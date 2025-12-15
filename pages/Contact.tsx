@@ -2,6 +2,18 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, LayoutTemplate, Code, PenTool, Megaphone } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 
+// --- CONFIGURATION ---
+// REPLACE THESE VALUES WITH YOUR GOOGLE FORM ENTRY IDs
+const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScjuNuXGi7nEfCUBUjhG77TdDmUr7cT2jPfnH_MuK7Zas4Zxw/formResponse";
+
+const FORM_ENTRY_IDS = {
+  service: "entry.SERVICE_ID", // Replace with actual Entry ID for 'Service'
+  name: "entry.NAME_ID",       // Replace with actual Entry ID for 'Name'
+  email: "entry.EMAIL_ID",     // Replace with actual Entry ID for 'Email'
+  budget: "entry.BUDGET_ID",   // Replace with actual Entry ID for 'Budget'
+  message: "entry.DETAILS_ID"  // Replace with actual Entry ID for 'Project Details'
+};
+
 const Contact: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [formData, setFormData] = useState({ name: '', email: '', budget: '', message: '' });
@@ -23,32 +35,29 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setFormStatus('submitting');
     
+    // Prepare FormData for Google Forms
+    const data = new FormData();
+    data.append(FORM_ENTRY_IDS.service, selectedService);
+    data.append(FORM_ENTRY_IDS.name, formData.name);
+    data.append(FORM_ENTRY_IDS.email, formData.email);
+    data.append(FORM_ENTRY_IDS.budget, formData.budget);
+    data.append(FORM_ENTRY_IDS.message, formData.message);
+
     try {
-      const response = await fetch("https://formspree.io/f/mgvgdpng", {
+      await fetch(GOOGLE_FORM_ACTION_URL, {
         method: "POST",
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          service: selectedService,
-          budget: formData.budget,
-          message: formData.message,
-          subject: `New Enquiry: ${selectedService} from ${formData.name}`,
-        })
+        mode: "no-cors", // Important: Prevents CORS errors for Google Forms
+        body: data
       });
 
-      if (response.ok) {
-        setFormStatus('success');
-        setFormData({ name: '', email: '', budget: '', message: '' });
-        setSelectedService('Web Development');
-        setTimeout(() => setFormStatus('idle'), 5000);
-      } else {
-        alert("There was an issue sending your message. Please try again.");
-        setFormStatus('idle');
-      }
+      // Assuming success if no network error occurred (no-cors yields opaque response)
+      setFormStatus('success');
+      setFormData({ name: '', email: '', budget: '', message: '' });
+      setSelectedService('Web Development');
+      
+      // Auto reset after a delay (optional, keeping form clean)
+      setTimeout(() => setFormStatus('idle'), 8000);
+
     } catch (error) {
       console.error("Form error:", error);
       alert("Network error. Please check your connection and try again.");
@@ -161,7 +170,7 @@ const Contact: React.FC = () => {
            </ScrollReveal>
         </div>
 
-        {/* Right Column: NEW FORM UI */}
+        {/* Right Column: FORM UI */}
         <div className="lg:col-span-7 relative">
            <ScrollReveal delay="delay-200" className="h-full">
                <div className="relative bg-white dark:bg-[#0A0C11] border border-gray-200 dark:border-white/10 rounded-3xl p-6 md:p-8 lg:p-10 shadow-2xl overflow-hidden group hover:border-gray-300 dark:hover:border-white/20 transition-colors">
@@ -177,9 +186,9 @@ const Contact: React.FC = () => {
                                     <CheckCircle size={48} className="animate-bounce-custom" />
                                 </div>
                             </div>
-                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Request Received!</h3>
+                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Request Sent Successfully!</h3>
                             <p className="text-gray-600 dark:text-gray-400 max-w-sm mx-auto mb-10 text-sm leading-relaxed">
-                                We've received your inquiry. Our team will review your project details and get back to you within 24 hours.
+                                Your request has been sent successfully. Our team will review your project details and get back to you within 24 hours.
                             </p>
                             <button 
                                 onClick={() => setFormStatus('idle')}
