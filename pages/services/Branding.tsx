@@ -8,6 +8,9 @@ const Branding: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    // Disable on mobile/tablet
+    if (window.innerWidth < 1024) return;
+    
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;

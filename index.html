@@ -199,17 +199,120 @@
       img {
         transition: opacity 0.3s ease-in-out;
       }
+
+      /* --- Mobile Performance Optimizations --- */
+      @media (max-width: 1023px) {
+        /* Disable heavy blur filters to save GPU */
+        .backdrop-blur-xl, .backdrop-blur-md, .backdrop-blur-sm, .glass-morphism {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+        }
+        
+        /* Fallback solid backgrounds for glass elements */
+        html.dark .backdrop-blur-xl, 
+        html.dark .backdrop-blur-md, 
+        html.dark .backdrop-blur-sm,
+        html.dark .glass-morphism {
+          background-color: rgba(10, 12, 17, 0.95) !important;
+        }
+        html:not(.dark) .backdrop-blur-xl, 
+        html:not(.dark) .backdrop-blur-md, 
+        html:not(.dark) .backdrop-blur-sm,
+        html:not(.dark) .glass-morphism {
+          background-color: rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* Disable complex infinite animations on mobile */
+        .animate-float, .animate-float-fast, .animate-blob, .animate-pulse-glow, .animate-spin-slow {
+          animation: none !important;
+        }
+        
+        /* Simplify transitions for snappier feel */
+        * {
+          transition-duration: 200ms !important;
+        }
+        
+        /* Flatten 3D transforms on mobile to reduce rendering cost */
+        .preserve-3d {
+          transform-style: flat !important;
+          perspective: none !important;
+          transform: none !important;
+        }
+      }
+
+      /* --- Desktop Performance Optimizations --- */
+      @media (min-width: 1024px) {
+        /* Pause animations when off-screen via ViewOptimizer class */
+        .desktop-off-screen * {
+           animation-play-state: paused !important;
+        }
+        
+        /* Hint browser for heavy animations in non-hero sections */
+        .desktop-optimize-transform {
+           will-change: transform, opacity;
+        }
+      }
+
+      /* --- Logo Entrance Animation --- */
+      @keyframes logoEntrance {
+        0% {
+          opacity: 0;
+          transform: scale(0.95) translateY(2px);
+          filter: brightness(1.5) blur(4px);
+        }
+        30% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+          filter: brightness(1.1) blur(0px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+          filter: brightness(1) blur(0px);
+        }
+      }
+
+      .animate-logo-entrance {
+        animation: logoEntrance 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* --- Smooth Theme Switch Animation --- */
+      /* Apply smooth transitions to color/background properties globally */
+      body, 
+      div, 
+      span, 
+      header,
+      footer,
+      section,
+      article,
+      main,
+      nav,
+      a, 
+      button, 
+      input, 
+      textarea,
+      select,
+      svg {
+        transition-property: background-color, color, border-color, fill, stroke, shadow, background-image;
+        transition-duration: 700ms; /* Polished slow transition for themes */
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      /* Re-enable faster transform transitions for interactive elements to stay snappy */
+      .group:hover *, a:hover, button:hover {
+         transition-duration: 300ms; /* Restore hover speed */
+      }
     </style>
   <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
     "react-router-dom": "https://esm.sh/react-router-dom@^7.10.1",
-    "vite": "https://esm.sh/vite@^7.3.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "vite": "https://esm.sh/vite@^7.3.0"
   }
 }
 </script>

@@ -3,37 +3,52 @@ import { Link } from 'react-router-dom';
 import { Sparkles, Check, Shield, Zap, LayoutTemplate, Star, Rocket, Code, ArrowRight, Heart, Cpu, Globe, Palette, Monitor, Box, Terminal, Database, Smartphone, Layers, Command } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import TextReveal from '../components/TextReveal';
+import ViewOptimizer from '../components/ViewOptimizer';
 
 const TiltCard = ({ children, className = '' }: { children?: React.ReactNode, className?: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState('');
-  const [glowPos, setGlowPos] = useState({ x: 0, y: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    // Disable on mobile/tablet
+    if (window.innerWidth < 1024) return;
+    
+    if (!cardRef.current || !glowRef.current) return;
+    const { left, top, width, height } = cardRef.current.getBoundingClientRect();
     const x = (e.clientX - left - width / 2) / 25;
     const y = (e.clientY - top - height / 2) / 25;
-    setTransform(`perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg) scale3d(1.02, 1.02, 1.02)`);
-    setGlowPos({ x: e.clientX - left, y: e.clientY - top });
+    const glowX = e.clientX - left;
+    const glowY = e.clientY - top;
+
+    // Direct DOM manipulation
+    requestAnimationFrame(() => {
+        if (cardRef.current) {
+            cardRef.current.style.transform = `perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+        if (glowRef.current) {
+            glowRef.current.style.background = `radial-gradient(600px circle at ${glowX}px ${glowY}px, rgba(176, 38, 255, 0.15), transparent 40%)`;
+        }
+    });
   };
 
   const handleMouseLeave = () => {
-    setTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)');
+    if (cardRef.current) {
+        cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    }
   };
 
   return (
     <div
-      ref={ref}
+      ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative transition-transform duration-200 ease-out will-change-transform group ${className}`}
-      style={{ transform }}
+      className={`relative transition-transform duration-200 ease-out will-change-transform group ${className} desktop-optimize-transform`}
     >
       <div 
+        ref={glowRef}
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 rounded-[inherit] z-0"
         style={{
-          background: `radial-gradient(600px circle at ${glowPos.x}px ${glowPos.y}px, rgba(176, 38, 255, 0.15), transparent 40%)`,
+          background: `radial-gradient(600px circle at center, rgba(176, 38, 255, 0.15), transparent 40%)`,
         }}
       />
       <div className="relative z-10 h-full">
@@ -66,12 +81,12 @@ const About: React.FC = () => {
          <div className="absolute bottom-[20%] left-[-10%] w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-[100px]"></div>
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
          
-         {/* Floating Elements */}
+         {/* Floating Elements - Optimized with ViewOptimizer wrapper effectively via parent container if needed, but handled globally via CSS class if applied */}
          <div className="absolute top-40 left-10 text-gray-400/20 dark:text-white/5 animate-float delay-700"><Box size={48} /></div>
          <div className="absolute bottom-40 right-10 text-gray-400/20 dark:text-white/5 animate-float delay-1000"><Globe size={64} /></div>
       </div>
 
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO SECTION (Untouched per instructions) */}
       <section className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 mb-24 lg:mb-32 px-4 lg:px-12">
          
          {/* Left: Text Content */}
@@ -144,7 +159,8 @@ const About: React.FC = () => {
          </div>
       </section>
 
-      {/* 2. STATS STRIP */}
+      {/* 2. STATS STRIP - Optimized */}
+      <ViewOptimizer>
       <div className="w-full border-y border-gray-200 dark:border-white/5 bg-white/50 dark:bg-[#0A0C11]/50 backdrop-blur-sm mb-24">
          <div className="max-w-[1400px] mx-auto px-6 py-8 flex flex-wrap justify-around gap-8">
             {[
@@ -165,8 +181,10 @@ const About: React.FC = () => {
             ))}
          </div>
       </div>
+      </ViewOptimizer>
 
-      {/* 3. CORE PILLARS GRID (3D TILT) */}
+      {/* 3. CORE PILLARS GRID (3D TILT) - Optimized */}
+      <ViewOptimizer>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24 lg:mb-32 px-4 lg:px-8">
          
          {/* Card 1 */}
@@ -261,6 +279,7 @@ const About: React.FC = () => {
          </ScrollReveal>
 
       </div>
+      </ViewOptimizer>
       
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Prompt } from '../types';
 import { Copy, Eye, Heart, Sparkles } from 'lucide-react';
 
@@ -10,9 +10,9 @@ interface PromptCardProps {
 
 const PromptCard: React.FC<PromptCardProps> = ({ prompt, style, onClick }) => {
   const [copied, setCopied] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -22,11 +22,13 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, style, onClick }) => {
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Disable 3D tilt on touch devices/tablets
+    if (window.innerWidth < 1024) return;
+    
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    setPosition({ x, y });
 
     // Calculate rotation for 3D effect
     const centerX = rect.width / 2;
@@ -34,8 +36,15 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, style, onClick }) => {
     const rotateX = ((y - centerY) / centerY) * -5; // Max -5deg tilt
     const rotateY = ((x - centerX) / centerX) * 5;  // Max 5deg tilt
     
-    // Apply transform directly to avoid re-renders
-    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    // Direct DOM manipulation
+    requestAnimationFrame(() => {
+        if (cardRef.current) {
+            cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+        if (spotlightRef.current) {
+            spotlightRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(176, 38, 255, 0.4), transparent 40%)`;
+        }
+    });
   };
   
   const handleMouseLeave = () => {
@@ -53,15 +62,16 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, style, onClick }) => {
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={handleMouseLeave}
-      className="relative group rounded-xl md:rounded-[14px] lg:rounded-[20px] bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 cursor-pointer overflow-hidden transition-all duration-200 ease-out will-change-transform shadow-md dark:shadow-none"
+      className="relative group rounded-xl md:rounded-[14px] lg:rounded-[20px] bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 cursor-pointer overflow-hidden transition-all duration-200 ease-out will-change-transform shadow-md dark:shadow-none desktop-optimize-transform"
       style={{ ...style, transformStyle: 'preserve-3d' }}
     >
       {/* Spotlight Effect Border */}
       <div 
+        ref={spotlightRef}
         className="pointer-events-none absolute -inset-px transition-opacity duration-300 rounded-xl md:rounded-[14px] lg:rounded-[20px] opacity-0 group-hover:opacity-100"
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(176, 38, 255, 0.4), transparent 40%)`,
+          background: `radial-gradient(600px circle at center, rgba(176, 38, 255, 0.4), transparent 40%)`,
         }}
       />
       

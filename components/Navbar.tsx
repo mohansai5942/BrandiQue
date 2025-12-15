@@ -129,7 +129,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       <header 
-        className={`fixed top-0 z-50 w-full transition-all duration-500 ease-custom 
+        className={`fixed top-0 z-50 w-full transition-all duration-700 ease-custom 
           ${scrolled 
             ? 'bg-white/90 dark:bg-[#05070A]/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-2 md:py-2 lg:py-3 shadow-sm dark:shadow-none' 
             : 'bg-transparent py-3 md:py-4 lg:py-6'
@@ -137,8 +137,8 @@ const Navbar: React.FC = () => {
       >
         <div className="max-w-[1600px] mx-auto px-4 md:px-6 flex items-center justify-between relative">
           
-          {/* Logo Area */}
-          <Link to="/" className="flex items-center gap-3 group relative z-50" onClick={() => setIsOpen(false)}>
+          {/* Logo Area with Animation */}
+          <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)}>
             {/* Light Theme Logo */}
             <img 
               src="https://files.catbox.moe/th1mpy.png" 
@@ -154,7 +154,7 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-2 p-1.5 rounded-full bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/5 backdrop-blur-md relative z-50 shadow-sm dark:shadow-none">
+          <nav className="hidden lg:flex items-center gap-2 p-1.5 rounded-full bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/5 backdrop-blur-md relative z-50 shadow-sm dark:shadow-none transition-colors duration-700">
              {NAV_ITEMS.map((item) => {
                if (item.hasDropdown) {
                  return (
@@ -177,7 +177,7 @@ const Navbar: React.FC = () => {
                         className={`absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[640px] bg-white dark:bg-[#0A0C11]/90 backdrop-blur-2xl border border-gray-200 dark:border-white/10 rounded-2xl p-4 shadow-2xl transition-all duration-300 origin-top transform 
                         ${isServicesHovered ? 'opacity-100 translate-y-0 visible scale-100' : 'opacity-0 translate-y-4 invisible scale-95 pointer-events-none'}`}
                       >
-                          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#0A0C11]/90 border-t border-l border-gray-200 dark:border-white/10 rotate-45"></div>
+                          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#0A0C11]/90 border-t border-l border-gray-200 dark:border-white/10 rotate-45 transition-colors duration-700"></div>
                           
                           <div className="grid grid-cols-2 gap-3 relative z-10">
                              {SERVICE_ITEMS.map((service, idx) => (
@@ -202,7 +202,7 @@ const Navbar: React.FC = () => {
                              ))}
                           </div>
                           
-                          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/5 text-center">
+                          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/5 text-center transition-colors duration-700">
                              <Link to="/services" className="text-xs font-bold text-gray-500 hover:text-black dark:hover:text-white uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">
                                 View Overview Page <ArrowRight size={12} />
                              </Link>
@@ -261,7 +261,7 @@ const Navbar: React.FC = () => {
         className={`fixed top-0 right-0 z-[70] h-[100dvh] w-[85%] max-w-[400px] bg-white dark:bg-[#0A0C11] shadow-2xl border-l border-gray-200 dark:border-white/10 transform transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {/* Header inside Menu */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-white/50 dark:bg-[#0A0C11]/50 backdrop-blur-md sticky top-0 z-10">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-white/50 dark:bg-[#0A0C11]/50 backdrop-blur-md sticky top-0 z-10 transition-colors duration-700">
            <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">Menu</span>
            <button 
              onClick={() => setIsOpen(false)}
@@ -364,7 +364,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Footer Actions inside Menu */}
-        <div className="p-6 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-[#0A0C11]/50 space-y-4">
+        <div className="p-6 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-[#0A0C11]/50 space-y-4 transition-colors duration-700">
            {/* Theme Toggle */}
            <button 
               onClick={toggleTheme}
