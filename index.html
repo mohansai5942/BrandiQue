@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BrandiQue Web Agency</title>
+    <script>
+      // Immediately check for saved theme preference to prevent FOUC
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              navy: {
+                900: '#05070A', // Darker base
+                800: '#0A0C11',
+                700: '#12151C',
+                card: 'rgba(255, 255, 255, 0.02)',
+              },
+              neon: {
+                purple: '#B026FF', // More vibrant
+                blue: '#00D4FF',
+                pink: '#FF2E93',
+              },
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              heading: ['Poppins', 'sans-serif'],
+              mono: ['Fira Code', 'monospace'],
+            },
+            transitionTimingFunction: {
+              'custom': 'cubic-bezier(0.16, 1, 0.3, 1)', // Ultra smooth
+              'bounce-custom': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+            },
+            backgroundImage: {
+              'dot-matrix': 'radial-gradient(#2a2d3d 1px, transparent 1px)',
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+              'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+              'glass-gradient': 'linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)',
+            },
+            animation: {
+              'fade-up': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'fade-in': 'fadeIn 0.4s ease-out forwards',
+              'reveal-text': 'revealText 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-in-right': 'slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-in-blur': 'slideInBlur 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'scale-in': 'scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'float': 'float 8s ease-in-out infinite',
+              'float-fast': 'float 4s ease-in-out infinite',
+              'pulse-glow': 'pulseGlow 3s infinite',
+              'gradient-x': 'gradient-x 5s ease infinite',
+              'blob': 'blob 10s infinite',
+              'shine': 'shine 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'spin-slow': 'spin 12s linear infinite',
+              'border-beam': 'borderBeam 8s linear infinite',
+              'marquee': 'marquee 30s linear infinite',
+            },
+            keyframes: {
+              marquee: {
+                '0%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(-100%)' },
+              },
+              shine: {
+                '0%': { left: '-100%', opacity: '0' },
+                '50%': { opacity: '0.5' },
+                '100%': { left: '100%', opacity: '0' },
+              },
+              revealText: {
+                '0%': { transform: 'translateY(110%)' },
+                '100%': { transform: 'translateY(0)' },
+              },
+              fadeUp: {
+                '0%': { opacity: '0', transform: 'translateY(30px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideInRight: {
+                '0%': { opacity: '0', transform: 'translateX(50px)' },
+                '100%': { opacity: '1', transform: 'translateX(0)' },
+              },
+              slideInBlur: {
+                '0%': { opacity: '0', transform: 'translateX(100px)', filter: 'blur(20px)' },
+                '100%': { opacity: '1', transform: 'translateX(0)', filter: 'blur(0)' },
+              },
+              scaleIn: {
+                '0%': { opacity: '0', transform: 'scale(0.9)' },
+                '100%': { opacity: '1', transform: 'scale(1)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-15px)' },
+              },
+              pulseGlow: {
+                '0%, 100%': { opacity: '1', boxShadow: '0 0 20px rgba(176, 38, 255, 0.4)' },
+                '50%': { opacity: '0.8', boxShadow: '0 0 40px rgba(176, 38, 255, 0.6)' },
+              },
+              'gradient-x': {
+                '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
+                '50%': { 'background-size': '200% 200%', 'background-position': 'right center' },
+              },
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(50px, -50px) scale(1.2)' },
+                '66%': { transform: 'translate(-30px, 30px) scale(0.8)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              },
+              borderBeam: {
+                '100%': { offsetDistance: '100%' },
+              }
+            },
+            boxShadow: {
+              'neon': '0 0 20px rgba(176, 38, 255, 0.3)',
+              'neon-strong': '0 0 40px rgba(176, 38, 255, 0.5)',
+              'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+            }
+          },
+        },
+      };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      
+      html.dark body {
+        background: #05070A;
+        color: #ffffff;
+      }
+      
+      /* Hide cursor on fine pointer devices (desktop) */
+      @media (pointer: fine) {
+        body, a, button, input, select, textarea, [role="button"] {
+          cursor: none !important;
+        }
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      html.dark ::-webkit-scrollbar-track {
+        background: #0A0C11;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+      }
+      html.dark ::-webkit-scrollbar-thumb {
+        background: #2a2d3d;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+      html.dark ::-webkit-scrollbar-thumb:hover {
+        background: #4B5563;
+      }
+
+      .glass-morphism {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .text-gradient {
+        background: linear-gradient(to right, #B026FF, #00D4FF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .preserve-3d { transform-style: preserve-3d; }
+      .perspective-1000 { perspective: 1000px; }
+      .perspective-2000 { perspective: 2000px; }
+      
+      /* Smooth loading of images */
+      img {
+        transition: opacity 0.3s ease-in-out;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.560.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.10.1",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
