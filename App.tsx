@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -28,26 +28,6 @@ const ScrollToTop = () => {
 }
 
 const App: React.FC = () => {
-  // Initialize state to delay rendering until we confirm URL state
-  const [isReady, setIsReady] = useState(false);
-
-  useLayoutEffect(() => {
-    // We want to force start at Home ('/') on every load to avoid flashing other pages.
-    // We check if there is a hash that isn't the root.
-    if (window.location.hash && window.location.hash !== '#/') {
-      // Directly setting window.location.hash is safer than history.replaceState 
-      // in 'blob:' or sandboxed environments where replaceState can throw SecurityErrors.
-      // This synchronously updates the hash to '#/', which HashRouter will see when it mounts.
-      window.location.hash = '/';
-    }
-    
-    // Mark as ready to render the Router
-    setIsReady(true);
-  }, []);
-
-  // Prevent Router from mounting until we've sanitized the URL
-  if (!isReady) return null;
-
   return (
     <HashRouter>
       <ScrollToTop />
