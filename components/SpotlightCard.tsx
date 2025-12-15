@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 interface SpotlightCardProps {
@@ -10,59 +10,53 @@ interface SpotlightCardProps {
 }
 
 const SpotlightCard: React.FC<SpotlightCardProps> = ({ to, title, description, icon, delay }) => {
-  const divRef = useRef<HTMLAnchorElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
+  const borderRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!divRef.current) return;
+    // Optimization: Skip calculation on mobile/tablet to save battery
+    if (window.innerWidth < 1024) return;
+    
+    if (!cardRef.current || !spotlightRef.current || !borderRef.current) return;
 
-    const div = divRef.current;
-    const rect = div.getBoundingClientRect();
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
-  const handleFocus = () => {
-    setOpacity(1);
-  };
-
-  const handleBlur = () => {
-    setOpacity(0);
-  };
-
-  const handleMouseEnter = () => {
-    setOpacity(1);
-  };
-
-  const handleMouseLeave = () => {
-    setOpacity(0);
+    // Direct DOM manipulation to avoid React re-renders
+    requestAnimationFrame(() => {
+      if (spotlightRef.current) {
+        spotlightRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(160, 32, 240, 0.15), transparent 40%)`;
+      }
+      if (borderRef.current) {
+        borderRef.current.style.background = `radial-gradient(400px circle at ${x}px ${y}px, rgba(160, 32, 240, 0.4), transparent 40%)`;
+      }
+    });
   };
 
   return (
     <Link
-      ref={divRef}
+      ref={cardRef}
       to={to}
       onMouseMove={handleMouseMove}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden rounded-[24px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0F1320] px-8 py-16 md:px-6 md:py-10 lg:px-8 lg:py-16 text-center shadow-xl dark:shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2 group h-full block ${delay || ''}`}
+      className={`relative overflow-hidden rounded-[24px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0F1320] px-8 py-16 md:px-6 md:py-10 lg:px-8 lg:py-16 text-center shadow-xl dark:shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2 group h-full block ${delay || ''} desktop-optimize-transform`}
     >
       {/* Spotlight Effect */}
       <div
+        ref={spotlightRef}
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(160, 32, 240, 0.15), transparent 40%)`,
+          background: `radial-gradient(600px circle at center, rgba(160, 32, 240, 0.15), transparent 40%)`,
         }}
       />
       
       {/* Border Glow Beam */}
       <div 
+        ref={borderRef}
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{
-          background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(160, 32, 240, 0.4), transparent 40%)`,
+          background: `radial-gradient(400px circle at center, rgba(160, 32, 240, 0.4), transparent 40%)`,
           maskImage: 'linear-gradient(black, black) content-box, linear-gradient(black, black)',
           maskComposite: 'exclude',
           WebkitMaskComposite: 'xor',

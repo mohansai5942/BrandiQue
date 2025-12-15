@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Send, AtSign, Mail, ArrowRight } from 'lucide-react';
+import { Instagram, Twitter, AtSign, Mail, ArrowRight } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const Footer: React.FC = () => {
@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
 
   const SOCIAL_LINKS = [
     { icon: Instagram, href: "https://www.instagram.com/mohan_creator/" },
-    { icon: Send, href: "https://t.me/mohancreator/" }, // Telegram
+    { icon: Twitter, href: "https://x.com/Mohan_Creator" }, // Twitter (X)
     { icon: AtSign, href: "https://www.threads.com/@mohan_creator/" }, // Threads
     { icon: Mail, href: "mailto:brandiqueagency@gmail.com" }
   ];

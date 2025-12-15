@@ -53,7 +53,8 @@ const WordPress: React.FC = () => {
                {/* Left: Dashboard Simulation - Scaled down for tablet */}
                <div className="relative perspective-2000 group w-full max-w-[340px] md:max-w-[420px] lg:max-w-none mx-auto lg:mx-0">
                   <ScrollReveal>
-                     <div className="relative transform transition-transform duration-700 hover:rotate-y-3 hover:rotate-x-3 preserve-3d">
+                     {/* Added 'lg:' prefix to hover effects to disable 3D rotate on mobile/tablet */}
+                     <div className="relative transform transition-transform duration-700 lg:hover:rotate-y-3 lg:hover:rotate-x-3 preserve-3d">
                         
                         {/* Laptop Mockup Body */}
                         <div className="bg-[#151A25] rounded-t-xl border border-white/10 shadow-2xl p-1 relative z-20 w-full mx-auto lg:mx-0">

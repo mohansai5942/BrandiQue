@@ -66,7 +66,8 @@ const FullStack: React.FC = () => {
             <div className="grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-center mb-20 md:mb-24 lg:mb-32">
                <div className="relative perspective-2000">
                   <ScrollReveal>
-                     <div className="relative transform transition-transform duration-700 hover:rotate-y-6 hover:rotate-x-6 preserve-3d">
+                     {/* Added 'lg:' prefix to hover effects to disable 3D rotate on mobile/tablet */}
+                     <div className="relative transform transition-transform duration-700 lg:hover:rotate-y-6 lg:hover:rotate-x-6 preserve-3d">
                         <div className="bg-[#0F1320] rounded-xl border border-white/10 shadow-2xl overflow-hidden min-h-[300px] md:min-h-[340px] lg:min-h-[400px] relative z-20">
                            <div className="h-8 md:h-10 bg-[#151A25] border-b border-white/5 flex items-center px-3 md:px-4 gap-2">
                               <div className="flex gap-1.5">

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Check, Youtube, Video, Heart, MessageCircle, Share2, Megaphone, Search, Palette, TrendingUp } from 'lucide-react';
+import { ArrowRight, Check, Youtube, Video, Heart, MessageCircle, Share2, Megaphone, Search, Palette, TrendingUp, BarChart, PieChart } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
 import TextReveal from '../../components/TextReveal';
 
 const DigitalMarketing: React.FC = () => {
   const [likes, setLikes] = useState(8432);
-  const [comments, setComments] = useState(128);
   const [showHeart, setShowHeart] = useState(false);
   
   useEffect(() => {
@@ -22,119 +21,156 @@ const DigitalMarketing: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#05070A] pt-24 md:pt-28 lg:pt-36 transition-colors duration-300">
       <div className="relative w-full overflow-hidden bg-transparent py-8 md:py-12 lg:py-24">
-          {/* Background Elements */}
+          {/* Background Elements - Optimized for Mobile */}
           <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-green-500/5 rounded-full blur-[120px] animate-pulse-glow"></div>
-              <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-purple-500/5 rounded-full blur-[150px]"></div>
+              <div className="absolute top-1/4 left-0 w-[200px] md:w-[400px] lg:w-[600px] h-[200px] md:h-[400px] lg:h-[600px] bg-green-500/5 rounded-full blur-[60px] md:blur-[100px] lg:blur-[120px] animate-pulse-glow"></div>
+              <div className="absolute bottom-0 right-0 w-[250px] md:w-[500px] lg:w-[800px] h-[250px] md:h-[500px] lg:h-[800px] bg-purple-500/5 rounded-full blur-[80px] md:blur-[120px] lg:blur-[150px]"></div>
               
-              {/* Floating Hashtags & Emojis */}
-              {['#Growth', '🔥', '#Viral', '🚀', '✨', '#Brand', '👍', '💬'].map((tag, i) => (
-                  <div 
-                      key={i}
-                      className="absolute text-gray-300 dark:text-white/5 font-bold text-xl animate-float"
-                      style={{
-                          top: `${Math.random() * 80 + 10}%`,
-                          left: `${Math.random() * 90}%`,
-                          animationDelay: `${i * 1.5}s`,
-                          animationDuration: `${10 + i * 2}s`
-                      }}
-                  >
-                      {tag}
-                  </div>
-              ))}
+              {/* Floating Hashtags & Emojis - Desktop Only to reduce mobile load */}
+              <div className="hidden lg:block">
+                {['#Growth', '🔥', '#Viral', '🚀', '✨', '#Brand', '👍', '💬'].map((tag, i) => (
+                    <div 
+                        key={i}
+                        className="absolute text-gray-300 dark:text-white/5 font-bold text-xl animate-float"
+                        style={{
+                            top: `${Math.random() * 80 + 10}%`,
+                            left: `${Math.random() * 90}%`,
+                            animationDelay: `${i * 1.5}s`,
+                            animationDuration: `${10 + i * 2}s`
+                        }}
+                    >
+                        {tag}
+                    </div>
+                ))}
+              </div>
           </div>
 
           <div className="max-w-[1400px] mx-auto px-6 relative z-10">
-              {/* Grid Layout */}
-              <div className="grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-center mb-20 md:mb-24 lg:mb-32">
+              {/* Grid Layout: Stacked on Mobile, Side-by-Side on Tablet/Desktop */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-8 lg:gap-16 items-center mb-20 md:mb-24 lg:mb-32">
                   
-                  {/* LEFT: Phone Visual - Order adjusted for Tablet */}
-                  <div className="relative perspective-2000 flex justify-center lg:justify-end pr-0 lg:pr-10">
-                      <div className="relative transform transition-transform duration-700 hover:rotate-y-6 hover:rotate-x-6 preserve-3d">
+                  {/* LEFT: Phone Visual */}
+                  <div className="relative perspective-2000 flex justify-center lg:justify-end pr-0 lg:pr-10 order-1">
+                      {/* 3D Transform only on Desktop Hover */}
+                      <div className="relative transform transition-transform duration-700 lg:hover:rotate-y-6 lg:hover:rotate-x-6 preserve-3d">
                           
-                          {/* Floating Elements Around Phone */}
+                          {/* Floating Elements Around Phone - Static & Smaller on Mobile/Tablet */}
                           {/* YouTube Thumbnail */}
-                          <div className="absolute top-[10%] -left-[15%] md:-left-[20%] w-32 h-20 md:w-36 md:h-24 lg:w-40 lg:h-24 bg-[#1a1a1a] rounded-lg border border-white/10 shadow-2xl animate-float z-20 overflow-hidden transform rotate-[-6deg]" style={{ animationDelay: '0.5s' }}>
-                              <div className="absolute inset-0 flex items-center justify-center bg-red-600/10">
-                                  <Youtube size={24} className="md:w-[32px] md:h-[32px] text-red-500" />
+                          <div className="absolute top-[10%] -left-[10%] md:-left-[15%] lg:-left-[20%] w-24 h-14 md:w-28 md:h-16 lg:w-40 lg:h-24 bg-[#1a1a1a] rounded-lg border border-white/10 shadow-2xl lg:animate-float z-20 overflow-hidden transform rotate-[-6deg]" style={{ animationDelay: '0.5s' }}>
+                              <div className="absolute inset-0 flex items-center justify-center bg-red-600/10 relative overflow-hidden group">
+                                  {/* Abstract thumbnail art */}
+                                  <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-black"></div>
+                                  <div className="absolute -right-4 -bottom-4 w-12 h-12 md:w-16 md:h-16 bg-red-600/20 rounded-full blur-xl"></div>
+                                  <Youtube size={20} className="md:w-[24px] lg:w-[32px] text-red-500 relative z-10 drop-shadow-md" />
                               </div>
-                              <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/80 rounded text-[6px] md:text-[8px] font-bold text-white">12:45</div>
+                              <div className="absolute bottom-1 right-1 lg:bottom-1.5 lg:right-1.5 px-1 py-0.5 bg-black/80 rounded text-[6px] md:text-[8px] font-bold text-white">12:45</div>
                           </div>
 
                           {/* Chart Card */}
-                          <div className="absolute bottom-[20%] -right-[10%] md:-right-[15%] w-28 h-22 md:w-32 md:h-24 lg:w-36 lg:h-28 bg-white dark:bg-[#151A25] rounded-xl border border-gray-200 dark:border-white/10 shadow-2xl animate-float-fast z-30 p-2 md:p-3 transform rotate-[6deg]" style={{ animationDelay: '1.5s' }}>
-                              <div className="flex items-center gap-2 mb-2">
+                          <div className="absolute bottom-[20%] -right-[10%] md:-right-[15%] lg:-right-[15%] w-24 h-20 md:w-28 md:h-22 lg:w-36 lg:h-28 bg-white dark:bg-[#151A25] rounded-xl border border-gray-200 dark:border-white/10 shadow-2xl lg:animate-float-fast z-30 p-2 md:p-3 transform rotate-[6deg]" style={{ animationDelay: '1.5s' }}>
+                              <div className="flex items-center gap-1.5 lg:gap-2 mb-1.5 lg:mb-2">
                                   <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500"></div>
                                   <span className="text-[6px] md:text-[8px] text-gray-500 dark:text-gray-400 uppercase font-bold">Reach</span>
                               </div>
-                              <div className="flex items-end gap-1 h-8 md:h-12 justify-between">
+                              <div className="flex items-end gap-0.5 lg:gap-1 h-6 md:h-8 lg:h-12 justify-between">
                                   {[40, 65, 45, 80, 55, 90].map((h, i) => (
-                                      <div key={i} style={{ height: `${h}%` }} className="w-2 md:w-3 bg-green-500/20 rounded-t-sm relative group">
+                                      <div key={i} style={{ height: `${h}%` }} className="w-1.5 md:w-2 lg:w-3 bg-green-500/20 rounded-t-sm relative group">
                                           <div className="absolute bottom-0 left-0 w-full bg-green-500 rounded-t-sm transition-all duration-1000" style={{ height: '100%' }}></div>
                                       </div>
                                   ))}
                               </div>
-                              <div className="mt-2 text-right">
-                                  <span className="text-green-500 dark:text-green-400 text-[10px] md:text-xs font-bold">+124%</span>
+                              <div className="mt-1.5 lg:mt-2 text-right">
+                                  <span className="text-green-500 dark:text-green-400 text-[8px] md:text-[10px] lg:text-xs font-bold">+124%</span>
                               </div>
                           </div>
 
-                          {/* The Phone */}
-                          <div className="w-[240px] h-[480px] md:w-[280px] md:h-[560px] lg:w-[300px] lg:h-[600px] bg-black rounded-[32px] md:rounded-[40px] border-[6px] md:border-[8px] border-[#1a1a1a] shadow-2xl overflow-hidden relative z-10">
+                          {/* The Phone - Responsive Sizing */}
+                          <div className="w-[220px] h-[440px] md:w-[240px] md:h-[480px] lg:w-[300px] lg:h-[600px] bg-black rounded-[24px] md:rounded-[32px] lg:rounded-[40px] border-[6px] md:border-[8px] border-[#1a1a1a] shadow-2xl overflow-hidden relative z-10">
                               {/* Notch */}
-                              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 md:w-32 h-5 md:h-6 bg-[#1a1a1a] rounded-b-xl md:rounded-b-2xl z-20"></div>
+                              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 md:w-24 lg:w-32 h-4 md:h-5 lg:h-6 bg-[#1a1a1a] rounded-b-lg md:rounded-b-xl lg:rounded-b-2xl z-20"></div>
                               
                               {/* Screen Content */}
                               <div className="w-full h-full bg-[#000] relative flex flex-col">
                                   {/* Header */}
-                                  <div className="pt-8 md:pt-10 pb-2 px-3 md:px-4 flex items-center justify-between border-b border-white/10">
+                                  <div className="pt-6 md:pt-8 lg:pt-10 pb-2 px-3 md:px-4 flex items-center justify-between border-b border-white/10 bg-black/50 backdrop-blur-sm z-10">
                                       <div className="flex items-center gap-2">
-                                          <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-[2px]">
-                                              <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-[8px] md:text-[10px] font-bold text-white">BQ</div>
+                                          <div className="w-5 h-5 md:w-6 md:h-6 lg:w-8 lg:h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-[1.5px] lg:p-[2px]">
+                                              <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-[6px] md:text-[8px] lg:text-[10px] font-bold text-white">BQ</div>
                                           </div>
-                                          <span className="text-[10px] md:text-xs font-bold text-white">brandique_agency</span>
+                                          <span className="text-[8px] md:text-[10px] lg:text-xs font-bold text-white">brandique_agency</span>
                                       </div>
-                                      <div className="w-1 h-3 md:h-4 flex flex-col justify-between items-center">
+                                      <div className="w-1 h-3 md:h-4 flex flex-col justify-between items-center opacity-60">
                                           <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-white rounded-full"></div>
                                           <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-white rounded-full"></div>
                                           <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-white rounded-full"></div>
                                       </div>
                                   </div>
 
-                                  {/* Main Post */}
-                                  <div className="flex-1 bg-[#111] relative group cursor-pointer">
-                                      <img 
-                                          src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600&auto=format&fit=crop" 
-                                          alt="Social Content" 
-                                          className="w-full h-full object-cover opacity-80"
-                                      />
+                                  {/* Main Post Content (Copyright Safe Visual) */}
+                                  <div className="flex-1 bg-[#050505] relative group cursor-pointer overflow-hidden">
+                                      {/* Custom Digital Abstract Art */}
+                                      <div className="absolute inset-0 w-full h-full">
+                                          <div className="absolute inset-0 bg-gradient-to-bl from-gray-900 via-black to-gray-900"></div>
+                                          
+                                          {/* Decorative Blobs */}
+                                          <div className="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_70%_20%,_rgba(74,222,128,0.15),transparent_50%)]"></div>
+                                          <div className="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_80%,_rgba(168,85,247,0.15),transparent_50%)]"></div>
+                                          
+                                          {/* Abstract Grid/Wave */}
+                                          <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+                                          
+                                          {/* Center Piece: Analysis / Growth Graphic */}
+                                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 md:gap-4">
+                                              {/* Animated Circle */}
+                                              <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24">
+                                                  <div className="absolute inset-0 rounded-full border-2 border-green-500/30 animate-ping" style={{ animationDuration: '3s' }}></div>
+                                                  <div className="absolute inset-2 rounded-full border-2 border-purple-500/30 animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
+                                                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center shadow-2xl">
+                                                      <BarChart size={24} className="text-white md:w-[32px] lg:w-[40px] h-auto" />
+                                                  </div>
+                                              </div>
+                                              
+                                              {/* Post Text Placeholder */}
+                                              <div className="space-y-1.5 md:space-y-2 w-3/4 flex flex-col items-center">
+                                                  <div className="h-1 md:h-1.5 w-1/2 bg-gradient-to-r from-gray-700 to-gray-800 rounded-full"></div>
+                                                  <div className="h-1 md:h-1.5 w-2/3 bg-gradient-to-r from-gray-800 to-gray-700 rounded-full"></div>
+                                              </div>
+                                          </div>
+                                      </div>
+
                                       {/* Popping Heart Animation */}
-                                      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${showHeart ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}>
-                                          <Heart size={60} className="md:w-[80px] md:h-[80px] text-white fill-white drop-shadow-xl" />
+                                      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 z-20 ${showHeart ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}>
+                                          <Heart size={50} className="md:w-[60px] lg:w-[80px] h-auto text-white fill-white drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" />
                                       </div>
                                       
-                                      {/* Play Icon Overlay */}
-                                      <div className="absolute top-3 right-3 md:top-4 md:right-4 bg-black/50 p-1 md:p-1.5 rounded-full backdrop-blur-sm">
-                                          <Video size={12} className="md:w-[16px] md:h-[16px] text-white" />
+                                      {/* UI Overlays */}
+                                      <div className="absolute top-3 right-3 md:top-4 md:right-4 bg-black/40 p-1.5 md:p-2 rounded-full backdrop-blur-md border border-white/10">
+                                          <PieChart size={10} className="md:w-[14px] lg:w-[16px] h-auto text-white" />
+                                      </div>
+                                      
+                                      <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4">
+                                          <div className="px-1.5 py-0.5 md:px-2 md:py-1 bg-green-500/20 backdrop-blur-md border border-green-500/30 rounded-md text-[6px] md:text-[8px] lg:text-[10px] font-bold text-green-400 uppercase tracking-wider flex items-center gap-1">
+                                              <TrendingUp size={8} className="md:w-[10px]" /> Growth
+                                          </div>
                                       </div>
                                   </div>
 
                                   {/* Actions */}
-                                  <div className="p-3 md:p-4 bg-black">
-                                      <div className="flex items-center justify-between mb-2 md:mb-3">
+                                  <div className="p-3 md:p-4 bg-black border-t border-white/5 relative z-10">
+                                      <div className="flex items-center justify-between mb-1.5 md:mb-2 lg:mb-3">
                                           <div className="flex items-center gap-3 md:gap-4">
-                                              <Heart size={20} className={`cursor-pointer transition-colors md:w-[24px] md:h-[24px] ${showHeart ? 'text-red-500 fill-red-500' : 'text-white'}`} />
-                                              <MessageCircle size={20} className="md:w-[24px] md:h-[24px] text-white hover:text-gray-300 transition-colors" />
-                                              <Share2 size={20} className="md:w-[24px] md:h-[24px] text-white hover:text-gray-300 transition-colors" />
+                                              <Heart size={16} className={`cursor-pointer transition-colors md:w-[20px] lg:w-[24px] h-auto ${showHeart ? 'text-red-500 fill-red-500' : 'text-white'}`} />
+                                              <MessageCircle size={16} className="md:w-[20px] lg:w-[24px] h-auto text-white hover:text-gray-300 transition-colors" />
+                                              <Share2 size={16} className="md:w-[20px] lg:w-[24px] h-auto text-white hover:text-gray-300 transition-colors" />
                                           </div>
-                                          <div className="px-1.5 py-0.5 md:px-2 md:py-1 bg-white/10 rounded-full text-[8px] md:text-[10px] font-bold uppercase text-white animate-pulse">
-                                              Trending
+                                          <div className="px-1.5 py-0.5 md:px-2 md:py-1 bg-white/10 rounded-full text-[6px] md:text-[8px] lg:text-[10px] font-bold uppercase text-white animate-pulse">
+                                              Live Campaign
                                           </div>
                                       </div>
-                                      <div className="text-xs md:text-sm font-bold text-white mb-1">
-                                          {likes.toLocaleString()} likes
+                                      <div className="text-[10px] md:text-xs lg:text-sm font-bold text-white mb-0.5 md:mb-1">
+                                          {likes.toLocaleString()} insights
                                       </div>
-                                      <div className="text-[10px] md:text-xs text-gray-300">
+                                      <div className="text-[8px] md:text-[10px] lg:text-xs text-gray-300">
                                           <span className="font-bold text-white mr-1">brandique_agency</span>
                                           Boosting your brand's digital presence 🚀 <span className="text-blue-400">#marketing #growth</span>
                                       </div>
@@ -145,8 +181,8 @@ const DigitalMarketing: React.FC = () => {
                       </div>
                   </div>
 
-                  {/* RIGHT: Content - Order adjusted for Tablet */}
-                  <div>
+                  {/* RIGHT: Content */}
+                  <div className="order-2 text-center md:text-left">
                       <ScrollReveal>
                           <div className="overflow-hidden mb-2">
                               <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight leading-[1.1] animate-reveal-text">
@@ -163,7 +199,7 @@ const DigitalMarketing: React.FC = () => {
                           </p>
 
                           {/* Features List */}
-                          <ul className="space-y-2 md:space-y-3 mb-8 md:mb-10">
+                          <ul className="space-y-2 md:space-y-3 mb-8 md:mb-10 text-left">
                               {[
                                   "Social media creatives",
                                   "Instagram branding",

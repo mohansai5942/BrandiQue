@@ -4,6 +4,7 @@ import { ArrowRight, Trophy, Rocket, Clock, LayoutTemplate, Play, Code, PenTool,
 import ScrollReveal from '../components/ScrollReveal';
 import TextReveal from '../components/TextReveal';
 import SpotlightCard from '../components/SpotlightCard';
+import ViewOptimizer from '../components/ViewOptimizer';
 
 // --- DATA CONSTANTS ---
 
@@ -35,6 +36,9 @@ const Home: React.FC = () => {
 
   // Mouse Parallax Logic
   const handleMouseMove = (e: React.MouseEvent) => {
+    // Disable on mobile/tablet to save battery and performance
+    if (window.innerWidth < 1024) return;
+    
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -88,17 +92,22 @@ const Home: React.FC = () => {
       >
          {/* --- Background Elements --- */}
          <div className="absolute inset-0 pointer-events-none -z-10 bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
-             {/* Animated Gradient Blobs */}
-             <div 
-                className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-neon-purple/20 dark:bg-neon-purple/10 rounded-full blur-[150px] animate-pulse-glow transition-transform duration-700 ease-out"
-                style={{ transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -30}px)` }}
-             />
-             <div 
-                className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-[150px] transition-transform duration-700 ease-out"
-                style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)` }}
-             />
+             {/* Animated Gradient Blobs - Hidden on Mobile/Tablet */}
+             <div className="hidden lg:block">
+               <div 
+                  className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-neon-purple/20 dark:bg-neon-purple/10 rounded-full blur-[150px] animate-pulse-glow transition-transform duration-700 ease-out"
+                  style={{ transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -30}px)` }}
+               />
+               <div 
+                  className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-[150px] transition-transform duration-700 ease-out"
+                  style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)` }}
+               />
+             </div>
              
-             {/* Floating Particles */}
+             {/* Mobile Static Gradient Fallback */}
+             <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-purple-500/10 to-blue-500/10 opacity-30"></div>
+             
+             {/* Floating Particles - Reduced count / visibility handled by CSS */}
              <div className="absolute inset-0 overflow-hidden">
                 {[...Array(6)].map((_, i) => (
                     <div 
@@ -129,7 +138,7 @@ const Home: React.FC = () => {
                 {/* Badge */}
                 <div className="opacity-0 animate-fade-in flex justify-start" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                    <div className="inline-flex items-center gap-2 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-md hover:bg-gray-100 dark:hover:bg-white/10 transition-all cursor-default group shadow-sm dark:shadow-[0_0_15px_rgba(0,0,0,0.2)]">
-                      <div className="relative flex h-1.5 w-1.5 md:h-2 md:w-2">
+                      <div className="relative flex h-1.5 w-1.5 md:h-2 md:h-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-green-500"></span>
                       </div>
@@ -335,7 +344,8 @@ const Home: React.FC = () => {
          </div>
       </section>
 
-      {/* 2. QUICK STATS - Reduced Size & Padding */}
+      {/* 2. QUICK STATS - Reduced Size & Padding - OPTIMIZED: ViewOptimizer */}
+      <ViewOptimizer>
       <section className="px-3 md:px-6 pb-10 md:pb-12 lg:pb-20 max-w-[1200px] mx-auto w-full -mt-6 md:-mt-8 lg:-mt-10 relative z-20">
          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
             {STATS.map((stat, i) => (
@@ -353,8 +363,10 @@ const Home: React.FC = () => {
             ))}
          </div>
       </section>
+      </ViewOptimizer>
 
-      {/* 3. SERVICES HUB - Compact on Mobile */}
+      {/* 3. SERVICES HUB - Compact on Mobile - OPTIMIZED: ViewOptimizer */}
+      <ViewOptimizer>
       <section id="services-hub" className="px-4 md:px-6 py-12 md:py-12 lg:py-24 max-w-[1400px] mx-auto w-full">
          <div className="text-center mb-10 md:mb-12 lg:mb-16">
             <h2 className="text-2xl md:text-3xl lg:text-5xl font-bold mb-3 md:mb-4 text-gray-900 dark:text-white">Our Expertise</h2>
@@ -407,8 +419,10 @@ const Home: React.FC = () => {
              </Link>
          </div>
       </section>
+      </ViewOptimizer>
 
-      {/* 4. WEB DEV TEASER - Smaller Sections */}
+      {/* 4. WEB DEV TEASER - Smaller Sections - OPTIMIZED: ViewOptimizer */}
+      <ViewOptimizer>
       <section className="px-4 md:px-6 py-12 md:py-12 lg:py-20 bg-gradient-to-b from-gray-100 to-white dark:from-[#0A0C11] dark:to-[#05070A] border-y border-gray-200 dark:border-white/5 relative overflow-hidden transition-colors duration-300">
          <div className="absolute top-0 right-0 w-[300px] md:w-[400px] lg:w-[600px] h-[300px] md:h-[400px] lg:h-[600px] bg-blue-500/5 rounded-full blur-[80px] md:blur-[100px] lg:blur-[120px] pointer-events-none"></div>
          <div className="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-10 md:gap-10 lg:gap-16 items-center">
@@ -462,8 +476,10 @@ const Home: React.FC = () => {
             </ScrollReveal>
          </div>
       </section>
+      </ViewOptimizer>
 
-      {/* 5. ABOUT / PROCESS TEASER - Small */}
+      {/* 5. ABOUT / PROCESS TEASER - Small - OPTIMIZED: ViewOptimizer */}
+      <ViewOptimizer>
       <section className="px-4 md:px-6 py-12 md:py-12 lg:py-20 bg-gray-100 dark:bg-[#0F1320]/30 border-t border-gray-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-[1000px] mx-auto text-center">
             <h2 className="text-2xl md:text-2xl lg:text-4xl font-bold mb-4 md:mb-4 lg:mb-6 text-gray-900 dark:text-white">How We Work</h2>
@@ -490,6 +506,7 @@ const Home: React.FC = () => {
             </Link>
          </div>
       </section>
+      </ViewOptimizer>
 
     </div>
   );
