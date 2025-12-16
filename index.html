@@ -15,11 +15,12 @@
     
     <script>
       // Immediately check for saved theme preference to prevent FOUC
+      // FORCE DARK MODE BY DEFAULT: Ignore system preference, only respect explicit 'light' setting
       try {
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
-        } else {
+        if (localStorage.getItem('theme') === 'light') {
           document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
         }
       } catch (e) {
         document.documentElement.classList.add('dark');
