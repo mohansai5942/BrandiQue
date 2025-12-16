@@ -46,8 +46,8 @@ const Services: React.FC = () => {
   return (
     <div className="min-h-screen pt-28 md:pt-32 pb-20 px-4 md:px-6 max-w-[1400px] mx-auto w-full relative overflow-hidden">
       
-      {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none -z-10">
+      {/* Background Ambience - Hidden on Mobile */}
+      <div className="fixed inset-0 pointer-events-none -z-10 hidden lg:block">
          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-neon-purple/5 rounded-full blur-[150px] animate-pulse-glow"></div>
          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-[150px]"></div>
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>

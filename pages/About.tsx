@@ -76,7 +76,7 @@ const About: React.FC = () => {
     <div className="min-h-screen pt-28 md:pt-36 pb-20 px-4 md:px-6 max-w-[1600px] mx-auto w-full relative overflow-hidden bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
       
       {/* --- Ambient Background Effects --- */}
-      <div className="fixed inset-0 pointer-events-none -z-10">
+      <div className="fixed inset-0 pointer-events-none -z-10 hidden lg:block">
          <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-neon-purple/5 rounded-full blur-[120px] animate-pulse-glow"></div>
          <div className="absolute bottom-[20%] left-[-10%] w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-[100px]"></div>
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
@@ -130,24 +130,28 @@ const About: React.FC = () => {
 
          {/* Right: Profile Image with Tech Frame */}
          <div className="relative group shrink-0 order-1 lg:order-2 z-10">
-             {/* Decorative Rings */}
-            <div className={`absolute inset-[-40px] border border-dashed border-gray-300 dark:border-white/5 rounded-full animate-[spin_20s_linear_infinite] ${mounted ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000`}></div>
-            <div className={`absolute inset-[-20px] border border-neon-purple/20 rounded-full animate-[spin_15s_linear_infinite_reverse] ${mounted ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000 delay-300`}></div>
+             {/* Decorative Rings - Hidden on Mobile */}
+            <div className={`hidden lg:block absolute inset-[-40px] border border-dashed border-gray-300 dark:border-white/5 rounded-full animate-[spin_20s_linear_infinite] ${mounted ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000`}></div>
+            <div className={`hidden lg:block absolute inset-[-20px] border border-neon-purple/20 rounded-full animate-[spin_15s_linear_infinite_reverse] ${mounted ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000 delay-300`}></div>
             
             {/* Center Glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-neon-purple/30 to-blue-500/30 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
             
-            {/* Main Image */}
+            {/* Main Image - Eager Load Priority */}
             <div className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl dark:shadow-[0_0_50px_rgba(0,0,0,0.5)] bg-white dark:bg-[#0A0C11] group-hover:scale-[1.02] transition-transform duration-500">
                 <img 
                   src="https://files.catbox.moe/upp9cw.jpg" 
                   alt="Mohan - Founder" 
+                  loading="eager"
+                  fetchPriority="high"
+                  width={384}
+                  height={384}
                   className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" 
                 />
             </div>
 
             {/* Floating Badge */}
-            <div className="absolute bottom-4 -left-4 md:bottom-8 md:-left-8 bg-white/90 dark:bg-[#0A0C11]/90 backdrop-blur-xl border border-gray-200 dark:border-white/10 p-4 rounded-2xl shadow-xl z-20 animate-float">
+            <div className="absolute bottom-4 -left-4 md:bottom-8 md:-left-8 bg-white/90 dark:bg-[#0A0C11]/90 backdrop-blur-xl border border-gray-200 dark:border-white/10 p-4 rounded-2xl shadow-xl z-20 lg:animate-float">
                <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-purple to-blue-500 flex items-center justify-center text-white font-bold text-xl shadow-lg">M</div>
                   <div>

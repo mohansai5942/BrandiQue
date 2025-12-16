@@ -25,8 +25,19 @@ const Navbar: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
     
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    // Throttled Scroll Handler
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -129,9 +140,9 @@ const Navbar: React.FC = () => {
   return (
     <>
       <header 
-        className={`fixed top-0 z-50 w-full transition-all duration-700 ease-custom 
+        className={`fixed top-0 z-50 w-full transition-all duration-500 ease-custom will-change-transform
           ${scrolled 
-            ? 'bg-white/90 dark:bg-[#05070A]/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-2 md:py-2 lg:py-3 shadow-sm dark:shadow-none' 
+            ? 'bg-white/95 dark:bg-[#05070A]/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-2 shadow-sm' 
             : 'bg-transparent py-3 md:py-4 lg:py-6'
           }`}
       >
@@ -144,17 +155,19 @@ const Navbar: React.FC = () => {
               src="https://files.catbox.moe/th1mpy.png" 
               alt="BrandiQue Web Agency" 
               className="h-[40px] sm:h-[50px] lg:h-[72px] w-auto object-contain transition-all duration-300 block dark:hidden"
+              loading="eager"
             />
             {/* Dark Theme Logo */}
             <img 
               src="https://files.catbox.moe/i0txqw.png" 
               alt="BrandiQue Web Agency" 
               className="h-[40px] sm:h-[50px] lg:h-[72px] w-auto object-contain transition-all duration-300 hidden dark:block"
+              loading="eager"
             />
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-2 p-1.5 rounded-full bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/5 backdrop-blur-md relative z-50 shadow-sm dark:shadow-none transition-colors duration-700">
+          <nav className="hidden lg:flex items-center gap-2 p-1.5 rounded-full bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/5 backdrop-blur-md relative z-50 shadow-sm dark:shadow-none transition-colors duration-500">
              {NAV_ITEMS.map((item) => {
                if (item.hasDropdown) {
                  return (
@@ -177,7 +190,7 @@ const Navbar: React.FC = () => {
                         className={`absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[640px] bg-white dark:bg-[#0A0C11]/90 backdrop-blur-2xl border border-gray-200 dark:border-white/10 rounded-2xl p-4 shadow-2xl transition-all duration-300 origin-top transform 
                         ${isServicesHovered ? 'opacity-100 translate-y-0 visible scale-100' : 'opacity-0 translate-y-4 invisible scale-95 pointer-events-none'}`}
                       >
-                          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#0A0C11]/90 border-t border-l border-gray-200 dark:border-white/10 rotate-45 transition-colors duration-700"></div>
+                          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#0A0C11]/90 border-t border-l border-gray-200 dark:border-white/10 rotate-45 transition-colors duration-500"></div>
                           
                           <div className="grid grid-cols-2 gap-3 relative z-10">
                              {SERVICE_ITEMS.map((service, idx) => (
@@ -202,7 +215,7 @@ const Navbar: React.FC = () => {
                              ))}
                           </div>
                           
-                          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/5 text-center transition-colors duration-700">
+                          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/5 text-center transition-colors duration-500">
                              <Link to="/services" className="text-xs font-bold text-gray-500 hover:text-black dark:hover:text-white uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">
                                 View Overview Page <ArrowRight size={12} />
                              </Link>
@@ -258,10 +271,10 @@ const Navbar: React.FC = () => {
 
       {/* Slide-in Menu */}
       <aside 
-        className={`fixed top-0 right-0 z-[70] h-[100dvh] w-[85%] max-w-[400px] bg-white dark:bg-[#0A0C11] shadow-2xl border-l border-gray-200 dark:border-white/10 transform transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 z-[70] h-[100dvh] w-[85%] max-w-[400px] bg-white dark:bg-[#0A0C11] shadow-2xl border-l border-gray-200 dark:border-white/10 transform transition-transform duration-300 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {/* Header inside Menu */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-white/50 dark:bg-[#0A0C11]/50 backdrop-blur-md sticky top-0 z-10 transition-colors duration-700">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-white/50 dark:bg-[#0A0C11]/50 backdrop-blur-md sticky top-0 z-10 transition-colors duration-500">
            <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">Menu</span>
            <button 
              onClick={() => setIsOpen(false)}
@@ -288,7 +301,7 @@ const Navbar: React.FC = () => {
                       }
                       ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
                     `}
-                    style={{ transitionDelay: `${idx * 50}ms` }}
+                    style={{ transitionDelay: `${Math.min(idx * 30, 150)}ms` }}
                   >
                      <button 
                        onClick={() => setServicesOpen(!servicesOpen)}
@@ -349,7 +362,7 @@ const Navbar: React.FC = () => {
                     }
                     ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
                   `}
-                  style={{ transitionDelay: `${idx * 50}ms` }}
+                  style={{ transitionDelay: `${Math.min(idx * 30, 150)}ms` }}
                 >
                    <div className={`p-2 rounded-lg transition-colors ${active ? 'text-neon-purple bg-neon-purple/10' : 'text-gray-400 bg-gray-100 dark:bg-white/5'}`}>
                       <item.icon size={20} />
@@ -364,7 +377,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Footer Actions inside Menu */}
-        <div className="p-6 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-[#0A0C11]/50 space-y-4 transition-colors duration-700">
+        <div className="p-6 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-[#0A0C11]/50 space-y-4 transition-colors duration-500">
            {/* Theme Toggle */}
            <button 
               onClick={toggleTheme}

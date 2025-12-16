@@ -3,8 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BrandiQue Web Agency - Premium Web Development, Branding, and Digital Marketing Services." />
     <title>BrandiQue Web Agency</title>
     <link rel="icon" type="image/png" href="https://files.catbox.moe/2dzu9q.png" />
+    
+    <!-- Performance: Preconnect to Fonts & CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    
     <script>
       // Immediately check for saved theme preference to prevent FOUC
       try {
@@ -14,7 +22,6 @@
           document.documentElement.classList.remove('dark');
         }
       } catch (e) {
-        // Fallback to dark mode if localStorage is blocked
         document.documentElement.classList.add('dark');
       }
     </script>
@@ -154,12 +161,12 @@
         }
       }
 
-      /* Custom Scrollbar */
+      /* Custom Scrollbar - Optimized width */
       ::-webkit-scrollbar {
-        width: 8px;
+        width: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: transparent;
       }
       html.dark ::-webkit-scrollbar-track {
         background: #0A0C11;
@@ -191,24 +198,33 @@
         -webkit-text-fill-color: transparent;
       }
 
+      /* Performance Optimizations */
       .preserve-3d { transform-style: preserve-3d; }
       .perspective-1000 { perspective: 1000px; }
       .perspective-2000 { perspective: 2000px; }
+      .will-change-transform { will-change: transform; }
+      .will-change-opacity { will-change: opacity; }
       
       /* Smooth loading of images */
       img {
         transition: opacity 0.3s ease-in-out;
       }
 
-      /* --- Mobile Performance Optimizations --- */
+      /* --- Mobile & Tablet Performance Optimizations (< 1024px) --- */
       @media (max-width: 1023px) {
-        /* Disable heavy blur filters to save GPU */
-        .backdrop-blur-xl, .backdrop-blur-md, .backdrop-blur-sm, .glass-morphism {
+        /* Force hardware acceleration for scrolling */
+        body {
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* Aggressively disable heavy effects */
+        .backdrop-blur-xl, .backdrop-blur-md, .backdrop-blur-sm, .glass-morphism, .blur-3xl, .blur-2xl, .blur-xl {
           backdrop-filter: none !important;
           -webkit-backdrop-filter: none !important;
+          filter: none !important;
         }
         
-        /* Fallback solid backgrounds for glass elements */
+        /* Fallback solid backgrounds */
         html.dark .backdrop-blur-xl, 
         html.dark .backdrop-blur-md, 
         html.dark .backdrop-blur-sm,
@@ -222,21 +238,26 @@
           background-color: rgba(255, 255, 255, 0.95) !important;
         }
 
-        /* Disable complex infinite animations on mobile */
-        .animate-float, .animate-float-fast, .animate-blob, .animate-pulse-glow, .animate-spin-slow {
+        /* Disable all non-critical animations */
+        .animate-float, .animate-float-fast, .animate-blob, .animate-pulse-glow, .animate-spin-slow, .animate-gradient-x {
           animation: none !important;
         }
         
-        /* Simplify transitions for snappier feel */
-        * {
-          transition-duration: 200ms !important;
+        /* Reduce shadow complexity */
+        .shadow-2xl, .shadow-xl, .shadow-neon {
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
         }
         
-        /* Flatten 3D transforms on mobile to reduce rendering cost */
+        /* Flatten 3D transforms */
         .preserve-3d {
           transform-style: flat !important;
           perspective: none !important;
           transform: none !important;
+        }
+        
+        /* Optimize transitions */
+        * {
+          transition-duration: 200ms !important;
         }
       }
 
@@ -247,7 +268,6 @@
            animation-play-state: paused !important;
         }
         
-        /* Hint browser for heavy animations in non-hero sections */
         .desktop-optimize-transform {
            will-change: transform, opacity;
         }
@@ -274,10 +294,10 @@
 
       .animate-logo-entrance {
         animation: logoEntrance 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        will-change: transform, opacity, filter;
       }
 
       /* --- Smooth Theme Switch Animation --- */
-      /* Apply smooth transitions to color/background properties globally */
       body, 
       div, 
       span, 
@@ -293,14 +313,14 @@
       textarea,
       select,
       svg {
-        transition-property: background-color, color, border-color, fill, stroke, shadow, background-image;
-        transition-duration: 700ms; /* Polished slow transition for themes */
+        transition-property: background-color, color, border-color, fill, stroke, shadow;
+        transition-duration: 500ms;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       }
       
-      /* Re-enable faster transform transitions for interactive elements to stay snappy */
+      /* Keep interactions snappy */
       .group:hover *, a:hover, button:hover {
-         transition-duration: 300ms; /* Restore hover speed */
+         transition-duration: 200ms;
       }
     </style>
   <script type="importmap">
