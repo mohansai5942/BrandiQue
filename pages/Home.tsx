@@ -33,11 +33,19 @@ const Home: React.FC = () => {
   const [typedCode, setTypedCode] = useState('');
   const [cursorVisible, setCursorVisible] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 1024);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Mouse Parallax Logic
   const handleMouseMove = (e: React.MouseEvent) => {
     // Disable on mobile/tablet to save battery and performance
-    if (window.innerWidth < 1024) return;
+    if (isMobile) return;
     
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
@@ -92,7 +100,7 @@ const Home: React.FC = () => {
       >
          {/* --- Background Elements --- */}
          <div className="absolute inset-0 pointer-events-none -z-10 bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
-             {/* Animated Gradient Blobs - Hidden on Mobile/Tablet */}
+             {/* Animated Gradient Blobs - Hidden on Mobile/Tablet for Performance */}
              <div className="hidden lg:block">
                <div 
                   className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-neon-purple/20 dark:bg-neon-purple/10 rounded-full blur-[150px] animate-pulse-glow transition-transform duration-700 ease-out"
@@ -104,24 +112,26 @@ const Home: React.FC = () => {
                />
              </div>
              
-             {/* Mobile Static Gradient Fallback */}
-             <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-purple-500/10 to-blue-500/10 opacity-30"></div>
+             {/* Mobile Static Gradient Fallback - Simple opacity layer */}
+             <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-purple-500/5 to-blue-500/5 opacity-50"></div>
              
-             {/* Floating Particles - Reduced count / visibility handled by CSS */}
-             <div className="absolute inset-0 overflow-hidden">
-                {[...Array(6)].map((_, i) => (
-                    <div 
-                        key={i}
-                        className="absolute w-1 h-1 bg-white/20 rounded-full animate-float"
-                        style={{
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            animationDuration: `${5 + Math.random() * 5}s`,
-                            animationDelay: `${Math.random() * 2}s`
-                        }}
-                    />
-                ))}
-             </div>
+             {/* Floating Particles - Render ONLY on Desktop */}
+             {!isMobile && (
+                 <div className="absolute inset-0 overflow-hidden">
+                    {[...Array(6)].map((_, i) => (
+                        <div 
+                            key={i}
+                            className="absolute w-1 h-1 bg-white/20 rounded-full animate-float"
+                            style={{
+                                top: `${Math.random() * 100}%`,
+                                left: `${Math.random() * 100}%`,
+                                animationDuration: `${5 + Math.random() * 5}s`,
+                                animationDelay: `${Math.random() * 2}s`
+                            }}
+                        />
+                    ))}
+                 </div>
+             )}
 
              {/* Noise Texture */}
              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
@@ -217,20 +227,20 @@ const Home: React.FC = () => {
             </div>
 
             {/* Right: Advanced 3D Composition - Slide In from Right with Blur */}
-            <div className="relative block h-[350px] sm:h-[400px] md:h-[500px] lg:h-[650px] w-full opacity-0 animate-slide-in-blur order-2" style={{ perspective: '1500px', animationDelay: '400ms', animationFillMode: 'forwards' }}>
+            <div className="relative block h-[350px] sm:h-[400px] md:h-[500px] lg:h-[650px] w-full opacity-0 animate-slide-in-blur order-2" style={{ perspective: isMobile ? 'none' : '1500px', animationDelay: '400ms', animationFillMode: 'forwards' }}>
                 <div 
-                  className="relative w-full h-full transform-3d transition-transform duration-100 ease-linear preserve-3d"
-                  style={{
+                  className={`relative w-full h-full transition-transform duration-100 ease-linear ${!isMobile ? 'transform-3d preserve-3d' : ''}`}
+                  style={!isMobile ? {
                      transform: `rotateY(${mousePos.x * 8}deg) rotateX(${mousePos.y * -8}deg)`
-                  }}
+                  } : {}}
                 >
-                   {/* Center Glow */}
-                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] md:w-[350px] h-[250px] md:h-[350px] bg-gradient-to-tr from-neon-purple/20 to-blue-500/20 rounded-full blur-[80px] md:blur-[100px] -z-10 transform-3d" style={{ transform: 'translateZ(-100px)' }}></div>
+                   {/* Center Glow - Hidden on mobile */}
+                   <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] md:w-[350px] h-[250px] md:h-[350px] bg-gradient-to-tr from-neon-purple/20 to-blue-500/20 rounded-full blur-[80px] md:blur-[100px] -z-10 transform-3d" style={{ transform: 'translateZ(-100px)' }}></div>
 
                    {/* Main Card: Code/Dashboard Interface */}
                    <div 
-                     className="absolute top-[5%] md:top-[10%] left-[2%] md:left-[5%] right-[2%] md:right-[5%] bottom-[10%] md:bottom-[15%] bg-[#0A0C11]/90 backdrop-blur-xl border border-white/10 rounded-xl md:rounded-2xl shadow-2xl overflow-hidden transform-3d group transition-all duration-300 hover:border-white/20"
-                     style={{ transform: 'translateZ(0px)' }}
+                     className={`absolute top-[5%] md:top-[10%] left-[2%] md:left-[5%] right-[2%] md:right-[5%] bottom-[10%] md:bottom-[15%] bg-[#0A0C11]/90 backdrop-blur-xl border border-white/10 rounded-xl md:rounded-2xl shadow-2xl overflow-hidden group transition-all duration-300 hover:border-white/20 ${!isMobile ? 'transform-3d' : ''}`}
+                     style={!isMobile ? { transform: 'translateZ(0px)' } : {}}
                    >
                        {/* Header with Traffic Lights & Copy Button */}
                        <div className="h-8 md:h-10 border-b border-white/5 bg-[#0F1320] flex items-center px-3 md:px-4 justify-between relative">
@@ -280,8 +290,8 @@ const Home: React.FC = () => {
 
                    {/* Floating Element 1: Marketing Stats (Graph) */}
                    <div 
-                     className="absolute top-[15%] md:top-[20%] -right-[2%] w-36 md:w-48 bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 p-3 md:p-4 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] transform-3d animate-float transition-colors duration-300"
-                     style={{ transform: 'translateZ(60px)', animationDelay: '1s' }}
+                     className={`absolute top-[15%] md:top-[20%] -right-[2%] w-36 md:w-48 bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 p-3 md:p-4 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-colors duration-300 ${!isMobile ? 'transform-3d animate-float' : 'shadow-xl'}`}
+                     style={!isMobile ? { transform: 'translateZ(60px)', animationDelay: '1s' } : {}}
                    >
                        <div className="flex justify-between items-start mb-2">
                            <div>
@@ -307,8 +317,8 @@ const Home: React.FC = () => {
 
                    {/* Floating Element 2: Branding Palette */}
                    <div 
-                     className="absolute bottom-[15%] md:bottom-[20%] -left-[2%] md:-left-[5%] bg-white/90 dark:bg-[#0F1320]/90 backdrop-blur-md border border-gray-200 dark:border-white/10 p-2 md:p-3 rounded-lg md:rounded-xl shadow-2xl transform-3d animate-float-fast transition-colors duration-300"
-                     style={{ transform: 'translateZ(40px) rotate(-5deg)', animationDelay: '0.5s' }}
+                     className={`absolute bottom-[15%] md:bottom-[20%] -left-[2%] md:-left-[5%] bg-white/90 dark:bg-[#0F1320]/90 backdrop-blur-md border border-gray-200 dark:border-white/10 p-2 md:p-3 rounded-lg md:rounded-xl shadow-2xl transition-colors duration-300 ${!isMobile ? 'transform-3d animate-float-fast' : ''}`}
+                     style={!isMobile ? { transform: 'translateZ(40px) rotate(-5deg)', animationDelay: '0.5s' } : {}}
                    >
                        <div className="flex items-center gap-2 md:gap-3 mb-2">
                            <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-neon-purple flex items-center justify-center text-white">
@@ -329,10 +339,10 @@ const Home: React.FC = () => {
 
                    {/* Floating Element 3: AI Chip */}
                    <div 
-                     className="absolute top-[2%] md:top-[5%] left-[8%] md:left-[10%] w-12 h-12 md:w-16 md:h-16 bg-[#0A0C11] border border-neon-blue/50 rounded-xl shadow-[0_0_30px_rgba(0,212,255,0.3)] transform-3d flex items-center justify-center animate-pulse-glow"
-                     style={{ transform: 'translateZ(80px)' }}
+                     className={`absolute top-[2%] md:top-[5%] left-[8%] md:left-[10%] w-12 h-12 md:w-16 md:h-16 bg-[#0A0C11] border border-neon-blue/50 rounded-xl shadow-[0_0_30px_rgba(0,212,255,0.3)] flex items-center justify-center ${!isMobile ? 'transform-3d animate-pulse-glow' : ''}`}
+                     style={!isMobile ? { transform: 'translateZ(80px)' } : {}}
                    >
-                       <Hexagon size={24} className="text-neon-blue animate-spin-slow md:w-[32px]" />
+                       <Hexagon size={24} className={`text-neon-blue md:w-[32px] ${!isMobile ? 'animate-spin-slow' : ''}`} />
                        <div className="absolute inset-0 flex items-center justify-center">
                            <span className="text-[6px] md:text-[8px] font-bold text-white">AI</span>
                        </div>
@@ -424,7 +434,7 @@ const Home: React.FC = () => {
       {/* 4. WEB DEV TEASER - Smaller Sections - OPTIMIZED: ViewOptimizer */}
       <ViewOptimizer>
       <section className="px-4 md:px-6 py-12 md:py-12 lg:py-20 bg-gradient-to-b from-gray-100 to-white dark:from-[#0A0C11] dark:to-[#05070A] border-y border-gray-200 dark:border-white/5 relative overflow-hidden transition-colors duration-300">
-         <div className="absolute top-0 right-0 w-[300px] md:w-[400px] lg:w-[600px] h-[300px] md:h-[400px] lg:h-[600px] bg-blue-500/5 rounded-full blur-[80px] md:blur-[100px] lg:blur-[120px] pointer-events-none"></div>
+         <div className="hidden lg:block absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"></div>
          <div className="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-10 md:gap-10 lg:gap-16 items-center">
             <ScrollReveal>
                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-500 dark:text-blue-400 text-[10px] md:text-[10px] lg:text-xs font-bold uppercase tracking-wider mb-4 md:mb-4 lg:mb-6">

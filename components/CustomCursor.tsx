@@ -8,8 +8,11 @@ const CustomCursor: React.FC = () => {
   const [isClicking, setIsClicking] = useState(false);
 
   useEffect(() => {
-    // Only enable on devices with fine pointers (mouse)
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    // Strictly disable on all touch devices and small screens
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth < 1024;
+
+    if (isTouchDevice || isSmallScreen) return;
     
     setIsVisible(true);
 
@@ -51,6 +54,7 @@ const CustomCursor: React.FC = () => {
       setVariant(isInteractive ? 'pointer' : 'default');
     };
 
+    let rafId: number;
     const animateTrailer = () => {
       // Smooth interpolation for the trailer
       const speed = 0.15; // Lower = smoother/laggier
@@ -61,7 +65,7 @@ const CustomCursor: React.FC = () => {
         trailerRef.current.style.transform = `translate3d(${trailerPos.x}px, ${trailerPos.y}px, 0) translate(-50%, -50%)`;
       }
       
-      requestAnimationFrame(animateTrailer);
+      rafId = requestAnimationFrame(animateTrailer);
     };
 
     window.addEventListener('mousemove', onMouseMove);
@@ -69,7 +73,7 @@ const CustomCursor: React.FC = () => {
     window.addEventListener('mouseup', onMouseUp);
     window.addEventListener('mouseover', onMouseOver);
     
-    const rafId = requestAnimationFrame(animateTrailer);
+    rafId = requestAnimationFrame(animateTrailer);
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
