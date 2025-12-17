@@ -13,16 +13,13 @@ const Navbar: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Initialize theme from localStorage
-    const savedTheme = localStorage.getItem('theme');
-    
-    // Default to dark mode unless 'light' is explicitly saved
-    if (savedTheme === 'light') {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    } else {
+    // Initialize theme from localStorage or system preference
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       setIsDark(true);
       document.documentElement.classList.add('dark');
+    } else {
+      setIsDark(false);
+      document.documentElement.classList.remove('dark');
     }
     
     // Throttled Scroll Handler

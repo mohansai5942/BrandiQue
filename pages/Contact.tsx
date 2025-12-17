@@ -3,16 +3,7 @@ import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, C
 import ScrollReveal from '../components/ScrollReveal';
 
 // --- CONFIGURATION ---
-// REPLACE THESE VALUES WITH YOUR GOOGLE FORM ENTRY IDs
-const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScjuNuXGi7nEfCUBUjhG77TdDmUr7cT2jPfnH_MuK7Zas4Zxw/formResponse";
-
-const FORM_ENTRY_IDS = {
-  service: "entry.SERVICE_ID", // Replace with actual Entry ID for 'Service'
-  name: "entry.NAME_ID",       // Replace with actual Entry ID for 'Name'
-  email: "entry.EMAIL_ID",     // Replace with actual Entry ID for 'Email'
-  budget: "entry.BUDGET_ID",   // Replace with actual Entry ID for 'Budget'
-  message: "entry.DETAILS_ID"  // Replace with actual Entry ID for 'Project Details'
-};
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgvgdpng";
 
 const Contact: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -35,28 +26,34 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setFormStatus('submitting');
     
-    // Prepare FormData for Google Forms
-    const data = new FormData();
-    data.append(FORM_ENTRY_IDS.service, selectedService);
-    data.append(FORM_ENTRY_IDS.name, formData.name);
-    data.append(FORM_ENTRY_IDS.email, formData.email);
-    data.append(FORM_ENTRY_IDS.budget, formData.budget);
-    data.append(FORM_ENTRY_IDS.message, formData.message);
-
     try {
-      await fetch(GOOGLE_FORM_ACTION_URL, {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
-        mode: "no-cors", // Important: Prevents CORS errors for Google Forms
-        body: data
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            service: selectedService,
+            name: formData.name,
+            email: formData.email,
+            budget: formData.budget,
+            message: formData.message
+        })
       });
 
-      // Assuming success if no network error occurred (no-cors yields opaque response)
-      setFormStatus('success');
-      setFormData({ name: '', email: '', budget: '', message: '' });
-      setSelectedService('Web Development');
-      
-      // Auto reset after a delay (optional, keeping form clean)
-      setTimeout(() => setFormStatus('idle'), 8000);
+      if (response.ok) {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', budget: '', message: '' });
+        setSelectedService('Web Development');
+        
+        // Auto reset after a delay (optional, keeping form clean)
+        setTimeout(() => setFormStatus('idle'), 8000);
+      } else {
+        console.error("Form error:", response.statusText);
+        alert("There was a problem submitting your form. Please try again.");
+        setFormStatus('idle');
+      }
 
     } catch (error) {
       console.error("Form error:", error);
