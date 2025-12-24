@@ -11,6 +11,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({ children, className = '', d
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Optimization: Low-power check
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -18,7 +19,10 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({ children, className = '', d
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.1, rootMargin: '50px' }
+      { 
+        threshold: 0.05, 
+        rootMargin: '100px 0px' // Pre-reveal slightly before it's actually visible
+      }
     );
 
     if (ref.current) observer.observe(ref.current);
@@ -29,7 +33,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({ children, className = '', d
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 cubic-bezier(0.22, 1, 0.36, 1) will-change-transform transform ${
+      className={`transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) will-change-transform transform ${
         isVisible ? 'opacity-100 translate-y-0 blur-0' : 'opacity-0 translate-y-12 blur-sm'
       } ${className} ${isVisible ? delay : ''}`}
     >

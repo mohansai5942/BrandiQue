@@ -149,14 +149,14 @@ const Navbar: React.FC = () => {
           <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)}>
             {/* Light Theme Logo */}
             <img 
-              src="https://files.catbox.moe/th1mpy.png" 
+              src="https://cdn.imgchest.com/files/dcafd6812298.png" 
               alt="BrandiQue Web Agency" 
               className="h-[40px] sm:h-[50px] lg:h-[72px] w-auto object-contain transition-all duration-300 block dark:hidden"
               loading="eager"
             />
             {/* Dark Theme Logo */}
             <img 
-              src="https://files.catbox.moe/i0txqw.png" 
+              src="https://cdn.imgchest.com/files/fd6fe875bd05.png" 
               alt="BrandiQue Web Agency" 
               className="h-[40px] sm:h-[50px] lg:h-[72px] w-auto object-contain transition-all duration-300 hidden dark:block"
               loading="eager"
