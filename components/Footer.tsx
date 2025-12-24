@@ -31,13 +31,13 @@ const Footer: React.FC = () => {
             <Link to="/" className="flex items-center gap-3 group w-fit">
               {/* Light Theme Logo (Visible in Light Mode) */}
               <img 
-                src="https://files.catbox.moe/th1mpy.png" 
+                src="https://cdn.imgchest.com/files/dcafd6812298.png" 
                 alt="BrandiQue Web Agency" 
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 block dark:hidden" 
               />
               {/* Dark Theme Logo (Visible in Dark Mode) */}
               <img 
-                src="https://files.catbox.moe/i0txqw.png" 
+                src="https://cdn.imgchest.com/files/fd6fe875bd05.png" 
                 alt="BrandiQue Web Agency" 
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 hidden dark:block" 
               />

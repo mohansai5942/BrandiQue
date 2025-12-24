@@ -12,7 +12,10 @@ const CustomCursor: React.FC = () => {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isSmallScreen = window.innerWidth < 1024;
 
-    if (isTouchDevice || isSmallScreen) return;
+    if (isTouchDevice || isSmallScreen) {
+        document.body.style.cursor = 'auto';
+        return;
+    }
     
     setIsVisible(true);
 
@@ -48,7 +51,7 @@ const CustomCursor: React.FC = () => {
         target.closest('a') || 
         target.closest('button') || 
         target.closest('[role="button"]') ||
-        target.closest('.group') || // Often used for cards in this app
+        target.closest('.group') || 
         computedStyle.cursor === 'pointer';
 
       setVariant(isInteractive ? 'pointer' : 'default');
@@ -57,7 +60,7 @@ const CustomCursor: React.FC = () => {
     let rafId: number;
     const animateTrailer = () => {
       // Smooth interpolation for the trailer
-      const speed = 0.15; // Lower = smoother/laggier
+      const speed = 0.2; // Slightly faster for responsiveness
       trailerPos.x += (mousePos.x - trailerPos.x) * speed;
       trailerPos.y += (mousePos.y - trailerPos.y) * speed;
 
@@ -68,10 +71,10 @@ const CustomCursor: React.FC = () => {
       rafId = requestAnimationFrame(animateTrailer);
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mouseup', onMouseUp);
-    window.addEventListener('mouseover', onMouseOver);
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('mousedown', onMouseDown, { passive: true });
+    window.addEventListener('mouseup', onMouseUp, { passive: true });
+    window.addEventListener('mouseover', onMouseOver, { passive: true });
     
     rafId = requestAnimationFrame(animateTrailer);
 
@@ -91,7 +94,7 @@ const CustomCursor: React.FC = () => {
       {/* Inner Cursor - High Precision */}
       <div 
         ref={cursorRef}
-        className={`fixed top-0 left-0 z-[10000] pointer-events-none transition-all duration-200 ease-out mix-blend-difference will-change-transform
+        className={`fixed top-0 left-0 z-[10000] pointer-events-none transition-all duration-150 ease-out mix-blend-difference will-change-transform
           ${variant === 'text' 
             ? 'h-6 w-[2px] bg-white' 
             : 'w-2 h-2 bg-white rotate-45'
@@ -103,7 +106,7 @@ const CustomCursor: React.FC = () => {
       {/* Outer Trailer - Contextual Field */}
       <div 
         ref={trailerRef}
-        className={`fixed top-0 left-0 z-[9999] pointer-events-none flex items-center justify-center will-change-transform transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)]
+        className={`fixed top-0 left-0 z-[9999] pointer-events-none flex items-center justify-center will-change-transform transition-all duration-300 ease-custom
           ${variant === 'text' ? 'opacity-0 scale-50' : 'opacity-100'}
           ${variant === 'pointer' ? 'w-14 h-14' : 'w-10 h-10'}
         `}
@@ -127,7 +130,7 @@ const CustomCursor: React.FC = () => {
            ${variant === 'pointer' ? 'animate-ping opacity-20' : 'opacity-0'}
         `} />
 
-        {/* Click Pulse Ring - Appears when clicking */}
+        {/* Click Pulse Ring */}
          <div className={`absolute inset-0 rounded-full border border-neon-purple transition-all duration-500
            ${isClicking ? 'animate-ping opacity-100 scale-150' : 'opacity-0 scale-100'}
         `} />

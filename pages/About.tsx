@@ -81,12 +81,12 @@ const About: React.FC = () => {
          <div className="absolute bottom-[20%] left-[-10%] w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-[100px]"></div>
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
          
-         {/* Floating Elements - Optimized with ViewOptimizer wrapper effectively via parent container if needed, but handled globally via CSS class if applied */}
+         {/* Floating Elements - Optimized with will-change via global CSS */}
          <div className="absolute top-40 left-10 text-gray-400/20 dark:text-white/5 animate-float delay-700"><Box size={48} /></div>
          <div className="absolute bottom-40 right-10 text-gray-400/20 dark:text-white/5 animate-float delay-1000"><Globe size={64} /></div>
       </div>
 
-      {/* 1. HERO SECTION (Untouched per instructions) */}
+      {/* 1. HERO SECTION */}
       <section className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 mb-24 lg:mb-32 px-4 lg:px-12">
          
          {/* Left: Text Content */}
@@ -163,7 +163,7 @@ const About: React.FC = () => {
          </div>
       </section>
 
-      {/* 2. STATS STRIP - Optimized */}
+      {/* 2. STATS STRIP - Optimized with background-clip and hardware acceleration */}
       <ViewOptimizer>
       <div className="w-full border-y border-gray-200 dark:border-white/5 bg-white/50 dark:bg-[#0A0C11]/50 backdrop-blur-sm mb-24">
          <div className="max-w-[1400px] mx-auto px-6 py-8 flex flex-wrap justify-around gap-8">
@@ -187,7 +187,7 @@ const About: React.FC = () => {
       </div>
       </ViewOptimizer>
 
-      {/* 3. CORE PILLARS GRID (3D TILT) - Optimized */}
+      {/* 3. CORE PILLARS GRID (3D TILT) - Optimized with ViewOptimizer and will-change */}
       <ViewOptimizer>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24 lg:mb-32 px-4 lg:px-8">
          
