@@ -140,7 +140,7 @@ const About: React.FC = () => {
             {/* Main Image - Eager Load Priority */}
             <div className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl dark:shadow-[0_0_50px_rgba(0,0,0,0.5)] bg-white dark:bg-[#0A0C11] group-hover:scale-[1.02] transition-transform duration-500">
                 <img 
-                  src="https://files.catbox.moe/upp9cw.jpg" 
+                  src="https://cdn.imgchest.com/files/3359d7725202.jpg" 
                   alt="Mohan - Founder" 
                   loading="eager"
                   fetchPriority="high"
