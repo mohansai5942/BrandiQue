@@ -97,7 +97,7 @@ const DigitalMarketing: React.FC = () => {
                                           <div className="w-5 h-5 md:w-6 md:h-6 lg:w-8 lg:h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-[1.5px] lg:p-[2px]">
                                               <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-[6px] md:text-[8px] lg:text-[10px] font-bold text-white">BQ</div>
                                           </div>
-                                          <span className="text-[8px] md:text-[10px] lg:text-xs font-bold text-white">brandique_agency</span>
+                                          <span className="text-[8px] md:text-[10px] lg:text-xs font-bold text-white">brandiqueweb</span>
                                       </div>
                                       <div className="w-1 h-3 md:h-4 flex flex-col justify-between items-center opacity-60">
                                           <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-white rounded-full"></div>
@@ -106,37 +106,13 @@ const DigitalMarketing: React.FC = () => {
                                       </div>
                                   </div>
 
-                                  {/* Main Post Content (Copyright Safe Visual) */}
+                                  {/* Main Post Content - Updated with New Image */}
                                   <div className="flex-1 bg-[#050505] relative group cursor-pointer overflow-hidden">
-                                      {/* Custom Digital Abstract Art */}
-                                      <div className="absolute inset-0 w-full h-full">
-                                          <div className="absolute inset-0 bg-gradient-to-bl from-gray-900 via-black to-gray-900"></div>
-                                          
-                                          {/* Decorative Blobs */}
-                                          <div className="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_70%_20%,_rgba(74,222,128,0.15),transparent_50%)]"></div>
-                                          <div className="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_80%,_rgba(168,85,247,0.15),transparent_50%)]"></div>
-                                          
-                                          {/* Abstract Grid/Wave */}
-                                          <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-                                          
-                                          {/* Center Piece: Analysis / Growth Graphic */}
-                                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 md:gap-4">
-                                              {/* Animated Circle */}
-                                              <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24">
-                                                  <div className="absolute inset-0 rounded-full border-2 border-green-500/30 animate-ping" style={{ animationDuration: '3s' }}></div>
-                                                  <div className="absolute inset-2 rounded-full border-2 border-purple-500/30 animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
-                                                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center shadow-2xl">
-                                                      <BarChart size={24} className="text-white md:w-[32px] lg:w-[40px] h-auto" />
-                                                  </div>
-                                              </div>
-                                              
-                                              {/* Post Text Placeholder */}
-                                              <div className="space-y-1.5 md:space-y-2 w-3/4 flex flex-col items-center">
-                                                  <div className="h-1 md:h-1.5 w-1/2 bg-gradient-to-r from-gray-700 to-gray-800 rounded-full"></div>
-                                                  <div className="h-1 md:h-1.5 w-2/3 bg-gradient-to-r from-gray-800 to-gray-700 rounded-full"></div>
-                                              </div>
-                                          </div>
-                                      </div>
+                                      <img 
+                                          src="https://cdn.imgchest.com/files/63bb11beb595.jpg" 
+                                          alt="Social Post Content" 
+                                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                      />
 
                                       {/* Popping Heart Animation */}
                                       <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 z-20 ${showHeart ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}>
@@ -171,7 +147,7 @@ const DigitalMarketing: React.FC = () => {
                                           {likes.toLocaleString()} insights
                                       </div>
                                       <div className="text-[8px] md:text-[10px] lg:text-xs text-gray-300">
-                                          <span className="font-bold text-white mr-1">brandique_agency</span>
+                                          <span className="font-bold text-white mr-1">brandiqueweb</span>
                                           Boosting your brand's digital presence 🚀 <span className="text-blue-400">#marketing #growth</span>
                                       </div>
                                   </div>
