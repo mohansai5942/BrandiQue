@@ -1,20 +1,23 @@
+
 import React from 'react';
 
-export interface NavLink {
-  label: string;
-  path: string;
-  icon?: React.ReactNode;
-}
+// Define the available categories for prompt filtering and creation
+export type CategoryType = 'All' | 'Men' | 'Women' | 'Couple';
 
-export type CategoryType = 'All' | 'Men' | 'Women' | 'Couple' | string;
-
+// Define the Prompt interface used throughout the application
 export interface Prompt {
   id: string;
   title: string;
   description: string;
   promptText: string;
   imageUrl: string;
-  category: string;
+  category: 'Men' | 'Women' | 'Couple';
   likes: number;
   style?: string;
+}
+
+export interface NavLink {
+  label: string;
+  path: string;
+  icon?: React.ReactNode;
 }
