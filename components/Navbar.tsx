@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight } from 'lucide-react';
+import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,6 +95,7 @@ const Navbar: React.FC = () => {
     { label: 'Home', path: '/', icon: Home },
     { label: 'Services', path: '/services', icon: Layers, hasDropdown: true },
     { label: 'Web Development', path: '/web-development', icon: Code },
+    { label: 'AI Prompts', path: 'https://creator.brandique.in/', icon: Sparkles, isExternal: true },
     { label: 'About', path: '/about', icon: Info },
     { label: 'Contact', path: '/contact', icon: Mail },
   ];
@@ -221,6 +222,21 @@ const Navbar: React.FC = () => {
                    </div>
                  );
                }
+               
+               if (item.isExternal) {
+                 return (
+                   <a 
+                     key={item.path} 
+                     href={item.path} 
+                     target="_blank" 
+                     rel="noopener noreferrer" 
+                     className={navLinkClasses(item.path)}
+                   >
+                     {item.label}
+                   </a>
+                 );
+               }
+
                return (
                  <Link key={item.path} to={item.path} className={navLinkClasses(item.path)}>{item.label}</Link>
                );
@@ -344,6 +360,31 @@ const Navbar: React.FC = () => {
                         </Link>
                      </div>
                   </div>
+                );
+              }
+
+              if (item.isExternal) {
+                return (
+                  <a 
+                    key={item.path} 
+                    href={item.path} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-4 p-3 rounded-xl transition-all duration-300 border border-transparent
+                      hover:bg-gray-50 dark:hover:bg-white/5 active:scale-[0.98]
+                      ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
+                    `}
+                    style={{ transitionDelay: `${Math.min(idx * 30, 150)}ms` }}
+                  >
+                     <div className={`p-2 rounded-lg transition-colors text-gray-400 bg-gray-100 dark:bg-white/5`}>
+                        <item.icon size={20} />
+                     </div>
+                     <span className={`text-base font-bold text-gray-600 dark:text-gray-300`}>
+                        {item.label}
+                     </span>
+                     <ExternalLink size={14} className="ml-auto text-gray-400 opacity-50" />
+                  </a>
                 );
               }
 
