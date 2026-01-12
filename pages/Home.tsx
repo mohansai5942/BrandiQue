@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Trophy, Rocket, Clock, LayoutTemplate, Play, Code, PenTool, Megaphone, Zap, Cpu, Copy, Command, BarChart3, Fingerprint, Search, Globe, Layers, Hexagon } from 'lucide-react';
+// Added 'Check' to the lucide-react imports to fix the undefined name error
+import { ArrowRight, Trophy, Rocket, Clock, LayoutTemplate, Play, Code, PenTool, Megaphone, Zap, Cpu, Copy, Command, BarChart3, Fingerprint, Search, Globe, Layers, Hexagon, ShieldCheck, ZapIcon, Target, Check } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import TextReveal from '../components/TextReveal';
 import SpotlightCard from '../components/SpotlightCard';
@@ -44,9 +46,7 @@ const Home: React.FC = () => {
 
   // Mouse Parallax Logic
   const handleMouseMove = (e: React.MouseEvent) => {
-    // Disable on mobile/tablet to save battery and performance
     if (isMobile) return;
-    
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -91,16 +91,14 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col pb-0 overflow-x-hidden bg-gray-50 dark:bg-[#05070A] relative text-gray-900 dark:text-white transition-colors duration-300">
       
-      {/* 1. HERO SECTION (Stacked on Mobile, Side-by-Side on Desktop) */}
+      {/* 1. HERO SECTION */}
       <section 
         ref={heroRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="relative flex items-center justify-center pt-28 pb-12 md:pt-36 md:pb-16 lg:pt-36 lg:pb-32 w-full overflow-hidden min-h-[90vh] md:min-h-0 lg:min-h-[95vh]"
       >
-         {/* --- Background Elements --- */}
          <div className="absolute inset-0 pointer-events-none -z-10 bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
-             {/* Animated Gradient Blobs - Hidden on Mobile/Tablet for Performance */}
              <div className="hidden lg:block">
                <div 
                   className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-neon-purple/20 dark:bg-neon-purple/10 rounded-full blur-[150px] animate-pulse-glow transition-transform duration-700 ease-out"
@@ -111,11 +109,7 @@ const Home: React.FC = () => {
                   style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)` }}
                />
              </div>
-             
-             {/* Mobile Static Gradient Fallback - Simple opacity layer */}
              <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-purple-500/5 to-blue-500/5 opacity-50"></div>
-             
-             {/* Floating Particles - Render ONLY on Desktop */}
              {!isMobile && (
                  <div className="absolute inset-0 overflow-hidden">
                     {[...Array(6)].map((_, i) => (
@@ -132,20 +126,12 @@ const Home: React.FC = () => {
                     ))}
                  </div>
              )}
-
-             {/* Noise Texture */}
              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
-             
-             {/* Futuristic Grid */}
              <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
          </div>
 
-         {/* Grid layout: Stacked on Mobile (grid-cols-1), Side-by-Side on Tablet/Desktop (md:grid-cols-2) */}
          <div className="max-w-[1400px] w-full mx-auto px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6 lg:gap-12 items-center z-10 perspective-2000">
-            
-            {/* Left: Content - Text Content First on Mobile */}
             <div className="space-y-6 md:space-y-8 relative z-20 text-left order-1">
-                {/* Badge */}
                 <div className="opacity-0 animate-fade-in flex justify-start" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                    <div className="inline-flex items-center gap-2 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-md hover:bg-gray-100 dark:hover:bg-white/10 transition-all cursor-default group shadow-sm dark:shadow-[0_0_15px_rgba(0,0,0,0.2)]">
                       <div className="relative flex h-1.5 w-1.5 md:h-2 md:h-2">
@@ -156,7 +142,6 @@ const Home: React.FC = () => {
                    </div>
                 </div>
 
-                {/* Heading - Vertical Clip Reveal with Rotating Text */}
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.1] text-gray-900 dark:text-white min-h-[3.3em] md:min-h-[auto]">
                    <div className="overflow-hidden pb-2 md:pb-4">
                       <span className="block animate-reveal-text origin-bottom" style={{ animationDelay: '50ms' }}>We Architect</span>
@@ -177,7 +162,6 @@ const Home: React.FC = () => {
                    </div>
                 </h1>
 
-                {/* Subheadline - Letter by letter fade slide */}
                 <div className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm md:text-base lg:text-xl max-w-lg leading-relaxed font-light border-l-2 border-gray-300 dark:border-white/10 pl-4 md:pl-5">
                    <TextReveal 
                      text="Merging code, creativity, and strategy to build digital experiences that define the future." 
@@ -186,9 +170,7 @@ const Home: React.FC = () => {
                    />
                 </div>
 
-                {/* CTAs */}
                 <div className="flex flex-wrap gap-3 md:gap-4 pt-2 md:pt-4 justify-start">
-                    {/* Primary CTA: Hover Beam & Morph */}
                     <Link 
                       to="/services" 
                       className="relative group overflow-hidden px-5 py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-sm lg:text-base hover:scale-105 transition-transform duration-300 shadow-lg dark:shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center gap-2 animate-fade-up opacity-0"
@@ -196,13 +178,11 @@ const Home: React.FC = () => {
                     >
                        <div className="absolute inset-0 bg-gradient-to-r from-neon-purple to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                        <div className="absolute -inset-[100%] top-0 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine" />
-                       
                        <span className="relative z-10 flex items-center gap-2">
                          Start Project <ArrowRight size={16} className="md:w-[18px]" />
                        </span>
                     </Link>
 
-                    {/* Secondary CTA: Neon Outline Hover */}
                     <Link 
                       to="/web-development" 
                       className="px-5 py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-4 rounded-full border border-gray-300 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-gray-900 dark:text-white font-bold text-xs md:text-sm lg:text-base transition-all duration-300 flex items-center gap-2 group hover:border-neon-blue hover:shadow-[0_0_15px_rgba(0,212,255,0.4)] animate-fade-up opacity-0"
@@ -212,8 +192,7 @@ const Home: React.FC = () => {
                     </Link>
                 </div>
                 
-                {/* Metrics - Staggered Fade Up */}
-                 <div className="hidden sm:flex pt-4 items-center gap-6 md:gap-8 border-t border-gray-200 dark:border-white/5 justify-start w-auto">
+                 <div className="hidden sm:flex pt-4 items-center gap-6 md:gap-8 border-t border-gray-200 dark:border-white/10 justify-start w-auto">
                     <div className="opacity-0 animate-fade-up" style={{ animationDelay: '700ms', animationFillMode: 'forwards' }}>
                         <div className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-0.5 flex items-center gap-2">100+ <Rocket size={14} className="md:w-[16px] text-neon-purple" /></div>
                         <div className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider">Projects Launched</div>
@@ -226,7 +205,6 @@ const Home: React.FC = () => {
                  </div>
             </div>
 
-            {/* Right: Advanced 3D Composition - Slide In from Right with Blur */}
             <div className="relative block h-[350px] sm:h-[400px] md:h-[500px] lg:h-[650px] w-full opacity-0 animate-slide-in-blur order-2" style={{ perspective: isMobile ? 'none' : '1500px', animationDelay: '400ms', animationFillMode: 'forwards' }}>
                 <div 
                   className={`relative w-full h-full transition-transform duration-100 ease-linear ${!isMobile ? 'transform-3d preserve-3d' : ''}`}
@@ -234,38 +212,27 @@ const Home: React.FC = () => {
                      transform: `rotateY(${mousePos.x * 8}deg) rotateX(${mousePos.y * -8}deg)`
                   } : {}}
                 >
-                   {/* Center Glow - Hidden on mobile */}
                    <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] md:w-[350px] h-[250px] md:h-[350px] bg-gradient-to-tr from-neon-purple/20 to-blue-500/20 rounded-full blur-[80px] md:blur-[100px] -z-10 transform-3d" style={{ transform: 'translateZ(-100px)' }}></div>
-
-                   {/* Main Card: Code/Dashboard Interface */}
                    <div 
                      className={`absolute top-[5%] md:top-[10%] left-[2%] md:left-[5%] right-[2%] md:right-[5%] bottom-[10%] md:bottom-[15%] bg-[#0A0C11]/90 backdrop-blur-xl border border-white/10 rounded-xl md:rounded-2xl shadow-2xl overflow-hidden group transition-all duration-300 hover:border-white/20 ${!isMobile ? 'transform-3d' : ''}`}
                      style={!isMobile ? { transform: 'translateZ(0px)' } : {}}
                    >
-                       {/* Header with Traffic Lights & Copy Button */}
                        <div className="h-8 md:h-10 border-b border-white/5 bg-[#0F1320] flex items-center px-3 md:px-4 justify-between relative">
                            <div className="flex gap-1.5 md:gap-2">
                                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500/80"></div>
                                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-500/80"></div>
                                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500/80"></div>
                            </div>
-                           
-                           {/* Filename centered */}
                            <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-50">
                               <Command size={10} className="text-white md:w-[12px]" />
                               <span className="text-[8px] md:text-[10px] text-white font-mono">brandique.config.ts</span>
                            </div>
-
-                           {/* Copy Button with Pulsing Glow */}
                            <button className="group/copy relative p-1 md:p-1.5 rounded-md hover:bg-white/5 transition-colors cursor-pointer">
                                <Copy size={12} className="text-gray-500 group-hover/copy:text-white transition-colors relative z-10 md:w-[14px]" />
                                <div className="absolute inset-0 bg-neon-purple/80 rounded-md blur-[8px] opacity-0 group-hover/copy:opacity-100 group-hover/copy:animate-pulse transition-opacity"></div>
                            </button>
                        </div>
-                       
-                       {/* IDE Content */}
                        <div className="p-4 md:p-6 grid grid-cols-4 gap-4 h-full">
-                           {/* Sidebar */}
                            <div className="col-span-1 border-r border-white/5 pr-2 hidden sm:block">
                                <div className="flex flex-col gap-3 md:gap-4 text-gray-500">
                                    <Layers size={16} className="text-neon-purple md:w-[18px]" />
@@ -274,8 +241,6 @@ const Home: React.FC = () => {
                                    <Globe size={16} className="md:w-[18px]" />
                                </div>
                            </div>
-                           
-                           {/* Code Area */}
                            <div className="col-span-4 sm:col-span-3 font-mono text-[10px] md:text-xs lg:text-sm leading-relaxed relative">
                                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0A0C11] pointer-events-none opacity-50"></div>
                                <pre className="text-gray-300">
@@ -287,10 +252,8 @@ const Home: React.FC = () => {
                            </div>
                        </div>
                    </div>
-
-                   {/* Floating Element 1: Marketing Stats (Graph) */}
                    <div 
-                     className={`absolute top-[15%] md:top-[20%] -right-[2%] w-36 md:w-48 bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 p-3 md:p-4 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-colors duration-300 ${!isMobile ? 'transform-3d animate-float' : 'shadow-xl'}`}
+                     className={`absolute top-[15%] md:top-[20%] -right-[2%] w-36 md:w-48 bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 p-3 md:p-4 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-300 ${!isMobile ? 'transform-3d animate-float' : 'shadow-xl'}`}
                      style={!isMobile ? { transform: 'translateZ(60px)', animationDelay: '1s' } : {}}
                    >
                        <div className="flex justify-between items-start mb-2">
@@ -302,7 +265,6 @@ const Home: React.FC = () => {
                                <BarChart3 size={12} className="md:w-[16px]" />
                            </div>
                        </div>
-                       {/* Animated Bars */}
                        <div className="flex items-end gap-1 h-8 md:h-12 justify-between">
                            {[40, 70, 50, 90, 60, 80].map((h, i) => (
                                <div key={i} className="w-full bg-green-500/20 rounded-t-sm relative overflow-hidden h-full">
@@ -314,10 +276,8 @@ const Home: React.FC = () => {
                            ))}
                        </div>
                    </div>
-
-                   {/* Floating Element 2: Branding Palette */}
                    <div 
-                     className={`absolute bottom-[15%] md:bottom-[20%] -left-[2%] md:-left-[5%] bg-white/90 dark:bg-[#0F1320]/90 backdrop-blur-md border border-gray-200 dark:border-white/10 p-2 md:p-3 rounded-lg md:rounded-xl shadow-2xl transition-colors duration-300 ${!isMobile ? 'transform-3d animate-float-fast' : ''}`}
+                     className={`absolute bottom-[15%] md:bottom-[20%] -left-[2%] md:-left-[5%] bg-white/90 dark:bg-[#0F1320]/90 backdrop-blur-md border border-gray-200 dark:border-white/10 p-2 md:p-3 rounded-lg md:rounded-xl shadow-2xl transition-all duration-300 ${!isMobile ? 'transform-3d animate-float-fast' : ''}`}
                      style={!isMobile ? { transform: 'translateZ(40px) rotate(-5deg)', animationDelay: '0.5s' } : {}}
                    >
                        <div className="flex items-center gap-2 md:gap-3 mb-2">
@@ -336,8 +296,6 @@ const Home: React.FC = () => {
                            <div className="w-4 h-4 md:w-6 md:h-6 rounded-full bg-black dark:bg-white shadow-sm"></div>
                        </div>
                    </div>
-
-                   {/* Floating Element 3: AI Chip */}
                    <div 
                      className={`absolute top-[2%] md:top-[5%] left-[8%] md:left-[10%] w-12 h-12 md:w-16 md:h-16 bg-[#0A0C11] border border-neon-blue/50 rounded-xl shadow-[0_0_30px_rgba(0,212,255,0.3)] flex items-center justify-center ${!isMobile ? 'transform-3d animate-pulse-glow' : ''}`}
                      style={!isMobile ? { transform: 'translateZ(80px)' } : {}}
@@ -347,14 +305,78 @@ const Home: React.FC = () => {
                            <span className="text-[6px] md:text-[8px] font-bold text-white">AI</span>
                        </div>
                    </div>
-
                 </div>
             </div>
-
          </div>
       </section>
 
-      {/* 2. QUICK STATS - Reduced Size & Padding - OPTIMIZED: ViewOptimizer */}
+      {/* 2. SEO INFORMATIONAL SECTION (New Content for AdSense) */}
+      <section className="px-4 md:px-6 py-16 md:py-24 bg-white dark:bg-[#0A0C11]/50 relative z-20">
+        <div className="max-w-5xl mx-auto space-y-12">
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">Empowering Your Business Through Digital Excellence</h2>
+              <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed max-w-3xl mx-auto">
+                At BrandiQue Web Agency, we specialize in bridging the gap between sophisticated technology and impactful business goals. Our agency is a dedicated hub for high-end web development, creative branding, and results-driven digital marketing.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            <ScrollReveal className="space-y-6" delay="delay-100">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <Target className="text-neon-purple" /> Our Core Mission
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Our mission is simple: to help businesses scale in the modern digital landscape. We believe that a website should be more than just a digital brochure; it should be a powerful engine that drives leads, builds trust, and solidifies your brand authority. Whether you are an individual creator, a rising startup, or an established enterprise, we provide the tools and expertise to build an extraordinary online presence.
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                By leveraging cutting-edge frameworks like React and Next.js, along with robust content management systems like WordPress, we ensure your digital storefront is fast, secure, and infinitely scalable. We don't just write code; we architect solutions tailored to your unique market challenges.
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal className="space-y-6" delay="delay-200">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <ShieldCheck className="text-neon-blue" /> Why Choose BrandiQue?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                In a world full of generic templates, BrandiQue stands out by offering bespoke digital craftsmanship. We prioritize user experience (UX) and performance above all else. Every line of code is optimized for lightning-fast load times, and every visual element is designed to reflect your brand's core values.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <div className="mt-1 w-5 h-5 rounded-full bg-neon-purple/20 text-neon-purple flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300"><strong>Performance-First:</strong> We optimize for Core Web Vitals to ensure top-tier SEO rankings and user satisfaction.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="mt-1 w-5 h-5 rounded-full bg-neon-purple/20 text-neon-purple flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300"><strong>End-to-End Solutions:</strong> From initial wireframing and brand identity to post-launch marketing and maintenance.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="mt-1 w-5 h-5 rounded-full bg-neon-purple/20 text-neon-purple flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300"><strong>Innovative Tech:</strong> Integration of AI-driven features and modern animations to keep you ahead of the curve.</span>
+                </li>
+              </ul>
+            </ScrollReveal>
+          </div>
+
+          <ScrollReveal delay="delay-300">
+            <div className="bg-gray-100 dark:bg-white/5 p-8 rounded-3xl border border-gray-200 dark:border-white/10 mt-12">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">A Holistic Approach to Digital Growth</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-center max-w-4xl mx-auto leading-relaxed">
+                Digital success isn't just about having a pretty website. It's about a consistent visual identity that spans social media, a marketing strategy that reaches your ideal customers, and a technical foundation that never fails. At BrandiQue, we integrate these three pillars—Development, Branding, and Marketing—to create a seamless journey for your clients. We understand that your success is our success, which is why we offer dedicated support and transparent progress tracking throughout every project lifecycle.
+              </p>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* 3. QUICK STATS */}
       <ViewOptimizer>
       <section className="px-3 md:px-6 pb-10 md:pb-12 lg:pb-20 max-w-[1200px] mx-auto w-full -mt-6 md:-mt-8 lg:-mt-10 relative z-20">
          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
@@ -375,7 +397,7 @@ const Home: React.FC = () => {
       </section>
       </ViewOptimizer>
 
-      {/* 3. SERVICES HUB - Compact on Mobile - OPTIMIZED: ViewOptimizer */}
+      {/* 4. SERVICES HUB */}
       <ViewOptimizer>
       <section id="services-hub" className="px-4 md:px-6 py-12 md:py-12 lg:py-24 max-w-[1400px] mx-auto w-full">
          <div className="text-center mb-10 md:mb-12 lg:mb-16">
@@ -431,7 +453,7 @@ const Home: React.FC = () => {
       </section>
       </ViewOptimizer>
 
-      {/* 4. WEB DEV TEASER - Smaller Sections - OPTIMIZED: ViewOptimizer */}
+      {/* 5. WEB DEV TEASER */}
       <ViewOptimizer>
       <section className="px-4 md:px-6 py-12 md:py-12 lg:py-20 bg-gradient-to-b from-gray-100 to-white dark:from-[#0A0C11] dark:to-[#05070A] border-y border-gray-200 dark:border-white/5 relative overflow-hidden transition-colors duration-300">
          <div className="hidden lg:block absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"></div>
@@ -488,7 +510,7 @@ const Home: React.FC = () => {
       </section>
       </ViewOptimizer>
 
-      {/* 5. ABOUT / PROCESS TEASER - Small - OPTIMIZED: ViewOptimizer */}
+      {/* 6. ABOUT / PROCESS TEASER */}
       <ViewOptimizer>
       <section className="px-4 md:px-6 py-12 md:py-12 lg:py-20 bg-gray-100 dark:bg-[#0F1320]/30 border-t border-gray-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-[1000px] mx-auto text-center">
@@ -511,7 +533,7 @@ const Home: React.FC = () => {
                ))}
             </div>
 
-            <Link to="/about" className="text-xs md:text-xs lg:text-sm font-bold text-neon-purple hover:text-black dark:hover:text-white transition-colors uppercase tracking-widest border-b border-neon-purple/30 pb-1 hover:border-black dark:hover:border-white">
+            <Link to="/about" className="text-xs md:text-xs lg:text-sm font-bold text-neon-purple hover:text-black dark:hover:text-white transition-colors uppercase tracking-widest border-b border-neon-purple/30 pb-1 hover:border-black dark:hover:text-white">
                Read Our Story
             </Link>
          </div>
