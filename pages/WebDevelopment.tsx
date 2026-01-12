@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Shield, MessageCircle, Star, ArrowRight, Clock, Lock, Sparkles, Zap, LayoutTemplate, ChevronDown, ChevronUp, Globe, Server, Code, Palette, Smartphone, Search, Database, Trophy, Rocket } from 'lucide-react';
+import { Check, Shield, MessageCircle, Star, ArrowRight, Clock, Lock, Sparkles, Zap, LayoutTemplate, ChevronDown, ChevronUp, Globe, Server, Code, Palette, Smartphone, Search, Database, Trophy, Rocket, Target, ShieldCheck } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
 
@@ -225,6 +225,37 @@ const WebDevelopment = () => {
         </ScrollReveal>
       </section>
 
+      {/* --- INFORMATIONAL NARRATIVE (AdSense Content) --- */}
+      <section className="px-4 py-12 md:py-20 max-w-4xl mx-auto bg-white dark:bg-[#0A0C11]/50 rounded-[40px] border border-gray-200 dark:border-white/10 mb-24 relative z-20">
+        <ScrollReveal className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Why Professional Web Development is Critical for Your Success</h2>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm md:text-lg">
+              In today's digital-first economy, your website is your most valuable employee. It works 24/7, handles your first impressions, and serves as your central hub for customer conversion. At BrandiQue, we don't believe in cutting corners. While DIY website builders might seem attractive, they often lack the performance, security, and SEO foundation required for real growth. Our starter kits are designed to solve this problem by providing custom-coded, expert-level web solutions at an accessible price point.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <Target className="text-neon-purple" /> Strategic Engineering
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+                We approach web development through a lens of strategy. Every feature we implement is designed to move your business forward. We focus on 'Core Web Vitals' to ensure Google rewards your site with higher rankings, and we use modern frameworks like Next.js to provide a sub-second load experience that delights your users.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <ShieldCheck className="text-neon-blue" /> Scalable Foundations
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+                Our websites are built to grow with you. Whether you're starting with a simple personal landing page or a complex business portal, our clean code ensures that adding new features in the future is a seamless process. We handle the technical heavy lifting—hosting, domain setup, and security—so you can focus on your business.
+              </p>
+            </div>
+          </div>
+        </ScrollReveal>
+      </section>
+
       {/* --- PRICE COMPARISON SECTION --- */}
       <section className="px-0 md:px-0 mb-16 md:mb-24 lg:mb-32 relative z-20">
          <ScrollReveal>
@@ -232,15 +263,12 @@ const WebDevelopment = () => {
                
                {/* Box 1: Personal */}
                <div className="relative bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 rounded-2xl p-6 group hover:-translate-y-2 transition-all duration-300 shadow-xl dark:shadow-[0_0_30px_rgba(34,197,94,0.15)] overflow-hidden flex flex-col">
-                  {/* Green Theme */}
                   <div className="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-gray-100 dark:bg-white/5 backdrop-blur-md border-b border-x border-gray-200 dark:border-white/10 px-3 py-1 rounded-b-lg text-[10px] font-bold uppercase tracking-wider text-green-600 dark:text-green-400 w-max z-10">
                      Best for Individuals
                   </div>
-                  
                   <div className="mt-8 space-y-4 md:space-y-5 relative z-10 flex-1">
                      <h3 className="text-xl md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white text-center">Personal Website</h3>
-                     
                      <div className="bg-gray-100 dark:bg-black/40 rounded-xl p-4 border border-gray-200 dark:border-white/5">
                         <div className="flex justify-between text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">
                            <span>Real Market Price</span>
@@ -251,39 +279,25 @@ const WebDevelopment = () => {
                            <span className="text-green-500 dark:text-green-400 text-xl md:text-xl lg:text-2xl font-bold drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">₹9,000</span>
                         </div>
                      </div>
-                     
                      <div className="flex items-center justify-between text-xs">
                          <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400 font-bold bg-green-500/10 px-2 py-1 rounded-lg">
                             <Check size={12} /> Save 47%
                          </div>
-                         <div className="flex gap-1">
-                            <Check size={14} className="text-green-500/50" />
-                            <Check size={14} className="text-green-500/50" />
-                         </div>
                      </div>
                   </div>
-
-                  {/* CTA Button */}
                   <div className="mt-6 relative z-10">
-                      <button 
-                        onClick={() => scrollToId('personal')}
-                        className="w-full py-2.5 md:py-2.5 lg:py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs md:text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2 group/btn"
-                      >
-                        View More Details <ChevronDown size={14} className="group-hover/btn:translate-y-1 transition-transform" />
-                      </button>
+                      <button onClick={() => scrollToId('personal')} className="w-full py-2.5 md:py-2.5 lg:py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs md:text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2 group/btn">View More Details <ChevronDown size={14} className="group-hover/btn:translate-y-1 transition-transform" /></button>
                   </div>
                </div>
 
-               {/* Box 2: Portfolio - Purple Glow */}
+               {/* Box 2: Portfolio */}
                <div className="relative bg-white dark:bg-[#0F1320] border border-neon-purple/30 rounded-2xl p-6 group hover:-translate-y-2 transition-all duration-300 shadow-xl dark:shadow-[0_0_20px_rgba(176,38,255,0.15)] hover:shadow-2xl dark:hover:shadow-[0_0_40px_rgba(176,38,255,0.3)] overflow-hidden flex flex-col">
                   <div className="absolute inset-0 bg-neon-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-neon-purple/10 dark:bg-neon-purple/20 backdrop-blur-md border-b border-x border-neon-purple/30 px-3 py-1 rounded-b-lg text-[10px] font-bold uppercase tracking-wider text-neon-purple w-max z-10">
                      Perfect for Creators
                   </div>
-
                   <div className="mt-8 space-y-4 md:space-y-5 relative z-10 flex-1">
                      <h3 className="text-xl md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white text-center">Portfolio Website</h3>
-                     
                      <div className="bg-gray-100 dark:bg-black/40 rounded-xl p-4 border border-neon-purple/20">
                         <div className="flex justify-between text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">
                            <span>Real Market Price</span>
@@ -294,34 +308,24 @@ const WebDevelopment = () => {
                            <span className="text-neon-purple text-xl md:text-xl lg:text-2xl font-bold drop-shadow-[0_0_10px_rgba(176,38,255,0.5)]">₹9,000</span>
                         </div>
                      </div>
-
                      <div className="flex items-center justify-between text-xs">
                          <div className="flex items-center gap-1.5 text-neon-purple font-bold bg-neon-purple/10 px-2 py-1 rounded-lg">
                             <Trophy size={12} /> Save 55%
                          </div>
                      </div>
                   </div>
-
-                  {/* CTA Button */}
                   <div className="mt-6 relative z-10">
-                      <button 
-                        onClick={() => scrollToId('portfolio')}
-                        className="w-full py-2.5 md:py-2.5 lg:py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs md:text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2 group/btn"
-                      >
-                        View More Details <ChevronDown size={14} className="group-hover/btn:translate-y-1 transition-transform" />
-                      </button>
+                      <button onClick={() => scrollToId('portfolio')} className="w-full py-2.5 md:py-2.5 lg:py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs md:text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2 group/btn">View More Details <ChevronDown size={14} className="group-hover/btn:translate-y-1 transition-transform" /></button>
                   </div>
                </div>
 
-               {/* Box 3: Business - Neon Border */}
+               {/* Box 3: Business */}
                <div className="relative bg-white dark:bg-[#0F1320] border border-neon-blue rounded-2xl p-6 group hover:-translate-y-2 transition-all duration-300 shadow-xl dark:shadow-[0_0_30px_rgba(0,212,255,0.2)] overflow-hidden flex flex-col">
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-neon-blue/10 dark:bg-neon-blue/20 backdrop-blur-md border-b border-x border-neon-blue/30 px-3 py-1 rounded-b-lg text-[10px] font-bold uppercase tracking-wider text-neon-blue w-max z-10">
                      Best for Agencies
                   </div>
-
                   <div className="mt-8 space-y-4 md:space-y-5 relative z-10 flex-1">
                      <h3 className="text-xl md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white text-center">Business Website</h3>
-                     
                      <div className="bg-gray-100 dark:bg-black/40 rounded-xl p-4 border border-neon-blue/20">
                         <div className="flex justify-between text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">
                            <span>Real Market Price</span>
@@ -332,38 +336,26 @@ const WebDevelopment = () => {
                            <span className="text-neon-blue text-xl md:text-xl lg:text-2xl font-bold drop-shadow-[0_0_10px_rgba(0,212,255,0.5)]">₹10,999</span>
                         </div>
                      </div>
-
                      <div className="flex items-center justify-between text-xs">
                          <div className="flex items-center gap-1.5 text-neon-blue font-bold bg-neon-blue/10 px-2 py-1 rounded-lg">
                             <Zap size={12} /> Save 63%
                          </div>
                      </div>
                   </div>
-
-                  {/* CTA Button */}
                   <div className="mt-6 relative z-10">
-                      <button 
-                        onClick={() => scrollToId('business')}
-                        className="w-full py-2.5 md:py-2.5 lg:py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs md:text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2 group/btn"
-                      >
-                        View More Details <ChevronDown size={14} className="group-hover/btn:translate-y-1 transition-transform" />
-                      </button>
+                      <button onClick={() => scrollToId('business')} className="w-full py-2.5 md:py-2.5 lg:py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs md:text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2 group/btn">View More Details <ChevronDown size={14} className="group-hover/btn:translate-y-1 transition-transform" /></button>
                   </div>
                </div>
 
-               {/* Box 4: E-Commerce - Premium Gradient */}
+               {/* Box 4: E-Commerce */}
                <div className="relative bg-white dark:bg-[#0F1320] p-[1px] rounded-2xl group hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col shadow-xl dark:shadow-none">
-                  {/* Gradient Border */}
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-2xl opacity-70 group-hover:opacity-100 transition-opacity"></div>
-                  
                   <div className="relative bg-white dark:bg-[#0F1320] h-full rounded-[15px] p-6 flex flex-col flex-1">
                      <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 backdrop-blur-md border-b border-x border-orange-500/30 px-3 py-1 rounded-b-lg text-[10px] font-bold uppercase tracking-wider text-orange-500 dark:text-orange-400 w-max z-10">
                         Sell Online Fast
                      </div>
-
                      <div className="mt-8 space-y-4 md:space-y-5 relative z-10 flex-1">
                         <h3 className="text-xl md:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-600 dark:from-yellow-400 dark:to-orange-500 text-center">E-Commerce</h3>
-                        
                         <div className="bg-gray-100 dark:bg-black/40 rounded-xl p-4 border border-orange-500/20">
                            <div className="flex justify-between text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">
                               <span>Real Market Price</span>
@@ -374,26 +366,17 @@ const WebDevelopment = () => {
                               <span className="text-orange-500 dark:text-orange-400 text-xl md:text-xl lg:text-2xl font-bold drop-shadow-[0_0_10px_rgba(251,146,60,0.5)]">₹28,999</span>
                            </div>
                         </div>
-
                         <div className="flex items-center justify-between text-xs">
                             <div className="flex items-center gap-1.5 text-orange-500 dark:text-orange-400 font-bold bg-orange-500/10 px-2 py-1 rounded-lg">
                                <Rocket size={12} /> Save 68%
                             </div>
                         </div>
                      </div>
-
-                      {/* CTA Button */}
                       <div className="mt-6 relative z-10">
-                          <button 
-                            onClick={() => scrollToId('ecommerce')}
-                            className="w-full py-2.5 md:py-2.5 lg:py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs md:text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2 group/btn"
-                          >
-                            View More Details <ChevronDown size={14} className="group-hover/btn:translate-y-1 transition-transform" />
-                          </button>
+                          <button onClick={() => scrollToId('ecommerce')} className="w-full py-2.5 md:py-2.5 lg:py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs md:text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2 group/btn">View More Details <ChevronDown size={14} className="group-hover/btn:translate-y-1 transition-transform" /></button>
                       </div>
                   </div>
                </div>
-
             </div>
          </ScrollReveal>
       </section>
@@ -403,7 +386,6 @@ const WebDevelopment = () => {
           {SERVICES.map((service, idx) => (
              <section key={service.id} id={service.id} className="scroll-mt-24 md:scroll-mt-32">
                  <ScrollReveal>
-                    {/* Header */}
                     <div className="flex flex-col md:flex-row gap-4 md:gap-6 md:items-end justify-between mb-6 md:mb-8 border-b border-gray-200 dark:border-white/5 pb-6 md:pb-8">
                        <div>
                           <div className={`inline-flex items-center gap-2 mb-2 md:mb-3 text-${service.theme}-500 dark:text-${service.theme}-400 font-bold`}>
@@ -420,15 +402,10 @@ const WebDevelopment = () => {
                           <p className={`text-3xl md:text-3xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${service.gradient}`}>
                              ₹{service.price}
                           </p>
-                          <p className="text-[10px] md:text-[10px] lg:text-xs text-gray-500 mt-1 md:mt-2">Limited slots at this price</p>
                        </div>
                     </div>
-
                     <div className="grid lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
-                       
-                       {/* Left: Specs & Pricing */}
                        <div className="lg:col-span-1 space-y-6 md:space-y-8">
-                           {/* Breakdown Box */}
                            <div className="bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg dark:shadow-none">
                               <h3 className="text-gray-900 dark:text-white font-bold mb-3 md:mb-4 flex items-center gap-2 text-sm md:text-sm lg:text-base">
                                  <Server size={14} className="text-gray-400 md:w-[18px]" /> Cost Breakdown
@@ -442,8 +419,6 @@ const WebDevelopment = () => {
                                  ))}
                               </div>
                            </div>
-
-                           {/* Timeline Box */}
                            <div className="bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg dark:shadow-none">
                               <h3 className="text-gray-900 dark:text-white font-bold mb-2 flex items-center gap-2 text-sm md:text-sm lg:text-base">
                                  <Clock size={14} className="text-gray-400 md:w-[18px]" /> Estimated Timeline
@@ -451,30 +426,13 @@ const WebDevelopment = () => {
                               <p className={`text-xl md:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${service.gradient}`}>
                                  {service.timeline}
                               </p>
-                              <p className="text-[10px] md:text-[10px] lg:text-xs text-gray-500 mt-2">From assets receipt to launch</p>
-                           </div>
-
-                           {/* Add-ons */}
-                           <div className="bg-gray-100 dark:bg-[#0F1320]/50 border border-gray-200 dark:border-white/5 rounded-xl md:rounded-2xl p-4 md:p-6">
-                              <h3 className="text-gray-500 dark:text-gray-300 font-bold mb-3 md:mb-4 text-xs md:text-xs lg:text-sm uppercase tracking-wider">Optional Add-ons</h3>
-                              <div className="space-y-2 md:space-y-3">
-                                 {service.addons.map((addon, i) => (
-                                    <div key={i} className="flex justify-between items-center text-[10px] md:text-xs lg:text-sm">
-                                       <span className="text-gray-500 dark:text-gray-400">{addon.name}</span>
-                                       <span className="text-gray-900 dark:text-white font-mono">{addon.price}</span>
-                                    </div>
-                                 ))}
-                              </div>
                            </div>
                        </div>
-
-                       {/* Center: Deliverables */}
                        <div className="lg:col-span-2">
                           <h3 className="text-lg md:text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6 flex items-center gap-2">
                              <Check size={16} className={`text-${service.theme}-500 dark:text-${service.theme}-400 md:w-[20px]`} /> 
                              Core Deliverables
                           </h3>
-                          
                           <div className="grid md:grid-cols-2 gap-3 md:gap-4 mb-8 md:mb-10">
                              {service.deliverables.map((item, i) => (
                                 <div key={i} className="flex items-start gap-3 p-3 md:p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors shadow-sm dark:shadow-none">
@@ -485,22 +443,17 @@ const WebDevelopment = () => {
                                 </div>
                              ))}
                           </div>
-
                           <h3 className="text-lg md:text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6 flex items-center gap-2">
                              <MessageCircle size={16} className="text-gray-400 md:w-[20px]" /> 
                              Frequently Asked Questions
                           </h3>
-
                           <div className="space-y-3 md:space-y-4 mb-8 md:mb-10">
                              {service.faqs.map((faq, i) => {
                                 const faqId = `${service.key}-${i}`;
                                 const isOpen = activeFAQ === faqId;
                                 return (
                                    <div key={i} className="border border-gray-200 dark:border-white/10 rounded-xl bg-white dark:bg-[#0F1320] overflow-hidden shadow-sm dark:shadow-none">
-                                      <button 
-                                         onClick={() => toggleFAQ(faqId)}
-                                         className="w-full flex items-center justify-between p-3 md:p-4 text-left hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                                      >
+                                      <button onClick={() => toggleFAQ(faqId)} className="w-full flex items-center justify-between p-3 md:p-4 text-left hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                          <span className="text-xs md:text-xs lg:text-sm font-bold text-gray-800 dark:text-gray-200">{faq.q}</span>
                                          {isOpen ? <ChevronUp size={14} className="text-gray-500 md:w-[16px]" /> : <ChevronDown size={14} className="text-gray-500 md:w-[16px]" />}
                                       </button>
@@ -513,31 +466,11 @@ const WebDevelopment = () => {
                                 );
                              })}
                           </div>
-
-                          {/* Action Row */}
                           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-6 border-t border-gray-200 dark:border-white/5">
-                             <a 
-                                href="https://wa.me/917093320572?text=Hi%20I%20want%20a%20website%20quote" 
-                                target="_blank" 
-                                rel="noreferrer"
-                                className={`px-6 py-3 md:px-5 md:py-3 lg:px-8 lg:py-4 rounded-xl font-bold text-white shadow-lg flex-1 text-center hover:scale-[1.02] transition-transform bg-gradient-to-r text-xs md:text-xs lg:text-base ${service.gradient}`}
-                             >
-                                Claim This Plan
-                             </a>
-                             <Link 
-                                to="/contact" 
-                                className="px-6 py-3 md:px-5 md:py-3 lg:px-8 lg:py-4 rounded-xl font-bold text-gray-900 dark:text-white border border-gray-300 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 flex-1 text-center transition-colors text-xs md:text-xs lg:text-base"
-                             >
-                                Request Custom Quote
-                             </Link>
+                             <a href="https://wa.me/917093320572?text=Hi%20I%20want%20a%20website%20quote" target="_blank" rel="noreferrer" className={`px-6 py-3 md:px-5 md:py-3 lg:px-8 lg:py-4 rounded-xl font-bold text-white shadow-lg flex-1 text-center hover:scale-[1.02] transition-transform bg-gradient-to-r text-xs md:text-xs lg:text-base ${service.gradient}`}>Claim This Plan</a>
+                             <Link to="/contact" className="px-6 py-3 md:px-5 md:py-3 lg:px-8 lg:py-4 rounded-xl font-bold text-gray-900 dark:text-white border border-gray-300 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 flex-1 text-center transition-colors text-xs md:text-xs lg:text-base">Request Custom Quote</Link>
                           </div>
-                          
-                          <p className="text-center sm:text-left text-[10px] text-gray-500 mt-4 flex items-center gap-1.5 justify-center sm:justify-start">
-                             <Shield size={10} /> 
-                             All websites fully custom-coded — No templates. Limited slots available.
-                          </p>
                        </div>
-
                     </div>
                  </ScrollReveal>
              </section>
