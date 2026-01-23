@@ -28,7 +28,11 @@ const Footer: React.FC = () => {
           
           {/* Brand Column (Spans 2 columns on lg screens) */}
           <ScrollReveal className="col-span-2 lg:col-span-2 space-y-4 md:space-y-4 lg:space-y-6 pr-4 md:pr-4 lg:pr-8" delay="delay-100">
-            <Link to="/" className="flex items-center gap-3 group w-fit">
+            <Link 
+              to="/" 
+              className="flex items-center gap-3 group w-fit"
+              onContextMenu={(e) => e.preventDefault()}
+            >
               {/* Light Theme Logo (Visible in Light Mode) */}
               <img 
                 src="https://cdn.imgchest.com/files/dcafd6812298.png" 

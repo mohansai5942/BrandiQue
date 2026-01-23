@@ -147,7 +147,12 @@ const Navbar: React.FC = () => {
         <div className="max-w-[1600px] mx-auto px-4 md:px-6 flex items-center justify-between relative">
           
           {/* Logo Area with Animation */}
-          <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)}>
+          <Link 
+            to="/" 
+            className="flex items-center gap-3 group relative z-50 animate-logo-entrance" 
+            onClick={() => setIsOpen(false)}
+            onContextMenu={(e) => e.preventDefault()}
+          >
             {/* Light Theme Logo */}
             <img 
               src="https://cdn.imgchest.com/files/dcafd6812298.png" 

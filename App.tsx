@@ -11,7 +11,6 @@ import FullStack from './pages/services/FullStack';
 import WordPress from './pages/services/WordPress';
 import Branding from './pages/services/Branding';
 import DigitalMarketing from './pages/services/DigitalMarketing';
-import CustomCursor from './components/CustomCursor';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import CookiePolicy from './pages/CookiePolicy';
@@ -31,7 +30,6 @@ const App: React.FC = () => {
   return (
     <HashRouter>
       <ScrollToTop />
-      <CustomCursor />
       <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white selection:bg-neon-purple selection:text-white transition-colors duration-300">
         <Navbar />
         
