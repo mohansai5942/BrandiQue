@@ -152,13 +152,6 @@
         color: #ffffff;
       }
       
-      /* Hide cursor on fine pointer devices (desktop) */
-      @media (pointer: fine) {
-        body, a, button, input, select, textarea, [role="button"] {
-          cursor: none !important;
-        }
-      }
-
       /* Custom Scrollbar - Optimized width */
       ::-webkit-scrollbar {
         width: 6px;
@@ -208,21 +201,18 @@
         transition: opacity 0.3s ease-in-out;
       }
 
-      /* --- Mobile & Tablet Performance Optimizations (< 1024px) --- */
+      /* --- Mobile & Tablet Performance Optimizations --- */
       @media (max-width: 1023px) {
-        /* Force hardware acceleration for scrolling */
         body {
           -webkit-overflow-scrolling: touch;
         }
 
-        /* Aggressively disable heavy effects */
         .backdrop-blur-xl, .backdrop-blur-md, .backdrop-blur-sm, .glass-morphism, .blur-3xl, .blur-2xl, .blur-xl {
           backdrop-filter: none !important;
           -webkit-backdrop-filter: none !important;
           filter: none !important;
         }
         
-        /* Fallback solid backgrounds */
         html.dark .backdrop-blur-xl, 
         html.dark .backdrop-blur-md, 
         html.dark .backdrop-blur-sm,
@@ -236,24 +226,20 @@
           background-color: rgba(255, 255, 255, 0.95) !important;
         }
 
-        /* Disable all non-critical animations */
         .animate-float, .animate-float-fast, .animate-blob, .animate-pulse-glow, .animate-spin-slow, .animate-gradient-x {
           animation: none !important;
         }
         
-        /* Reduce shadow complexity */
         .shadow-2xl, .shadow-xl, .shadow-neon {
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
         }
         
-        /* Flatten 3D transforms */
         .preserve-3d {
           transform-style: flat !important;
           perspective: none !important;
           transform: none !important;
         }
         
-        /* Optimize transitions */
         * {
           transition-duration: 200ms !important;
         }
@@ -261,7 +247,6 @@
 
       /* --- Desktop Performance Optimizations --- */
       @media (min-width: 1024px) {
-        /* Pause animations when off-screen via ViewOptimizer class */
         .desktop-off-screen * {
            animation-play-state: paused !important;
         }
@@ -316,7 +301,6 @@
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       }
       
-      /* Keep interactions snappy */
       .group:hover *, a:hover, button:hover {
          transition-duration: 200ms;
       }
