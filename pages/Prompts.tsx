@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Sparkles, LayoutGrid, Grid, X } from 'lucide-react';
+import { Search, Sparkles, LayoutGrid, Grid, X, Info } from 'lucide-react';
 import PromptCard from '../components/PromptCard';
 import ScrollReveal from '../components/ScrollReveal';
 import PromptModal from '../components/PromptModal';
@@ -43,9 +43,15 @@ const Prompts: React.FC = () => {
                Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-black dark:via-white to-neon-blue animate-gradient-x bg-[length:200%_auto]">Inspiration</span>
              </h1>
              
-             <p className="text-gray-600 dark:text-gray-400 text-sm md:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed font-light">
-               A curated collection of high-fidelity image prompts for Midjourney, ChatGPT, and Gemini. Ready to be copied and used for your next project.
-             </p>
+             <div className="text-gray-600 dark:text-gray-400 text-sm md:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed font-light space-y-4">
+               <p>
+                 A curated collection of high-fidelity image prompts for Midjourney, ChatGPT, and Gemini. Ready to be copied and used for your next digital art project. Our library features premium visual directions across Men, Women, and Couple categories, ensuring you have the perfect command for any creative requirement.
+               </p>
+               <p className="text-xs md:text-sm font-medium border-t border-gray-200 dark:border-white/5 pt-4 flex items-center justify-center gap-2">
+                 <Info size={14} className="text-neon-purple" />
+                 Each prompt is optimized for modern diffusion models to deliver consistent, photorealistic, and stylistically coherent results.
+               </p>
+             </div>
          </ScrollReveal>
       </div>
 
