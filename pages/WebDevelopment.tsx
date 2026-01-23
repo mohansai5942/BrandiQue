@@ -225,36 +225,6 @@ const WebDevelopment = () => {
         </ScrollReveal>
       </section>
 
-      {/* --- INFORMATIONAL NARRATIVE (AdSense Content) --- */}
-      <section className="px-4 py-12 md:py-20 max-w-4xl mx-auto bg-white dark:bg-[#0A0C11]/50 rounded-[40px] border border-gray-200 dark:border-white/10 mb-24 relative z-20">
-        <ScrollReveal className="space-y-8">
-          <div className="text-center">
-            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Why Professional Web Development is Critical for Your Success</h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm md:text-lg">
-              In today's digital-first economy, your website is your most valuable employee. It works 24/7, handles your first impressions, and serves as your central hub for customer conversion. At BrandiQue, we don't believe in cutting corners. While DIY website builders might seem attractive, they often lack the performance, security, and SEO foundation required for real growth. Our starter kits are designed to solve this problem by providing custom-coded, expert-level web solutions at an accessible price point.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Target className="text-neon-purple" /> Strategic Engineering
-              </h3>
-              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
-                We approach web development through a lens of strategy. Every feature we implement is designed to move your business forward. We focus on 'Core Web Vitals' to ensure Google rewards your site with higher rankings, and we use modern frameworks like Next.js to provide a sub-second load experience that delights your users.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <ShieldCheck className="text-neon-blue" /> Scalable Foundations
-              </h3>
-              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
-                Our websites are built to grow with you. Whether you're starting with a simple personal landing page or a complex business portal, our clean code ensures that adding new features in the future is a seamless process. We handle the technical heavy lifting—hosting, domain setup, and security—so you can focus on your business.
-              </p>
-            </div>
-          </div>
-        </ScrollReveal>
-      </section>
 
       {/* --- PRICE COMPARISON SECTION --- */}
       <section className="px-0 md:px-0 mb-16 md:mb-24 lg:mb-32 relative z-20">
@@ -380,6 +350,38 @@ const WebDevelopment = () => {
             </div>
          </ScrollReveal>
       </section>
+
+            {/* --- INFORMATIONAL NARRATIVE (AdSense Content) --- */}
+      <section className="px-4 py-12 md:py-20 max-w-4xl mx-auto bg-white dark:bg-[#0A0C11]/50 rounded-[40px] border border-gray-200 dark:border-white/10 mb-24 relative z-20">
+        <ScrollReveal className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Why Professional Web Development is Critical for Your Success</h2>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm md:text-lg">
+              In today's digital-first economy, your website is your most valuable employee. It works 24/7, handles your first impressions, and serves as your central hub for customer conversion. At BrandiQue, we don't believe in cutting corners. While DIY website builders might seem attractive, they often lack the performance, security, and SEO foundation required for real growth. Our starter kits are designed to solve this problem by providing custom-coded, expert-level web solutions at an accessible price point.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <Target className="text-neon-purple" /> Strategic Engineering
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+                We approach web development through a lens of strategy. Every feature we implement is designed to move your business forward. We focus on 'Core Web Vitals' to ensure Google rewards your site with higher rankings, and we use modern frameworks like Next.js to provide a sub-second load experience that delights your users.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <ShieldCheck className="text-neon-blue" /> Scalable Foundations
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+                Our websites are built to grow with you. Whether you're starting with a simple personal landing page or a complex business portal, our clean code ensures that adding new features in the future is a seamless process. We handle the technical heavy lifting—hosting, domain setup, and security—so you can focus on your business.
+              </p>
+            </div>
+          </div>
+        </ScrollReveal>
+      </section>
+
 
       {/* --- DETAILED BREAKDOWN SECTIONS --- */}
       <div className="space-y-16 md:space-y-24 lg:space-y-32 relative z-10">
