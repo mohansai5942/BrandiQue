@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Sparkles, Grid, LayoutGrid, X } from 'lucide-react';
+import { Search, Sparkles, Grid, LayoutGrid, X, Info } from 'lucide-react';
 import PromptCard from '../components/PromptCard';
 import ScrollReveal from '../components/ScrollReveal';
 import PromptModal from '../components/PromptModal';
@@ -52,13 +52,19 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ category }) => {
                {category === 'All' ? (
                  <>Curated <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-black dark:via-white to-neon-blue animate-gradient-x bg-[length:200%_auto]">Masterpieces</span></>
                ) : (
-                 <>{category} <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-gradient-x bg-[length:200%_auto]">Edition</span></>
+                 <>{category} <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-black dark:via-white to-neon-blue animate-gradient-x bg-[length:200%_auto]">Edition</span></>
                )}
              </h1>
              
-             <p className="text-gray-600 dark:text-gray-400 text-sm md:text-sm lg:text-xl max-w-2xl mx-auto leading-relaxed font-light animate-fade-up delay-200">
-               Explore high-fidelity image prompts for ChatGPT & Gemini Nano Banana. Copy with one click and unleash your creativity.
-             </p>
+             <div className="text-gray-600 dark:text-gray-400 text-sm md:text-sm lg:text-xl max-w-2xl mx-auto leading-relaxed font-light animate-fade-up delay-200 space-y-4">
+               <p>
+                 Discover our dedicated {category} collection, featuring the most effective image prompts for leading AI generative models. Whether you are using ChatGPT's DALL-E, Midjourney, or Google's latest Gemini models, these prompts provide the precise technical direction needed to generate high-quality art.
+               </p>
+               <p className="text-xs md:text-sm font-medium border-t border-gray-200 dark:border-white/5 pt-4 flex items-center justify-center gap-2">
+                 <Info size={14} className="text-neon-purple" />
+                 This collection focuses on {category}-specific visual styles, ensuring consistent character portrayal and environmental context for your projects.
+               </p>
+             </div>
          </ScrollReveal>
       </div>
 

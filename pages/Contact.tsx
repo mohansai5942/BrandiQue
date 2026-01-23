@@ -69,7 +69,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-28 md:pt-36 pb-20 px-4 md:px-6 max-w-[1600px] mx-auto w-full relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen pt-28 md:pt-36 pb-20 px-4 md:px-6 max-w-[1500px] mx-auto w-full relative overflow-hidden transition-colors duration-300">
       
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none -z-10 bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
@@ -99,7 +99,7 @@ const Contact: React.FC = () => {
            </ScrollReveal>
 
            <ScrollReveal delay="delay-100" className="space-y-4 mb-10">
-              {/* Contact Cards (Email, Phone, Location) - Keeping existing design for left side */}
+              {/* Contact Cards */}
               <div className="group relative bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 hover:border-neon-purple/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(176,38,255,0.1)] hover:-translate-y-1">
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
   <head>
@@ -29,15 +30,18 @@
         darkMode: 'class',
         theme: {
           extend: {
+            screens: {
+              'lg': '768px', // Force desktop layout starting from tablet width
+            },
             colors: {
               navy: {
-                900: '#05070A', // Darker base
+                900: '#05070A', 
                 800: '#0A0C11',
                 700: '#12151C',
                 card: 'rgba(255, 255, 255, 0.02)',
               },
               neon: {
-                purple: '#B026FF', // More vibrant
+                purple: '#B026FF', 
                 blue: '#00D4FF',
                 pink: '#FF2E93',
               },
@@ -48,7 +52,7 @@
               mono: ['Fira Code', 'monospace'],
             },
             transitionTimingFunction: {
-              'custom': 'cubic-bezier(0.16, 1, 0.3, 1)', // Ultra smooth
+              'custom': 'cubic-bezier(0.16, 1, 0.3, 1)', 
               'bounce-custom': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
             },
             backgroundImage: {
@@ -146,13 +150,54 @@
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
       }
+
+      /* MOBILE SPECIFIC SIZE REDUCTION (Under 768px) */
+      @media (max-width: 767px) {
+        html {
+          font-size: 11px; /* Global scale-down of all rem units */
+        }
+        
+        /* Reduce Massive Headings in Hero */
+        .text-4xl { font-size: 2.5rem !important; }
+        .text-5xl { font-size: 3rem !important; }
+        
+        /* Reduce General Section Spacing on Mobile */
+        section { 
+          padding-top: 2rem !important; 
+          padding-bottom: 2rem !important; 
+        }
+        
+        /* Specific override for hero to maintain some stature but more compact */
+        section.pt-24 { 
+          padding-top: 6rem !important; 
+          padding-bottom: 3rem !important;
+          min-height: auto !important;
+        }
+
+        /* Shrink Margin/Gaps */
+        .mb-16 { margin-bottom: 2rem !important; }
+        .mb-24 { margin-bottom: 3rem !important; }
+        .gap-12 { gap: 1.5rem !important; }
+        .gap-16 { gap: 2rem !important; }
+      }
+
+      /* TABLET/SMALL DESKTOP RANGE (768px to 1200px) */
+      @media (min-width: 768px) and (max-width: 1200px) {
+        html {
+          font-size: 13px; 
+        }
+        .text-8xl { font-size: 4rem !important; line-height: 1.1 !important; }
+        .text-7xl { font-size: 3.5rem !important; }
+        .text-6xl { font-size: 3rem !important; }
+        .text-5xl { font-size: 2.5rem !important; }
+        section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+      }
       
       html.dark body {
         background: #05070A;
         color: #ffffff;
       }
       
-      /* Custom Scrollbar - Optimized width */
       ::-webkit-scrollbar {
         width: 6px;
       }
@@ -189,90 +234,27 @@
         -webkit-text-fill-color: transparent;
       }
 
-      /* Performance Optimizations */
       .preserve-3d { transform-style: preserve-3d; }
       .perspective-1000 { perspective: 1000px; }
       .perspective-2000 { perspective: 2000px; }
       .will-change-transform { will-change: transform; }
       .will-change-opacity { will-change: opacity; }
       
-      /* Smooth loading of images */
       img {
         transition: opacity 0.3s ease-in-out;
       }
 
-      /* --- Mobile & Tablet Performance Optimizations --- */
-      @media (max-width: 1023px) {
-        body {
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .backdrop-blur-xl, .backdrop-blur-md, .backdrop-blur-sm, .glass-morphism, .blur-3xl, .blur-2xl, .blur-xl {
-          backdrop-filter: none !important;
-          -webkit-backdrop-filter: none !important;
-          filter: none !important;
-        }
-        
-        html.dark .backdrop-blur-xl, 
-        html.dark .backdrop-blur-md, 
-        html.dark .backdrop-blur-sm,
-        html.dark .glass-morphism {
-          background-color: rgba(10, 12, 17, 0.95) !important;
-        }
-        html:not(.dark) .backdrop-blur-xl, 
-        html:not(.dark) .backdrop-blur-md, 
-        html:not(.dark) .backdrop-blur-sm,
-        html:not(.dark) .glass-morphism {
-          background-color: rgba(255, 255, 255, 0.95) !important;
-        }
-
-        .animate-float, .animate-float-fast, .animate-blob, .animate-pulse-glow, .animate-spin-slow, .animate-gradient-x {
-          animation: none !important;
-        }
-        
-        .shadow-2xl, .shadow-xl, .shadow-neon {
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
-        }
-        
-        .preserve-3d {
-          transform-style: flat !important;
-          perspective: none !important;
-          transform: none !important;
-        }
-        
-        * {
-          transition-duration: 200ms !important;
-        }
-      }
-
-      /* --- Desktop Performance Optimizations --- */
-      @media (min-width: 1024px) {
-        .desktop-off-screen * {
-           animation-play-state: paused !important;
-        }
-        
+      /* Desktop transitions adjusted for new tablet-as-desktop logic */
+      @media (min-width: 768px) {
         .desktop-optimize-transform {
            will-change: transform, opacity;
         }
       }
 
-      /* --- Logo Entrance Animation --- */
       @keyframes logoEntrance {
-        0% {
-          opacity: 0;
-          transform: scale(0.95) translateY(2px);
-          filter: brightness(1.5) blur(4px);
-        }
-        30% {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-          filter: brightness(1.1) blur(0px);
-        }
-        100% {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-          filter: brightness(1) blur(0px);
-        }
+        0% { opacity: 0; transform: scale(0.95) translateY(2px); filter: brightness(1.5) blur(4px); }
+        30% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1.1) blur(0px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1.1) blur(0px); }
       }
 
       .animate-logo-entrance {
@@ -280,22 +262,7 @@
         will-change: transform, opacity, filter;
       }
 
-      /* --- Smooth Theme Switch Animation --- */
-      body, 
-      div, 
-      span, 
-      header,
-      footer,
-      section,
-      article,
-      main,
-      nav,
-      a, 
-      button, 
-      input, 
-      textarea,
-      select,
-      svg {
+      body, div, span, header, footer, section, article, main, nav, a, button, input, textarea, select, svg {
         transition-property: background-color, color, border-color, fill, stroke, shadow;
         transition-duration: 500ms;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
