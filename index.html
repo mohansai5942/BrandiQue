@@ -31,7 +31,7 @@
         theme: {
           extend: {
             screens: {
-              'lg': '768px', 
+              'lg': '768px', // Force desktop layout starting from tablet width
             },
             colors: {
               navy: {
@@ -151,28 +151,34 @@
         overflow-x: hidden;
       }
 
-      /* REFINED MOBILE SPACING */
+      /* MOBILE SPECIFIC SIZE REDUCTION (Under 768px) */
       @media (max-width: 767px) {
         html {
-          font-size: 14px; /* Set back to a more readable "normal" size */
+          font-size: 11px; /* Global scale-down of all rem units */
         }
         
-        .text-4xl { font-size: 2.25rem !important; }
-        .text-5xl { font-size: 2.75rem !important; }
+        /* Reduce Massive Headings in Hero */
+        .text-4xl { font-size: 2.5rem !important; }
+        .text-5xl { font-size: 3rem !important; }
         
+        /* Reduce General Section Spacing on Mobile */
         section { 
-          padding-top: 3.5rem !important; 
-          padding-bottom: 3.5rem !important; 
+          padding-top: 2rem !important; 
+          padding-bottom: 2rem !important; 
         }
         
+        /* Specific override for hero to maintain some stature but more compact */
         section.pt-24 { 
-          padding-top: 7rem !important; 
-          padding-bottom: 4rem !important;
+          padding-top: 6rem !important; 
+          padding-bottom: 3rem !important;
+          min-height: auto !important;
         }
 
-        /* Navbar & Footer normal sizes */
-        header { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
-        footer { padding-top: 3rem !important; padding-bottom: 2rem !important; }
+        /* Shrink Margin/Gaps */
+        .mb-16 { margin-bottom: 2rem !important; }
+        .mb-24 { margin-bottom: 3rem !important; }
+        .gap-12 { gap: 1.5rem !important; }
+        .gap-16 { gap: 2rem !important; }
       }
 
       /* TABLET/SMALL DESKTOP RANGE (768px to 1200px) */
@@ -238,6 +244,13 @@
         transition: opacity 0.3s ease-in-out;
       }
 
+      /* Desktop transitions adjusted for new tablet-as-desktop logic */
+      @media (min-width: 768px) {
+        .desktop-optimize-transform {
+           will-change: transform, opacity;
+        }
+      }
+
       @keyframes logoEntrance {
         0% { opacity: 0; transform: scale(0.95) translateY(2px); filter: brightness(1.5) blur(4px); }
         30% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1.1) blur(0px); }
@@ -247,6 +260,16 @@
       .animate-logo-entrance {
         animation: logoEntrance 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         will-change: transform, opacity, filter;
+      }
+
+      body, div, span, header, footer, section, article, main, nav, a, button, input, textarea, select, svg {
+        transition-property: background-color, color, border-color, fill, stroke, shadow;
+        transition-duration: 500ms;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .group:hover *, a:hover, button:hover {
+         transition-duration: 200ms;
       }
     </style>
 <script type="importmap">
