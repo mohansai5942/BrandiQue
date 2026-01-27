@@ -14,6 +14,11 @@ import DigitalMarketing from './pages/services/DigitalMarketing';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import CookiePolicy from './pages/CookiePolicy';
+import Prompts from './pages/Prompts';
+import CategoryPage from './pages/CategoryPage';
+import Login from './pages/Login';
+import Admin from './pages/Admin';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
@@ -36,10 +41,15 @@ const App: React.FC = () => {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/web-development" element={<WebDevelopment />} />
+            
+            {/* Prompts Section */}
+            <Route path="/ai-prompts" element={<Prompts />} />
+            <Route path="/men" element={<CategoryPage category="Men" />} />
+            <Route path="/women" element={<CategoryPage category="Women" />} />
+            <Route path="/couple" element={<CategoryPage category="Couple" />} />
             
             {/* Service Routes */}
             <Route path="/services" element={<Services />} />
@@ -48,12 +58,20 @@ const App: React.FC = () => {
             <Route path="/services/branding" element={<Branding />} />
             <Route path="/services/digital-marketing" element={<DigitalMarketing />} />
 
+            {/* Admin & Auth */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            } />
+
             {/* Legal Pages */}
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             
-            {/* Catch-all route: Redirects any unknown paths to Home */}
+            {/* Catch-all route */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

@@ -81,6 +81,17 @@ const WebDevelopment = () => {
             </p>
         </ScrollReveal>
       </section>
+      
+<div className="my-10">
+  <ins
+    className="adsbygoogle"
+    style={{ display: "block" }}
+    data-ad-format="fluid"
+    data-ad-layout-key="-ef+6k-30-ac+ty"
+    data-ad-client="ca-pub-9587188804206049"
+    data-ad-slot="2366860495"
+  ></ins>
+</div>
 
       {/* 2. PRICING GRID */}
       <section id="pricing" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-32">
