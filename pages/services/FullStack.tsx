@@ -160,6 +160,29 @@ const FullStack: React.FC = () => {
   ></ins>
 </div>
 
+{/* ===== In-Article Ad ===== */}
+<div className="my-10 flex justify-center">
+  <ins
+    className="adsbygoogle"
+    style={{ display: "block", textAlign: "center" }}
+    data-ad-layout="in-article"
+    data-ad-format="fluid"
+    data-ad-client="ca-pub-9587188804206049"
+    data-ad-slot="9328856681"
+  />
+</div>
+
+{/* ===== Auto-relaxed Ad ===== */}
+<div className="my-10 flex justify-center">
+  <ins
+    className="adsbygoogle"
+    style={{ display: "block" }}
+    data-ad-format="autorelaxed"
+    data-ad-client="ca-pub-9587188804206049"
+    data-ad-slot="2426738115"
+  />
+</div>
+
             <div className="mb-20 md:mb-24 lg:mb-32">
                <ScrollReveal>
                   <div className="text-center mb-10 md:mb-16">
