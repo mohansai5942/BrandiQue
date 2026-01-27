@@ -381,6 +381,18 @@ const Home: React.FC = () => {
             </section>
          </ViewOptimizer>
 
+{/* ===== In-Article Ad ===== */}
+<div className="my-10 flex justify-center">
+  <ins
+    className="adsbygoogle"
+    style={{ display: "block", textAlign: "center" }}
+    data-ad-layout="in-article"
+    data-ad-format="fluid"
+    data-ad-client="ca-pub-9587188804206049"
+    data-ad-slot="9328856681"
+  />
+</div>
+
          {/* --- INFO BLOCK C: MAXIMIZING ROI THROUGH PERFORMANCE --- */}
          <section className="py-24 bg-white dark:bg-[#0A0C11]/50 border-y border-gray-200 dark:border-white/5">
             <div className="max-w-[1500px] mx-auto px-6">
@@ -419,6 +431,17 @@ const Home: React.FC = () => {
                <SpotlightCard to="/services/digital-marketing" title="Marketing" description="Viral social creatives for high reach." icon={<Megaphone size={32} />} delay="delay-300" />
             </div>
          </section>
+
+{/* ===== Auto-relaxed Ad ===== */}
+<div className="my-10 flex justify-center">
+  <ins
+    className="adsbygoogle"
+    style={{ display: "block" }}
+    data-ad-format="autorelaxed"
+    data-ad-client="ca-pub-9587188804206049"
+    data-ad-slot="2426738115"
+  />
+</div>
 
          {/* 6. WHY CHOOSE US (TEXT HEAVY) */}
          <section className="py-24 bg-gray-100 dark:bg-[#0A0C11]/50 border-y border-gray-200 dark:border-white/5">
