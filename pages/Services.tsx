@@ -47,7 +47,7 @@ const Services: React.FC = () => {
          <ScrollReveal>
              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-md mb-6 shadow-sm mx-auto">
                 <Sparkles size={14} className="text-neon-purple" />
-                <span className="text-[10px] md:text-xs font-bold tracking-widest text-gray-600 dark:text-gray-300 uppercase">Expert Agency Services</span>
+                <span className="text-[10px] md:text-xs font-bold tracking-widest text-gray-600 dark:text-gray-300 uppercase">Expert Digital Solutions</span>
              </div>
              <h1 className="text-4xl md:text-7xl lg:text-8xl font-bold mb-8 text-gray-900 dark:text-white tracking-tight leading-[1.1]">
                Our <span className="text-neon-purple">Expertise.</span>
@@ -83,7 +83,7 @@ const Services: React.FC = () => {
          <ScrollReveal>
             <h2 className="text-3xl md:text-5xl font-bold mb-6">Need a Custom Quote?</h2>
             <p className="text-gray-500 text-lg mb-10 max-w-lg mx-auto font-light">We offer bespoke plans tailored to your unique project requirements.</p>
-            <Link to="/contact" className="px-10 py-4 bg-neon-purple text-white rounded-full font-bold shadow-lg shadow-neon-purple/30 hover:scale-105 transition-transform inline-flex items-center gap-3">Contact Agency <ArrowRight size={20} /></Link>
+            <Link to="/contact" className="px-10 py-4 bg-neon-purple text-white rounded-full font-bold shadow-lg shadow-neon-purple/30 hover:scale-105 transition-transform inline-flex items-center gap-3">Contact Solutions <ArrowRight size={20} /></Link>
          </ScrollReveal>
       </div>
     </div>

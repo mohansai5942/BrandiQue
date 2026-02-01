@@ -10,7 +10,7 @@ const TermsAndConditions: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold text-black dark:text-white mb-4">1. Agreement to Terms</h2>
           <p>
-            These Terms and Conditions constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you") and BrandiQue Web Agency ("we," "us" or "our"), 
+            These Terms and Conditions constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you") and BrandiQue Web Solutions ("we," "us" or "our"), 
             concerning your access to and use of our website and services. By accessing the site, you agree that you have read, understood, and agree to be bound by all of these Terms and Conditions.
           </p>
         </section>
@@ -53,7 +53,7 @@ const TermsAndConditions: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold text-black dark:text-white mb-4">6. Governing Law</h2>
           <p>
-            These Terms shall be governed by and defined following the laws of India. BrandiQue Web Agency and yourself irrevocably consent that the courts of India 
+            These Terms shall be governed by and defined following the laws of India. BrandiQue Web Solutions and yourself irrevocably consent that the courts of India 
             shall have exclusive jurisdiction to resolve any dispute which may arise in connection with these terms.
           </p>
         </section>

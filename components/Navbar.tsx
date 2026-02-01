@@ -110,14 +110,14 @@ const Navbar: React.FC = () => {
           <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)} onContextMenu={(e) => e.preventDefault()}>
             <img
               src="https://cdn.imgchest.com/files/dcafd6812298.png"
-              alt="BrandiQue Web Agency"
+              alt="BrandiQue Web Solutions"
               className="h-[52px] sm:h-[62px] lg:h-[78px] w-auto object-contain transition-all duration-300 block dark:hidden"
               loading="eager"
             />
 
             <img
               src="https://cdn.imgchest.com/files/fd6fe875bd05.png"
-              alt="BrandiQue Web Agency"
+              alt="BrandiQue Web Solutions"
               className="h-[52px] sm:h-[62px] lg:h-[78px] w-auto object-contain transition-all duration-300 hidden dark:block"
               loading="eager"
             />
@@ -216,7 +216,7 @@ const Navbar: React.FC = () => {
             <div className={`w-10 h-6 rounded-full p-1 transition-colors ${isDark ? 'bg-neon-purple' : 'bg-gray-300'}`}><div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${isDark ? 'translate-x-4' : 'translate-x-0'}`}></div></div>
           </button>
           <div className="flex gap-3"><a href="https://www.instagram.com/mohan_creator/" target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-bold text-sm hover:text-neon-purple transition-colors"><Instagram size={16} /> Social</a></div>
-          <div className="text-center"><p className="text-[10px] text-gray-400 font-medium">v1.2.0 • BrandiQue Agency</p></div>
+          <div className="text-center"><p className="text-[10px] text-gray-400 font-medium">v1.2.0 • BrandiQue Web Solutions</p></div>
         </div>
       </aside>
     </>

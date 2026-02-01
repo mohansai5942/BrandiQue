@@ -69,7 +69,7 @@ const About: React.FC = () => {
                 </h1>
                 
                 <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left">
-                   <p>I am the visionary behind <strong>BrandiQue Web Agency</strong>. My life's work is centered on transforming complex technical challenges into elegant, high-performance digital experiences.</p>
+                   <p>I am the visionary behind <strong>BrandiQue Web Solutions</strong>. My life's work is centered on transforming complex technical challenges into elegant, high-performance digital experiences.</p>
                    <p>With expertise spanning from <span className="text-neon-purple font-medium">Full-Stack Engineering</span> to <span className="text-blue-500 font-medium">Strategic Brand Identity</span>, I help ambitious businesses build an online presence that commands respect and drives revenue.</p>
                 </div>
 
@@ -133,7 +133,7 @@ const About: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-wider">Mohan</div>
-                  <div className="text-sm text-gray-500 font-bold uppercase">Founder & CEO, BrandiQue Web Agency</div>
+                  <div className="text-sm text-gray-500 font-bold uppercase">Founder & CEO, BrandiQue Web Solutions</div>
                 </div>
               </div>
             </div>
