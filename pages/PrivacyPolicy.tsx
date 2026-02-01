@@ -10,7 +10,7 @@ const PrivacyPolicy: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold text-black dark:text-white mb-4">1. Introduction</h2>
           <p>
-            Welcome to BrandiQue Web Agency ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. 
+            Welcome to BrandiQue Web Solutions ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. 
             This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website and use our services.
           </p>
         </section>

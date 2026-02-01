@@ -157,7 +157,7 @@ const Home: React.FC = () => {
                            <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
                         </div>
                         <div className="flex items-center gap-2">
-                           <span className="text-[10px] text-gray-500 font-mono">AgencyEngine.js</span>
+                           <span className="text-[10px] text-gray-500 font-mono">SolutionsEngine.js</span>
                            <div className="w-3 h-3 rounded bg-blue-500/20 flex items-center justify-center"><Code size={8} className="text-blue-400" /></div>
                         </div>
                      </div>
@@ -384,7 +384,7 @@ const Home: React.FC = () => {
                            Statistics prove that for every second your website takes to load beyond 3 seconds, your conversion rate drops by over 20%. At BrandiQue, we treat performance as a core business metric. We don't just optimize images; we architect entire data-fetching strategies using Incremental Static Regeneration (ISR) and Server-Side Rendering (SSR) to ensure your users never see a loading spinner.
                         </p>
                         <p>
-                           Our SEO strategy is equally rigorous. Most agencies stop at meta titles and descriptions. We go deeper, implementing JSON-LD Schema markup, ensuring perfect Core Web Vital scores (LCP, FID, CLS), and building accessible DOM structures. When Google sees a technically perfect website that serves users instantly, your organic visibility skyrockets, providing a sustainable ROI that far outweighs paid advertising costs in the long run.
+                           Our SEO strategy is equally rigorous. Most Solutions Providers stop at meta titles and descriptions. We go deeper, implementing JSON-LD Schema markup, ensuring perfect Core Web Vital scores (LCP, FID, CLS), and building accessible DOM structures. When Google sees a technically perfect website that serves users instantly, your organic visibility skyrockets, providing a sustainable ROI that far outweighs paid advertising costs in the long run.
                         </p>
                      </div>
                      <div className="pt-6">
@@ -465,7 +465,7 @@ const Home: React.FC = () => {
                   <div className="h-[2px] flex-grow bg-gray-200 dark:bg-white/5 mb-4 hidden md:block"></div>
                </div>
                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  {["Real Estate", "E-Commerce", "Portfolio", "Personal", "Healthcare", "Tech Startups", "Agency", "Creator"].map((item, i) => (
+                  {["Real Estate", "E-Commerce", "Portfolio", "Personal", "Healthcare", "Tech Startups", "Solutions Provider", "Creator"].map((item, i) => (
                      <div key={i} className="p-6 rounded-2xl border border-gray-200 dark:border-white/5 hover:border-neon-purple transition-all bg-white dark:bg-[#0F1320] flex items-center gap-4 group">
                         <div className="w-2 h-2 rounded-full bg-neon-purple group-hover:scale-150 transition-transform"></div>
                         <span className="font-bold text-sm md:text-base uppercase tracking-wider">{item}</span>
@@ -521,7 +521,7 @@ const Home: React.FC = () => {
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   {[
                      { title: "Personal", price: "9,000", tag: "Portfolio" },
-                     { title: "Business", price: "10,999", tag: "Agency" },
+                     { title: "Business", price: "10,999", tag: "Solutions" },
                      { title: "E-Commerce", price: "28,999", tag: "Online Store" }
                   ].map((plan, i) => (
                      <div key={i} className="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-white/30 transition-all text-center group">
@@ -585,7 +585,7 @@ const Home: React.FC = () => {
                   <div className="max-w-4xl mx-auto space-y-16">
                      <div className="text-center space-y-4">
                         <h2 className="text-3xl md:text-5xl font-bold">Bridging <span className="text-neon-purple">Creativity</span> and <span className="text-neon-blue">Code</span></h2>
-                        <p className="text-gray-500 text-lg font-light">A final deep dive into our agency's technical philosophy and commitment to excellence.</p>
+                        <p className="text-gray-500 text-lg font-light">A final deep dive into our technical philosophy and commitment to excellence.</p>
                      </div>
 
                      <div className="space-y-12 text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">

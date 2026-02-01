@@ -36,13 +36,13 @@ const Footer: React.FC = () => {
               {/* Light Theme Logo (Visible in Light Mode) */}
               <img 
                 src="https://cdn.imgchest.com/files/dcafd6812298.png" 
-                alt="BrandiQue Web Agency" 
+                alt="BrandiQue Web Solutions" 
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 block dark:hidden" 
               />
               {/* Dark Theme Logo (Visible in Dark Mode) */}
               <img 
                 src="https://cdn.imgchest.com/files/fd6fe875bd05.png" 
-                alt="BrandiQue Web Agency" 
+                alt="BrandiQue Web Solutions" 
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 hidden dark:block" 
               />
             </Link>
@@ -126,7 +126,7 @@ const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <ScrollReveal className="border-t border-gray-200 dark:border-white/5 pt-6 md:pt-6 lg:pt-8 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4" delay="delay-400">
           <p className="text-gray-500 dark:text-gray-500 text-[10px] md:text-xs lg:text-sm text-center md:text-left">
-            &copy; {currentYear} BrandiQue Web Agency. All rights reserved.
+            &copy; {currentYear} BrandiQue Web Solutions. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
              <span className="text-gray-500 dark:text-gray-500 text-[10px] md:text-xs lg:text-sm">Created by <Link to="/about" className="text-black dark:text-white font-bold hover:text-neon-purple transition-colors cursor-pointer">Mohan</Link></span>

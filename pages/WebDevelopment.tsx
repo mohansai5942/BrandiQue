@@ -27,7 +27,7 @@ const SERVICES = [
     title: "Business Website",
     price: "10,999",
     oldPrice: "22,000",
-    tagline: "For Agencies & Startups",
+    tagline: "For Solutions & Startups",
     icon: LayoutTemplate,
     features: ["Multi-Page Architecture", "Lead Generation Focus", "Google Maps & WhatsApp", "Speed Optimization", "CMS for Easy Updates", "14-Day Delivery"]
   },
@@ -71,13 +71,13 @@ const WebDevelopment = () => {
       <section className="text-center mb-24 lg:mb-32">
         <ScrollReveal>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-8 animate-pulse">
-               <Zap size={14} /> Limited Time: 50% Agency Discount
+               <Zap size={14} /> Limited Time: 50% Solutions Discount
             </div>
             <h1 className="text-4xl md:text-7xl lg:text-8xl font-bold mb-8 tracking-tight leading-[1.1]">
               Web Design <br/> <span className="text-neon-purple text-gradient">Starter Kits.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed font-light">
-              High-performance, custom-coded websites built for business growth. Get premium agency quality at the most competitive market prices.
+              High-performance, custom-coded websites built for business growth. Get premium solutions quality at the most competitive market prices.
             </p>
         </ScrollReveal>
       </section>
@@ -170,7 +170,7 @@ const WebDevelopment = () => {
             <ScrollReveal>
                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-8">What makes our <br/><span className="text-neon-blue">Engineering</span> different?</h2>
                <p className="text-gray-500 text-lg mb-12 font-light leading-relaxed">
-                  Unlike agencies that sell generic WordPress templates, BrandiQue focuses on strategic digital engineering. Every "Starter Kit" is built with a long-term vision.
+                  Unlike Solutions Providers that sell generic WordPress templates, BrandiQue focuses on strategic digital engineering. Every "Starter Kit" is built with a long-term vision.
                </p>
                <div className="space-y-8">
                   {[
