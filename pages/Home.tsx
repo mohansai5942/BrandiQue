@@ -640,11 +640,13 @@ const Home: React.FC = () => {
                      <img
                         src="https://cdn.imgchest.com/files/a349c84111b6.png"
                         alt="Logo"
+                        onContextMenu={(e) => e.preventDefault()}
                         className="h-12 md:h-16 mx-auto object-contain hidden dark:block"
                      />
                      <img
                         src="https://cdn.imgchest.com/files/00ed5014ae49.png"
                         alt="Logo"
+                        onContextMenu={(e) => e.preventDefault()}
                         className="h-12 md:h-16 mx-auto object-contain block dark:hidden"
                      />
                      <p className="text-[10px] font-bold uppercase tracking-[0.4em] mt-4">Visakhapatnam, India • Global Operations</p>
