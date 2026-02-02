@@ -638,12 +638,12 @@ const Home: React.FC = () => {
                   </div>
                   <div className="pt-20 opacity-30">
                      <img
-                        src="https://cdn.imgchest.com/files/fd6fe875bd05.png"
+                        src="https://cdn.imgchest.com/files/a349c84111b6.png"
                         alt="Logo"
                         className="h-12 md:h-16 mx-auto object-contain hidden dark:block"
                      />
                      <img
-                        src="https://cdn.imgchest.com/files/dcafd6812298.png"
+                        src="https://cdn.imgchest.com/files/00ed5014ae49.png"
                         alt="Logo"
                         className="h-12 md:h-16 mx-auto object-contain block dark:hidden"
                      />
