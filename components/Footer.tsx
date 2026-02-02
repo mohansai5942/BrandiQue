@@ -35,13 +35,13 @@ const Footer: React.FC = () => {
             >
               {/* Light Theme Logo (Visible in Light Mode) */}
               <img 
-                src="https://cdn.imgchest.com/files/dcafd6812298.png" 
+                src="https://cdn.imgchest.com/files/00ed5014ae49.png" 
                 alt="BrandiQue Web Solutions" 
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 block dark:hidden" 
               />
               {/* Dark Theme Logo (Visible in Dark Mode) */}
               <img 
-                src="https://cdn.imgchest.com/files/fd6fe875bd05.png" 
+                src="https://cdn.imgchest.com/files/a349c84111b6.png" 
                 alt="BrandiQue Web Solutions" 
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 hidden dark:block" 
               />
