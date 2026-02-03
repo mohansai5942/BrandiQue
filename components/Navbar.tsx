@@ -109,14 +109,14 @@ const Navbar: React.FC = () => {
         <div className="max-w-[1600px] mx-auto px-4 md:px-6 flex items-center justify-between relative">
           <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)} onContextMenu={(e) => e.preventDefault()}>
             <img
-              src="https://cdn.imgchest.com/files/00ed5014ae49.png"
+              src="https://cdn.imgchest.com/files/c912299e5353.png"
               alt="BrandiQue Web Solutions"
               className="h-[52px] sm:h-[62px] lg:h-[78px] w-auto object-contain transition-all duration-300 block dark:hidden"
               loading="eager"
             />
 
             <img
-              src="https://cdn.imgchest.com/files/a349c84111b6.png"
+              src="https://cdn.imgchest.com/files/1b3230978aa9.png"
               alt="BrandiQue Web Solutions"
               className="h-[52px] sm:h-[62px] lg:h-[78px] w-auto object-contain transition-all duration-300 hidden dark:block"
               loading="eager"

@@ -638,13 +638,13 @@ const Home: React.FC = () => {
                   </div>
                   <div className="pt-20 opacity-30">
                      <img
-                        src="https://cdn.imgchest.com/files/a349c84111b6.png"
+                        src="https://cdn.imgchest.com/files/1b3230978aa9.png"
                         alt="Logo"
                         onContextMenu={(e) => e.preventDefault()}
                         className="h-12 md:h-16 mx-auto object-contain hidden dark:block"
                      />
                      <img
-                        src="https://cdn.imgchest.com/files/00ed5014ae49.png"
+                        src="https://cdn.imgchest.com/files/c912299e5353.png"
                         alt="Logo"
                         onContextMenu={(e) => e.preventDefault()}
                         className="h-12 md:h-16 mx-auto object-contain block dark:hidden"

@@ -35,19 +35,19 @@ const Footer: React.FC = () => {
             >
               {/* Light Theme Logo (Visible in Light Mode) */}
               <img 
-                src="https://cdn.imgchest.com/files/00ed5014ae49.png" 
+                src="https://cdn.imgchest.com/files/c912299e5353.png" 
                 alt="BrandiQue Web Solutions" 
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 block dark:hidden" 
               />
               {/* Dark Theme Logo (Visible in Dark Mode) */}
               <img 
-                src="https://cdn.imgchest.com/files/a349c84111b6.png" 
+                src="https://cdn.imgchest.com/files/1b3230978aa9.png" 
                 alt="BrandiQue Web Solutions" 
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 hidden dark:block" 
               />
             </Link>
             
-            <p className="text-gray-500 dark:text-gray-400 text-xs md:text-xs lg:text-sm leading-relaxed max-w-sm font-light">
+            <p className="text-gray-500 dark:text-gray-400 text-xs md:text-xs lg:text-sm leading-relaxed max-sm font-light">
               We design, develop, and grow digital brands with web development, branding, digital marketing, and AI-powered solutions.
             </p>
 
