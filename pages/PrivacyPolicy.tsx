@@ -66,7 +66,7 @@ const PrivacyPolicy: React.FC = () => {
           <h2 className="text-2xl font-bold text-black dark:text-white mb-4">7. Contact Us</h2>
           <p>
             If you have questions or comments about this policy, you may email us at: <br/>
-            <a href="mailto:brandiqueagency@gmail.com" className="text-neon-purple hover:underline font-bold">brandiqueagency@gmail.com</a>
+            <a href="mailto:brandiquewebsolutions@gmail.com" className="text-neon-purple hover:underline font-bold">brandiquewebsolutions@gmail.com</a>
           </p>
         </section>
       </div>

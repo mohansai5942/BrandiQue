@@ -108,10 +108,10 @@ const Contact: React.FC = () => {
                         </div>
                         <div>
                             <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Email Us</p>
-                            <a href="mailto:brandiqueagency@gmail.com" className="text-gray-900 dark:text-white font-medium hover:text-neon-purple transition-colors">brandiqueagency@gmail.com</a>
+                            <a href="mailto:brandiquewebsolutions@gmail.com" className="text-gray-900 dark:text-white font-medium hover:text-neon-purple transition-colors">brandiquewebsolutions@gmail.com</a>
                         </div>
                     </div>
-                    <button onClick={() => copyToClipboard('brandiqueagency@gmail.com', 'email')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors">
+                    <button onClick={() => copyToClipboard('brandiquewebsolutions@gmail.com', 'email')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors">
                         {copiedField === 'email' ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
                     </button>
                  </div>
