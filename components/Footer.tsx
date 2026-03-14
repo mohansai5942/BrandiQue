@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
     { icon: Instagram, href: "https://www.instagram.com/mohan_creator/" },
     { icon: Twitter, href: "https://x.com/Mohan_Creator" }, // Twitter (X)
     { icon: AtSign, href: "https://www.threads.com/@mohan_creator/" }, // Threads
-    { icon: Mail, href: "mailto:brandiqueagency@gmail.com" }
+    { icon: Mail, href: "mailto:brandiquewebsolutions@gmail.com" }
   ];
 
   return (
