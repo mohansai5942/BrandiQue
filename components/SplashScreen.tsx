@@ -52,9 +52,12 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         autoPlay
         muted
         playsInline
+        webkit-playsinline="true"
+        disablePictureInPicture
+        controlsList="nodownload nofullscreen noremoteplayback"
         onTimeUpdate={handleTimeUpdate}
         onEnded={startFadeOut}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover pointer-events-none"
         onError={() => onComplete()}
       >
         <source src={isMobile ? mobileVideo : desktopVideo} type="video/mp4" />
