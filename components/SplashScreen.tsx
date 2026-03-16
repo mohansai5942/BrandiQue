@@ -63,7 +63,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       {/* Skip Intro Button */}
       <button
         onClick={handleSkip}
-        className="absolute bottom-8 right-8 z-[10001] px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full text-white text-xs font-medium tracking-widest uppercase transition-all hover:scale-105 active:scale-95"
+        className="absolute bottom-5 right-5 z-[10001] px-2.5 py-1 bg-black/20 hover:bg-black/40 border border-white/20 rounded-sm text-white/70 hover:text-white text-[10px] transition-all"
       >
         Skip Intro
       </button>
