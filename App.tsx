@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -19,6 +19,7 @@ import CategoryPage from './pages/CategoryPage';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
+import SplashScreen from './components/SplashScreen';
 
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
@@ -32,10 +33,17 @@ const ScrollToTop = () => {
 }
 
 const App: React.FC = () => {
+  const [showSplash, setShowSplash] = useState(true);
+
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
+
   return (
     <BrowserRouter>
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white selection:bg-neon-purple selection:text-white transition-colors duration-300">
+      <div className={`min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white selection:bg-neon-purple selection:text-white transition-colors duration-300 ${showSplash ? 'hidden' : ''}`}>
         <Navbar />
         
         <main className="flex-grow">
