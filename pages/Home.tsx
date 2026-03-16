@@ -69,7 +69,7 @@ const Home: React.FC = () => {
       <div className="flex flex-col pb-0 overflow-x-hidden bg-gray-50 dark:bg-[#05070A] relative text-gray-900 dark:text-white transition-colors duration-300">
 
          {/* 1. HERO SECTION - Enhanced with coding elements and animations */}
-         <section ref={heroRef} className="relative flex items-center justify-center pt-24 pb-12 md:pt-28 md:pb-16 lg:pt-32 lg:pb-24 w-full overflow-hidden min-h-[75vh] lg:min-h-[85vh]">
+         <section ref={heroRef} className="relative flex items-center justify-center pt-32 pb-12 md:pt-28 md:pb-16 lg:pt-32 lg:pb-24 w-full overflow-hidden min-h-[75vh] lg:min-h-[85vh]">
             {/* Tech Background Pattern */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(176,38,255,0.03),transparent_70%)] pointer-events-none"></div>
