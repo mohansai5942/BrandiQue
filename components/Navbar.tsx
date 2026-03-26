@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink } from 'lucide-react';
+import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,11 +67,14 @@ const Navbar: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const navLinkClasses = (path: string) => `
-    relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full
+  const navLinkClasses = (path: string, isHighlighted?: boolean) => `
+    relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-2
+    ${isHighlighted ? 'nav-highlight' : ''}
     ${isActive(path)
       ? 'text-white bg-black dark:bg-white/10 dark:text-white shadow-lg dark:shadow-[0_0_15px_rgba(255,255,255,0.1)]'
-      : 'text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+      : isHighlighted 
+        ? 'text-gray-900 dark:text-white'
+        : 'text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
     }
   `;
 
@@ -90,8 +93,9 @@ const Navbar: React.FC = () => {
   const NAV_ITEMS = [
     { label: 'Home', path: '/', icon: Home },
     { label: 'Services', path: '/services', icon: Layers, hasDropdown: true },
-    { label: 'Web Development', path: '/web-development', icon: Code },
-    { label: 'AI Prompts', path: 'https://creator.brandique.in/', icon: Sparkles, isExternal: true },
+    { label: 'Web Development', path: '/web-development', icon: Code, isHighlighted: true },
+    { label: 'Offers & Deals', path: 'https://deals.brandique.in/', icon: Tag, isExternal: true, isHighlighted: true },
+    { label: 'AI Prompts', path: 'https://creator.brandique.in/', icon: Sparkles, isExternal: true, isHighlighted: true },
     { label: 'About', path: '/about', icon: Info },
     { label: 'Contact', path: '/contact', icon: Mail },
   ];
@@ -129,7 +133,11 @@ const Navbar: React.FC = () => {
               if (item.hasDropdown) {
                 return (
                   <div key={item.path} className="relative" onMouseEnter={handleServicesEnter} onMouseLeave={handleServicesLeave}>
-                    <Link to={item.path} className={`${navLinkClasses(item.path)} flex items-center gap-1 group`}>{item.label} <ChevronDown size={14} className={`transition-transform duration-300 ${isServicesHovered ? 'rotate-180' : ''}`} /></Link>
+                    <Link to={item.path} className={`${navLinkClasses(item.path, item.isHighlighted)} group`}>
+                      {item.icon && <item.icon size={14} />}
+                      {item.label} 
+                      <ChevronDown size={14} className={`transition-transform duration-300 ${isServicesHovered ? 'rotate-180' : ''}`} />
+                    </Link>
                     <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[640px] bg-white dark:bg-[#0A0C11]/90 backdrop-blur-2xl border border-gray-200 dark:border-white/10 rounded-2xl p-4 shadow-2xl transition-all duration-300 origin-top transform ${isServicesHovered ? 'opacity-100 translate-y-0 visible scale-100' : 'opacity-0 translate-y-4 invisible scale-95 pointer-events-none'}`}>
                       <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#0A0C11]/90 border-t border-l border-gray-200 dark:border-white/10 rotate-45 transition-colors duration-500"></div>
                       <div className="grid grid-cols-2 gap-3 relative z-10">
@@ -151,9 +159,29 @@ const Navbar: React.FC = () => {
                 );
               }
               if (item.isExternal) {
-                return (<a key={item.path} href={item.path} target="_blank" rel="noopener noreferrer" className={navLinkClasses(item.path)}>{item.label}</a>);
+                return (
+                  <a 
+                    key={item.path} 
+                    href={item.path} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className={navLinkClasses(item.path, item.isHighlighted)}
+                  >
+                    {item.icon && <item.icon size={14} className={item.isHighlighted ? 'text-neon-purple' : ''} />}
+                    {item.label}
+                  </a>
+                );
               }
-              return (<Link key={item.path} to={item.path} className={navLinkClasses(item.path)}>{item.label}</Link>);
+              return (
+                <Link 
+                  key={item.path} 
+                  to={item.path} 
+                  className={navLinkClasses(item.path, item.isHighlighted)}
+                >
+                  {item.icon && <item.icon size={14} className={item.isHighlighted ? 'text-neon-purple' : ''} />}
+                  {item.label}
+                </Link>
+              );
             })}
           </nav>
 
@@ -198,8 +226,20 @@ const Navbar: React.FC = () => {
                 </div>
               );
             }
+            const commonClasses = `flex items-center gap-4 p-3 rounded-xl transition-all duration-300 border border-transparent ${active ? 'bg-gray-100 dark:bg-white/10 shadow-sm border-gray-200 dark:border-white/10' : 'hover:bg-gray-50 dark:hover:bg-white/5 active:scale-[0.98]'} ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} ${item.isHighlighted ? 'nav-highlight' : ''}`;
+            const delayStyle = { transitionDelay: `${Math.min(idx * 30, 150)}ms` };
+
+            if (item.isExternal) {
+              return (
+                <a key={item.path} href={item.path} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)} className={commonClasses} style={delayStyle}>
+                  <div className={`p-2 rounded-lg transition-colors ${active ? 'text-neon-purple bg-neon-purple/10' : 'text-gray-400 bg-gray-100 dark:bg-white/5'}`}><item.icon size={20} /></div>
+                  <span className={`text-base font-bold ${active ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-300'}`}>{item.label}</span>
+                </a>
+              );
+            }
+
             return (
-              <Link key={item.path} to={item.path} onClick={() => setIsOpen(false)} className={`flex items-center gap-4 p-3 rounded-xl transition-all duration-300 border border-transparent ${active ? 'bg-gray-100 dark:bg-white/10 shadow-sm border-gray-200 dark:border-white/10' : 'hover:bg-gray-50 dark:hover:bg-white/5 active:scale-[0.98]'} ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: `${Math.min(idx * 30, 150)}ms` }}>
+              <Link key={item.path} to={item.path} onClick={() => setIsOpen(false)} className={commonClasses} style={delayStyle}>
                 <div className={`p-2 rounded-lg transition-colors ${active ? 'text-neon-purple bg-neon-purple/10' : 'text-gray-400 bg-gray-100 dark:bg-white/5'}`}><item.icon size={20} /></div>
                 <span className={`text-base font-bold ${active ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-300'}`}>{item.label}</span>
                 {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-neon-purple"></div>}
