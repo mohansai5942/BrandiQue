@@ -12,6 +12,8 @@ import ScrollReveal from '../components/ScrollReveal';
 import TextReveal from '../components/TextReveal';
 import SpotlightCard from '../components/SpotlightCard';
 import ViewOptimizer from '../components/ViewOptimizer';
+import DealsSection from '../components/DealsSection';
+import PromptsSection from '../components/PromptsSection';
 
 const STATS = [
    { label: "Projects Completed", value: "100+", icon: Rocket, color: "text-neon-purple" },
@@ -557,6 +559,9 @@ const Home: React.FC = () => {
                </div>
             </ScrollReveal>
          </section>
+
+         <DealsSection />
+         <PromptsSection />
 
          {/* 10. FAQ SHORTFORM */}
          <section className="py-24 bg-gray-50 dark:bg-[#0A0C11]/50 border-t border-gray-200 dark:border-white/5">

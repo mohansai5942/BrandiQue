@@ -20,6 +20,7 @@ import Login from './pages/Login';
 import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import SplashScreen from './components/SplashScreen';
+import FloatingPromotions from './components/FloatingPromotions';
 
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
@@ -85,6 +86,7 @@ const App: React.FC = () => {
         </main>
 
         <Footer />
+        <FloatingPromotions />
       </div>
     </BrowserRouter>
   );
