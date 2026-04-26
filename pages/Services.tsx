@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Code, LayoutTemplate, PenTool, Megaphone, Check, Sparkles } from 'lucide-react';
+import { ArrowRight, Code, LayoutTemplate, PenTool, Megaphone, Check, Sparkles, Bot } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 
 const Services: React.FC = () => {
@@ -36,6 +36,14 @@ const Services: React.FC = () => {
       link: "/services/digital-marketing",
       color: "text-green-400",
       features: ["Social Creatives", "Viral Growth", "Content Strategy"]
+    },
+    {
+      title: "AI Automation & Agents",
+      description: "Custom AI agents and automated n8n workflows to optimize your operations.",
+      icon: Bot,
+      link: "/services/ai-automation",
+      color: "text-neon-blue",
+      features: ["AI Chatbots", "n8n Pipelines", "24/7 Support"]
     }
   ];
 
