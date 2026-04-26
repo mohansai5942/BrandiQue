@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag } from 'lucide-react';
+import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag, Bot } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -104,7 +104,8 @@ const Navbar: React.FC = () => {
     { title: "Full-Stack Web Development", path: "/services/full-stack", desc: "Custom-coded websites with modern UI/UX", icon: Code, color: "text-neon-purple", gradient: "group-hover:border-neon-purple/50 group-hover:shadow-[0_0_20px_rgba(176,38,255,0.2)]" },
     { title: "WordPress Development", path: "/services/wordpress", desc: "Fast, scalable, easy-to-manage builds", icon: LayoutTemplate, color: "text-blue-400", gradient: "group-hover:border-blue-400/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]" },
     { title: "Branding & Identity", path: "/services/branding", desc: "Logos, 3D mockups, and brand systems", icon: PenTool, color: "text-pink-400", gradient: "group-hover:border-pink-400/50 group-hover:shadow-[0_0_20px_rgba(236,72,153,0.2)]" },
-    { title: "Digital Marketing", path: "/services/digital-marketing", desc: "Social media creatives and growth visuals", icon: Megaphone, color: "text-green-400", gradient: "group-hover:border-green-400/50 group-hover:shadow-[0_0_20px_rgba(74,222,128,0.2)]" }
+    { title: "Digital Marketing", path: "/services/digital-marketing", desc: "Social media creatives and growth visuals", icon: Megaphone, color: "text-green-400", gradient: "group-hover:border-green-400/50 group-hover:shadow-[0_0_20px_rgba(74,222,128,0.2)]" },
+    { title: "AI Automation & Chatbots", path: "/services/ai-automation", desc: "Intelligent AI agents & business workflows", icon: Bot, color: "text-neon-blue", gradient: "group-hover:border-neon-blue/50 group-hover:shadow-[0_0_20px_rgba(0,212,255,0.2)]" }
   ];
 
   return (

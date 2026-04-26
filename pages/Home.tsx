@@ -6,7 +6,7 @@ import {
    Globe, Layers, ShieldCheck, ZapIcon, Target, Check, HelpCircle,
    Sparkles, Shield, Star, Monitor, Smartphone, Database, Globe2, Palette,
    History, Award, Activity, FileCode, HeartHandshake, Eye, Lightbulb, Workflow,
-   Terminal, Braces, Binary
+   Terminal, Braces, Binary, Bot
 } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import TextReveal from '../components/TextReveal';
@@ -227,16 +227,7 @@ const Home: React.FC = () => {
             </div>
          </section>
 
-<div className="my-10">
-  <ins
-    className="adsbygoogle"
-    style={{ display: "block" }}
-    data-ad-format="fluid"
-    data-ad-layout-key="-ef+6k-30-ac+ty"
-    data-ad-client="ca-pub-9587188804206049"
-    data-ad-slot="2366860495"
-  ></ins>
-</div>
+{/* Ads significantly removed */}
 
          {/* 2. TRUST MARQUEE */}
          <section className="py-12 border-y border-gray-200 dark:border-white/5 bg-white dark:bg-[#05070A]">
@@ -360,17 +351,7 @@ const Home: React.FC = () => {
             </section>
          </ViewOptimizer>
 
-{/* ===== In-Article Ad ===== */}
-<div className="my-10 flex justify-center">
-  <ins
-    className="adsbygoogle"
-    style={{ display: "block", textAlign: "center" }}
-    data-ad-layout="in-article"
-    data-ad-format="fluid"
-    data-ad-client="ca-pub-9587188804206049"
-    data-ad-slot="9328856681"
-  />
-</div>
+{/* Ads significantly removed */}
 
          {/* --- INFO BLOCK C: MAXIMIZING ROI THROUGH PERFORMANCE --- */}
          <section className="py-24 bg-white dark:bg-[#0A0C11]/50 border-y border-gray-200 dark:border-white/5">
@@ -403,24 +384,16 @@ const Home: React.FC = () => {
                <h2 className="text-3xl md:text-5xl font-bold">Our Core <span className="text-neon-blue">Capabilities.</span></h2>
                <p className="text-gray-500 max-w-xl mx-auto text-lg font-light">Everything you need to brand, build, and scale your digital presence.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                <SpotlightCard to="/services/full-stack" title="Full-Stack" description="Custom-coded React sites built for speed." icon={<Code size={32} />} delay="delay-0" />
                <SpotlightCard to="/services/wordpress" title="WordPress" description="Easy-to-manage, professional CMS builds." icon={<LayoutTemplate size={32} />} delay="delay-100" />
                <SpotlightCard to="/services/branding" title="Branding" description="Logos and 3D mockups that define you." icon={<PenTool size={32} />} delay="delay-200" />
                <SpotlightCard to="/services/digital-marketing" title="Marketing" description="Viral social creatives for high reach." icon={<Megaphone size={32} />} delay="delay-300" />
+               <SpotlightCard to="/services/ai-automation" title="AI Automation" description="Intelligent bots and n8n workflows." icon={<Bot size={32} />} delay="delay-400" />
             </div>
          </section>
 
-{/* ===== Auto-relaxed Ad ===== */}
-<div className="my-10 flex justify-center">
-  <ins
-    className="adsbygoogle"
-    style={{ display: "block" }}
-    data-ad-format="autorelaxed"
-    data-ad-client="ca-pub-9587188804206049"
-    data-ad-slot="2426738115"
-  />
-</div>
+{/* Ads significantly removed */}
 
          {/* 6. WHY CHOOSE US (TEXT HEAVY) */}
          <section className="py-24 bg-gray-100 dark:bg-[#0A0C11]/50 border-y border-gray-200 dark:border-white/5">

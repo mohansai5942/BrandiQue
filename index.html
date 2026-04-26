@@ -7,14 +7,25 @@
     <meta name="robots" content="index, follow" />
     <meta name="google-site-verification" content="yabpCgv5BOpOpfkzwsekwwHq1DGyhdGIsjG_UHh5Wb4" />
     <title>BrandiQue Web Solutions</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9587188804206049"
-     crossorigin="anonymous"></script>
+    <script>
+      // Prevent crash from scripts trying to overwrite window.fetch
+      (function() {
+        if (window.fetch && Object.getOwnPropertyDescriptor(window, 'fetch').set) return;
+        try {
+          const originalFetch = window.fetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function() { return originalFetch; },
+            set: function() { console.warn('Fetch overwrite blocked'); },
+            configurable: true
+          });
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/png" href="https://cdn.imgchest.com/files/bde72aa20905.png" />
     
     <!-- Performance: Preconnect to Fonts & CDN -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="https://images.unsplash.com">
     
     <script>
@@ -24,7 +35,7 @@
         document.documentElement.classList.remove('dark');
       }
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -321,21 +332,7 @@
          transition-duration: 200ms;
       }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
-    "vite": "https://esm.sh/vite@^7.3.0",
-    "veo": "https://esm.sh/veo-sdk@latest",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
-  }
-}
-</script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
