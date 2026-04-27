@@ -5,12 +5,14 @@ import {
   ArrowRight, Check, Bot, Cpu, Workflow, MessageSquare, Zap, 
   Database, Network, Sparkles, TrendingUp, Globe, Server, 
   Activity, Rocket, Webhook, FileText, Split, Send, Link2, 
-  Search, Settings, Trash2 
+  Search, Settings, Trash2, Plus, Minus, Maximize
 } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
 import TextReveal from '../../components/TextReveal';
 
-const WorkflowNode = ({ icon: Icon, title, x, y, active = false, color = "blue", hideInput = false, hideOutput = false, delay = 0 }: any) => {
+const WorkflowNode = ({ id, onNodeDrag, icon: Icon, title, x, y, active = false, color = "blue", hideInput = false, hideOutput = false, delay = 0, zoom = 1 }: any) => {
+  const [isDragging, setIsDragging] = useState(false);
+
   const colorMap: any = {
     blue: "text-[#00D4FF] border-[#00D4FF]/30",
     purple: "text-[#B026FF] border-[#B026FF]/30",
@@ -25,20 +27,43 @@ const WorkflowNode = ({ icon: Icon, title, x, y, active = false, color = "blue",
     orange: "shadow-[0_0_20px_rgba(245,158,11,0.3)]"
   };
 
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    setIsDragging(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return;
+    e.stopPropagation();
+    // movementX and movementY are physical screen pixels, so divide by zoom
+    onNodeDrag(id, e.movementX / zoom, e.movementY / zoom);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay, duration: 0.5, type: 'spring', stiffness: 100 }}
-      whileHover={{ y: -5, scale: 1.05 }}
+      transition={{ delay: isDragging ? 0 : delay, duration: isDragging ? 0 : 0.5, type: 'spring', stiffness: 100 }}
+      whileHover={{ scale: 1.05 }}
       style={{ left: x, top: y }}
-      className="absolute z-20 group -translate-x-1/2 -translate-y-1/2 cursor-pointer isolate"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      className={`absolute z-20 group -translate-x-1/2 -translate-y-1/2 isolate ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
     >
-      <div className={`p-3 rounded-2xl border bg-[#11141A]/95 backdrop-blur-xl flex items-center gap-3 w-[160px] transition-all duration-300 ${colorMap[color]} ${active ? glowMap[color] + ' border-current' : 'border-[#2A2E39] hover:border-current hover:' + glowMap[color]}`}>
+      <div className={`p-3 rounded-2xl border bg-[#11141A]/95 backdrop-blur-xl flex items-center gap-3 w-[160px] transition-all duration-300 ${colorMap[color]} ${active ? glowMap[color] + ' border-current' : 'border-[#2A2E39] hover:border-current hover:' + glowMap[color]} ${isDragging ? 'ring-2 ring-white/20' : ''}`}>
         <div className={`w-10 h-10 rounded-xl bg-[#1D222E] flex items-center justify-center shrink-0`}>
           <Icon size={18} className="text-current" />
         </div>
-        <div className="flex flex-col overflow-hidden">
+        <div className="flex flex-col overflow-hidden select-none pointer-events-none">
           <span className="text-[11px] font-bold text-[#E5E7EB] uppercase tracking-wide truncate">
             {title}
           </span>
@@ -50,81 +75,59 @@ const WorkflowNode = ({ icon: Icon, title, x, y, active = false, color = "blue",
       
       {/* Input Port (Left) */}
       {!hideInput && (
-        <div className="absolute -left-[5px] top-1/2 -translate-y-[50%] w-3 h-3 rounded-full border-2 border-[#11141A] bg-[#9CA3AF] group-hover:bg-[#E5E7EB] z-30 transition-colors"></div>
+        <div className="absolute -left-[5px] top-1/2 -translate-y-[50%] w-3 h-3 rounded-full border-2 border-[#11141A] bg-[#9CA3AF] group-hover:bg-[#E5E7EB] z-30 transition-colors pointer-events-none"></div>
       )}
       {/* Output Port (Right) */}
       {!hideOutput && (
-        <div className="absolute -right-[5px] top-1/2 -translate-y-[50%] w-3 h-3 rounded-full border-2 border-[#11141A] bg-[#9CA3AF] group-hover:bg-[#E5E7EB] z-30 transition-colors"></div>
+        <div className="absolute -right-[5px] top-1/2 -translate-y-[50%] w-3 h-3 rounded-full border-2 border-[#11141A] bg-[#9CA3AF] group-hover:bg-[#E5E7EB] z-30 transition-colors pointer-events-none"></div>
       )}
     </motion.div>
   );
 };
 
 const WorkflowVisual = () => {
+  const [zoom, setZoom] = useState(1);
+  const [resetKey, setResetKey] = useState(0);
   const nodeOffset = 80; // 160px node width / 2
 
-  const nodes = [
+  const [nodes, setNodes] = useState([
     // Column 1
-    { id: 'schedule', title: 'CRON Schedule', icon: Activity, x: 150, y: 150, color: 'orange', hideInput: true, delay: 0 },
-    { id: 'webhook', title: 'Webhook Start', icon: Webhook, x: 150, y: 450, color: 'blue', active: true, hideInput: true, delay: 0.1 },
-    { id: 'email_in', title: 'Email Parser', icon: FileText, x: 150, y: 750, color: 'purple', hideInput: true, delay: 0.2 },
+    { id: 'webhook', title: 'Webhook Start', icon: Webhook, x: 120, y: 300, color: 'blue', active: true, hideInput: true, delay: 0 },
     
     // Column 2
-    { id: 'enrich', title: 'Lead Enricher', icon: Settings, x: 420, y: 300, color: 'blue', delay: 0.3 },
-    { id: 'agent', title: 'AI Agent Hub', icon: Bot, x: 420, y: 450, color: 'purple', active: true, delay: 0.4 },
-    { id: 'vision', title: 'Vision Scanner', icon: Search, x: 420, y: 600, color: 'green', delay: 0.5 },
+    { id: 'agent', title: 'AI Agent', icon: Bot, x: 340, y: 300, color: 'purple', active: true, delay: 0.2 },
     
     // Column 3
-    { id: 'crm', title: 'CRM Sync', icon: Network, x: 690, y: 150, color: 'blue', delay: 0.6 },
-    { id: 'model', title: 'Google Gemini', icon: Sparkles, x: 690, y: 300, color: 'blue', delay: 0.7 },
-    { id: 'api', title: 'Rest API Client', icon: Globe, x: 690, y: 450, color: 'green', delay: 0.8 },
-    { id: 'switch', title: 'Condition Logic', icon: Split, x: 690, y: 600, color: 'orange', delay: 0.9 },
-    { id: 'analytics', title: 'Log Analytics', icon: TrendingUp, x: 690, y: 750, color: 'purple', delay: 1.0 },
+    { id: 'model', title: 'Google Gemini', icon: Sparkles, x: 560, y: 150, color: 'blue', delay: 0.4 },
+    { id: 'api', title: 'External API', icon: Globe, x: 560, y: 300, color: 'green', delay: 0.6 },
+    { id: 'switch', title: 'Condition / IF', icon: Split, x: 560, y: 450, color: 'orange', delay: 0.8 },
     
     // Column 4
-    { id: 'slack', title: 'Slack Notify', icon: MessageSquare, x: 960, y: 150, color: 'green', hideOutput: true, delay: 1.1 },
-    { id: 'output1', title: 'WhatsApp Out', icon: Zap, x: 960, y: 300, color: 'green', hideOutput: true, delay: 1.2 },
-    { id: 'output2', title: 'Return Data', icon: Send, x: 960, y: 450, color: 'blue', hideOutput: true, delay: 1.3 },
-    { id: 'db', title: 'Database Store', icon: Database, x: 960, y: 600, color: 'purple', delay: 1.4 },
-    { id: 'dashboard', title: 'Client Dashboard', icon: Cpu, x: 960, y: 750, color: 'orange', hideOutput: true, delay: 1.5 },
+    { id: 'output1', title: 'WhatsApp Out', icon: MessageSquare, x: 780, y: 150, color: 'green', hideOutput: true, delay: 1.0 },
+    { id: 'output2', title: 'Return Data', icon: Send, x: 780, y: 300, color: 'blue', hideOutput: true, delay: 1.2 },
+    { id: 'db', title: 'Data Store', icon: Database, x: 780, y: 450, color: 'purple', delay: 1.4 },
     
     // Column 5
-    { id: 'docs', title: 'Knowledge Base', icon: FileText, x: 1230, y: 600, color: 'blue', delay: 1.6 },
-    
-    // Column 6
-    { id: 'archive', title: 'Cold Storage Vault', icon: Server, x: 1500, y: 600, color: 'purple', hideOutput: true, delay: 1.7 },
-  ];
+    { id: 'docs', title: 'Knowledge Base', icon: FileText, x: 1000, y: 450, color: 'blue', hideOutput: true, delay: 1.6 },
+  ]);
+
+  const handleNodeDrag = (id: string, deltaX: number, deltaY: number) => {
+    setNodes(prev => prev.map(node => 
+      node.id === id 
+        ? { ...node, x: node.x + deltaX, y: node.y + deltaY }
+        : node
+    ));
+  };
 
   const connections = [
-    // Top flow
-    { from: 'schedule', to: 'enrich' },
-    { from: 'enrich', to: 'crm' },
-    { from: 'crm', to: 'slack' },
-    
-    // Middle-top interlaces
     { from: 'webhook', to: 'agent' },
-    { from: 'agent', to: 'enrich' }, 
     { from: 'agent', to: 'model' },
-    { from: 'model', to: 'crm' },
-    { from: 'model', to: 'output1' },
-    
-    // Middle standard
     { from: 'agent', to: 'api' },
-    { from: 'api', to: 'output2' },
-    
-    // Bottom interlaces
-    { from: 'email_in', to: 'vision' },
-    { from: 'vision', to: 'switch' },
     { from: 'agent', to: 'switch' },
-    
+    { from: 'model', to: 'output1' },
+    { from: 'api', to: 'output2' },
     { from: 'switch', to: 'db' },
-    { from: 'switch', to: 'analytics' },
-    
-    { from: 'analytics', to: 'dashboard' },
-    
-    // Storage tail
     { from: 'db', to: 'docs' },
-    { from: 'docs', to: 'archive' },
   ];
 
   return (
@@ -138,11 +141,20 @@ const WorkflowVisual = () => {
       <div className="absolute top-[20%] left-[20%] w-72 h-72 bg-neon-blue/10 rounded-full blur-[110px] animate-pulse"></div>
       <div className="absolute bottom-[20%] right-[20%] w-72 h-72 bg-neon-purple/10 rounded-full blur-[110px] animate-pulse" style={{ animationDelay: '1.5s' }}></div>
 
-      {/* FIXED SIZE INNER WOKRFLOW CANVAS (SCALES TO FIT) */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1650px] h-[900px] scale-[0.22] sm:scale-[0.35] md:scale-[0.45] lg:scale-[0.55] xl:scale-[0.65] 2xl:scale-[0.75] transform-gpu">
-        
-        {/* SVG Drawing Layer for Perfect Splines */}
-        <svg width="1650" height="900" viewBox="0 0 1650 900" className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-10 transition-transform duration-700">
+      {/* INTERACTIVE DRAGGABLE & ZOOMABLE PANVAS */}
+      <motion.div 
+        key={resetKey}
+        drag
+        dragConstraints={{ left: -1000, right: 1000, top: -1000, bottom: 1000 }}
+        dragElastic={0.1}
+        className="absolute top-1/2 left-1/2 w-[4000px] h-[4000px] -ml-[2000px] -mt-[2000px] cursor-grab active:cursor-grabbing flex items-center justify-center z-10"
+        animate={{ scale: zoom }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        <div className="relative w-[1120px] h-[600px] scale-[0.35] sm:scale-[0.55] md:scale-[0.65] lg:scale-[0.75] xl:scale-[0.85] 2xl:scale-[1] origin-center transform-gpu pointer-events-auto">
+          
+          {/* SVG Drawing Layer for Perfect Splines */}
+        <svg width="1120" height="600" viewBox="0 0 1120 600" className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-10 transition-transform duration-700">
           <defs>
             <linearGradient id="wf-line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#00D4FF" stopOpacity="0.5" />
@@ -225,9 +237,40 @@ const WorkflowVisual = () => {
         {/* Nodes Layer */}
         <div className="absolute inset-0 z-20">
           {nodes.map((node) => (
-            <WorkflowNode key={node.id} {...node} />
+            <WorkflowNode key={node.id} onNodeDrag={handleNodeDrag} zoom={zoom} {...node} />
           ))}
         </div>
+        </div>
+      </motion.div>
+
+      {/* Zoom / Pan Controls */}
+      <div className="absolute bottom-6 right-6 flex items-center gap-1.5 px-3 py-2 bg-white/10 dark:bg-black/50 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-full shadow-2xl z-40">
+        <button 
+          onClick={() => setZoom(z => Math.max(0.4, z - 0.2))}
+          className="p-1.5 rounded-full hover:bg-white/20 text-gray-800 dark:text-white transition-colors"
+          title="Zoom Out"
+        >
+          <Minus size={16} />
+        </button>
+        <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+        <button 
+          onClick={() => {
+            setZoom(1);
+            setResetKey(prev => prev + 1);
+          }}
+          className="p-1.5 rounded-full hover:bg-white/20 text-gray-800 dark:text-white transition-colors"
+          title="Reset Zoom & Pan"
+        >
+          <Maximize size={14} />
+        </button>
+        <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+        <button 
+          onClick={() => setZoom(z => Math.min(3, z + 0.2))}
+          className="p-1.5 rounded-full hover:bg-white/20 text-gray-800 dark:text-white transition-colors"
+          title="Zoom In"
+        >
+          <Plus size={16} />
+        </button>
       </div>
 
       {/* Floating Status Badges - Unaffected by scaling */}
