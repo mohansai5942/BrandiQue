@@ -110,8 +110,8 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ease-custom will-change-transform ${scrolled ? 'bg-white/95 dark:bg-[#05070A]/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-1.5 md:py-2 shadow-sm' : 'bg-transparent py-2.5 md:py-4 lg:py-6'}`}>
-        <div className="max-w-[1600px] mx-auto px-4 md:px-6 flex items-center justify-between relative">
+      <header className={`fixed top-0 z-50 w-full -mt-[19px] transition-all duration-500 ease-custom will-change-transform ${scrolled ? 'bg-white/95 dark:bg-[#05070A]/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-1.5 md:py-2 shadow-sm' : 'bg-transparent py-2.5 md:py-4 lg:py-6'}`}>
+        <div className="max-w-[1600px] mx-auto px-4 md:px-6 mt-[20px] m-0 flex items-center justify-between relative">
           <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)} onContextMenu={(e) => e.preventDefault()}>
             <img
               src="https://cdn.imgchest.com/files/c912299e5353.png"

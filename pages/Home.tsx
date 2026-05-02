@@ -88,13 +88,13 @@ const Home: React.FC = () => {
                <div className="space-y-6 text-left">
 
                   {/* ✅ Mobile (<lg): NO entrance animations */}
-                  <div className="block lg:hidden">
+                  <div className="block lg:hidden mt-[48px]">
                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-purple/10 border border-neon-purple/20 text-neon-purple text-[10px] font-bold uppercase tracking-widest">
                         <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
                         Engineered for Excellence
                      </div>
 
-                     <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-4">
+                     <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-[22px]">
                         We Architect <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-gradient-x bg-[length:200%_auto]">
                            {ROTATING_WORDS[currentWordIndex]}.
