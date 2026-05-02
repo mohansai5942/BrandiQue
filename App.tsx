@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ChatBotHighlight from './components/ChatBotHighlight';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -20,7 +21,6 @@ import CategoryPage from './pages/CategoryPage';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
-import SplashScreen from './components/SplashScreen';
 import FloatingPromotions from './components/FloatingPromotions';
 
 // ScrollToTop component to handle scroll reset on route change
@@ -35,17 +35,10 @@ const ScrollToTop = () => {
 }
 
 const App: React.FC = () => {
-  const [showSplash, setShowSplash] = useState(true);
-
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-  };
-
   return (
     <BrowserRouter>
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <ScrollToTop />
-      <div className={`min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white selection:bg-neon-purple selection:text-white transition-colors duration-300 ${showSplash ? 'hidden' : ''}`}>
+      <div className={`min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white selection:bg-neon-purple selection:text-white transition-colors duration-300`}>
         <Navbar />
         
         <main className="flex-grow">
@@ -89,6 +82,7 @@ const App: React.FC = () => {
 
         <Footer />
         <FloatingPromotions />
+        <ChatBotHighlight />
       </div>
     </BrowserRouter>
   );
