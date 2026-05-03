@@ -1,7 +1,36 @@
 import React, { useState, useRef } from 'react';
-import { ArrowRight, PenTool, Palette, Grid, Type, Diamond, Search, BookOpen, ShieldCheck, Star, TrendingUp } from 'lucide-react';
+import { ArrowRight, PenTool, Palette, Grid, Type, Diamond, Search, BookOpen, ShieldCheck, Star, TrendingUp, Check, Layers, Code, LayoutTemplate, Package, Sparkles } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
 import TextReveal from '../../components/TextReveal';
+
+
+const BRANDING_PACKAGE = {
+  id: "branding",
+  title: "Brand Strategy",
+  icon: Search,
+  desc: "Branding is the process of shaping how your business is perceived. We create a strong brand foundation that reflects your values, vision, and personality in a clear and consistent way. Our branding service focuses on building a unique concept for your business that makes it recognizable and memorable. We ensure your brand has a strong presence through thoughtful strategy, style direction, and visual consistency. The goal is to give your business a powerful identity that stands out and connects with your audience effectively.",
+  price: { basic: "10,000 to 20,000", premium: "25,000 to 50,000" },
+  features: ["Brand strategy & concept development", "Business positioning & tone direction", "Target audience understanding", "Brand name guidance (if needed)", "Consistent brand messaging framework", "Visual direction planning", "Competitor analysis (basic level)", "Brand guideline document (basic)"],
+  deliverables: ["Brand strategy document (business positioning & direction)", "Brand concept & storytelling framework", "Target audience & tone guidelines", "Brand messaging structure (how your brand communicates)", "Basic brand guideline document", "Final brand summary report (for reference use)"],
+  process: ["Discovery & Understanding", "Research & Analysis", "Brand Strategy Development", "Concept Creation", "Review & Refinement", "Final Documentation"],
+  requirements: ["Business name", "Business idea / overview", "Vision & mission (what you aim to achieve)", "Target audience details", "Industry / competitors (if known)", "Brand values (how you want to be perceived)", "Preferred tone (formal, modern, luxury, etc.)", "Any reference brands or inspirations"],
+  tech: ["Adobe Illustrator (brand strategy visuals, diagrams)", "Adobe Photoshop (concept mockups, presentations)", "Figma (brand presentation & layouts)", "Miro / FigJam (brainstorming & mind mapping)", "Google Docs / Notion (brand documentation)", "Canva (quick mockups & previews)"],
+  promises: ["Clear & well-defined brand strategy", "Unique brand positioning (no copy concepts)", "Consistent brand direction across all outputs", "Professional communication throughout the process", "On-time delivery as agreed", "Revisions included (within scope)", "Final output aligned with your business goals", "Complete transparency in process"]
+};
+
+const IDENTITY_PACKAGE = {
+  id: "identity",
+  title: "Visual Identity",
+  icon: Palette,
+  desc: "Brand identity is the visual expression of your brand. We design all the visual elements that represent your business, ensuring a consistent and professional look across all platforms. This includes logo design, color palette, typography, and brand style elements that define how your brand looks and feels. Every detail is designed to maintain consistency and visual impact. Our aim is to create a distinctive identity that is visually strong, easy to recognize, and aligned with your brand personality.",
+  price: { basic: "8,000 to 15,000", premium: "18,000 to 40,000" },
+  features: ["Custom logo design (primary + variations)", "Color palette selection", "Typography selection (fonts system)", "Brand style elements (icons, shapes, patterns)", "Visual identity system creation", "Brand guidelines document (full usage rules)", "Print & digital usage formats (basic assets)", "Scalable design system for consistency"],
+  deliverables: ["Primary logo + logo variations (horizontal, vertical, icon)", "Color palette file (HEX/RGB codes included)", "Typography system (font pairings)", "Brand style elements (icons, patterns, shapes)", "Complete brand guideline document (usage rules)", "High-resolution logo files (PNG, JPG, SVG, PDF)", "Social/print-ready assets (basic formats)", "Editable source files (if included in package)"],
+  process: ["Requirement Gathering", "Visual Research", "Logo Design & Concepts", "Design Refinement", "Identity System Creation", "Final Delivery"],
+  requirements: ["Brand name (final or shortlisted)", "Logo preferences (if any idea or style)", "Preferred colors (if any)", "Business niche / category", "Tagline (if available)", "Usage needs (website, print, social media, etc.)", "Any reference logos or design inspiration", "Text/content to include in logo (if needed)"],
+  tech: ["Adobe Illustrator (logo design & vector work)", "Adobe Photoshop (image editing & mockups)", "Figma (UI-style brand system & previews)", "Adobe InDesign (brand guidelines document)", "Color tools (Coolors / Adobe Color)", "Font libraries (Google Fonts, Adobe Fonts)", "Mockup tools (Placeit / Smartmockups)"],
+  promises: ["100% custom-designed identity (no templates)", "Unique and professional logo system", "Consistent visual identity across all elements", "High-quality, scalable design files", "Proper brand guideline documentation", "Multiple formats for digital & print use", "Revisions for design refinement", "Final delivery ready for real-world use"]
+};
 
 const Branding: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -214,7 +243,8 @@ const Branding: React.FC = () => {
   />
 </div>
 
-            {/* 2. Process Section */}
+            
+      {/* 2. Process Section */}
             <div className="mb-20 md:mb-32">
                <ScrollReveal>
                   <div className="text-center mb-10 md:mb-16">
@@ -246,7 +276,193 @@ const Branding: React.FC = () => {
                </ScrollReveal>
             </div>
 
-            {/* 3. Why Branding Matters Block */}
+            {/* Detailed Services & Packages */}
+      <div className="max-w-[1400px] mx-auto px-6 relative z-10 mb-20 md:mb-32">
+         <ScrollReveal>
+            <div className="text-center mb-10 md:mb-16">
+               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Detailed Packages</h3>
+               <div className="h-1 w-20 bg-pink-500 mx-auto rounded-full mb-6"></div>
+               <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">Explore our extensive branding and identity solutions.</p>
+            </div>
+         </ScrollReveal>
+
+         <div className="space-y-32">
+            {[BRANDING_PACKAGE, IDENTITY_PACKAGE].map((pkg, i) => (
+               <div key={i} id={pkg.id}>
+                  {/* Package Title & Description */}
+                  <ScrollReveal delay="delay-100">
+                     <div className="mb-10 text-center">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-pink-500/10 text-pink-500 mb-6 relative group">
+                            <div className="absolute inset-0 bg-pink-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all opacity-0 group-hover:opacity-100"></div>
+                            <pkg.icon size={32} className="relative z-10" />
+                        </div>
+                        <h4 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">{pkg.title}</h4>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base leading-relaxed max-w-4xl mx-auto">{pkg.desc}</p>
+                     </div>
+                  </ScrollReveal>
+
+                  {/* Bento Grid Layout */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min">
+                     
+                     {/* Pricing Card - spans 1 col */}
+                     <ScrollReveal delay="delay-200" className="lg:row-span-2">
+                        <div className="bg-gradient-to-br from-pink-500 to-rose-700 rounded-[32px] p-8 h-full flex flex-col shadow-xl relative overflow-hidden group">
+                           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl transform group-hover:scale-110 transition-transform duration-700"></div>
+                           <div className="absolute -top-4 -right-4 p-6 opacity-20 pointer-events-none transform group-hover:rotate-12 transition-transform duration-500">
+                              <TrendingUp size={120} className="text-white" />
+                           </div>
+                           <div className="relative z-10 flex-grow">
+                              <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h4>
+                              <p className="text-pink-100 text-sm mb-8 leading-relaxed">
+                                 Flexible plans tailored to your growth ambitions. We deliver measurable results.
+                              </p>
+                              
+                              <div className="space-y-4">
+                                 <div className="bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md rounded-2xl p-5 border border-white/20">
+                                    <p className="text-pink-200 text-xs font-bold uppercase tracking-wider mb-1">Basic Package</p>
+                                    <div className="flex items-end gap-1">
+                                       <p className="text-white text-xl md:text-2xl font-black">₹{pkg.price.basic}</p>
+                                    </div>
+                                 </div>
+                                 <div className="bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md rounded-2xl p-5 border border-white/20 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 bg-white text-pink-600 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-20">MOST POPULAR</div>
+                                    <p className="text-pink-200 text-xs font-bold uppercase tracking-wider mb-1">Advanced / Premium</p>
+                                    <div className="flex items-end gap-1">
+                                       <p className="text-white text-xl md:text-2xl font-black">₹{pkg.price.premium}</p>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </ScrollReveal>
+
+                     {/* Features Card */}
+                     <ScrollReveal delay="delay-300">
+                        <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-pink-500/30 transition-colors">
+                           <div className="flex items-center gap-4 mb-6">
+                              <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-500 shrink-0">
+                                 <Sparkles size={24} />
+                              </div>
+                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Features</h4>
+                           </div>
+                           <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
+                              {pkg.features.map((item, i) => (
+                                 <li key={i} className="flex items-start gap-3"><Check size={16} className="text-pink-500 shrink-0 mt-0.5" /> <span>{item}</span></li>
+                              ))}
+                           </ul>
+                        </div>
+                     </ScrollReveal>
+
+                     {/* Deliverables Card */}
+                     <ScrollReveal delay="delay-400">
+                        <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-blue-500/30 transition-colors">
+                           <div className="flex items-center gap-4 mb-6">
+                              <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
+                                 <Package size={24} />
+                              </div>
+                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Deliverables</h4>
+                           </div>
+                           <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
+                              {pkg.deliverables.map((item, i) => (
+                                 <li key={i} className="flex items-start gap-3"><Check size={16} className="text-blue-500 shrink-0 mt-0.5" /> <span>{item}</span></li>
+                              ))}
+                           </ul>
+                        </div>
+                     </ScrollReveal>
+
+                     {/* Process Card - spans 2 cols on lg, placed below features/deliverables */}
+                     <ScrollReveal delay="delay-500" className="md:col-span-2">
+                        <div className="bg-[#0A0C11] rounded-[32px] p-8 md:p-10 border border-gray-800 shadow-xl relative overflow-hidden h-full flex flex-col">
+                           <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-[80px]"></div>
+                           <div className="flex items-center gap-4 mb-8 relative z-10">
+                              <div className="w-12 h-12 rounded-xl bg-pink-500 flex items-center justify-center text-white shrink-0">
+                                 <LayoutTemplate size={24} />
+                              </div>
+                              <h4 className="text-xl md:text-2xl font-bold text-white">Full Cycle Process</h4>
+                           </div>
+                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8 relative z-10 flex-grow">
+                              {pkg.process.map((item, i) => (
+                                 <div key={i} className="flex gap-4 items-start group">
+                                    <span className="w-6 h-6 rounded-full bg-gray-800 text-gray-400 group-hover:bg-pink-500 group-hover:text-white transition-colors flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0 mt-0.5">{i+1}</span>
+                                    <div>
+                                       <p className="text-sm md:text-base font-bold text-gray-200 mb-1">{item}</p>
+                                    </div>
+                                 </div>
+                              ))}
+                           </div>
+                        </div>
+                     </ScrollReveal>
+
+                     {/* Requirements Card */}
+                     <ScrollReveal delay="delay-600">
+                        <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-orange-500/30 transition-colors">
+                           <div className="flex items-center gap-4 mb-6">
+                              <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 shrink-0">
+                                 <Layers size={24} />
+                              </div>
+                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Requirements</h4>
+                           </div>
+                           <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
+                              {pkg.requirements.map((item, i) => (
+                                 <li key={i} className="flex items-start gap-3"><Check size={14} className="text-orange-500 shrink-0 mt-0.5" /> <span>{item}</span></li>
+                              ))}
+                           </ul>
+                        </div>
+                     </ScrollReveal>
+
+                     {/* Tech & Tools Card - spans 1 col */}
+                     <ScrollReveal delay="delay-700">
+                        <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-purple-500/30 transition-colors">
+                           <div className="flex items-center gap-4 mb-6">
+                              <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 shrink-0">
+                                 <Code size={24} />
+                              </div>
+                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Tech & Tools</h4>
+                           </div>
+                           <div className="flex flex-wrap gap-2 flex-grow">
+                              {pkg.tech.map((item, i) => (
+                                 <span key={i} className="px-3 py-1.5 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-lg text-xs md:text-sm text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap">
+                                    {item}
+                                 </span>
+                              ))}
+                           </div>
+                        </div>
+                     </ScrollReveal>
+
+                     {/* Promises Card - spans 2 cols on lg */}
+                     <ScrollReveal delay="delay-800" className="md:col-span-2">
+                        <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-red-500/30 transition-colors">
+                           <div className="flex items-center gap-4 mb-6">
+                              <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 shrink-0">
+                                 <ShieldCheck size={24} />
+                              </div>
+                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Promises</h4>
+                           </div>
+                           <div className="grid md:grid-cols-2 gap-y-3 gap-x-6 flex-grow text-sm text-gray-600 dark:text-gray-400">
+                              {pkg.promises.map((item, i) => (
+                                 <div key={i} className="flex items-start gap-3"><Check size={16} className="text-red-500 shrink-0 mt-0.5" /> <span>{item}</span></div>
+                              ))}
+                           </div>
+                        </div>
+                     </ScrollReveal>
+
+                  </div>
+                  
+                  <div className="mt-12 md:mt-16 text-center flex justify-center w-full">
+                     <a 
+                        href={`https://wa.me/917093320572?text=Hi,%20I%20am%20interested%20in%20the%20${encodeURIComponent(pkg.title)}%20package.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-pink-500 text-white rounded-full font-bold text-base md:text-lg hover:bg-black transition-colors shadow-[0_10px_30px_rgba(236,72,153,0.3)] hover:shadow-black/30 group"
+                     >
+                        Get a Quote for {pkg.title} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                     </a>
+                  </div>
+               </div>
+            ))}
+         </div>
+      </div>
+{/* 3. Why Branding Matters Block */}
             <div className="bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/5 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 relative overflow-hidden group shadow-xl dark:shadow-none">
                {/* Hover Gradient Reveal */}
                <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Check, Youtube, Video, Heart, MessageCircle, Share2, Megaphone, Search, Palette, TrendingUp, BarChart, PieChart } from 'lucide-react';
+import { ArrowRight, Check, Youtube, Video, Heart, MessageCircle, Share2, Megaphone, Search, Palette, TrendingUp, BarChart, PieChart, Target, Package, Cpu, Sparkles, Layers, ListChecks } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
 import TextReveal from '../../components/TextReveal';
 
@@ -270,7 +270,197 @@ const DigitalMarketing: React.FC = () => {
                   </ScrollReveal>
               </div>
 
-              {/* Why Digital Marketing Matters Block */}
+              
+      {/* Detailed Digital Marketing Overview */}
+      <div className="max-w-[1400px] mx-auto px-6 relative z-10 mb-20 md:mb-32">
+         <ScrollReveal>
+             <div className="text-center mb-10 md:mb-16">
+                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Detailed Packages & Strategy</h3>
+                 <div className="h-1 w-20 bg-green-500 mx-auto rounded-full mb-6"></div>
+                 <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">
+                    Result-driven digital marketing solutions to help businesses increase their online visibility, reach the right audience, and grow effectively.
+                 </p>
+             </div>
+         </ScrollReveal>
+
+         {/* Bento Grid Layout */}
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min">
+            
+            {/* Pricing Card - spans 1 col */}
+            <ScrollReveal delay="delay-100" className="lg:row-span-2">
+               <div className="bg-gradient-to-br from-green-500 to-emerald-700 rounded-[32px] p-8 h-full flex flex-col shadow-xl relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl transform group-hover:scale-110 transition-transform duration-700"></div>
+                  <div className="absolute -top-4 -right-4 p-6 opacity-20 pointer-events-none transform group-hover:rotate-12 transition-transform duration-500">
+                     <TrendingUp size={120} className="text-white" />
+                  </div>
+                  <div className="relative z-10 flex-grow">
+                     <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h4>
+                     <p className="text-green-100 text-sm mb-8 leading-relaxed">
+                        Flexible plans tailored to your growth ambitions. From brand awareness to customer acquisition, we deliver measurable results.
+                     </p>
+                     
+                     <div className="space-y-4">
+                        <div className="bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md rounded-2xl p-5 border border-white/20">
+                           <p className="text-green-200 text-xs font-bold uppercase tracking-wider mb-1">Starter</p>
+                           <div className="flex items-end gap-1">
+                              <p className="text-white text-2xl font-black">₹10K – ₹20K</p>
+                              <span className="text-xs font-medium text-green-200 mb-1">/ month</span>
+                           </div>
+                        </div>
+                        <div className="bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md rounded-2xl p-5 border border-white/20 relative overflow-hidden">
+                           <div className="absolute top-0 right-0 bg-white text-green-600 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-20">MOST POPULAR</div>
+                           <p className="text-green-200 text-xs font-bold uppercase tracking-wider mb-1">Growth</p>
+                           <div className="flex items-end gap-1">
+                              <p className="text-white text-2xl font-black">₹25K – ₹50K</p>
+                              <span className="text-xs font-medium text-green-200 mb-1">/ month</span>
+                           </div>
+                        </div>
+                        <div className="bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md rounded-2xl p-5 border border-white/20">
+                           <p className="text-green-200 text-xs font-bold uppercase tracking-wider mb-1">Premium</p>
+                           <div className="flex items-end gap-1">
+                              <p className="text-white text-2xl font-black">₹60K – ₹1.2L</p>
+                              <span className="text-xs font-medium text-green-200 mb-1">/ month</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </ScrollReveal>
+
+            {/* Features Card */}
+            <ScrollReveal delay="delay-200">
+               <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-green-500/30 transition-colors">
+                  <div className="flex items-center gap-4 mb-6">
+                     <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500 shrink-0">
+                        <Sparkles size={24} />
+                     </div>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Features</h4>
+                  </div>
+                  <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
+                     {["Brand awareness campaigns", "Content planning & strategy", "Social media management", "Audience targeting & research", "Paid ad campaign setup", "Engagement improvement", "Performance tracking", "Monthly reporting"].map((item, i) => (
+                        <li key={i} className="flex items-start gap-3"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> <span>{item}</span></li>
+                     ))}
+                  </ul>
+               </div>
+            </ScrollReveal>
+
+            {/* Deliverables Card */}
+            <ScrollReveal delay="delay-300">
+               <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-blue-500/30 transition-colors">
+                  <div className="flex items-center gap-4 mb-6">
+                     <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
+                        <Package size={24} />
+                     </div>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Deliverables</h4>
+                  </div>
+                  <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
+                     {["Monthly marketing plan", "Content calendar (schedule)", "Social media posts/designs", "Ad campaign setup & reports", "Audience targeting report", "Performance analytics", "Growth insights", "Monthly progress report"].map((item, i) => (
+                        <li key={i} className="flex items-start gap-3"><Check size={16} className="text-blue-500 shrink-0 mt-0.5" /> <span>{item}</span></li>
+                     ))}
+                  </ul>
+               </div>
+            </ScrollReveal>
+
+            {/* Process Card - spans 2 cols on lg, placed below features/deliverables */}
+            <ScrollReveal delay="delay-400" className="md:col-span-2">
+               <div className="bg-[#0A0C11] rounded-[32px] p-8 md:p-10 border border-gray-800 shadow-xl relative overflow-hidden h-full flex flex-col">
+                  <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-green-500/5 rounded-full blur-[80px]"></div>
+                  <div className="flex items-center gap-4 mb-8 relative z-10">
+                     <div className="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center text-white shrink-0">
+                        <ListChecks size={24} />
+                     </div>
+                     <h4 className="text-xl md:text-2xl font-bold text-white">Full Cycle Process</h4>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 relative z-10 flex-grow">
+                     {[
+                        { title: "Requirement Analysis", desc: "Understand goals & audience" },
+                        { title: "Strategy Planning", desc: "Create marketing plan & approach" },
+                        { title: "Content Planning", desc: "Decide posts, creatives & schedule" },
+                        { title: "Campaign Setup", desc: "Set up ads & platforms" },
+                        { title: "Execution", desc: "Run campaigns & manage content" },
+                        { title: "Monitoring", desc: "Track performance & engagement" },
+                        { title: "Optimization", desc: "Improve results based on data" },
+                        { title: "Reporting", desc: "Monthly report & insights" }
+                     ].map((item, i) => (
+                        <div key={i} className="flex gap-4 items-start group">
+                           <span className="w-6 h-6 rounded-full bg-gray-800 text-gray-400 group-hover:bg-green-500 group-hover:text-white transition-colors flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0 mt-0.5">{i+1}</span>
+                           <div>
+                              <p className="text-sm md:text-base font-bold text-gray-200 mb-1">{item.title}</p>
+                              <p className="text-xs md:text-sm text-gray-500">{item.desc}</p>
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+               </div>
+            </ScrollReveal>
+
+            {/* Requirements Card */}
+            <ScrollReveal delay="delay-500">
+               <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-orange-500/30 transition-colors">
+                  <div className="flex items-center gap-4 mb-6">
+                     <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 shrink-0">
+                        <Layers size={24} />
+                     </div>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Requirements</h4>
+                  </div>
+                  <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
+                     {["Business details", "Target audience info", "Products / services", "Social media access", "Brand logo/assets", "Marketing goals", "Ads budget", "Competitor references"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3"><Check size={14} className="text-orange-500 shrink-0" /> <span>{item}</span></li>
+                     ))}
+                  </ul>
+               </div>
+            </ScrollReveal>
+
+            {/* Tech & Tools Card - spans 1 col */}
+            <ScrollReveal delay="delay-600">
+               <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-purple-500/30 transition-colors">
+                  <div className="flex items-center gap-4 mb-6">
+                     <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 shrink-0">
+                        <Cpu size={24} />
+                     </div>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Tech & Tools</h4>
+                  </div>
+                  <div className="flex flex-wrap gap-2 flex-grow">
+                     {["Meta Ads", "Google Ads", "Analytics", "Canva", "Business Suite", "SEO tools", "Notion / Sheets", "Search Console"].map((item, i) => (
+                        <span key={i} className="px-3 py-1.5 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-lg text-xs md:text-sm text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap">
+                           {item}
+                        </span>
+                     ))}
+                  </div>
+               </div>
+            </ScrollReveal>
+
+            {/* Promises Card - spans 2 cols on lg */}
+            <ScrollReveal delay="delay-700" className="md:col-span-2">
+               <div className="bg-white dark:bg-[#151A25] rounded-[32px] p-8 md:p-10 border border-gray-200 dark:border-white/5 shadow-xl h-full flex flex-col group hover:border-red-500/30 transition-colors">
+                  <div className="flex items-center gap-4 mb-6">
+                     <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 shrink-0">
+                        <Target size={24} />
+                     </div>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Promises</h4>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-y-3 gap-x-6 flex-grow text-sm text-gray-600 dark:text-gray-400">
+                     {["Clear transparent strategy", "Consistent campaign execution", "Regular performance tracking", "On-time monthly reporting", "Data-driven optimization", "Professional support", "Revisions based on results", "Focus on improving reach"].map((item, i) => (
+                        <div key={i} className="flex items-center gap-3"><Check size={16} className="text-red-500 shrink-0" /> <span>{item}</span></div>
+                     ))}
+                  </div>
+               </div>
+            </ScrollReveal>
+
+         </div>
+         
+         <div className="mt-12 md:mt-16 text-center flex justify-center w-full">
+            <a 
+               href="https://wa.me/917093320572?text=Hi,%20I%20am%20interested%20in%20your%20Digital%20Marketing%20services."
+               target="_blank"
+               rel="noopener noreferrer"
+               className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-green-500 text-white rounded-full font-bold text-base md:text-lg hover:bg-black transition-colors shadow-[0_10px_30px_rgba(34,197,94,0.3)] hover:shadow-black/30 group"
+            >
+               Get a Marketing Quote <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </a>
+         </div>
+      </div>
+{/* Why Digital Marketing Matters Block */}
               <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
                   {/* Text Block */}
                   <div className="lg:col-span-2 bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/5 rounded-2xl md:rounded-3xl p-6 md:p-8 relative overflow-hidden group shadow-xl dark:shadow-none">
