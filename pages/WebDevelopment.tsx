@@ -1,46 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Shield, MessageCircle, Star, ArrowRight, Clock, Lock, Sparkles, Zap, LayoutTemplate, ChevronDown, ChevronUp, Globe, Server, Code, Palette, Smartphone, Search, Database, Trophy, Rocket, Target, ShieldCheck, HelpCircle } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Check, Shield, MessageCircle, Star, ArrowRight, Clock, Lock, Sparkles, Zap, LayoutTemplate, ChevronDown, ChevronUp, Globe, Server, Code, Palette, Smartphone, Search, Database, Trophy, Rocket, Target, ShieldCheck, HelpCircle, User, Briefcase, ShoppingCart, Package, Layers, Monitor } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
 
-const SERVICES = [
-  {
-    id: "personal",
-    title: "Personal Website",
-    price: "9,000",
-    oldPrice: "18,000",
-    tagline: "For Individuals & Portfolios",
-    icon: Sparkles,
-    features: ["Custom React/Next.js Build", "5 Pages Included", "Mobile Responsive", "Contact Form Integration", "Basic Technical SEO", "7-Day Fast Delivery"]
-  },
-  {
-    id: "portfolio",
-    title: "Portfolio Website",
-    price: "9,000",
-    oldPrice: "18,000",
-    tagline: "For Creators & Artists",
-    icon: Palette,
-    features: ["High-End Visual Gallery", "3D Motion Effects", "Custom Brand Integration", "Mobile Optimized", "Domain & Hosting Setup", "10-Day Delivery"]
-  },
-  {
-    id: "business",
-    title: "Business Website",
-    price: "10,999",
-    oldPrice: "22,000",
-    tagline: "For Solutions & Startups",
-    icon: LayoutTemplate,
-    features: ["Multi-Page Architecture", "Lead Generation Focus", "Google Maps & WhatsApp", "Speed Optimization", "CMS for Easy Updates", "14-Day Delivery"]
-  },
-  {
-    id: "ecommerce",
-    title: "E-commerce Store",
-    price: "28,999",
-    oldPrice: "58,000",
-    tagline: "For Online Sellers",
-    icon: Lock,
-    features: ["Full Product Catalog", "Secure Payment Gateway", "Admin Dashboard", "Inventory Management", "Customer Accounts", "25-Day Pro Delivery"]
-  }
-];
+;
 
 const FAQ_ITEMS = [
   { q: "Standard Delivery Time entha?", a: "Standard projects 7-14 days lo complete chestam. Complex e-commerce sites ki 3-4 weeks padutundi." },
@@ -50,19 +13,7 @@ const FAQ_ITEMS = [
 ];
 
 const WebDevelopment = () => {
-  const location = useLocation();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (location.hash) {
-      const element = document.getElementById(location.hash.replace('#', ''));
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      }
-    }
-  }, [location]);
 
   return (
     <div className="min-h-screen pt-28 md:pt-36 pb-20 px-4 md:px-6 max-w-[1500px] mx-auto w-full relative overflow-hidden transition-colors duration-300">
@@ -116,52 +67,118 @@ const WebDevelopment = () => {
   />
 </div>
 
-      {/* 2. PRICING GRID */}
-      <section id="pricing" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-32">
-         {SERVICES.map((s, i) => (
-           <ScrollReveal key={i} delay={`delay-${i*100}`}>
-              <div className="relative group p-8 rounded-[40px] bg-white dark:bg-[#0F1320] border border-gray-100 dark:border-white/5 shadow-2xl hover:border-neon-purple/50 transition-all duration-500 flex flex-col h-full">
-                 {/* Top Decor */}
-                 <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity text-neon-purple">
-                    <s.icon size={80} />
-                 </div>
-                 
-                 <div className="relative z-10 flex-grow">
-                    <div className="w-14 h-14 rounded-2xl bg-gray-50 dark:bg-white/5 flex items-center justify-center mb-8 text-neon-purple shadow-sm">
-                       <s.icon size={30} />
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{s.title}</h3>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-[0.2em] mb-10">{s.tagline}</p>
-                    
-                    <div className="mb-10">
-                       <div className="flex items-end gap-2 mb-1">
-                          <span className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white">₹{s.price}</span>
-                          <span className="text-sm font-bold text-gray-400 line-through mb-1.5 opacity-60">₹{s.oldPrice}</span>
-                       </div>
-                       <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest">Inclusive of everything</p>
-                    </div>
+      {/* 2. PRICING PACKAGES */}
+      <section id="pricing" className="mb-32">
+         {/* 2. OVERVIEW */}
+         <ScrollReveal>
+            <div className="text-center mb-10 md:mb-16">
+               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Website Types & Pricing</h3>
+               <div className="h-1 w-20 bg-neon-purple mx-auto rounded-full mb-6"></div>
+               <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">Explore our pricing models for various website types. Choose between Full Stack Custom Coding or WordPress Development based on your needs.</p>
+            </div>
+         </ScrollReveal>
 
-                    <ul className="space-y-4 mb-12">
-                       {s.features.map((f, idx) => (
-                         <li key={idx} className="flex items-start gap-3">
-                            <div className="w-5 h-5 rounded-full bg-neon-purple/10 flex items-center justify-center text-neon-purple shrink-0 mt-0.5"><Check size={12} strokeWidth={3} /></div>
-                            <span className="text-sm text-gray-600 dark:text-gray-400 font-light">{f}</span>
-                         </li>
-                       ))}
-                    </ul>
-                 </div>
+         <div className="space-y-12">
+            {[
+               {
+                  id: "personal",
+                  title: "Personal Website",
+                  icon: User,
+                  desc: "We create personal websites that represent you professionally online with custom design, profile sections, and resume integration.",
+                  customPrice: "₹9,000",
+                  wpPrice: "₹9,000"
+               },
+               {
+                  id: "portfolio",
+                  title: "Portfolio Website",
+                  icon: Palette,
+                  desc: "Showcase your work effectively with project galleries, case studies, and smooth animations.",
+                  customPrice: "₹10,000",
+                  wpPrice: "₹10,000"
+               },
+               {
+                  id: "business",
+                  title: "Business Website",
+                  icon: Briefcase,
+                  desc: "Professional business websites with detailed service pages, lead generation forms, and SEO-friendly structures.",
+                  customPrice: "₹15,000",
+                  wpPrice: "₹15,000"
+               },
+               {
+                  id: "ecommerce",
+                  title: "E-Commerce Website",
+                  icon: ShoppingCart,
+                  desc: "Fully functional online stores with product management, secure payment integration, and order tracking.",
+                  customPrice: "₹25,000",
+                  wpPrice: "₹25,000"
+               }
+            ].map((pkg, idx) => (
+               <ScrollReveal key={idx} delay={`delay-${(idx%2)*100}`}>
+                  <div className="bg-white dark:bg-[#0F1320] rounded-[32px] border border-gray-200 dark:border-white/5 shadow-xl overflow-hidden group">
+                     {/* Header part */}
+                     <div className="p-6 md:p-8 border-b border-gray-200 dark:border-white/5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-6 opacity-[0.03] text-gray-900 dark:text-white pointer-events-none transition-transform duration-500 group-hover:scale-110">
+                           <pkg.icon size={100} />
+                        </div>
+                        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                           <div>
+                              <div className="flex items-center gap-4 mb-3">
+                                 <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-900 dark:text-white shrink-0">
+                                    <pkg.icon size={24} />
+                                 </div>
+                                 <h4 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{pkg.title}</h4>
+                              </div>
+                              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base max-w-3xl relative z-10">{pkg.desc}</p>
+                           </div>
+                        </div>
+                     </div>
 
-                 <a 
-                   href={`https://wa.me/917093320572?text=Hi, I am interested in the ${s.title} package.`}
-                   target="_blank"
-                   rel="noreferrer"
-                   className="relative z-10 w-full py-4 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-bold text-sm text-center shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
-                 >
-                   Get Started Now
-                 </a>
-              </div>
-           </ScrollReveal>
-         ))}
+                     {/* Options grid */}
+                     <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-white/5">
+                        
+                        {/* Custom Coding Option */}
+                        <div className="p-6 md:p-8 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors flex flex-col items-start h-full">
+                           <div className="flex items-center gap-2 mb-4">
+                              <Code size={18} className="text-neon-purple"/>
+                              <h5 className="font-bold text-lg text-gray-900 dark:text-white">Full Stack Custom Coding</h5>
+                           </div>
+                           <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex-grow">
+                              High-performance, completely custom-coded. Best for unique designs and maximum speed.
+                           </p>
+                           <div className="mb-6">
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-0.5">Starting from</p>
+                              <p className="text-2xl font-black text-neon-purple">{pkg.customPrice}</p>
+                           </div>
+                           <Link to={`/services/full-stack#${pkg.id}`} className="mt-auto w-full inline-flex items-center justify-between px-6 py-3.5 bg-gray-900 dark:bg-[#151A25] hover:bg-neon-purple dark:hover:bg-neon-purple text-white rounded-xl font-bold text-sm transition-all shadow-md group-hover:shadow-lg">
+                              <span>Full Stack Details</span>
+                              <ArrowRight size={16} />
+                           </Link>
+                        </div>
+
+                        {/* WordPress Option */}
+                        <div className="p-6 md:p-8 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors flex flex-col items-start h-full">
+                           <div className="flex items-center gap-2 mb-4">
+                              <LayoutTemplate size={18} className="text-blue-500"/>
+                              <h5 className="font-bold text-lg text-gray-900 dark:text-white">WordPress Development</h5>
+                           </div>
+                           <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex-grow">
+                              Flexible, easily manageable, and fast-to-deploy built on the world's most popular CMS.
+                           </p>
+                           <div className="mb-6">
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-0.5">Starting from</p>
+                              <p className="text-2xl font-black text-blue-500">{pkg.wpPrice}</p>
+                           </div>
+                           <Link to={`/services/wordpress#${pkg.id}`} className="mt-auto w-full inline-flex items-center justify-between px-6 py-3.5 bg-gray-900 dark:bg-[#151A25] hover:bg-blue-600 dark:hover:bg-blue-600 text-white rounded-xl font-bold text-sm transition-all shadow-md group-hover:shadow-lg">
+                              <span>WordPress Details</span>
+                              <ArrowRight size={16} />
+                           </Link>
+                        </div>
+
+                     </div>
+                  </div>
+               </ScrollReveal>
+            ))}
+         </div>
       </section>
 
       {/* 3. DETAILED DELIVERABLES */}

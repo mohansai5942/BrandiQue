@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Code, Zap, LayoutTemplate, Rocket, Server, Sparkles, TrendingUp, Globe } from 'lucide-react';
+import { ArrowRight, Check, Code, Zap, LayoutTemplate, Rocket, Server, Sparkles, TrendingUp, Globe, Monitor, Package, Briefcase, ShoppingCart, User, Layers, ShieldCheck } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
 import TextReveal from '../../components/TextReveal';
 
@@ -212,6 +212,170 @@ const FullStack: React.FC = () => {
                      <p className="text-gray-500 text-xs md:text-sm italic">“Each website is custom-built — no templates, no shortcuts.”</p>
                   </div>
                </ScrollReveal>
+            </div>
+            
+            {/* PACKAGES SECTION */}
+            <div className="mb-24 lg:mb-32">
+               <ScrollReveal>
+                  <div className="text-center mb-10 md:mb-16">
+                     <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Full Stack Development Services</h3>
+                     <div className="h-1 w-20 bg-neon-purple mx-auto rounded-full mb-6"></div>
+                     <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">Comprehensive solutions tailored to your unique needs, completely custom-coded.</p>
+                  </div>
+               </ScrollReveal>
+               
+               <div className="space-y-12 md:space-y-16">
+                  {[
+                    {
+                      id: "personal",
+                      title: "Personal Website",
+                      icon: User,
+                      desc: "We create personal websites that represent you professionally online. Our service includes custom design, about/profile sections, resume integration, contact forms, and mobile-friendly layouts to build your personal brand.",
+                      price: { sub: "9,000 to 15,000", custom: "18,000 to 25,000" },
+                      features: ["Custom UI design (clean & modern look)", "About Me / Profile section", "Resume / CV integration (download option)", "Contact form (email integration)", "Social media links integration", "Mobile responsive design", "Basic SEO setup", "Fast loading optimization"],
+                      deliverables: ["Fully designed & developed website", "Mobile responsive version (all devices)", "Live website deployment (hosting setup)", "Domain / subdomain setup", "Basic SEO configuration", "Contact form integration (email connected)", "1–2 rounds of revisions", "Handover + basic usage guidance"],
+                      process: ["Requirement discussion (profile, goals)", "Structure planning (about, resume, contact)", "UI design (clean & personal branding style)", "Development (responsive build)", "Review & minor revisions", "Testing & optimization", "Deployment (domain/hosting)", "Handover & guidance"],
+                      requirements: ["Basic details (name, bio, profession)", "Profile photo / personal images", "Resume / CV (PDF or content)", "Social media links", "Contact details (email, phone)", "Any reference websites (optional)"],
+                      tech: ["HTML, CSS, JavaScript", "React / Next.js (optional)", "Tailwind CSS", "Git & GitHub", "Basic SEO tools"],
+                      promises: ["Clean & professional personal branding", "Fully mobile responsive", "Fast loading & smooth performance", "Secure hosting & basic protection", "On-time delivery", "Revisions included", "Full ownership after delivery"]
+                    },
+                    {
+                      id: "portfolio",
+                      title: "Portfolio Website",
+                      icon: Briefcase,
+                      desc: "We design portfolio websites focused on showcasing your work effectively. We provide project galleries, case study sections, smooth navigation, fast loading speed, and visually engaging layouts to highlight your skills and creativity.",
+                      price: { sub: "10,000 to 17,000", custom: "16,000 to 28,000" },
+                      features: ["Creative & visually engaging design", "Project showcase (images / videos)", "Case study pages (project details)", "Category / filter options for projects", "Smooth animations & transitions", "Contact / inquiry form", "Mobile & tablet responsive", "Performance optimization"],
+                      deliverables: ["Custom-designed portfolio website", "Project showcase pages setup", "Mobile & tablet responsive design", "Live deployment (hosting + domain setup)", "Performance optimization", "Contact / inquiry form integration", "2–3 rounds of revisions", "Handover with editing guidance"],
+                      process: ["Requirement discussion (niche, style)", "Content & project collection", "Layout planning (project showcase)", "Creative UI/UX design", "Development with animations", "Review & revisions", "Performance testing", "Deployment & handover"],
+                      requirements: ["List of projects / works", "Project images / videos", "Project descriptions", "Personal / brand information", "Social links & contact details", "Design references (optional)"],
+                      tech: ["HTML, CSS, JavaScript", "React / Next.js", "Tailwind CSS / Framer Motion", "Image optimization tools", "Git & GitHub"],
+                      promises: ["Visually appealing & modern design", "High-quality project showcase", "Smooth animations & fast performance", "Fully responsive on all screens", "Revisions for design perfection", "On-time delivery commitment", "Complete control & easy updates"]
+                    },
+                    {
+                      id: "business",
+                      title: "Business Website",
+                      icon: Briefcase,
+                      desc: "We create professional business websites to enhance your online presence. Our service includes detailed service pages, lead generation forms, client testimonials, and SEO-friendly structures to help you attract and convert customers.",
+                      price: { sub: "15,000 to 25,000", custom: "30,000 to 60,000" },
+                      features: ["Professional business layout", "Service pages (detailed offerings)", "Lead generation forms", "WhatsApp / call integration", "Testimonials & client reviews", "SEO-friendly structure", "Google Maps integration", "Mobile responsive & speed optimized"],
+                      deliverables: ["Professional business website", "Service pages & lead generation setup", "Mobile responsive design", "Domain + hosting configuration", "Basic SEO + speed optimization", "WhatsApp / call integration", "Google Maps integration", "2–3 revisions + support", "Website handover with admin access"],
+                      process: ["Business requirement analysis", "Sitemap & page planning", "Professional UI/UX design", "Development (lead forms, integrations)", "Content integration", "Review & revisions", "SEO setup & performance optimization", "Deployment & support handover"],
+                      requirements: ["Business details (services, overview)", "Logo & branding materials", "Service descriptions", "Images (office, team, products)", "Contact information", "Testimonials / client reviews", "Google Maps location (optional)"],
+                      tech: ["HTML, CSS, JavaScript", "React / Next.js", "Tailwind / Bootstrap", "SEO tools (Google Search Console)", "Form integrations (Email/CRM)"],
+                      promises: ["Professional & conversion-focused design", "SEO-friendly structure", "Fast, secure, and reliable performance", "Lead generation systems", "Mobile responsive & user-friendly", "Timely delivery with clear communication", "Post-launch support included"]
+                    },
+                    {
+                      id: "ecommerce",
+                      title: "E-Commerce Website",
+                      icon: ShoppingCart,
+                      desc: "We develop e-commerce websites that enable you to sell online. Our service includes product management, secure payment integration, shopping cart system, order tracking, and a user-friendly interface for a smooth buying experience.",
+                      price: { sub: "25,000 to 50,000", custom: "1,50,000 to 5,00,000" },
+                      features: ["Product listing & categories", "Shopping cart & checkout system", "Secure payment gateway integration", "User account & order tracking", "Admin panel (manage products & orders)", "Discount coupons & offers", "Inventory management", "Mobile-friendly & fast performance"],
+                      deliverables: ["Fully functional online store", "Product & category setup", "Payment gateway integration", "Cart & checkout system", "User account & order tracking", "Admin dashboard access", "Mobile responsive & optimized", "Domain + hosting setup", "3–4 revisions + initial support", "Complete handover with training"],
+                      process: ["Requirement discussion (products, features)", "Store structure planning", "UI/UX design (shopping experience)", "Development (cart, checkout, payment)", "Product & content setup", "Testing (orders, payments, user flow)", "Deployment (live store setup)", "Handover + training (admin usage)"],
+                      requirements: ["Product details (name, price, description)", "Product images / videos", "Categories & product structure", "Payment details (bank/gateway)", "Shipping details & policies", "Business info (logo, contact)", "Terms & conditions / return policy"],
+                      tech: ["React / Next.js", "Node.js (Backend)", "Payment Gateway Integration", "Database (MySQL / Firebase)", "Hosting (Managed servers)", "Security tools (SSL)"],
+                      promises: ["Fully functional & secure online store", "Smooth shopping experience", "Safe payment gateway integration", "Fast loading & mobile-friendly design", "Proper product & order management", "Testing ensured before launch", "Training & support after delivery"]
+                    }
+                  ].map((pkg, i) => (
+                    <ScrollReveal key={i} delay={`delay-${(i%2)*100}`}>
+                      <div id={pkg.id} className="bg-white dark:bg-[#0F1320] rounded-[32px] border border-gray-200 dark:border-white/5 shadow-xl overflow-hidden group">
+                         <div className="p-6 md:p-10 border-b border-gray-200 dark:border-white/5 flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-neon-purple pointer-events-none">
+                               <pkg.icon size={120} />
+                            </div>
+                            <div className="relative z-10 flex-1">
+                               <div className="flex items-center gap-4 mb-4">
+                                  <div className="w-12 h-12 rounded-xl bg-neon-purple/10 flex items-center justify-center text-neon-purple shrink-0">
+                                     <pkg.icon size={24} />
+                                  </div>
+                                  <h4 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{pkg.title}</h4>
+                               </div>
+                               <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-3xl">{pkg.desc}</p>
+                            </div>
+                            <div className="relative z-10 lg:text-right shrink-0">
+                               <div className="bg-gray-50 dark:bg-[#151A25] p-5 rounded-2xl border border-gray-200 dark:border-white/5">
+                                  <div className="mb-3">
+                                     <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">With Sub-domain & Free Hosting</p>
+                                     <p className="text-xl font-bold text-gray-900 dark:text-white">₹{pkg.price.sub}</p>
+                                  </div>
+                                  <div>
+                                     <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">With Custom Domain & Secure Hosting</p>
+                                     <p className="text-xl font-black text-neon-purple">₹{pkg.price.custom}</p>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                         
+                         <div className="p-6 md:p-10 grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-x-12 md:gap-y-10 bg-gray-50 dark:bg-white/[0.02]">
+                            <div>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Sparkles size={16} className="text-neon-purple"/> Features</h5>
+                               <ul className="space-y-2">
+                                  {pkg.features.map((f, i) => (
+                                    <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400"><Check size={14} className="text-green-500 shrink-0 mt-0.5" /> <span>{f}</span></li>
+                                  ))}
+                               </ul>
+                            </div>
+                            <div>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Package size={16} className="text-neon-purple"/> Deliverables</h5>
+                               <ul className="space-y-2">
+                                  {pkg.deliverables.map((f, i) => (
+                                    <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400"><Check size={14} className="text-blue-400 shrink-0 mt-0.5" /> <span>{f}</span></li>
+                                  ))}
+                               </ul>
+                            </div>
+                            <div>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Layers size={16} className="text-neon-purple"/> Requirements</h5>
+                               <ul className="space-y-2">
+                                  {pkg.requirements.map((f, i) => (
+                                    <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400"><Check size={14} className="text-yellow-500 shrink-0 mt-0.5" /> <span>{f}</span></li>
+                                  ))}
+                               </ul>
+                            </div>
+                            <div>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><LayoutTemplate size={16} className="text-neon-purple"/> Process</h5>
+                               <ul className="space-y-2">
+                                  {pkg.process.map((f, i) => (
+                                    <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400">
+                                       <span className="w-4 h-4 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center text-[8px] font-bold shrink-0 mt-0.5">{i+1}</span>
+                                       <span>{f}</span>
+                                    </li>
+                                  ))}
+                               </ul>
+                            </div>
+                            <div>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Code size={16} className="text-neon-purple"/> Tech Stack</h5>
+                               <div className="flex flex-wrap gap-2">
+                                  {pkg.tech.map((t, i) => (
+                                    <span key={i} className="px-2.5 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider bg-gray-200 dark:bg-[#151A25] text-gray-700 dark:text-gray-300 rounded-md border border-gray-300 dark:border-white/5 shadow-sm">{t}</span>
+                                  ))}
+                               </div>
+                            </div>
+                            <div>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><ShieldCheck size={16} className="text-neon-purple"/> Promises</h5>
+                               <ul className="space-y-2">
+                                  {pkg.promises.map((f, i) => (
+                                    <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400"><Check size={14} className="text-neon-purple shrink-0 mt-0.5" /> <span>{f}</span></li>
+                                  ))}
+                               </ul>
+                            </div>
+                         </div>
+                         
+                         <div className="p-6 md:px-10 md:py-8 border-t border-gray-200 dark:border-white/5 bg-white dark:bg-[#0F1320] flex justify-end">
+                            <a 
+                               href={`https://wa.me/917093320572?text=Hi,%20I%20am%20interested%20in%20the%20${encodeURIComponent(pkg.title)}%20Custom%20Coding%20website%20package.`}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="inline-flex items-center gap-2 px-6 py-3 bg-neon-purple text-white rounded-xl font-bold text-sm md:text-base hover:bg-black transition-colors"
+                            >
+                               Get Custom Quote for {pkg.title} <ArrowRight size={18} />
+                            </a>
+                         </div>
+                      </div>
+                    </ScrollReveal>
+                  ))}
+               </div>
             </div>
             
             <div className="bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 relative overflow-hidden group shadow-xl dark:shadow-none">
