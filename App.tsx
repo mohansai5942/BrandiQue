@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import ChatBotHighlight from './components/ChatBotHighlight';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -95,7 +94,6 @@ const App: React.FC = () => {
 
         <Footer />
         <FloatingPromotions />
-        <ChatBotHighlight />
       </div>
     </BrowserRouter>
   );
