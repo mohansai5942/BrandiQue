@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag, Bot } from 'lucide-react';
+import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag, Bot, Briefcase } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,12 +90,20 @@ const Navbar: React.FC = () => {
     setHoverTimeout(timeout);
   };
 
-  const NAV_ITEMS = [
+  interface NavItem {
+    label: string;
+    path: string;
+    icon: React.ComponentType<any>;
+    hasDropdown?: boolean;
+    isHighlighted?: boolean;
+    isExternal?: boolean;
+  }
+
+  const NAV_ITEMS: NavItem[] = [
     { label: 'Home', path: '/', icon: Home },
     { label: 'Services', path: '/services', icon: Layers, hasDropdown: true },
     { label: 'Web Development', path: '/web-development', icon: Code, isHighlighted: true },
-    { label: 'Offers & Deals', path: 'https://deals.brandique.in/', icon: Tag, isExternal: true, isHighlighted: true },
-    { label: 'AI Prompts', path: 'https://creator.brandique.in/', icon: Sparkles, isExternal: true, isHighlighted: true },
+    { label: 'Projects', path: '/projects', icon: Briefcase, isHighlighted: true },
     { label: 'About', path: '/about', icon: Info },
     { label: 'Contact', path: '/contact', icon: Mail },
   ];
