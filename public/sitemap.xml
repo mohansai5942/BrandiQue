@@ -38,6 +38,18 @@
   </url>
 
   <url>
+    <loc>https://www.brandique.in/projects</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://www.brandique.in/web-development</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
     <loc>https://www.brandique.in/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
