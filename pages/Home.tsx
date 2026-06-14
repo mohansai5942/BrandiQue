@@ -6,7 +6,7 @@ import {
    Globe, Layers, ShieldCheck, ZapIcon, Target, Check, HelpCircle,
    Sparkles, Shield, Star, Monitor, Smartphone, Database, Globe2, Palette,
    History, Award, Activity, FileCode, HeartHandshake, Eye, Lightbulb, Workflow,
-   Terminal, Braces, Binary, Bot
+   Terminal, Braces, Binary, Bot, ExternalLink
 } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import TextReveal from '../components/TextReveal';
@@ -22,6 +22,109 @@ const STATS = [
 ];
 
 const ROTATING_WORDS = ["Digital Empires", "Intelligent Brands", "High-End Websites", "Future Tech"];
+
+const SELECTED_PREVIEW_PROJECTS = [
+   {
+      title: 'CREATOR PROMPTS',
+      category: 'SAAS Ecosystem',
+      desc: 'A dedicated ecosystem for digital creators and personal brands, offering AI-driven tools, resource hubs, and streamlined branding assets.',
+      tags: ['Next.js', 'AI Tools', 'UI/UX'],
+      image: 'https://cdn.imgchest.com/files/f7d1c1ce40b3.jpg',
+      video: 'https://cdn.imgchest.com/files/800f6ef2e71a.mp4',
+      link: 'https://creator.brandique.in',
+   },
+   {
+      title: 'MY FIRST PORTFOLIO',
+      category: 'Handcrafted Web Presence',
+      desc: 'Developed with complete handcrafted code, showcasing early web design skills, clean responsive layout structures, and fluid component arrangements.',
+      tags: ['HTML', 'CSS', 'JavaScript', 'Responsive'],
+      image: 'https://cdn.imgchest.com/files/2139b17e3f2c.png',
+      link: 'https://mohanwebdeveloper.netlify.app/',
+   },
+   {
+      title: 'ARCAR | SPORTS CAR STORE',
+      category: 'UI/UX Interactive Design',
+      desc: 'Immersive e-commerce store layout built in Figma targeting high-end luxury sports cars, structured with customized 3D spatial grids.',
+      tags: ['Figma', 'UI/UX Layout', 'Visual Concept'],
+      image: 'https://cdn.imgchest.com/files/ffa2d64a507b.png',
+      link: 'https://www.figma.com/design/krZKRq4Zs2xXXVcI4z6qJw/Car-animation-3D?node-id=0-1&p=f',
+   },
+   {
+      title: 'JJH INTERIORS',
+      category: 'Architecture & Design',
+      desc: 'A luxury interior design portfolio showcasing high-end residential and commercial architectural projects with a focus on minimalist elegance.',
+      tags: ['Design', 'Luxury', 'Portfolio'],
+      image: 'https://cdn.imgchest.com/files/c881793b1aa7.jpg',
+      link: 'https://interiors.jjhglobalsolutions.com',
+   }
+];
+
+interface PreviewProjectMediaProps {
+   image: string;
+   video?: string;
+   title: string;
+}
+
+const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video, title }) => {
+   const [showVideo, setShowVideo] = useState(!!video);
+   const videoRef = useRef<HTMLVideoElement>(null);
+
+   useEffect(() => {
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+      if (!showVideo && video) {
+         timeoutId = setTimeout(() => {
+            setShowVideo(true);
+         }, 2000);
+      }
+
+      return () => {
+         if (timeoutId) {
+            clearTimeout(timeoutId);
+         }
+      };
+   }, [showVideo, video]);
+
+   useEffect(() => {
+      if (showVideo && videoRef.current) {
+         videoRef.current.currentTime = 0;
+         videoRef.current.play().catch((err) => {
+            console.log("Auto-play prevented (expected in certain browser policies):", err);
+         });
+      }
+   }, [showVideo]);
+
+   const handleVideoEnded = () => {
+      setShowVideo(false);
+   };
+
+   return (
+      <div className="relative w-full h-full overflow-hidden">
+         {/* Image layer */}
+         <img
+            src={image}
+            alt={title}
+            className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
+               showVideo && video ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+            }`}
+         />
+
+         {/* Video layer */}
+         {video && (
+            <video
+               ref={videoRef}
+               src={video}
+               muted
+               playsInline
+               onEnded={handleVideoEnded}
+               className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
+                  showVideo ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+               }`}
+            />
+         )}
+      </div>
+   );
+};
 
 const Home: React.FC = () => {
    const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -275,24 +378,6 @@ const Home: React.FC = () => {
             </div>
          </section>
 
-         {/* 3. ABOUT US SHORTFORM */}
-         <section className="py-24 md:py-32 bg-white dark:bg-[#0A0C11]/30">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <div className="max-w-4xl mx-auto text-center space-y-12">
-                  <ScrollReveal>
-                     <h2 className="text-3xl md:text-6xl font-bold mb-8 tracking-tight">Architecting the <span className="text-neon-purple">Modern Web.</span></h2>
-                     <div className="grid md:grid-cols-2 gap-12 text-left text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                        <p>BrandiQue is a premier digital studio helping businesses navigate the modern web. We specialize in building high-performance websites that serve as powerful engines for business growth and authority.</p>
-                        <p>By leveraging frameworks like React and Next.js, we ensure every platform we deliver is lightning-fast, mobile-responsive, and infinitely scalable for the long term.</p>
-                     </div>
-                     <div className="flex justify-center pt-10">
-                        <Link to="/about" className="text-sm font-bold text-neon-purple uppercase tracking-widest border-b-2 border-neon-purple/20 pb-1 hover:border-neon-purple transition-all">Learn Our Story</Link>
-                     </div>
-                  </ScrollReveal>
-               </div>
-            </div>
-         </section>
-
          {/* --- INFO BLOCK B: STRATEGIC ENGINEERING VS GENERIC DESIGN --- */}
          <section className="py-24 bg-white dark:bg-[#05070A]">
             <div className="max-w-[1500px] mx-auto px-6">
@@ -352,6 +437,84 @@ const Home: React.FC = () => {
          </ViewOptimizer>
 
 {/* Ads significantly removed */}
+
+         {/* --- CURATED PROJECTS PREVIEW --- */}
+         <section className="py-24 bg-white dark:bg-[#05070A] border-t border-gray-200 dark:border-white/5">
+            <div className="max-w-[1500px] mx-auto px-6">
+               <ScrollReveal>
+                  <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                     <span className="text-xs font-bold uppercase tracking-[0.3em] text-neon-purple">Portfolio Highlights</span>
+                     <h2 className="text-3xl md:text-5xl font-bold">Featured <span className="text-neon-blue">Creations.</span></h2>
+                     <p className="text-gray-500 text-lg font-light">A curated showcase spanning bespoke functional applications, agency architectures, and high-fidelity interactive designs.</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 md:gap-12">
+                     {SELECTED_PREVIEW_PROJECTS.map((project, idx) => (
+                        <div 
+                           key={idx} 
+                           className="group flex flex-col bg-gray-50 dark:bg-[#0A0C11] rounded-2xl md:rounded-[32px] border border-gray-200 dark:border-white/5 overflow-hidden hover:border-neon-purple/30 transition-all duration-500 hover:shadow-2xl"
+                        >
+                           {/* Media layer */}
+                           <div className="relative aspect-[16/9] w-full bg-gray-900 border-b border-gray-100 dark:border-white/5">
+                              <ProjectPreviewMedia 
+                                 image={project.image} 
+                                 video={"video" in project ? project.video : undefined} 
+                                 title={project.title} 
+                              />
+                              <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-black/60 backdrop-blur-md px-2 py-0.5 md:px-3 md:py-1 text-[8px] md:text-[10px] font-bold tracking-wider rounded-full text-white uppercase">
+                                 {project.category}
+                              </div>
+                           </div>
+
+                           {/* Content layer */}
+                           <div className="p-3 md:p-8 flex-grow flex flex-col justify-between space-y-3 md:space-y-6">
+                              <div className="space-y-1.5 md:space-y-3">
+                                 <h3 className="text-xs md:text-2xl font-bold text-gray-900 dark:text-white group-hover:text-neon-purple transition-colors flex items-center gap-1 md:gap-2 uppercase">
+                                    {project.title}
+                                 </h3>
+                                 <p className="text-[10px] md:text-sm text-gray-500 dark:text-gray-400 font-light leading-relaxed line-clamp-2 md:line-clamp-none">
+                                    {project.desc}
+                                 </p>
+                              </div>
+
+                              <div className="flex flex-wrap gap-1 md:gap-2 pt-1 md:pt-2">
+                                 {project.tags.map((tag, tIdx) => (
+                                    <span 
+                                       key={tIdx} 
+                                       className="text-[8px] md:text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 md:px-2.5 md:py-1 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 text-gray-600 dark:text-gray-400 rounded-full"
+                                    >
+                                       {tag}
+                                    </span>
+                                 ))}
+                              </div>
+
+                              <div className="pt-2 md:pt-4 border-t border-gray-200/50 dark:border-white/5 flex justify-end">
+                                 <a 
+                                    href={project.link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="inline-flex items-center gap-1 md:gap-2 text-[9px] md:text-xs font-bold uppercase tracking-widest text-neon-purple hover:text-neon-blue transition-colors"
+                                 >
+                                    Launch Concept <ExternalLink className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+
+                  <div className="flex flex-col items-center justify-center pt-16">
+                     <Link 
+                        to="/projects" 
+                        className="px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-3 shadow-xl hover:shadow-neon-purple/20 text-sm tracking-wider uppercase"
+                     >
+                        Click Here for More Projects <ArrowRight size={16} />
+                     </Link>
+                     <p className="text-xs text-gray-400 mt-4 font-light uppercase tracking-wider">Unveiling our comprehensive suite of codebases and 3D mockups</p>
+                  </div>
+               </ScrollReveal>
+            </div>
+         </section>
 
          {/* --- INFO BLOCK C: MAXIMIZING ROI THROUGH PERFORMANCE --- */}
          <section className="py-24 bg-white dark:bg-[#0A0C11]/50 border-y border-gray-200 dark:border-white/5">
@@ -596,6 +759,24 @@ const Home: React.FC = () => {
                      </div>
                   </div>
                </ScrollReveal>
+            </div>
+         </section>
+
+         {/* 3. ABOUT US SHORTFORM - Relocated right under Bridging Creativity and Code */}
+         <section className="py-24 md:py-32 bg-white dark:bg-[#0A0C11]/30 border-t border-gray-200 dark:border-white/5">
+            <div className="max-w-[1500px] mx-auto px-6">
+               <div className="max-w-4xl mx-auto text-center space-y-12">
+                  <ScrollReveal>
+                     <h2 className="text-3xl md:text-6xl font-bold mb-8 tracking-tight">Architecting the <span className="text-neon-purple">Modern Web.</span></h2>
+                     <div className="grid md:grid-cols-2 gap-12 text-left text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
+                        <p>BrandiQue is a premier digital studio helping businesses navigate the modern web. We specialize in building high-performance websites that serve as powerful engines for business growth and authority.</p>
+                        <p>By leveraging frameworks like React and Next.js, we ensure every platform we deliver is lightning-fast, mobile-responsive, and infinitely scalable for the long term.</p>
+                     </div>
+                     <div className="flex justify-center pt-10">
+                        <Link to="/about" className="text-sm font-bold text-neon-purple uppercase tracking-widest border-b-2 border-neon-purple/20 pb-1 hover:border-neon-purple transition-all">Learn Our Story</Link>
+                     </div>
+                  </ScrollReveal>
+               </div>
             </div>
          </section>
 

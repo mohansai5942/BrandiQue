@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import WebDevelopment from './pages/WebDevelopment';
+import Projects from './pages/Projects';
 import Services from './pages/Services';
 import FullStack from './pages/services/FullStack';
 import WordPress from './pages/services/WordPress';
@@ -61,6 +62,7 @@ const App: React.FC = () => {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/web-development" element={<WebDevelopment />} />
+            <Route path="/projects" element={<Projects />} />
             
             {/* Prompts Section */}
             <Route path="/ai-prompts" element={<Prompts />} />
