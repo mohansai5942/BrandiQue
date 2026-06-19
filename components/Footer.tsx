@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const SOCIAL_LINKS = [
-    { icon: Instagram, href: "https://www.instagram.com/mohan_creator/" },
+    { icon: Instagram, href: "https://www.instagram.com/brandiquewebsolutions/" },
     { icon: Twitter, href: "https://x.com/Mohan_Creator" }, // Twitter (X)
     { icon: AtSign, href: "https://www.threads.com/@mohan_creator/" }, // Threads
     { icon: Mail, href: "mailto:brandiquewebsolutions@gmail.com" }

@@ -195,7 +195,7 @@ const Navbar: React.FC = () => {
           </nav>
 
           <div className="hidden lg:flex items-center gap-4">
-            <a href="https://www.instagram.com/mohan_creator/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:border-neon-purple hover:bg-neon-purple/20 transition-all duration-300 hover:scale-110 shadow-sm dark:shadow-none"><Instagram size={18} /></a>
+            <a href="https://www.instagram.com/brandiquewebsolutions/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:border-neon-purple hover:bg-neon-purple/20 transition-all duration-300 hover:scale-110 shadow-sm dark:shadow-none"><Instagram size={18} /></a>
             <button onClick={toggleTheme} className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 hover:border-yellow-400/50 hover:bg-yellow-400/10 transition-all duration-300 hover:rotate-90 shadow-sm dark:shadow-none">{isDark ? <Sun size={18} /> : <Moon size={18} />}</button>
           </div>
 
@@ -264,7 +264,7 @@ const Navbar: React.FC = () => {
             </div>
             <div className={`w-10 h-6 rounded-full p-1 transition-colors ${isDark ? 'bg-neon-purple' : 'bg-gray-300'}`}><div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${isDark ? 'translate-x-4' : 'translate-x-0'}`}></div></div>
           </button>
-          <div className="flex gap-3"><a href="https://www.instagram.com/mohan_creator/" target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-bold text-sm hover:text-neon-purple transition-colors"><Instagram size={16} /> Social</a></div>
+          <div className="flex gap-3"><a href="https://www.instagram.com/brandiquewebsolutions/" target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-bold text-sm hover:text-neon-purple transition-colors"><Instagram size={16} /> Social</a></div>
           <div className="text-center"><p className="text-[10px] text-gray-400 font-medium">v1.2.0 • BrandiQue Web Solutions</p></div>
         </div>
       </aside>
