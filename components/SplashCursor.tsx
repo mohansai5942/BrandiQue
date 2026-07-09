@@ -841,44 +841,28 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     }
 
     function splatPointer(pointer: Pointer) {
-      const isTouch = pointer.id !== -1;
-      const forceMultiplier = isTouch ? 2.5 : 1.0;
-      let dx = pointer.deltaX * config.SPLAT_FORCE * forceMultiplier;
-      let dy = pointer.deltaY * config.SPLAT_FORCE * forceMultiplier;
-      
-      const radiusVal = isTouch 
-        ? (config.SPLAT_RADIUS * 2.0 / 100.0) 
-        : (config.SPLAT_RADIUS / 100.0);
-
-      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color, radiusVal);
+      let dx = pointer.deltaX * config.SPLAT_FORCE;
+      let dy = pointer.deltaY * config.SPLAT_FORCE;
+      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color);
     }
 
     function clickSplat(pointer: Pointer) {
-      const isTouch = pointer.id !== -1;
       const col = generateColor();
-      col.r *= isTouch ? 15.0 : 10.0;
-      col.g *= isTouch ? 15.0 : 10.0;
-      col.b *= isTouch ? 15.0 : 10.0;
-      const forceMultiplier = isTouch ? 3.0 : 1.0;
-      let dx = 10 * (Math.random() - 0.5) * forceMultiplier;
-      let dy = 30 * (Math.random() - 0.5) * forceMultiplier;
-      
-      const radiusVal = isTouch 
-        ? (config.SPLAT_RADIUS * 2.5 / 100.0) 
-        : (config.SPLAT_RADIUS / 100.0);
-
-      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, col, radiusVal);
+      col.r *= 10.0;
+      col.g *= 10.0;
+      col.b *= 10.0;
+      let dx = 10 * (Math.random() - 0.5);
+      let dy = 30 * (Math.random() - 0.5);
+      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, col);
     }
 
-    function splat(x: number, y: number, dx: number, dy: number, colorObj: { r: number; g: number; b: number }, customRadius?: number) {
+    function splat(x: number, y: number, dx: number, dy: number, colorObj: { r: number; g: number; b: number }) {
       splatProgram.bind();
       gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
       gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
       gl.uniform2f(splatProgram.uniforms.point, x, y);
       gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0);
-      
-      const radiusVal = customRadius !== undefined ? customRadius : (config.SPLAT_RADIUS / 100.0);
-      gl.uniform1f(splatProgram.uniforms.radius, correctRadius(radiusVal));
+      gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
       blit(velocity.write);
       velocity.swap();
 
@@ -1028,6 +1012,15 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       return hash;
     }
 
+    let lastScrollX = window.scrollX;
+    let lastScrollY = window.scrollY;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchCurrentX = 0;
+    let touchCurrentY = 0;
+    let isTouching = false;
+    let scrollTimeout: any = null;
+
     function handleMouseDown(e: MouseEvent) {
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
@@ -1052,38 +1045,100 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
 
     function handleTouchStart(e: TouchEvent) {
       const touches = e.targetTouches;
-      let pointer = pointers[0];
-      for (let i = 0; i < touches.length; i++) {
-        let posX = scaleByPixelRatio(touches[i].clientX);
-        let posY = scaleByPixelRatio(touches[i].clientY);
-        updatePointerDownData(pointer, touches[i].identifier, posX, posY);
+      if (touches.length > 0) {
+        isTouching = true;
+        const touch = touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchCurrentX = touch.clientX;
+        touchCurrentY = touch.clientY;
+        lastScrollX = window.scrollX;
+        lastScrollY = window.scrollY;
+
+        let pointer = pointers[0];
+        let posX = scaleByPixelRatio(touch.clientX);
+        let posY = scaleByPixelRatio(touch.clientY);
+        updatePointerDownData(pointer, touch.identifier, posX, posY);
+        clickSplat(pointer);
       }
-      clickSplat(pointer);
     }
 
     function handleTouchMove(e: TouchEvent) {
       const touches = e.targetTouches;
-      let pointer = pointers[0];
-      for (let i = 0; i < touches.length; i++) {
-        let posX = scaleByPixelRatio(touches[i].clientX);
-        let posY = scaleByPixelRatio(touches[i].clientY);
+      if (touches.length > 0) {
+        isTouching = true;
+        const touch = touches[0];
+        touchCurrentX = touch.clientX;
+        touchCurrentY = touch.clientY;
+        // Maintain sync with scrolling offset if scroll starts after touch
+        touchStartX = touchCurrentX + (window.scrollX - lastScrollX);
+        touchStartY = touchCurrentY + (window.scrollY - lastScrollY);
+
+        let pointer = pointers[0];
+        let posX = scaleByPixelRatio(touch.clientX);
+        let posY = scaleByPixelRatio(touch.clientY);
         updatePointerMoveData(pointer, posX, posY, pointer.color);
       }
     }
 
     function handleTouchEnd(e: TouchEvent) {
-      const touches = e.changedTouches;
-      let pointer = pointers[0];
-      for (let i = 0; i < touches.length; i++) {
+      const touches = e.targetTouches;
+      if (touches.length === 0) {
+        isTouching = false;
+        let pointer = pointers[0];
         updatePointerUpData(pointer);
       }
+    }
+
+    function handleScroll() {
+      const currentScrollX = window.scrollX;
+      const currentScrollY = window.scrollY;
+      const scrollDeltaX = currentScrollX - lastScrollX;
+      const scrollDeltaY = currentScrollY - lastScrollY;
+
+      lastScrollX = currentScrollX;
+      lastScrollY = currentScrollY;
+
+      if (isTouching) {
+        touchCurrentX -= scrollDeltaX;
+        touchCurrentY -= scrollDeltaY;
+
+        let pointer = pointers[0];
+        let posX = scaleByPixelRatio(touchCurrentX);
+        let posY = scaleByPixelRatio(touchCurrentY);
+
+        pointer.prevTexcoordX = pointer.texcoordX;
+        pointer.prevTexcoordY = pointer.texcoordY;
+        pointer.texcoordX = posX / canvas.width;
+        pointer.texcoordY = 1.0 - posY / canvas.height;
+        pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
+        pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
+        pointer.moved = true;
+
+        let dx = pointer.deltaX * config.SPLAT_FORCE;
+        let dy = pointer.deltaY * config.SPLAT_FORCE;
+        // Make sure there is always a solid and beautiful splash even during gentle/slow scrolls
+        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) {
+          dx = (Math.random() - 0.5) * 300;
+          dy = (Math.random() - 0.5) * 300;
+        }
+        splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color);
+      }
+
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isTouching = false;
+        let pointer = pointers[0];
+        updatePointerUpData(pointer);
+      }, 150);
     }
 
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchmove', handleTouchMove, false);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true } as any);
     window.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     updateFrame();
 
@@ -1095,11 +1150,14 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
         animationFrameId.current = null;
       }
 
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchmove', handleTouchMove as any);
       window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('scroll', handleScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
