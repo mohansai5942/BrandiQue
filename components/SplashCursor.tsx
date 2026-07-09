@@ -843,6 +843,17 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     function splatPointer(pointer: Pointer) {
       let dx = pointer.deltaX * config.SPLAT_FORCE;
       let dy = pointer.deltaY * config.SPLAT_FORCE;
+      
+      // Ensure that slow movements or high pixel density don't make the trail thin/invisible.
+      // Guarantee a minimum force magnitude so dragging/touch-moving creates a thick, lush, and continuous stream.
+      const minForce = 150;
+      const len = Math.sqrt(dx * dx + dy * dy);
+      if (len < minForce && len > 0) {
+        const factor = minForce / len;
+        dx *= factor;
+        dy *= factor;
+      }
+      
       splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color);
     }
 
@@ -1014,12 +1025,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
 
     let lastScrollX = window.scrollX;
     let lastScrollY = window.scrollY;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchCurrentX = 0;
-    let touchCurrentY = 0;
     let isTouching = false;
-    let scrollTimeout: any = null;
 
     function handleMouseDown(e: MouseEvent) {
       let pointer = pointers[0];
@@ -1048,10 +1054,6 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       if (touches.length > 0) {
         isTouching = true;
         const touch = touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-        touchCurrentX = touch.clientX;
-        touchCurrentY = touch.clientY;
         lastScrollX = window.scrollX;
         lastScrollY = window.scrollY;
 
@@ -1068,11 +1070,6 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       if (touches.length > 0) {
         isTouching = true;
         const touch = touches[0];
-        touchCurrentX = touch.clientX;
-        touchCurrentY = touch.clientY;
-        // Maintain sync with scrolling offset if scroll starts after touch
-        touchStartX = touchCurrentX + (window.scrollX - lastScrollX);
-        touchStartY = touchCurrentY + (window.scrollY - lastScrollY);
 
         let pointer = pointers[0];
         let posX = scaleByPixelRatio(touch.clientX);
@@ -1099,38 +1096,29 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       lastScrollX = currentScrollX;
       lastScrollY = currentScrollY;
 
+      // On mobile view (when active touch is present), let handleTouchMove handle coordinates 100% cleanly.
+      // We do NOT want scroll events to warp the active touch coordinates or trigger extra scroll-based splats.
       if (isTouching) {
-        touchCurrentX -= scrollDeltaX;
-        touchCurrentY -= scrollDeltaY;
+        return;
+      }
 
+      // For desktop scroll (or scroll momentum when not touching), generate a gorgeous splash centered in the viewport
+      if (Math.abs(scrollDeltaX) > 1 || Math.abs(scrollDeltaY) > 1) {
         let pointer = pointers[0];
-        let posX = scaleByPixelRatio(touchCurrentX);
-        let posY = scaleByPixelRatio(touchCurrentY);
+        let posX = scaleByPixelRatio(window.innerWidth / 2);
+        let posY = scaleByPixelRatio(window.innerHeight / 2);
 
         pointer.prevTexcoordX = pointer.texcoordX;
         pointer.prevTexcoordY = pointer.texcoordY;
         pointer.texcoordX = posX / canvas.width;
         pointer.texcoordY = 1.0 - posY / canvas.height;
-        pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
-        pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
-        pointer.moved = true;
 
-        let dx = pointer.deltaX * config.SPLAT_FORCE;
-        let dy = pointer.deltaY * config.SPLAT_FORCE;
-        // Make sure there is always a solid and beautiful splash even during gentle/slow scrolls
-        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) {
-          dx = (Math.random() - 0.5) * 300;
-          dy = (Math.random() - 0.5) * 300;
-        }
+        let dx = correctDeltaX(scrollDeltaX) * config.SPLAT_FORCE * 0.5;
+        let dy = correctDeltaY(-scrollDeltaY) * config.SPLAT_FORCE * 0.5;
+
+        // Apply a beautiful and solid splash based on desktop scroll speed
         splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color);
       }
-
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        isTouching = false;
-        let pointer = pointers[0];
-        updatePointerUpData(pointer);
-      }, 150);
     }
 
     window.addEventListener('mousedown', handleMouseDown);
@@ -1149,8 +1137,6 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
         cancelAnimationFrame(animationFrameId.current);
         animationFrameId.current = null;
       }
-
-      if (scrollTimeout) clearTimeout(scrollTimeout);
 
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
