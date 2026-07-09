@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-route
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import VideoIntro from './components/VideoIntro';
+import SplashCursor from './components/SplashCursor';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -51,6 +52,7 @@ const ScrollToTop = () => {
 const App: React.FC = () => {
   return (
     <BrowserRouter>
+      <SplashCursor />
       <VideoIntro />
       <ScrollToTop />
       <div className={`min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white selection:bg-neon-purple selection:text-white transition-colors duration-300`}>
