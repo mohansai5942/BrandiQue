@@ -841,28 +841,44 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     }
 
     function splatPointer(pointer: Pointer) {
-      let dx = pointer.deltaX * config.SPLAT_FORCE;
-      let dy = pointer.deltaY * config.SPLAT_FORCE;
-      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color);
+      const isTouch = pointer.id !== -1;
+      const forceMultiplier = isTouch ? 2.5 : 1.0;
+      let dx = pointer.deltaX * config.SPLAT_FORCE * forceMultiplier;
+      let dy = pointer.deltaY * config.SPLAT_FORCE * forceMultiplier;
+      
+      const radiusVal = isTouch 
+        ? (config.SPLAT_RADIUS * 2.0 / 100.0) 
+        : (config.SPLAT_RADIUS / 100.0);
+
+      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color, radiusVal);
     }
 
     function clickSplat(pointer: Pointer) {
+      const isTouch = pointer.id !== -1;
       const col = generateColor();
-      col.r *= 10.0;
-      col.g *= 10.0;
-      col.b *= 10.0;
-      let dx = 10 * (Math.random() - 0.5);
-      let dy = 30 * (Math.random() - 0.5);
-      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, col);
+      col.r *= isTouch ? 15.0 : 10.0;
+      col.g *= isTouch ? 15.0 : 10.0;
+      col.b *= isTouch ? 15.0 : 10.0;
+      const forceMultiplier = isTouch ? 3.0 : 1.0;
+      let dx = 10 * (Math.random() - 0.5) * forceMultiplier;
+      let dy = 30 * (Math.random() - 0.5) * forceMultiplier;
+      
+      const radiusVal = isTouch 
+        ? (config.SPLAT_RADIUS * 2.5 / 100.0) 
+        : (config.SPLAT_RADIUS / 100.0);
+
+      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, col, radiusVal);
     }
 
-    function splat(x: number, y: number, dx: number, dy: number, colorObj: { r: number; g: number; b: number }) {
+    function splat(x: number, y: number, dx: number, dy: number, colorObj: { r: number; g: number; b: number }, customRadius?: number) {
       splatProgram.bind();
       gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
       gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
       gl.uniform2f(splatProgram.uniforms.point, x, y);
       gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0);
-      gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+      
+      const radiusVal = customRadius !== undefined ? customRadius : (config.SPLAT_RADIUS / 100.0);
+      gl.uniform1f(splatProgram.uniforms.radius, correctRadius(radiusVal));
       blit(velocity.write);
       velocity.swap();
 
@@ -1042,6 +1058,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
         let posY = scaleByPixelRatio(touches[i].clientY);
         updatePointerDownData(pointer, touches[i].identifier, posX, posY);
       }
+      clickSplat(pointer);
     }
 
     function handleTouchMove(e: TouchEvent) {
