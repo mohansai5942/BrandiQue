@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import VideoIntro from './components/VideoIntro';
 import SplashCursor from './components/SplashCursor';
+import ClickSpark from './components/ClickSpark';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -55,7 +56,14 @@ const App: React.FC = () => {
       <SplashCursor />
       <VideoIntro />
       <ScrollToTop />
-      <div className={`min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white selection:bg-neon-purple selection:text-white transition-colors duration-300`}>
+      <ClickSpark
+        sparkColor="#e8eb14"
+        sparkSize={28}
+        sparkRadius={70}
+        sparkCount={9}
+        duration={700}
+        className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white selection:bg-neon-purple selection:text-white transition-colors duration-300"
+      >
         <Navbar />
         
         <main className="flex-grow">
@@ -100,7 +108,7 @@ const App: React.FC = () => {
 
         <Footer />
         <FloatingPromotions />
-      </div>
+      </ClickSpark>
     </BrowserRouter>
   );
 };
