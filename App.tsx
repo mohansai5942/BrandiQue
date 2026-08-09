@@ -19,8 +19,6 @@ import AIAutomation from './pages/services/AIAutomation';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import CookiePolicy from './pages/CookiePolicy';
-import Prompts from './pages/Prompts';
-import CategoryPage from './pages/CategoryPage';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -73,12 +71,6 @@ const App: React.FC = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/web-development" element={<WebDevelopment />} />
             <Route path="/projects" element={<Projects />} />
-            
-            {/* Prompts Section */}
-            <Route path="/ai-prompts" element={<Prompts />} />
-            <Route path="/men" element={<CategoryPage category="Men" />} />
-            <Route path="/women" element={<CategoryPage category="Women" />} />
-            <Route path="/couple" element={<CategoryPage category="Couple" />} />
             
             {/* Service Routes */}
             <Route path="/services" element={<Services />} />

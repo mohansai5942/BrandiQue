@@ -1,0 +1,25 @@
+{
+  "entities": {
+    "Message": {
+      "title": "Message",
+      "description": "Contact form submissions from users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "service": { "type": "string" },
+        "budget": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "service", "budget", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Collection of contact form submissions"
+    }
+  }
+}
