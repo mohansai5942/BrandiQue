@@ -4,28 +4,18 @@ import { motion, AnimatePresence } from 'motion/react';
 
 const FloatingPromotions: React.FC = () => {
   const [showDeals, setShowDeals] = useState(false);
-  const [showPrompts, setShowPrompts] = useState(false);
 
   useEffect(() => {
     const dealsClosed = localStorage.getItem('brandique_deals_closed');
-    const promptsClosed = localStorage.getItem('brandique_prompts_closed');
 
     if (!dealsClosed) {
       setTimeout(() => setShowDeals(true), 2000);
-    }
-    if (!promptsClosed) {
-      setTimeout(() => setShowPrompts(true), 3000);
     }
   }, []);
 
   const closeDeals = () => {
     setShowDeals(false);
     localStorage.setItem('brandique_deals_closed', 'true');
-  };
-
-  const closePrompts = () => {
-    setShowPrompts(false);
-    localStorage.setItem('brandique_prompts_closed', 'true');
   };
 
   return (
@@ -67,49 +57,6 @@ const FloatingPromotions: React.FC = () => {
                     className="inline-flex items-center gap-2 px-4 py-1.5 bg-neon-purple text-white text-[10px] font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-transform"
                   >
                     Explore Deals <ExternalLink size={10} />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {showPrompts && (
-          <motion.div
-            key="floating-prompts-popup"
-            initial={{ opacity: 0, x: 50, y: 20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-            className="pointer-events-auto w-full sm:w-80 glass-morphism rounded-2xl p-4 shadow-2xl border border-white/10 relative overflow-hidden group"
-          >
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-neon-blue to-neon-pink"></div>
-            
-            <button 
-              onClick={closePrompts}
-              className="absolute top-2 right-2 p-1 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
-            >
-              <X size={16} />
-            </button>
-
-            <div className="flex gap-4 items-start">
-              <div className="w-10 h-10 rounded-xl bg-neon-blue/20 flex items-center justify-center text-neon-blue shrink-0">
-                <Sparkles size={20} />
-              </div>
-              <div className="space-y-1 pr-4">
-                <h4 className="font-bold text-sm text-white flex items-center gap-2">
-                  ✨ Creator Prompts
-                </h4>
-                <p className="text-xs text-gray-400 leading-relaxed">
-                  New AI image & video prompts added daily for creators.
-                </p>
-                <div className="pt-2">
-                  <a 
-                    href="https://creator.brandique.in" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-1.5 bg-neon-blue text-white text-[10px] font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-transform"
-                  >
-                    Explore Prompts <ExternalLink size={10} />
                   </a>
                 </div>
               </div>

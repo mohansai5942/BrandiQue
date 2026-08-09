@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, LayoutTemplate, Code, PenTool, Megaphone } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 // --- CONFIGURATION ---
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgvgdpng";
@@ -27,6 +29,20 @@ const Contact: React.FC = () => {
     setFormStatus('submitting');
     
     try {
+      // Save submission to Firebase Firestore
+      try {
+        await addDoc(collection(db, 'messages'), {
+          service: selectedService,
+          name: formData.name,
+          email: formData.email,
+          budget: formData.budget,
+          message: formData.message,
+          createdAt: new Date().toISOString()
+        });
+      } catch (fbError) {
+        console.error("Firebase save error:", fbError);
+      }
+
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: {
