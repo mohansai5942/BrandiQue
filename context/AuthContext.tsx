@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (id: string, pass: string): Promise<boolean> => {
     const normalizedId = id.trim().toLowerCase();
-    const isMockAdmin = normalizedId === 'mohan' || normalizedId === 'mohan5942';
+    const isMockAdmin = normalizedId === 'mohan';
     
     // Convert to a valid email format for Firebase Auth if not already an email
     const email = id.includes('@') ? id.trim() : `${normalizedId}@brandique.in`;

@@ -32,11 +32,11 @@ const Admin: React.FC = () => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passError, setPassError] = useState('');
   const [passSuccess, setPassSuccess] = useState('');
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
   const fetchMessages = async () => {
     setMessagesLoading(true);
@@ -311,7 +311,7 @@ const Admin: React.FC = () => {
                 setPassSuccess('');
                 setShowOldPassword(false);
                 setShowNewPassword(false);
-                setShowConfirmPassword(false);
+                setShowConfirmNewPassword(false);
               }}
               className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors"
             >
@@ -342,7 +342,7 @@ const Admin: React.FC = () => {
                 setConfirmNewPassword('');
                 setShowOldPassword(false);
                 setShowNewPassword(false);
-                setShowConfirmPassword(false);
+                setShowConfirmNewPassword(false);
                 setTimeout(() => {
                   setIsChangePasswordOpen(false);
                   setPassSuccess('');
@@ -364,7 +364,7 @@ const Admin: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowOldPassword(!showOldPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none"
                   >
                     {showOldPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -384,7 +384,7 @@ const Admin: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none"
                   >
                     {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -395,7 +395,7 @@ const Admin: React.FC = () => {
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Confirm New Password</label>
                 <div className="relative">
                   <input 
-                    type={showConfirmPassword ? "text" : "password"} 
+                    type={showConfirmNewPassword ? "text" : "password"} 
                     value={confirmNewPassword} 
                     onChange={(e) => setConfirmNewPassword(e.target.value)}
                     required
@@ -403,10 +403,10 @@ const Admin: React.FC = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                    onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none"
                   >
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showConfirmNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
