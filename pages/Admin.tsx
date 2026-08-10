@@ -262,7 +262,7 @@ const Admin: React.FC = () => {
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Update your BrandiQue Admin credentials.</p>
 
-            <form onSubmit={(e) => {
+            <form onSubmit={async (e) => {
               e.preventDefault();
               setPassError('');
               setPassSuccess('');
@@ -272,7 +272,7 @@ const Admin: React.FC = () => {
                 return;
               }
 
-              const result = changePassword(oldPassword, newPassword);
+              const result = await changePassword(oldPassword, newPassword);
               if (result.success) {
                 setPassSuccess(result.message);
                 setOldPassword('');
