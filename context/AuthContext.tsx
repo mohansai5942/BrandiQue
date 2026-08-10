@@ -10,15 +10,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
-  // Check for existing session on mount
-  useEffect(() => {
-    const storedAuth = localStorage.getItem('isAdminAuthenticated');
-    if (storedAuth === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, []);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('isAdminAuthenticated') === 'true';
+  });
 
   const login = (id: string, pass: string) => {
     const customPass = localStorage.getItem('adminPassword');
