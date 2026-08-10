@@ -10,6 +10,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "firebase": "^12.17.1",
     "lucide-react": "0.344.0",
     "motion": "^12.38.0",

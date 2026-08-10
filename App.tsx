@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import VideoIntro from './components/VideoIntro';
@@ -101,6 +102,7 @@ const App: React.FC = () => {
         <Footer />
         <FloatingPromotions />
       </ClickSpark>
+      <SpeedInsights />
     </BrowserRouter>
   );
 };
