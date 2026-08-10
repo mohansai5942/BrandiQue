@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (id: string, pass: string): Promise<boolean> => {
     const normalizedId = id.trim().toLowerCase();
-    const isMockAdmin = normalizedId === 'mohan';
+    const isMockAdmin = normalizedId === 'mohan' || normalizedId === 'mohan@brandique.in';
     
     // Convert to a valid email format for Firebase Auth if not already an email
     const email = id.includes('@') ? id.trim() : `${normalizedId}@brandique.in`;
@@ -65,10 +65,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       let isValidCredentials = false;
 
       if (isMockAdmin) {
-        if (customPass) {
-          isValidCredentials = (pass === customPass);
-        } else {
-          isValidCredentials = (pass === 'Mohan@5942' || pass === 'Mohan@20452');
+        if (pass === 'Mohan@5942' || pass === 'Mohan@20452') {
+          isValidCredentials = true;
+          // Sync/Reset password locally in case it was changed/corrupted
+          localStorage.setItem('adminPassword', pass);
+        } else if (customPass && pass === customPass) {
+          isValidCredentials = true;
         }
       }
 
