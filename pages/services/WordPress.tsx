@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Check, LayoutTemplate, Settings, FileText, Globe, Users, Grid, MousePointer2, Map, Layers, ShieldCheck, Edit3, TrendingUp, Palette, Sparkles, Monitor, Package, Briefcase, ShoppingCart, User, Code } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
 import TextReveal from '../../components/TextReveal';
+import { useInquiry } from '../../context/InquiryContext';
 
 const WordPress: React.FC = () => {
+  const { openInquiry } = useInquiry();
   const [typedText, setTypedText] = useState('');
   
   useEffect(() => {
@@ -176,14 +178,12 @@ const WordPress: React.FC = () => {
                         ))}
                      </ul>
 
-                     <a 
-                        href="https://wa.me/917093320572?text=Hi%20I%20am%20looking%20for%20a%20Wordpress%20website!"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                     <button 
+                        onClick={() => openInquiry('WordPress Web Development')}
                         className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-blue-500 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all shadow-lg hover:shadow-blue-500/40 group transform hover:-translate-y-1"
                      >
                         Start WP Project <ArrowRight size={16} className="md:w-[18px] group-hover:translate-x-1 transition-transform" />
-                     </a>
+                     </button>
                   </ScrollReveal>
                </div>
             </div>
@@ -407,14 +407,12 @@ const WordPress: React.FC = () => {
                          </div>
                          
                          <div className="p-6 md:px-10 md:py-8 border-t border-gray-200 dark:border-white/5 bg-white dark:bg-[#151A25] flex justify-end">
-                            <a 
-                               href={`https://wa.me/917093320572?text=Hi,%20I%20am%20interested%20in%20the%20${encodeURIComponent(pkg.title)}%20WordPress%20package.`}
-                               target="_blank"
-                               rel="noopener noreferrer"
+                            <button 
+                               onClick={() => openInquiry('WordPress Web Development', pkg.title)}
                                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-xl font-bold text-sm md:text-base hover:bg-black transition-colors"
                             >
                                Get WP Quote for {pkg.title} <ArrowRight size={18} />
-                            </a>
+                            </button>
                          </div>
                       </div>
                     </ScrollReveal>

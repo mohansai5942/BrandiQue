@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Check, Bot, Cpu, Workflow, MessageSquare, Zap, Database, Network, Sparkles, TrendingUp, Globe, Server, Activity, Rocket, Webhook, FileText, Split, Send, Link2, Search, Settings, Trash2, Plus, Minus, Maximize, Target, Package, Layers, Code, LayoutTemplate, ShieldCheck } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
+import { useInquiry } from '../../context/InquiryContext';
 import TextReveal from '../../components/TextReveal';
 
 const WorkflowNode = ({ id, onNodeDrag, icon: Icon, title, x, y, active = false, color = "blue", hideInput = false, hideOutput = false, delay = 0, zoom = 1 }: any) => {
@@ -343,6 +344,7 @@ const AI_CHATBOTS_PKG = {
 };
 
 const AIAutomation: React.FC = () => {
+  const { openInquiry } = useInquiry();
   const [code, setCode] = useState('');
   const [cursorVisible, setCursorVisible] = useState(true);
   
@@ -445,14 +447,9 @@ await agent.deploy();`;
                            </li>
                         ))}
                      </ul>
-                     <a 
-                        href="https://wa.me/917093320572?text=Hi%20I%20am%20looking%20for%20a%20AI%20Automation%20or%20AI%20Agent%20Services!"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-neon-blue hover:text-white dark:hover:bg-neon-blue dark:hover:text-white transition-all shadow-lg hover:shadow-neon-blue/40 group transform hover:-translate-y-1"
-                     >
+                     <button onClick={() => openInquiry('AI Automation & Agents')} className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-neon-blue hover:text-white dark:hover:bg-neon-blue dark:hover:text-white transition-all shadow-lg hover:shadow-neon-blue/40 group transform hover:-translate-y-1">
                         Start AI Project <ArrowRight size={16} className="md:w-[18px] group-hover:translate-x-1 transition-transform" />
-                     </a>
+                     </button>
                   </ScrollReveal>
                </div>
             </div>
@@ -705,14 +702,9 @@ await agent.deploy();`;
                         </div>
                         
                         <div className="mt-12 md:mt-16 text-center flex justify-center w-full">
-                           <a 
-                              href={`https://wa.me/917093320572?text=Hi,%20I%20am%20interested%20in%20your%20${encodeURIComponent(pkg.title)}%20services.`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-neon-blue text-white rounded-full font-bold text-base md:text-lg hover:bg-black transition-colors shadow-[0_10px_30px_rgba(0,212,255,0.3)] hover:shadow-black/30 group"
-                           >
+                           <button onClick={() => openInquiry('AI Automation & Agents', pkg.title)} className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-neon-blue text-white rounded-full font-bold text-base md:text-lg hover:bg-black transition-colors shadow-[0_10px_30px_rgba(0,212,255,0.3)] hover:shadow-black/30 group">
                               Get Quote for {pkg.title} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                           </a>
+                           </button>
                         </div>
                      </div>
                   ))}
@@ -800,22 +792,12 @@ await agent.deploy();`;
                      <h3 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">Start Automating Your Business Today.</h3>
                      <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-light mb-10">Get your custom AI automation setup and save hours of manual work every single day.</p>
                      <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <a 
-                           href="https://wa.me/917093320572?text=Hi%20I%20am%20looking%20for%20a%20AI%20Automation%20or%20AI%20Agent%20Services!"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           className="px-10 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold shadow-2xl hover:scale-105 transition-transform inline-flex items-center justify-center gap-3"
-                        >
+                        <button onClick={() => openInquiry('AI Automation & Agents')} className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-neon-blue hover:text-white dark:hover:bg-neon-blue dark:hover:text-white transition-all shadow-lg hover:shadow-neon-blue/40 group transform hover:-translate-y-1">
                            Contact Now <ArrowRight size={20} />
-                        </a>
-                        <a 
-                           href="https://wa.me/917093320572?text=Hi%20I%20am%20looking%20for%20a%20AI%20Automation%20or%20AI%20Agent%20Services!"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           className="px-10 py-4 border border-neon-blue/50 text-neon-blue bg-neon-blue/5 backdrop-blur-sm rounded-full font-bold hover:bg-neon-blue hover:text-white transition-all inline-flex items-center justify-center gap-3"
-                        >
+                        </button>
+                        <button onClick={() => openInquiry('AI Automation & Agents')} className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-neon-blue hover:text-white dark:hover:bg-neon-blue dark:hover:text-white transition-all shadow-lg hover:shadow-neon-blue/40 group transform hover:-translate-y-1">
                            Let’s Build Your AI System <Zap size={20} />
-                        </a>
+                        </button>
                      </div>
                   </div>
                </div>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Check, Youtube, Video, Heart, MessageCircle, Share2, Megaphone, Search, Palette, TrendingUp, BarChart, PieChart, Target, Package, Cpu, Sparkles, Layers, ListChecks } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
+import { useInquiry } from '../../context/InquiryContext';
 import TextReveal from '../../components/TextReveal';
 
 const DigitalMarketing: React.FC = () => {
+  const { openInquiry } = useInquiry();
   const [likes, setLikes] = useState(8432);
   const [showHeart, setShowHeart] = useState(false);
   
@@ -192,14 +194,9 @@ const DigitalMarketing: React.FC = () => {
                               ))}
                           </ul>
 
-                          <a 
-                              href="https://wa.me/917093320572?text=Hi%20I%20am%20looking%20for%20a%20Digital%20Marketing%20service!"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-green-500 hover:text-white dark:hover:bg-green-500 dark:hover:text-white transition-all shadow-lg hover:shadow-green-500/40 group transform hover:-translate-y-1"
-                          >
+                          <button onClick={() => openInquiry('Digital Marketing')} className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-green-500 hover:text-white dark:hover:bg-green-500 dark:hover:text-white transition-all shadow-lg hover:shadow-green-500/40 group transform hover:-translate-y-1">
                               Grow Your Brand <ArrowRight size={16} className="md:w-[18px] group-hover:translate-x-1 transition-transform" />
-                          </a>
+                          </button>
                       </ScrollReveal>
                   </div>
               </div>
@@ -450,14 +447,9 @@ const DigitalMarketing: React.FC = () => {
          </div>
          
          <div className="mt-12 md:mt-16 text-center flex justify-center w-full">
-            <a 
-               href="https://wa.me/917093320572?text=Hi,%20I%20am%20interested%20in%20your%20Digital%20Marketing%20services."
-               target="_blank"
-               rel="noopener noreferrer"
-               className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-green-500 text-white rounded-full font-bold text-base md:text-lg hover:bg-black transition-colors shadow-[0_10px_30px_rgba(34,197,94,0.3)] hover:shadow-black/30 group"
-            >
+            <button onClick={() => openInquiry('Digital Marketing')} className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-green-500 text-white rounded-full font-bold text-base md:text-lg hover:bg-black transition-colors shadow-[0_10px_30px_rgba(34,197,94,0.3)] hover:shadow-black/30 group">
                Get a Marketing Quote <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </a>
+            </button>
          </div>
       </div>
 {/* Why Digital Marketing Matters Block */}

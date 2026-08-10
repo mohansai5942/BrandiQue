@@ -11,8 +11,10 @@ export interface Message {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   service: string;
   budget: string;
   message: string;
   createdAt: string;
+  serviceDetails?: Record<string, string>;
 }

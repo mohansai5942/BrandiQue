@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key } from 'lucide-react';
+import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Message } from '../types';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const Admin: React.FC = () => {
@@ -12,6 +12,17 @@ const Admin: React.FC = () => {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [messageSearchTerm, setMessageSearchTerm] = useState('');
   const [isMessageDetailOpen, setIsMessageDetailOpen] = useState(false);
+
+  // States for Editing
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editingMessage, setEditingMessage] = useState<Message | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [editService, setEditService] = useState('');
+  const [editBudget, setEditBudget] = useState('');
+  const [editMessageText, setEditMessageText] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // States for custom delete confirmation
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -60,6 +71,36 @@ const Admin: React.FC = () => {
       }
     } catch (error) {
       console.error("Error deleting message: ", error);
+    }
+  };
+
+  const handleUpdateMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingMessage) return;
+    setIsUpdating(true);
+    try {
+      const docRef = doc(db, 'messages', editingMessage.id);
+      const updatedData = {
+        name: editName.trim(),
+        email: editEmail.trim().toLowerCase(),
+        phone: editPhone.trim(),
+        service: editService.trim(),
+        budget: editBudget.trim(),
+        message: editMessageText.trim(),
+      };
+      await updateDoc(docRef, updatedData);
+      
+      setMessages(prev => prev.map(m => m.id === editingMessage.id ? { ...m, ...updatedData } : m));
+      setIsEditOpen(false);
+      setEditingMessage(null);
+      if (selectedMessage?.id === editingMessage.id) {
+        setSelectedMessage(prev => prev ? { ...prev, ...updatedData } : null);
+      }
+    } catch (error) {
+      console.error("Error updating message in Firestore: ", error);
+      alert("Error updating inquiry. Please try again.");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -212,6 +253,21 @@ const Admin: React.FC = () => {
                       className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:border-neon-purple hover:shadow-[0_0_10px_rgba(160,32,240,0.3)] transition-all"
                     >
                       View
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setEditingMessage(msg);
+                        setEditName(msg.name || '');
+                        setEditEmail(msg.email || '');
+                        setEditPhone(msg.phone || '');
+                        setEditService(msg.service || '');
+                        setEditBudget(msg.budget || '');
+                        setEditMessageText(msg.message || '');
+                        setIsEditOpen(true);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:border-neon-purple hover:shadow-[0_0_10px_rgba(160,32,240,0.3)] transition-all"
+                    >
+                      Edit
                     </button>
                     <button 
                       onClick={() => setDeletingId(msg.id)} 
@@ -402,6 +458,15 @@ const Admin: React.FC = () => {
                     {selectedMessage.email}
                   </a>
                 </div>
+                {selectedMessage.phone && (
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Phone Number</h4>
+                    <a href={`tel:${selectedMessage.phone}`} className="text-sm font-semibold text-neon-purple hover:underline flex items-center gap-1.5">
+                      <Phone size={14} />
+                      {selectedMessage.phone}
+                    </a>
+                  </div>
+                )}
                 <div>
                   <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Required Service</h4>
                   <span className="inline-block mt-1 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border bg-neon-purple/10 text-neon-purple border-neon-purple/20">
@@ -417,6 +482,24 @@ const Admin: React.FC = () => {
                 </div>
               </div>
 
+              {/* Dynamic Service Specific Details */}
+              {selectedMessage.serviceDetails && Object.keys(selectedMessage.serviceDetails).length > 0 && (
+                <div className="pt-6 border-t border-gray-200 dark:border-white/5">
+                  <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Service Specific Details</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(selectedMessage.serviceDetails).map(([key, val]) => {
+                      if (key === 'phone') return null; // Already rendered above
+                      return (
+                        <div key={key} className="p-3 bg-gray-50/50 dark:bg-[#05070A]/50 rounded-xl border border-gray-100 dark:border-white/5">
+                          <h5 className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">{key}</h5>
+                          <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">{val || 'Not specified'}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               <div className="pt-6 border-t border-gray-200 dark:border-white/5">
                 <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Detailed Message</h4>
                 <div className="p-4 bg-gray-50 dark:bg-[#05070A] rounded-xl border border-gray-200 dark:border-white/10 text-sm text-gray-800 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
@@ -427,6 +510,21 @@ const Admin: React.FC = () => {
 
             {/* Modal Footer */}
             <div className="p-6 border-t border-gray-200 dark:border-white/5 bg-gray-50/50 dark:bg-[#0A0C11]/50 flex justify-end gap-3">
+              <button 
+                onClick={() => {
+                  setEditingMessage(selectedMessage);
+                  setEditName(selectedMessage.name || '');
+                  setEditEmail(selectedMessage.email || '');
+                  setEditPhone(selectedMessage.phone || '');
+                  setEditService(selectedMessage.service || '');
+                  setEditBudget(selectedMessage.budget || '');
+                  setEditMessageText(selectedMessage.message || '');
+                  setIsEditOpen(true);
+                }}
+                className="px-5 py-2.5 rounded-xl bg-neon-purple/10 border border-neon-purple/20 text-neon-purple hover:bg-neon-purple hover:text-white transition-all text-sm font-bold flex items-center gap-1.5"
+              >
+                <Edit3 size={16} /> Edit Inquiry
+              </button>
               <button 
                 onClick={() => {
                   setDeletingId(selectedMessage.id);
@@ -443,6 +541,117 @@ const Admin: React.FC = () => {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* --- EDIT INQUIRY MODAL --- */}
+      {isEditOpen && editingMessage && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-xl rounded-[24px] border border-gray-200 dark:border-white/10 shadow-2xl p-8 relative animate-scale-in max-h-[92vh] flex flex-col">
+            <button 
+              onClick={() => {
+                setIsEditOpen(false);
+                setEditingMessage(null);
+              }}
+              className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors"
+            >
+              <X size={18} />
+            </button>
+            
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+              <Edit3 size={22} className="text-neon-purple" />
+              Edit Lead Inquiry
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Modify the client info or requested details.</p>
+
+            <form onSubmit={handleUpdateMessage} className="space-y-4 overflow-y-auto pr-1 flex-1 custom-scrollbar">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Full Name</label>
+                  <input 
+                    type="text" 
+                    value={editName} 
+                    onChange={(e) => setEditName(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Email Address</label>
+                  <input 
+                    type="email" 
+                    value={editEmail} 
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Phone Number</label>
+                  <input 
+                    type="text" 
+                    value={editPhone} 
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Service Requested</label>
+                  <input 
+                    type="text" 
+                    value={editService} 
+                    onChange={(e) => setEditService(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Estimated Budget</label>
+                <input 
+                  type="text" 
+                  value={editBudget} 
+                  onChange={(e) => setEditBudget(e.target.value)}
+                  required
+                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Message / Notes</label>
+                <textarea 
+                  rows={4}
+                  value={editMessageText} 
+                  onChange={(e) => setEditMessageText(e.target.value)}
+                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
+                />
+              </div>
+
+              <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-white/5">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setIsEditOpen(false);
+                    setEditingMessage(null);
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-xs font-bold"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={isUpdating}
+                  className="px-6 py-2.5 bg-neon-purple hover:bg-neon-purple/90 text-white font-bold rounded-xl shadow-lg shadow-neon-purple/20 transition-all text-xs flex items-center gap-1.5"
+                >
+                  {isUpdating ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
