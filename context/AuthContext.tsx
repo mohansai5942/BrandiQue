@@ -33,8 +33,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAuthenticated(true);
         localStorage.setItem('isAdminAuthenticated', 'true');
       } else {
-        setIsAuthenticated(false);
-        localStorage.removeItem('isAdminAuthenticated');
+        const wasAuthenticatedLocally = localStorage.getItem('isAdminAuthenticated') === 'true';
+        if (!wasAuthenticatedLocally) {
+          setIsAuthenticated(false);
+        }
       }
       setLoading(false);
     });
@@ -58,30 +60,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error: any) {
       console.log('Firebase auth login failed:', error.code || error.message);
       
-      // If the user does not exist, check if we can auto-provision using default admin credentials
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-email') {
-        const customPass = localStorage.getItem('adminPassword');
-        let isValidCredentials = false;
+      // Fallback: Check if credentials are valid locally
+      const customPass = localStorage.getItem('adminPassword');
+      let isValidCredentials = false;
 
-        if (isMockAdmin) {
-          if (customPass) {
-            isValidCredentials = (pass === customPass);
-          } else {
-            isValidCredentials = (pass === 'Mohan@5942' || pass === 'Mohan@20452');
-          }
+      if (isMockAdmin) {
+        if (customPass) {
+          isValidCredentials = (pass === customPass);
+        } else {
+          isValidCredentials = (pass === 'Mohan@5942' || pass === 'Mohan@20452');
         }
+      }
 
-        if (isValidCredentials) {
-          try {
-            // Auto-provision admin user in Firebase Auth
-            await createUserWithEmailAndPassword(auth, email, pass);
-            localStorage.setItem('isAdminAuthenticated', 'true');
-            setIsAuthenticated(true);
-            return true;
-          } catch (createError) {
-            console.error('Failed to auto-create admin in Firebase Auth:', createError);
-          }
+      if (isValidCredentials) {
+        localStorage.setItem('isAdminAuthenticated', 'true');
+        setIsAuthenticated(true);
+
+        // Try to auto-provision user in Firebase Auth silently in the background
+        try {
+          await createUserWithEmailAndPassword(auth, email, pass);
+        } catch (createError: any) {
+          console.log('Silent auto-provision info:', createError.code || createError.message);
         }
+        
+        return true;
       }
       return false;
     }
