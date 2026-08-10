@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ArrowRight, PenTool, Palette, Grid, Type, Diamond, Search, BookOpen, ShieldCheck, Star, TrendingUp, Check, Layers, Code, LayoutTemplate, Package, Sparkles } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
 import TextReveal from '../../components/TextReveal';
+import { useInquiry } from '../../context/InquiryContext';
 
 
 const BRANDING_PACKAGE = {
@@ -33,6 +34,7 @@ const IDENTITY_PACKAGE = {
 };
 
 const Branding: React.FC = () => {
+  const { openInquiry } = useInquiry();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -114,14 +116,9 @@ const Branding: React.FC = () => {
                         ))}
                      </ul>
 
-                     <a 
-                        href="https://wa.me/917093320572?text=Hi%20I%20am%20looking%20for%20a%20Branding%20service!"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-pink-500 hover:text-white dark:hover:bg-pink-500 dark:hover:text-white transition-all shadow-lg hover:shadow-pink-500/40 group transform hover:-translate-y-1"
-                     >
+                     <button onClick={() => openInquiry('Branding & Identity')} className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-pink-500 hover:text-white dark:hover:bg-pink-500 dark:hover:text-white transition-all shadow-lg hover:shadow-pink-500/40 group transform hover:-translate-y-1">
                         Start Branding <ArrowRight size={16} className="md:w-[18px] group-hover:translate-x-1 transition-transform" />
-                     </a>
+                     </button>
                   </ScrollReveal>
                </div>
 
@@ -449,14 +446,9 @@ const Branding: React.FC = () => {
                   </div>
                   
                   <div className="mt-12 md:mt-16 text-center flex justify-center w-full">
-                     <a 
-                        href={`https://wa.me/917093320572?text=Hi,%20I%20am%20interested%20in%20the%20${encodeURIComponent(pkg.title)}%20package.`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-pink-500 text-white rounded-full font-bold text-base md:text-lg hover:bg-black transition-colors shadow-[0_10px_30px_rgba(236,72,153,0.3)] hover:shadow-black/30 group"
-                     >
+                     <button onClick={() => openInquiry('Branding & Identity', pkg.title)} className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-pink-500 text-white rounded-full font-bold text-base md:text-lg hover:bg-black transition-colors shadow-[0_10px_30px_rgba(236,72,153,0.3)] hover:shadow-black/30 group">
                         Get a Quote for {pkg.title} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                     </a>
+                     </button>
                   </div>
                </div>
             ))}

@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Check, Code, Zap, LayoutTemplate, Rocket, Server, Sparkles, TrendingUp, Globe, Monitor, Package, Briefcase, ShoppingCart, User, Layers, ShieldCheck } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
 import TextReveal from '../../components/TextReveal';
+import { useInquiry } from '../../context/InquiryContext';
 
 const FullStack: React.FC = () => {
+  const { openInquiry } = useInquiry();
   const [code, setCode] = useState('');
   const [cursorVisible, setCursorVisible] = useState(true);
   
@@ -138,14 +140,12 @@ const FullStack: React.FC = () => {
                            </li>
                         ))}
                      </ul>
-                     <a 
-                        href="https://wa.me/917093320572?text=Hi%20I%20am%20looking%20for%20a%20Full-stack%20development%20coding%20website!"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-neon-purple hover:text-white dark:hover:bg-neon-purple dark:hover:text-white transition-all shadow-lg hover:shadow-neon-purple/40 group transform hover:-translate-y-1"
+                     <button 
+                        onClick={() => openInquiry('Full-Stack Web Development')}
+                        className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-neon-purple hover:text-white dark:hover:bg-neon-purple dark:hover:text-white transition-all shadow-lg hover:shadow-neon-purple/40 group transform hover:-translate-y-1 animate-fade-up"
                      >
                         Start Project <ArrowRight size={16} className="md:w-[18px] group-hover:translate-x-1 transition-transform" />
-                     </a>
+                     </button>
                   </ScrollReveal>
                </div>
             </div>
@@ -363,14 +363,9 @@ const FullStack: React.FC = () => {
                          </div>
                          
                          <div className="p-6 md:px-10 md:py-8 border-t border-gray-200 dark:border-white/5 bg-white dark:bg-[#0F1320] flex justify-end">
-                            <a 
-                               href={`https://wa.me/917093320572?text=Hi,%20I%20am%20interested%20in%20the%20${encodeURIComponent(pkg.title)}%20Custom%20Coding%20website%20package.`}
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="inline-flex items-center gap-2 px-6 py-3 bg-neon-purple text-white rounded-xl font-bold text-sm md:text-base hover:bg-black transition-colors"
-                            >
+                            <button onClick={() => openInquiry('Full-Stack Web Development', pkg.title)} className="inline-flex items-center gap-2 px-6 py-3 bg-neon-purple text-white rounded-xl font-bold text-sm md:text-base hover:bg-black transition-colors">
                                Get Custom Quote for {pkg.title} <ArrowRight size={18} />
-                            </a>
+                            </button>
                          </div>
                       </div>
                     </ScrollReveal>
