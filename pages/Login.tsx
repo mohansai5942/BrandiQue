@@ -7,6 +7,7 @@ const Login: React.FC = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -16,14 +17,25 @@ const Login: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!id || !password) {
+      setError('Please fill in all fields.');
+      return;
+    }
     setError('');
-    const success = login(id, password);
-    if (success) {
-      navigate('/admin');
-    } else {
-      setError('Invalid Admin ID or Password');
+    setIsSubmitting(true);
+    try {
+      const success = await login(id, password);
+      if (success) {
+        navigate('/admin');
+      } else {
+        setError('Invalid Admin ID or Password');
+      }
+    } catch (err) {
+      setError('An error occurred during login. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -56,7 +68,8 @@ const Login: React.FC = () => {
                    type="text" 
                    value={id}
                    onChange={(e) => setId(e.target.value)}
-                   className="w-full bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-11 pr-4 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
+                   disabled={isSubmitting}
+                   className="w-full bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-11 pr-4 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 disabled:opacity-50"
                    placeholder="Enter Admin ID"
                  />
               </div>
@@ -70,7 +83,8 @@ const Login: React.FC = () => {
                    type="password" 
                    value={password}
                    onChange={(e) => setPassword(e.target.value)}
-                   className="w-full bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-11 pr-4 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
+                   disabled={isSubmitting}
+                   className="w-full bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-11 pr-4 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 disabled:opacity-50"
                    placeholder="Enter Password"
                  />
               </div>
@@ -78,9 +92,20 @@ const Login: React.FC = () => {
 
            <button 
              type="submit" 
-             className="w-full py-3.5 mt-2 bg-neon-purple hover:bg-purple-600 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-neon-purple/40 flex items-center justify-center gap-2 group"
+             disabled={isSubmitting}
+             className="w-full py-3.5 mt-2 bg-neon-purple hover:bg-purple-600 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-neon-purple/40 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
            >
-              Login Dashboard <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              {isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                  <span>Authenticating...</span>
+                </>
+              ) : (
+                <>
+                  <span>Login Dashboard</span>
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
            </button>
         </form>
       </div>
