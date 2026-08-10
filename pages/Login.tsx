@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Shield, Lock, User, ArrowRight, AlertCircle } from 'lucide-react';
+import { Shield, Lock, User, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 const Login: React.FC = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, isAuthenticated } = useAuth();
@@ -80,13 +81,21 @@ const Login: React.FC = () => {
               <div className="relative">
                  <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                  <input 
-                   type="password" 
+                   type={showPassword ? "text" : "password"} 
                    value={password}
                    onChange={(e) => setPassword(e.target.value)}
                    disabled={isSubmitting}
-                   className="w-full bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-11 pr-4 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 disabled:opacity-50"
+                   className="w-full bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-11 pr-12 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 disabled:opacity-50"
                    placeholder="Enter Password"
                  />
+                 <button
+                   type="button"
+                   onClick={() => setShowPassword(!showPassword)}
+                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                   disabled={isSubmitting}
+                 >
+                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                 </button>
               </div>
            </div>
 

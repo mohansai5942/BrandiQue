@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3 } from 'lucide-react';
+import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Message } from '../types';
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
@@ -32,6 +32,9 @@ const Admin: React.FC = () => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passError, setPassError] = useState('');
   const [passSuccess, setPassSuccess] = useState('');
 
@@ -306,6 +309,9 @@ const Admin: React.FC = () => {
                 setConfirmNewPassword('');
                 setPassError('');
                 setPassSuccess('');
+                setShowOldPassword(false);
+                setShowNewPassword(false);
+                setShowConfirmPassword(false);
               }}
               className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors"
             >
@@ -334,6 +340,9 @@ const Admin: React.FC = () => {
                 setOldPassword('');
                 setNewPassword('');
                 setConfirmNewPassword('');
+                setShowOldPassword(false);
+                setShowNewPassword(false);
+                setShowConfirmPassword(false);
                 setTimeout(() => {
                   setIsChangePasswordOpen(false);
                   setPassSuccess('');
@@ -344,35 +353,62 @@ const Admin: React.FC = () => {
             }} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Old Password</label>
-                <input 
-                  type="password" 
-                  value={oldPassword} 
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  required
-                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                />
+                <div className="relative">
+                  <input 
+                    type={showOldPassword ? "text" : "password"} 
+                    value={oldPassword} 
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOldPassword(!showOldPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                  >
+                    {showOldPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">New Password</label>
-                <input 
-                  type="password" 
-                  value={newPassword} 
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                />
+                <div className="relative">
+                  <input 
+                    type={showNewPassword ? "text" : "password"} 
+                    value={newPassword} 
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                  >
+                    {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Confirm New Password</label>
-                <input 
-                  type="password" 
-                  value={confirmNewPassword} 
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
-                  required
-                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                />
+                <div className="relative">
+                  <input 
+                    type={showConfirmPassword ? "text" : "password"} 
+                    value={confirmNewPassword} 
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
 
               {passError && <p className="text-xs text-red-500 font-medium">{passError}</p>}
