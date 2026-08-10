@@ -14,6 +14,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return localStorage.getItem('isAdminAuthenticated') === 'true';
   });
 
+  // Keep state in sync with localStorage updates if any
+  useEffect(() => {
+    const storedAuth = localStorage.getItem('isAdminAuthenticated');
+    if (storedAuth === 'true' && !isAuthenticated) {
+      setIsAuthenticated(true);
+    } else if (storedAuth !== 'true' && isAuthenticated) {
+      setIsAuthenticated(false);
+    }
+  }, [isAuthenticated]);
+
   const login = (id: string, pass: string) => {
     const customPass = localStorage.getItem('adminPassword');
     if (id === 'Mohan5942') {
