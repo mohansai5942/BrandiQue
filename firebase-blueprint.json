@@ -8,18 +8,44 @@
         "id": { "type": "string" },
         "name": { "type": "string" },
         "email": { "type": "string" },
+        "phone": { "type": "string" },
         "service": { "type": "string" },
         "budget": { "type": "string" },
         "message": { "type": "string" },
-        "createdAt": { "type": "string", "format": "date-time" }
+        "createdAt": { "type": "string", "format": "date-time" },
+        "serviceDetails": { "type": "object" }
       },
       "required": ["name", "email", "service", "budget", "message", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Projects, visual designs, or portfolios uploaded by the admin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "desc": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "image": { "type": "string", "format": "uri" },
+        "video": { "type": "string" },
+        "link": { "type": "string", "format": "uri" },
+        "type": { "type": "string", "enum": ["main", "portfolio", "figma", "client"] },
+        "isDeleted": { "type": "boolean" },
+        "deletedAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "desc", "tags", "image", "link", "type", "createdAt"]
     }
   },
   "firestore": {
     "/messages/{messageId}": {
       "schema": "Message",
       "description": "Collection of contact form submissions"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Collection of showcase and portfolio projects"
     }
   }
 }

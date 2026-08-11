@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export interface NavLink {
@@ -17,4 +16,19 @@ export interface Message {
   message: string;
   createdAt: string;
   serviceDetails?: Record<string, string>;
+}
+
+export interface Project {
+  id: string;
+  title: string;
+  category: string;
+  desc: string;
+  tags: string[];
+  image: string;
+  video?: string;
+  link: string;
+  type: 'main' | 'portfolio' | 'figma' | 'client';
+  isDeleted?: boolean;
+  deletedAt?: string;
+  createdAt: string;
 }

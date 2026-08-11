@@ -1,6 +1,56 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { ExternalLink, Github, Code2, Globe, Layout, Smartphone } from 'lucide-react';
+import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw } from 'lucide-react';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { Project } from '../types';
+import { INITIAL_PROJECTS } from './ProjectsData';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+    tenantId?: string | null;
+    providerInfo?: {
+      providerId?: string | null;
+      email?: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid || null,
+      email: auth.currentUser?.email || null,
+      emailVerified: auth.currentUser?.emailVerified || null,
+      isAnonymous: auth.currentUser?.isAnonymous || null,
+      tenantId: auth.currentUser?.tenantId || null,
+      providerInfo: auth.currentUser?.providerData?.map(provider => ({
+        providerId: provider.providerId,
+        email: provider.email,
+      })) || []
+    },
+    operationType,
+    path
+  };
+  console.warn('Firestore Error (Gracefully handled with mock fallback): ', JSON.stringify(errInfo));
+}
 
 interface ProjectMediaProps {
   image: string;
@@ -69,130 +119,6 @@ function ProjectMedia({ image, video, title }: ProjectMediaProps) {
   );
 }
 
-const MAIN_PROJECTS = [
-  {
-    title: 'CREATOR PROMPTS',
-    category: 'SAAS Ecosystem',
-    desc: 'A dedicated ecosystem for digital creators and personal brands, offering AI-driven tools, resource hubs, and streamlined branding assets.',
-    tags: ['Next.js', 'AI Tools', 'UI/UX'],
-    image: 'https://cdn.imgchest.com/files/f7d1c1ce40b3.jpg',
-    video: 'https://cdn.imgchest.com/files/800f6ef2e71a.mp4',
-    link: 'https://creator.brandique.in',
-  },
-  {
-    title: 'BRANDIQUE DEALS',
-    category: 'E-Commerce',
-    desc: 'A curated e-commerce and deals platform designed for conversion, featuring high-end digital products and exclusive commercial offers.',
-    tags: ['Vite', 'Stripe', 'Dynamics'],
-    image: 'https://cdn.imgchest.com/files/ff941a55a86f.jpg',
-    link: 'https://deals.brandique.in',
-  },
-  {
-    title: 'JJH GLOBAL SOLUTIONS',
-    category: 'Corporate Enterprise',
-    desc: 'A sophisticated global business platform providing enterprise-level solutions, corporate consultancy, and international market integration.',
-    tags: ['Enterprise', 'Business', 'Global'],
-    image: 'https://cdn.imgchest.com/files/b69e3d734cab.jpg',
-    link: 'https://www.jjhglobalsolutions.com',
-  },
-  {
-    title: 'JJH INTERIORS',
-    category: 'Architecture & Design',
-    desc: 'A luxury interior design portfolio showcasing high-end residential and commercial architectural projects with a focus on minimalist elegance.',
-    tags: ['Design', 'Luxury', 'Portfolio'],
-    image: 'https://cdn.imgchest.com/files/c881793b1aa7.jpg',
-    link: 'https://interiors.jjhglobalsolutions.com',
-  }
-];
-
-const PORTFOLIO_PROJECTS = [
-  {
-    title: 'MY FIRST PORTFOLIO',
-    category: 'Handcrafted Web Presence',
-    desc: 'Developed with complete handcrafted code, showcasing my early web design skills and clean layout structures.',
-    tags: ['HTML', 'CSS', 'JavaScript', 'Responsive'],
-    image: 'https://cdn.imgchest.com/files/2139b17e3f2c.png',
-    link: 'https://mohanwebdeveloper.netlify.app/',
-  },
-  {
-    title: 'MY SECOND PORTFOLIO',
-    category: 'Advanced Personal Hub',
-    desc: 'Crafted entirely through custom code, leveraging highly optimized react components and smooth responsive flow.',
-    tags: ['React', 'Vite', 'Tailwind CSS', 'Motion'],
-    image: 'https://cdn.imgchest.com/files/c3409d9bab31.png',
-    link: 'https://mohanwebdeveloperr.netlify.app/',
-  },
-  {
-    title: 'MY THIRD PORTFOLIO',
-    category: 'AI-Augmented Architecture',
-    desc: 'Designed and built with advanced AI assistance to deliver modern web layouts, lightning-fast rendering speeds, and pristine component layouts.',
-    tags: ['React', 'Vite', 'Tailwind CSS', 'AI Hybrid'],
-    image: 'https://cdn.imgchest.com/files/d81f1c6d666b.png',
-    link: 'https://mohan.brandique.in/',
-  }
-];
-
-const FIGMA_PROJECTS = [
-  {
-    title: 'ARCAR | SPORTS CAR STORE',
-    category: 'UI/UX Interactive Design',
-    desc: 'Immersive e-commerce store layout built in Figma targeting high-end luxury sports cars, structured with customized 3D spatial grids.',
-    tags: ['Figma', 'UI/UX Layout', 'Visual Concept'],
-    image: 'https://cdn.imgchest.com/files/ffa2d64a507b.png',
-    link: 'https://www.figma.com/design/krZKRq4Zs2xXXVcI4z6qJw/Car-animation-3D?node-id=0-1&p=f',
-  },
-  {
-    title: 'MOHAN STORE | APPLE BRAND',
-    category: 'App Design Blueprint',
-    desc: 'Sleek electronic e-commerce store wireframes designed in Figma featuring optimized checkout pathways and high-fidelity mockups.',
-    tags: ['Figma', 'Mobile UI', 'Prototyping'],
-    image: 'https://cdn.imgchest.com/files/897a32eccb2e.png',
-    link: 'https://www.figma.com/design/hV0EWIq8kgpNAfeOpsdLVz/MOHAN-STORE-app?node-id=34-213',
-  },
-  {
-    title: 'POSITIVUS | DIGITAL MARKETING',
-    category: 'Premium Landing Page Design',
-    desc: 'Clean digital advertising agency prototype created in Figma displaying harmonious element scaling, typography grids and color accents.',
-    tags: ['Figma', 'Typography', 'Landing Page'],
-    image: 'https://cdn.imgchest.com/files/8e2e7168297c.png',
-    link: 'https://www.figma.com/design/fYVRNHkDiTNB5jEnOkammo/Positivus-Landing-Page-Design--Community-?node-id=25-145&p=f',
-  }
-];
-
-const CLIENT_PERSONAL_PROJECTS = [
-  {
-    title: 'MOHAN SALAAR CREATE',
-    category: 'Digital Artwork & Poster Editing',
-    desc: 'An elaborate cinematic character poster design and detailed image manipulation project crafted to client specifications.',
-    tags: ['Photoshop', 'Digital Design', 'Graphic Manipulation'],
-    image: 'https://mohanwebdeveloperr.netlify.app/assets/images/20250308_012135.png',
-    link: 'https://mohanwebdeveloperr.netlify.app/assets/images/mohan%20salaar%20create.png',
-  },
-  {
-    title: 'VATIKA PRODUCT DESIGN',
-    category: 'Commercial Advertisement Mockup',
-    desc: 'An eye-catching commercial design and product render highlighting herbal elements and premium container mockups.',
-    tags: ['Product Design', 'Branding', 'Ad Graphics'],
-    image: 'https://mohanwebdeveloperr.netlify.app/assets/images/vatika.png',
-    link: 'https://mohanwebdeveloperr.netlify.app/assets/images/MOHAN%20product%20Vatika.jpg',
-  },
-  {
-    title: 'BLENDER 3D CREATION',
-    category: '3D modeling & render visualization',
-    desc: 'A custom, detailed environmental render with optimized lighting simulations and cinematic video layout, compiled completely in Blender.',
-    tags: ['Blender 3D', '3D Modeling', 'Render Rendering'],
-    image: 'https://mohanwebdeveloperr.netlify.app/assets/images/Blender-Symbol.png',
-    link: 'https://mohanwebdeveloperr.netlify.app/assets/videos/mohan%20blender%20creation.mp4',
-  },
-  {
-    title: 'MOHAN LOGO DESIGN',
-    category: 'Enterprise Visual Redesign',
-    desc: 'A clean and professional visual redesign concept targeting corporate logos to deliver peak geometric precision and modern brand identity.',
-    tags: ['Identity Design', 'Vector logo', 'Redesign Brand'],
-    image: 'https://mohanwebdeveloperr.netlify.app/assets/images/Cigna-Logo.png',
-    link: 'https://mohanwebdeveloperr.netlify.app/assets/images/mohan%20logo%20design.jpg',
-  }
-];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -217,9 +143,120 @@ const cardVariants = {
 };
 
 export default function Projects() {
+  const getCachedProjects = (): Project[] => {
+    const cached = localStorage.getItem('brandique_projects');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        // Fallback
+      }
+    }
+    return INITIAL_PROJECTS;
+  };
+
+  const [projects, setProjects] = useState<Project[]>(getCachedProjects);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const cached = localStorage.getItem('brandique_projects');
+      let cachedList: Project[] = [];
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            cachedList = parsed;
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      try {
+        const querySnapshot = await getDocs(collection(db, 'projects'));
+        if (!querySnapshot.empty) {
+          const list: Project[] = [];
+          querySnapshot.forEach((doc) => {
+            list.push({ id: doc.id, ...doc.data() } as Project);
+          });
+
+          const cachedMap = new Map<string, Project>();
+          cachedList.forEach(p => {
+            if (p.id) cachedMap.set(p.id, p);
+            if (p.title) cachedMap.set(p.title, p);
+          });
+
+          const mergedList: Project[] = list.map(p => {
+            const cachedItem = cachedMap.get(p.id) || cachedMap.get(p.title);
+            if (cachedItem) {
+              return {
+                ...p,
+                isDeleted: p.isDeleted ?? cachedItem.isDeleted ?? false,
+                deletedAt: p.deletedAt || cachedItem.deletedAt
+              };
+            }
+            return p;
+          });
+
+          cachedList.forEach(c => {
+            if (c.isDeleted && !mergedList.some(m => m.id === c.id || m.title === c.title)) {
+              mergedList.push(c);
+            }
+          });
+
+          mergedList.sort((a, b) => {
+            const valA = a.createdAt || '';
+            const valB = b.createdAt || '';
+            return valA.localeCompare(valB);
+          });
+
+          localStorage.setItem('brandique_projects', JSON.stringify(mergedList));
+          setProjects(mergedList);
+        } else {
+          if (cachedList.length > 0) {
+            setProjects(cachedList);
+          } else {
+            try {
+              const seeded: Project[] = [];
+              for (const p of INITIAL_PROJECTS) {
+                const { id, ...dataWithoutId } = p;
+                const docRef = await addDoc(collection(db, 'projects'), dataWithoutId);
+                seeded.push({ id: docRef.id, ...dataWithoutId });
+              }
+              const finalList = seeded.length > 0 ? seeded : INITIAL_PROJECTS;
+              localStorage.setItem('brandique_projects', JSON.stringify(finalList));
+              setProjects(finalList);
+            } catch (seedErr) {
+              console.log("Silent seeding skipped:", seedErr);
+              localStorage.setItem('brandique_projects', JSON.stringify(INITIAL_PROJECTS));
+              setProjects(INITIAL_PROJECTS);
+            }
+          }
+        }
+      } catch (err) {
+        if (cachedList.length > 0) {
+          setProjects(cachedList);
+        }
+        handleFirestoreError(err, OperationType.GET, 'projects');
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  const activeProjects = projects.filter(p => !p.isDeleted);
+  const mainProjects = activeProjects.filter(p => p.type === 'main');
+  const portfolioProjects = activeProjects.filter(p => p.type === 'portfolio');
+  const figmaProjects = activeProjects.filter(p => p.type === 'figma');
+  const clientProjects = activeProjects.filter(p => p.type === 'client');
+
   const renderProjectCard = (project: any, i: number, type: string) => (
     <motion.a
-      key={`${type}-${i}`}
+      key={`${type}-${project.id || i}`}
       href={project.link}
       target="_blank"
       rel="noopener noreferrer"
@@ -255,7 +292,7 @@ export default function Projects() {
           <h3 className={`text-lg ${type === 'figma' || type === 'client' ? 'md:text-[28px]' : type === 'portfolio' ? 'md:text-[29px]' : 'md:text-3xl'} font-heading font-bold text-gray-900 dark:text-white mb-2 md:mb-4 group-hover:text-neon-purple dark:group-hover:text-neon-blue transition-colors uppercase`}>{project.title}</h3>
           <p className="text-gray-600 dark:text-gray-400 text-[11px] md:text-sm leading-relaxed mb-3 md:mb-6">{project.desc}</p>
           <div className="flex flex-wrap gap-2 text-[8px] md:text-[9px] font-bold text-gray-400 dark:text-white/40 uppercase tracking-widest mb-3">
-             {project.tags.map((tag: string, tIndex: number) => (
+             {project.tags?.map((tag: string, tIndex: number) => (
                <span key={tIndex}>{tag} {tIndex < project.tags.length - 1 ? "•" : ""}</span>
              ))}
           </div>
@@ -291,7 +328,7 @@ export default function Projects() {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-4 md:mb-8 uppercase text-balance leading-[1.1]"
           >
-            DIGITAL <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue">ARTIFACTS.</span>
+            OUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue">PROJECTS.</span>
           </motion.h1>
           <p className="text-sm md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl text-balance font-light">
             A curated selection of my work across custom software engineering, coding portfolios, and premium Figma prototypes.
@@ -305,15 +342,19 @@ export default function Projects() {
               // MAIN PROJECTS
             </h2>
           </div>
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
-          >
-             {MAIN_PROJECTS.map((project, i) => renderProjectCard(project, i, 'main'))}
-          </motion.div>
+          {mainProjects.length > 0 ? (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
+            >
+               {mainProjects.map((project, i) => renderProjectCard(project, i, 'main'))}
+            </motion.div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 font-light italic">No main projects uploaded.</p>
+          )}
         </div>
 
         {/* Section: Portfolio Projects */}
@@ -323,15 +364,19 @@ export default function Projects() {
               // PORTFOLIO PROJECTS
             </h2>
           </div>
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
-          >
-             {PORTFOLIO_PROJECTS.map((project, i) => renderProjectCard(project, i, 'portfolio'))}
-          </motion.div>
+          {portfolioProjects.length > 0 ? (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
+            >
+               {portfolioProjects.map((project, i) => renderProjectCard(project, i, 'portfolio'))}
+            </motion.div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 font-light italic">No portfolio projects uploaded.</p>
+          )}
         </div>
 
         {/* Section: Figma Projects */}
@@ -341,15 +386,19 @@ export default function Projects() {
               // FIGMA PROJECTS
             </h2>
           </div>
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12"
-          >
-              {FIGMA_PROJECTS.map((project, i) => renderProjectCard(project, i, 'figma'))}
-          </motion.div>
+          {figmaProjects.length > 0 ? (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12"
+            >
+                {figmaProjects.map((project, i) => renderProjectCard(project, i, 'figma'))}
+            </motion.div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 font-light italic">No Figma projects uploaded.</p>
+          )}
         </div>
 
         {/* Section: Client & Personal Projects */}
@@ -359,43 +408,48 @@ export default function Projects() {
               // CLIENT & PERSONAL PROJECTS
             </h2>
           </div>
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10"
-          >
-             {CLIENT_PERSONAL_PROJECTS.map((project, i) => (
-               <motion.a
-                 key={`client-${i}`}
-                 href={project.link}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 variants={cardVariants}
-                 className="group relative cursor-pointer block"
-               >
-                  {/* Visual Logo Card */}
-                  <div className="relative aspect-square bg-white dark:bg-white/[0.02] rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-500 group-hover:bg-gray-100/50 dark:group-hover:bg-white/[0.05] group-hover:border-neon-purple/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(176,38,255,0.08)] flex items-center justify-center p-6 md:p-10">
-                     <img 
-                        src={project.image} 
-                        alt={project.title}
-                        referrerPolicy="no-referrer"
-                        className="max-w-[85%] max-h-[85%] object-contain filter grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
-                     />
-                  </div>
+          {clientProjects.length > 0 ? (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10"
+            >
+               {clientProjects.map((project, i) => (
+                 <motion.a
+                   key={`client-${project.id || i}`}
+                   href={project.link}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   variants={cardVariants}
+                   className="group relative cursor-pointer block"
+                 >
+                    {/* Visual Logo Card */}
+                    <div className="relative aspect-square bg-white dark:bg-white/[0.02] rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-500 group-hover:bg-gray-100/50 dark:group-hover:bg-white/[0.05] group-hover:border-neon-purple/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(176,38,255,0.08)] flex items-center justify-center p-6 md:p-10">
+                       <img 
+                          src={project.image} 
+                          alt={project.title}
+                          referrerPolicy="no-referrer"
+                          className="max-w-[85%] max-h-[85%] object-contain filter grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                       />
+                    </div>
 
-                  {/* Hover Information Below the Card */}
-                  <div className="mt-4 text-center transition-all duration-300 opacity-60 group-hover:opacity-100">
-                     <p className="inline-flex items-center gap-1.5 text-[8px] md:text-[9px] font-bold text-gray-500 dark:text-white/30 group-hover:text-neon-purple dark:group-hover:text-neon-blue tracking-[0.2em] uppercase transition-colors">
-                        View Creation 
-                        <ExternalLink size={9} className="text-neon-purple dark:text-neon-blue" />
-                     </p>
-                  </div>
-               </motion.a>
-             ))}
-          </motion.div>
+                    {/* Hover Information Below the Card */}
+                    <div className="mt-4 text-center transition-all duration-300 opacity-60 group-hover:opacity-100">
+                       <p className="inline-flex items-center gap-1.5 text-[8px] md:text-[9px] font-bold text-gray-500 dark:text-white/30 group-hover:text-neon-purple dark:group-hover:text-neon-blue tracking-[0.2em] uppercase transition-colors">
+                          View Creation 
+                          <ExternalLink size={9} className="text-neon-purple dark:text-neon-blue" />
+                       </p>
+                    </div>
+                 </motion.a>
+               ))}
+            </motion.div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 font-light italic">No client or personal projects uploaded.</p>
+          )}
         </div>
+
 
         {/* Process Section */}
         <div className="mt-12 md:mt-60 border-t border-gray-200 dark:border-white/5 pt-10 md:pt-40">
