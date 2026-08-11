@@ -1,8 +1,65 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Global safety net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Checking email from authenticated token
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'saimohan5942@gmail.com' || 
+        request.auth.token.email == 'mohan@brandique.in'
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128;
+    }
+
+    function isValidMessage(msg) {
+      return msg.name is string && msg.name.size() > 0 && msg.name.size() <= 200 &&
+             msg.email is string && msg.email.size() > 0 && msg.email.size() <= 200 &&
+             msg.get('service', '') is string && msg.get('service', '').size() > 0 && msg.get('service', '').size() <= 200 &&
+             msg.budget is string && msg.budget.size() > 0 && msg.budget.size() <= 200 &&
+             msg.get('message', '') is string && msg.get('message', '').size() > 0 && msg.get('message', '').size() <= 5000 &&
+             msg.createdAt is string;
+    }
+
+    function isValidProject(proj) {
+      return proj.title is string && proj.title.size() > 0 && proj.title.size() <= 200 &&
+             proj.category is string && proj.category.size() > 0 && proj.category.size() <= 200 &&
+             proj.desc is string && proj.desc.size() > 0 && proj.desc.size() <= 5000 &&
+             proj.get('tags', []) is list && proj.get('tags', []).size() <= 30 &&
+             proj.image is string && proj.image.size() > 0 && proj.image.size() <= 2000 &&
+             proj.link is string && proj.link.size() > 0 && proj.link.size() <= 2000 &&
+             proj.type is string && (proj.type == 'main' || proj.type == 'portfolio' || proj.type == 'figma' || proj.type == 'client') &&
+             proj.createdAt is string &&
+             proj.get('video', '') is string && proj.get('video', '').size() <= 2000 &&
+             (proj.get('isDeleted', false) == true || proj.get('isDeleted', false) == false) &&
+             proj.get('deletedAt', '') is string;
+    }
+
+    // Messages collection
     match /messages/{messageId} {
-      allow read, write: if true;
+      allow create: if isValidId(messageId) && isValidMessage(request.resource.data);
+      allow read: if isAdmin();
+      allow update: if isAdmin() && isValidMessage(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Projects collection
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidId(projectId) && isValidProject(request.resource.data);
+      allow update: if isAdmin() && isValidProject(request.resource.data);
+      allow delete: if isAdmin();
     }
   }
 }
