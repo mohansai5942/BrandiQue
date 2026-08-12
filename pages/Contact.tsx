@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, LayoutTemplate, Code, PenTool, Megaphone } from 'lucide-react';
+import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, LayoutTemplate, Code, PenTool, Megaphone, Bot } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -10,14 +10,15 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgvgdpng";
 const Contact: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [formData, setFormData] = useState({ name: '', email: '', budget: '', message: '' });
-  const [selectedService, setSelectedService] = useState('Web Development');
+  const [selectedService, setSelectedService] = useState('Full-Stack Development');
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const services = [
-    { id: 'Web Development', icon: Code },
-    { id: 'WordPress', icon: LayoutTemplate },
-    { id: 'Branding', icon: PenTool },
+    { id: 'Full-Stack Development', icon: Code },
+    { id: 'WordPress Development', icon: LayoutTemplate },
+    { id: 'Branding & Identity', icon: PenTool },
     { id: 'Digital Marketing', icon: Megaphone },
+    { id: 'AI Automation & Agents', icon: Bot },
   ];
 
   const budgets = [
@@ -29,47 +30,73 @@ const Contact: React.FC = () => {
     setFormStatus('submitting');
     
     try {
+      const createdAtISO = new Date().toISOString();
+      let createdDocId = 'msg-' + Date.now();
+
       // Save submission to Firebase Firestore
       try {
-        await addDoc(collection(db, 'messages'), {
+        const docRef = await addDoc(collection(db, 'messages'), {
+          source: 'contact',
           service: selectedService,
           name: formData.name,
           email: formData.email,
           budget: formData.budget,
           message: formData.message,
-          createdAt: new Date().toISOString()
+          createdAt: createdAtISO
         });
+        if (docRef && docRef.id) {
+          createdDocId = docRef.id;
+        }
       } catch (fbError) {
         console.error("Firebase save error:", fbError);
       }
 
-      const response = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        headers: {
+      // Save to localStorage so Admin panel has instant access
+      const newMsg = {
+        id: createdDocId,
+        source: 'contact' as const,
+        service: selectedService,
+        name: formData.name,
+        email: formData.email,
+        budget: formData.budget,
+        message: formData.message,
+        createdAt: createdAtISO
+      };
+      try {
+        const existingRaw = localStorage.getItem('brandique_messages');
+        const existing = existingRaw ? JSON.parse(existingRaw) : [];
+        const updated = Array.isArray(existing) ? [newMsg, ...existing] : [newMsg];
+        localStorage.setItem('brandique_messages', JSON.stringify(updated));
+      } catch (lsError) {
+        console.error("localStorage save error:", lsError);
+      }
+
+      // Also send to Formspree
+      try {
+        await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
-        },
-        body: JSON.stringify({
+          },
+          body: JSON.stringify({
             service: selectedService,
             name: formData.name,
             email: formData.email,
             budget: formData.budget,
             message: formData.message
-        })
-      });
-
-      if (response.ok) {
-        setFormStatus('success');
-        setFormData({ name: '', email: '', budget: '', message: '' });
-        setSelectedService('Web Development');
-        
-        // Auto reset after a delay (optional, keeping form clean)
-        setTimeout(() => setFormStatus('idle'), 8000);
-      } else {
-        console.error("Form error:", response.statusText);
-        alert("There was a problem submitting your form. Please try again.");
-        setFormStatus('idle');
+          })
+        });
+      } catch (formspreeErr) {
+        console.warn("Formspree notification skipped or failed:", formspreeErr);
       }
+
+      setFormStatus('success');
+      setFormData({ name: '', email: '', budget: '', message: '' });
+      setSelectedService('Web Development');
+      
+      // Auto reset after 8s
+      setTimeout(() => setFormStatus('idle'), 8000);
 
     } catch (error) {
       console.error("Form error:", error);
