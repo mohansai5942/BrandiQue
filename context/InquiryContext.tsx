@@ -99,7 +99,35 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const promptDetails = detailsList.join('\n');
       const finalMessage = `Phone: ${phone}\nTimeline: ${timeline}\nService Specifics:\n${promptDetails || 'None provided'}\n\nAdditional Details:\n${formattedMsg || 'None'}`;
 
-      await addDoc(collection(db, 'messages'), {
+      const createdAtISO = new Date().toISOString();
+      let createdDocId = 'msg-' + Date.now();
+
+      try {
+        const docRef = await addDoc(collection(db, 'messages'), {
+          source: 'service',
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          phone: phone.trim(),
+          service: fullServiceTitle,
+          budget: budget,
+          message: finalMessage,
+          serviceDetails: {
+            ...customAnswers,
+            timeline,
+            phone
+          },
+          createdAt: createdAtISO
+        });
+        if (docRef && docRef.id) {
+          createdDocId = docRef.id;
+        }
+      } catch (fbErr) {
+        console.error("Firestore error in InquiryContext:", fbErr);
+      }
+
+      const newMsg = {
+        id: createdDocId,
+        source: 'service' as const,
         name: name.trim(),
         email: email.trim().toLowerCase(),
         phone: phone.trim(),
@@ -111,8 +139,17 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           timeline,
           phone
         },
-        createdAt: new Date().toISOString()
-      });
+        createdAt: createdAtISO
+      };
+
+      try {
+        const existingRaw = localStorage.getItem('brandique_messages');
+        const existing = existingRaw ? JSON.parse(existingRaw) : [];
+        const updated = Array.isArray(existing) ? [newMsg, ...existing] : [newMsg];
+        localStorage.setItem('brandique_messages', JSON.stringify(updated));
+      } catch (lsError) {
+        console.error("localStorage save error in InquiryContext:", lsError);
+      }
 
       setIsSuccess(true);
       setStep(4);

@@ -13,9 +13,11 @@ import { auth } from '../firebase';
 interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
+  adminId: string;
   login: (id: string, pass: string) => Promise<boolean>;
   logout: () => Promise<void>;
   changePassword: (oldPass: string, newPass: string) => Promise<{ success: boolean; message: string }>;
+  changeAdminId: (currentPass: string, newAdminId: string) => Promise<{ success: boolean; message: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,6 +27,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return localStorage.getItem('isAdminAuthenticated') === 'true';
   });
   const [loading, setLoading] = useState<boolean>(true);
+  const [adminId, setAdminId] = useState<string>(() => {
+    return localStorage.getItem('adminUsername') || 'mohan';
+  });
 
   // Monitor Firebase Auth state change
   useEffect(() => {
@@ -46,7 +51,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (id: string, pass: string): Promise<boolean> => {
     const normalizedId = id.trim().toLowerCase();
-    const isMockAdmin = normalizedId === 'mohan' || normalizedId === 'mohan@brandique.in';
+    const storedAdminId = (localStorage.getItem('adminUsername') || 'mohan').toLowerCase();
+    const isMockAdmin = normalizedId === storedAdminId || normalizedId === 'mohan' || normalizedId === 'mohan@brandique.in';
     
     // Convert to a valid email format for Firebase Auth if not already an email
     const email = id.includes('@') ? id.trim() : `${normalizedId}@brandique.in`;
@@ -159,8 +165,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const changeAdminId = async (currentPass: string, newAdminId: string) => {
+    const trimmedId = newAdminId.trim();
+    if (!trimmedId) {
+      return { success: false, message: 'Admin ID cannot be empty.' };
+    }
+    if (trimmedId.length < 3) {
+      return { success: false, message: 'Admin ID must be at least 3 characters.' };
+    }
+
+    // Verify current password
+    const customPass = localStorage.getItem('adminPassword');
+    let isPassCorrect = false;
+    if (customPass) {
+      isPassCorrect = (currentPass === customPass);
+    } else {
+      isPassCorrect = (currentPass === 'Mohan@5942' || currentPass === 'Mohan@20452');
+    }
+
+    if (!isPassCorrect && auth.currentUser) {
+      try {
+        const credential = EmailAuthProvider.credential(auth.currentUser.email || '', currentPass);
+        await reauthenticateWithCredential(auth.currentUser, credential);
+        isPassCorrect = true;
+      } catch (e) {
+        // Failed reauth
+      }
+    }
+
+    if (!isPassCorrect) {
+      return { success: false, message: 'Incorrect current password.' };
+    }
+
+    localStorage.setItem('adminUsername', trimmedId);
+    setAdminId(trimmedId);
+    return { success: true, message: `Admin ID successfully updated to: ${trimmedId}` };
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout, changePassword }}>
+    <AuthContext.Provider value={{ isAuthenticated, loading, adminId, login, logout, changePassword, changeAdminId }}>
       {children}
     </AuthContext.Provider>
   );

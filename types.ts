@@ -15,6 +15,9 @@ export interface Message {
   budget: string;
   message: string;
   createdAt: string;
+  source?: 'contact' | 'service';
+  isDeleted?: boolean;
+  deletedAt?: string;
   serviceDetails?: Record<string, string>;
 }
 

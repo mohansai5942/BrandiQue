@@ -1,10 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight } from 'lucide-react';
+import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Message, Project } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
 import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc, setDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
+
+const SERVICE_CATEGORIES = [
+  { 
+    id: 'Full-Stack Development', 
+    name: 'Full-Stack Development', 
+    icon: Code, 
+    color: 'text-neon-purple', 
+    badgeBg: 'bg-neon-purple/10 border-neon-purple/20 text-neon-purple',
+    keywords: ['full-stack', 'full stack', 'react', 'next.js', 'web development'] 
+  },
+  { 
+    id: 'WordPress Development', 
+    name: 'WordPress Development', 
+    icon: LayoutTemplate, 
+    color: 'text-blue-400', 
+    badgeBg: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
+    keywords: ['wordpress', 'wp'] 
+  },
+  { 
+    id: 'Branding & Identity', 
+    name: 'Branding & Identity', 
+    icon: PenTool, 
+    color: 'text-pink-400', 
+    badgeBg: 'bg-pink-500/10 border-pink-500/20 text-pink-400',
+    keywords: ['branding', 'identity', 'logo'] 
+  },
+  { 
+    id: 'Digital Marketing', 
+    name: 'Digital Marketing', 
+    icon: Megaphone, 
+    color: 'text-green-400', 
+    badgeBg: 'bg-green-500/10 border-green-500/20 text-green-400',
+    keywords: ['digital marketing', 'marketing', 'social'] 
+  },
+  { 
+    id: 'AI Automation & Agents', 
+    name: 'AI Automation & Agents', 
+    icon: Bot, 
+    color: 'text-cyan-400', 
+    badgeBg: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400',
+    keywords: ['ai automation', 'ai', 'agent', 'automation', 'n8n', 'bot'] 
+  },
+];
+
+const categorizeMessage = (msg: Message): string => {
+  const serviceLower = (msg.service || '').toLowerCase();
+  for (const cat of SERVICE_CATEGORIES) {
+    if (cat.keywords.some(k => serviceLower.includes(k))) {
+      return cat.id;
+    }
+  }
+  return 'Full-Stack Development';
+};
+
+const isContactFormMessage = (msg: Message): boolean => {
+  if (msg.source === 'contact') return true;
+  if (msg.source === 'service') return false;
+  if (msg.serviceDetails && Object.keys(msg.serviceDetails).length > 0) return false;
+  const serviceLower = (msg.service || '').toLowerCase();
+  if (SERVICE_CATEGORIES.some(c => c.keywords.some(k => serviceLower.includes(k)))) return false;
+  return true;
+};
+
+const isServiceFormMessage = (msg: Message): boolean => {
+  return !isContactFormMessage(msg);
+};
 
 enum OperationType {
   CREATE = 'create',
@@ -53,7 +119,7 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
 }
 
 const Admin: React.FC = () => {
-  const { logout, changePassword } = useAuth();
+  const { logout, changePassword, changeAdminId, adminId } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
@@ -61,8 +127,10 @@ const Admin: React.FC = () => {
   const [isMessageDetailOpen, setIsMessageDetailOpen] = useState(false);
   const [isUsingFallback, setIsUsingFallback] = useState<boolean>(false);
 
-  // Tab State
-  const [activeTab, setActiveTab] = useState<'leads' | 'projects' | 'recycle' | 'storage'>('leads');
+  // Tab State - Default to 'projects' as requested
+  const [activeTab, setActiveTab] = useState<'projects' | 'services' | 'leads' | 'recycle' | 'storage'>('projects');
+  const [selectedServiceTab, setSelectedServiceTab] = useState<string>('Full-Stack Development');
+  const [serviceFormSearch, setServiceFormSearch] = useState('');
 
   // Projects State
   const [projects, setProjects] = useState<Project[]>([]);
@@ -94,8 +162,9 @@ const Admin: React.FC = () => {
   const [editType, setEditType] = useState<'main' | 'portfolio' | 'figma' | 'client'>('main');
   const [isUpdatingProject, setIsUpdatingProject] = useState(false);
 
-  // State for soft delete and permanent delete confirmation
+  // State for soft delete, restore, and permanent delete confirmation
   const [deletingProjectDoc, setDeletingProjectDoc] = useState<Project | null>(null);
+  const [restoringProjectDoc, setRestoringProjectDoc] = useState<Project | null>(null);
   const [isPermanentDelete, setIsPermanentDelete] = useState(false);
 
   // States for Editing
@@ -109,8 +178,13 @@ const Admin: React.FC = () => {
   const [editMessageText, setEditMessageText] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // States for custom delete confirmation
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  // Recycle Bin Sub-Tab State
+  const [recycleSubTab, setRecycleSubTab] = useState<'projects' | 'contact' | 'services'>('projects');
+
+  // Message Delete & Restore Confirmation States
+  const [deletingMessageDoc, setDeletingMessageDoc] = useState<Message | null>(null);
+  const [restoringMessageDoc, setRestoringMessageDoc] = useState<Message | null>(null);
+  const [deletingMessagePermanentDoc, setDeletingMessagePermanentDoc] = useState<Message | null>(null);
 
   // States for Password Change modal
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
@@ -123,25 +197,100 @@ const Admin: React.FC = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
+  // States for Admin ID Change modal
+  const [isChangeAdminIdOpen, setIsChangeAdminIdOpen] = useState(false);
+  const [newAdminIdInput, setNewAdminIdInput] = useState('');
+  const [adminIdCurrentPass, setAdminIdCurrentPass] = useState('');
+  const [adminIdError, setAdminIdError] = useState('');
+  const [adminIdSuccess, setAdminIdSuccess] = useState('');
+  const [showAdminIdPass, setShowAdminIdPass] = useState(false);
+
+  const handleChangeAdminIdSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAdminIdError('');
+    setAdminIdSuccess('');
+
+    if (!adminIdCurrentPass) {
+      setAdminIdError('Please enter your current password.');
+      return;
+    }
+
+    if (!newAdminIdInput.trim()) {
+      setAdminIdError('Please enter a new Admin ID.');
+      return;
+    }
+
+    const res = await changeAdminId(adminIdCurrentPass, newAdminIdInput.trim());
+    if (res.success) {
+      setAdminIdSuccess(res.message);
+      setTimeout(() => {
+        setIsChangeAdminIdOpen(false);
+        setAdminIdCurrentPass('');
+        setNewAdminIdInput('');
+        setAdminIdSuccess('');
+      }, 1500);
+    } else {
+      setAdminIdError(res.message);
+    }
+  };
+
   const fetchMessages = async () => {
     setMessagesLoading(true);
+    const cached = localStorage.getItem('brandique_messages');
+    let cachedList: Message[] = [];
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          cachedList = parsed;
+        }
+      } catch (e) {
+        // Fallback
+      }
+    }
+
     try {
       const querySnapshot = await getDocs(collection(db, 'messages'));
       const messagesList: Message[] = [];
       querySnapshot.forEach((doc) => {
         messagesList.push({ id: doc.id, ...doc.data() } as Message);
       });
-      // Sort messages by createdAt descending
-      messagesList.sort((a, b) => {
-        const valA = a.createdAt || a.id;
-        const valB = b.createdAt || b.id;
+
+      // Merge Firestore messages with cached local messages, preserving isDeleted status
+      const map = new Map<string, Message>();
+      messagesList.forEach(m => {
+        if (m.id) {
+          const cachedItem = cachedList.find(c => c.id === m.id);
+          if (cachedItem && cachedItem.isDeleted && !m.isDeleted) {
+            m.isDeleted = true;
+            m.deletedAt = cachedItem.deletedAt;
+          }
+          if (cachedItem && cachedItem.source && !m.source) {
+            m.source = cachedItem.source;
+          }
+          map.set(m.id, m);
+        }
+      });
+      cachedList.forEach(m => {
+        if (m.id && !map.has(m.id)) {
+          map.set(m.id, m);
+        } else if (!m.id) {
+          map.set(`local-${m.createdAt}-${m.email}`, m);
+        }
+      });
+
+      const finalList = Array.from(map.values());
+      finalList.sort((a, b) => {
+        const valA = a.createdAt || a.id || '';
+        const valB = b.createdAt || b.id || '';
         return valB.localeCompare(valA);
       });
-      setMessages(messagesList);
+
+      setMessages(finalList);
+      localStorage.setItem('brandique_messages', JSON.stringify(finalList));
       setIsUsingFallback(false);
     } catch (error) {
-      setIsUsingFallback(true);
-      setMessages([]);
+      setMessages(cachedList);
       handleFirestoreError(error, OperationType.GET, 'messages');
     } finally {
       setMessagesLoading(false);
@@ -249,6 +398,12 @@ const Admin: React.FC = () => {
       localStorage.setItem('brandique_projects', JSON.stringify(projects));
     }
   }, [projects]);
+
+  useEffect(() => {
+    if (messages && messages.length > 0) {
+      localStorage.setItem('brandique_messages', JSON.stringify(messages));
+    }
+  }, [messages]);
 
   const handleAddProject = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -407,21 +562,59 @@ const Admin: React.FC = () => {
     }
   };
 
-  const handleDeleteMessage = async (id: string) => {
+  const handleSoftDeleteMessage = async (msg: Message) => {
+    const delTime = new Date().toISOString();
+    try {
+      const docRef = doc(db, 'messages', msg.id);
+      await setDoc(docRef, { ...msg, isDeleted: true, deletedAt: delTime }, { merge: true });
+    } catch (error) {
+      handleFirestoreError(error, OperationType.UPDATE, 'messages/' + msg.id);
+    } finally {
+      setMessages(prev => {
+        const next = prev.map(m => m.id === msg.id ? { ...m, isDeleted: true, deletedAt: delTime } : m);
+        localStorage.setItem('brandique_messages', JSON.stringify(next));
+        return next;
+      });
+      setDeletingMessageDoc(null);
+      if (selectedMessage?.id === msg.id) {
+        setIsMessageDetailOpen(false);
+        setSelectedMessage(null);
+      }
+    }
+  };
+
+  const handleRestoreMessage = async (msg: Message) => {
+    try {
+      const docRef = doc(db, 'messages', msg.id);
+      await setDoc(docRef, { ...msg, isDeleted: false, deletedAt: null }, { merge: true });
+    } catch (error) {
+      handleFirestoreError(error, OperationType.UPDATE, 'messages/' + msg.id);
+    } finally {
+      setMessages(prev => {
+        const next = prev.map(m => m.id === msg.id ? { ...m, isDeleted: false, deletedAt: undefined } : m);
+        localStorage.setItem('brandique_messages', JSON.stringify(next));
+        return next;
+      });
+      setRestoringMessageDoc(null);
+    }
+  };
+
+  const handlePermanentDeleteMessage = async (id: string) => {
     try {
       await deleteDoc(doc(db, 'messages', id));
-      setMessages(prev => prev.filter(m => m.id !== id));
-      if (selectedMessage?.id === id) {
-        setIsMessageDetailOpen(false);
-        setSelectedMessage(null);
-      }
     } catch (error) {
-      setMessages(prev => prev.filter(m => m.id !== id));
+      handleFirestoreError(error, OperationType.DELETE, 'messages/' + id);
+    } finally {
+      setMessages(prev => {
+        const next = prev.filter(m => m.id !== id);
+        localStorage.setItem('brandique_messages', JSON.stringify(next));
+        return next;
+      });
+      setDeletingMessagePermanentDoc(null);
       if (selectedMessage?.id === id) {
         setIsMessageDetailOpen(false);
         setSelectedMessage(null);
       }
-      handleFirestoreError(error, OperationType.DELETE, 'messages/' + id);
     }
   };
 
@@ -468,7 +661,13 @@ const Admin: React.FC = () => {
     }
   };
 
-  const filteredMessages = messages.filter(msg => {
+  const activeContactMessages = messages.filter(msg => !msg.isDeleted && isContactFormMessage(msg));
+  const activeServiceMessages = messages.filter(msg => !msg.isDeleted && isServiceFormMessage(msg));
+  const deletedContactMessages = messages.filter(msg => msg.isDeleted && isContactFormMessage(msg));
+  const deletedServiceMessages = messages.filter(msg => msg.isDeleted && isServiceFormMessage(msg));
+  const deletedProjects = projects.filter(p => p.isDeleted);
+
+  const filteredMessages = activeContactMessages.filter(msg => {
     const term = messageSearchTerm.toLowerCase();
     return (
       (msg.name || '').toLowerCase().includes(term) ||
@@ -553,17 +752,41 @@ const Admin: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Admin Dashboard</h1>
           <p className="text-gray-500 dark:text-gray-400">Monitor your contact submissions, lead budgets, and client inquiries.</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <button 
+            onClick={() => setActiveTab('storage')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
+              activeTab === 'storage'
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400/50'
+                : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500 hover:text-white shadow-sm'
+            }`}
+          >
+            <Database size={16} />
+            <span>Storage & Stats</span>
+          </button>
+          <button 
+            onClick={() => {
+              setNewAdminIdInput(adminId || 'mohan');
+              setAdminIdCurrentPass('');
+              setAdminIdError('');
+              setAdminIdSuccess('');
+              setIsChangeAdminIdOpen(true);
+            }}
+            className="p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 hover:border-blue-500/40 transition-all flex items-center gap-2 font-bold text-sm shadow-sm"
+          >
+            <User size={18} className="text-blue-500" />
+            Change Admin ID
+          </button>
           <button 
             onClick={() => setIsChangePasswordOpen(true)}
-            className="p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-neon-purple hover:border-neon-purple/40 transition-all flex items-center gap-2 font-bold text-sm"
+            className="p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-neon-purple hover:border-neon-purple/40 transition-all flex items-center gap-2 font-bold text-sm shadow-sm"
           >
-            <Key size={18} />
+            <Key size={18} className="text-neon-purple" />
             Change Password
           </button>
           <button 
             onClick={logout}
-            className="p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:border-red-500/50 transition-all group flex items-center gap-2 font-bold text-sm"
+            className="p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:border-red-500/50 transition-all group flex items-center gap-2 font-bold text-sm shadow-sm"
             title="Logout"
           >
             <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
@@ -572,69 +795,58 @@ const Admin: React.FC = () => {
         </div>
       </div>
 
-      {/* Fallback Warning Banner */}
-      {isUsingFallback && (
-        <div className="mb-8 p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 text-xs md:text-sm leading-relaxed flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-up">
-          <div className="flex items-start md:items-center gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold">!</span>
-            <p>
-              <strong>🔒 Connection & Permissions Notice:</strong> Browser privacy partition rules inside this preview iframe restrict direct Firestore database syncing. No fake data or mock leads are ever created in your database, keeping your storage perfectly clean. To view your live database sync and authentic inquiries, simply click the <strong>Open in New Tab</strong> button.
-            </p>
-          </div>
-          <button 
-            onClick={() => window.open(window.location.origin + '/admin', '_blank')}
-            className="shrink-0 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition-colors shadow-sm self-start md:self-auto"
-          >
-            Open in New Tab
-          </button>
-        </div>
-      )}
-
-      {/* Navigation Tabs */}
+      {/* Navigation Tabs - Reordered & Unique Colors for Each Tab */}
       <div className="flex flex-wrap items-center gap-3 mb-8 bg-gray-100/50 dark:bg-[#0A0C11]/30 p-2 rounded-2xl border border-gray-200 dark:border-white/5 max-w-fit opacity-0 animate-fade-up">
-        <button
-          onClick={() => setActiveTab('leads')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
-            activeTab === 'leads'
-              ? 'bg-neon-purple text-white shadow-lg shadow-neon-purple/20'
-              : 'text-gray-500 hover:text-black dark:hover:text-white'
-          }`}
-        >
-          <MessageSquare size={14} />
-          Inquiries ({filteredMessages.length})
-        </button>
+        {/* 1. PROJECTS (Blue Theme) */}
         <button
           onClick={() => setActiveTab('projects')}
           className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
             activeTab === 'projects'
-              ? 'bg-neon-purple text-white shadow-lg shadow-neon-purple/20'
-              : 'text-gray-500 hover:text-black dark:hover:text-white'
+              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-400/30'
+              : 'text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10'
           }`}
         >
           <FolderPlus size={14} />
           Projects ({projects.filter(p => !p.isDeleted).length})
         </button>
+
+        {/* 2. SERVICES FORM (Neon Purple Theme) */}
+        <button
+          onClick={() => setActiveTab('services')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+            activeTab === 'services'
+              ? 'bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-lg shadow-purple-500/30 ring-2 ring-purple-400/30'
+              : 'text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-500/10'
+          }`}
+        >
+          <Layers size={14} />
+          Services Form ({activeServiceMessages.length})
+        </button>
+
+        {/* 3. CONTACT FORM (Emerald / Teal Theme) */}
+        <button
+          onClick={() => setActiveTab('leads')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+            activeTab === 'leads'
+              ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400/30'
+              : 'text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10'
+          }`}
+        >
+          <MessageSquare size={14} />
+          Contact Form ({activeContactMessages.length})
+        </button>
+
+        {/* 4. RECYCLE BIN (Red / Rose Theme) */}
         <button
           onClick={() => setActiveTab('recycle')}
           className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
             activeTab === 'recycle'
-              ? 'bg-neon-purple text-white shadow-lg shadow-neon-purple/20'
-              : 'text-gray-500 hover:text-black dark:hover:text-white'
+              ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-lg shadow-red-500/30 ring-2 ring-red-400/30'
+              : 'text-gray-500 dark:text-gray-400 hover:text-rose-600 dark:hover:text-red-400 hover:bg-red-500/10'
           }`}
         >
           <Trash2 size={14} />
-          Recycle Bin ({projects.filter(p => p.isDeleted).length})
-        </button>
-        <button
-          onClick={() => setActiveTab('storage')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
-            activeTab === 'storage'
-              ? 'bg-neon-purple text-white shadow-lg shadow-neon-purple/20'
-              : 'text-gray-500 hover:text-black dark:hover:text-white'
-          }`}
-        >
-          <Database size={14} />
-          Storage & Stats
+          Recycle Bin ({deletedProjects.length + deletedContactMessages.length + deletedServiceMessages.length})
         </button>
       </div>
 
@@ -645,7 +857,7 @@ const Admin: React.FC = () => {
           <div className="p-6 border-b border-gray-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50/50 dark:bg-[#0A0C11]/50 backdrop-blur-md sticky top-0 z-20">
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
               <MessageSquare size={16} />
-              <span className="font-medium">All Lead Inquiries</span>
+              <span className="font-bold text-gray-900 dark:text-white">Contact Form Submissions</span>
               <span className="bg-gray-200 dark:bg-white/10 px-2 py-0.5 rounded-full text-xs text-gray-700 dark:text-white">{filteredMessages.length}</span>
             </div>
 
@@ -745,7 +957,7 @@ const Admin: React.FC = () => {
                         Edit
                       </button>
                       <button 
-                        onClick={() => setDeletingId(msg.id)} 
+                        onClick={() => setDeletingMessageDoc(msg)} 
                         className="p-2 rounded-lg bg-gray-100 dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:border-red-500/50 hover:shadow-[0_0_10px_rgba(239,68,68,0.3)] transition-all"
                         title="Delete Submission"
                       >
@@ -766,6 +978,249 @@ const Admin: React.FC = () => {
           {/* Messages Table Footer */}
           <div className="px-8 py-4 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#0F1320] text-xs text-gray-500 flex justify-between items-center">
             <span>Showing {filteredMessages.length} of {messages.length} Submissions</span>
+          </div>
+        </div>
+      )}
+
+      {/* --- SERVICES FORM SECTION (5 SERVICES) --- */}
+      {activeTab === 'services' && (
+        <div className="space-y-8 animate-fade-up">
+          {/* Top 5 Services Selection Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {SERVICE_CATEGORIES.map((cat) => {
+              const IconComp = cat.icon;
+              const count = activeServiceMessages.filter(m => categorizeMessage(m) === cat.id).length;
+              const isSelected = selectedServiceTab === cat.id;
+
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedServiceTab(cat.id)}
+                  className={`relative p-5 rounded-2xl border text-left transition-all duration-300 flex flex-col justify-between h-full group ${
+                    isSelected
+                      ? 'bg-white dark:bg-[#0F1320] border-neon-purple shadow-lg shadow-neon-purple/10 ring-2 ring-neon-purple/30'
+                      : 'bg-white/60 dark:bg-[#0A0C11]/50 border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/20 hover:bg-white dark:hover:bg-[#0F1320]'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${cat.badgeBg}`}>
+                        <IconComp size={20} />
+                      </div>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                        count > 0 ? 'bg-neon-purple text-white' : 'bg-gray-100 dark:bg-white/5 text-gray-500'
+                      }`}>
+                        {count} {count === 1 ? 'Form' : 'Forms'}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-neon-purple transition-colors">
+                      {cat.name}
+                    </h3>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-gray-100 dark:border-white/5 flex items-center justify-between text-[11px] font-semibold text-gray-400">
+                    <span>View Submissions</span>
+                    <ChevronRight size={14} className={`transition-transform ${isSelected ? 'translate-x-1 text-neon-purple' : 'group-hover:translate-x-1'}`} />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Submissions List for Selected Service */}
+          <div className="glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 flex flex-col min-h-[450px] shadow-sm dark:shadow-none">
+            {/* Toolbar */}
+            <div className="p-6 border-b border-gray-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50/50 dark:bg-[#0A0C11]/50 backdrop-blur-md sticky top-0 z-20">
+              <div className="flex items-center gap-3">
+                {(() => {
+                  const currentCat = SERVICE_CATEGORIES.find(c => c.id === selectedServiceTab);
+                  const IconComp = currentCat?.icon || Code;
+                  return (
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${currentCat?.badgeBg}`}>
+                      <IconComp size={18} />
+                    </div>
+                  );
+                })()}
+                <div>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    {selectedServiceTab} Forms
+                    <span className="bg-neon-purple/10 border border-neon-purple/20 text-neon-purple text-xs px-2.5 py-0.5 rounded-full font-bold">
+                      {activeServiceMessages.filter(m => categorizeMessage(m) === selectedServiceTab).length}
+                    </span>
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Detailed submissions specifically submitted for {selectedServiceTab}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="relative group w-full md:w-72">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 group-focus-within:text-neon-purple transition-colors" size={16} />
+                  <input 
+                    type="text" 
+                    placeholder="Search in this service..." 
+                    value={serviceFormSearch}
+                    onChange={(e) => setServiceFormSearch(e.target.value)}
+                    className="w-full bg-white dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl py-2 pl-9 pr-3 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  />
+                </div>
+                <button 
+                  onClick={fetchMessages}
+                  className="p-2 bg-white dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl text-gray-400 hover:text-black dark:hover:text-white transition-all"
+                  title="Refresh Messages"
+                >
+                  <RefreshCw size={16} className={messagesLoading ? "animate-spin text-neon-purple" : ""} />
+                </button>
+              </div>
+            </div>
+
+            {/* Submissions List */}
+            <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
+              {(() => {
+                const serviceMsgs = activeServiceMessages
+                  .filter(m => categorizeMessage(m) === selectedServiceTab)
+                  .filter(m => {
+                    if (!serviceFormSearch.trim()) return true;
+                    const q = serviceFormSearch.toLowerCase();
+                    return (
+                      (m.name && m.name.toLowerCase().includes(q)) ||
+                      (m.email && m.email.toLowerCase().includes(q)) ||
+                      (m.phone && m.phone.toLowerCase().includes(q)) ||
+                      (m.service && m.service.toLowerCase().includes(q)) ||
+                      (m.message && m.message.toLowerCase().includes(q))
+                    );
+                  });
+
+                if (messagesLoading) {
+                  return (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                      <RefreshCw className="w-10 h-10 text-neon-purple animate-spin mb-3" />
+                      <p className="text-xs text-gray-400">Loading {selectedServiceTab} form submissions...</p>
+                    </div>
+                  );
+                }
+
+                if (serviceMsgs.length === 0) {
+                  return (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                      <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-400 mb-4">
+                        <MessageSquare size={28} />
+                      </div>
+                      <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">No Form Submissions Yet</h4>
+                      <p className="text-xs text-gray-500 max-w-sm">Submissions for {selectedServiceTab} from users on the website will appear here in detail.</p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {serviceMsgs.map((msg) => (
+                      <div 
+                        key={msg.id}
+                        className="bg-gray-50/50 dark:bg-[#05070A]/60 border border-gray-200 dark:border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-neon-purple/40 hover:shadow-lg hover:shadow-neon-purple/5 flex flex-col justify-between"
+                      >
+                        <div>
+                          {/* Header: Name, Email & Date */}
+                          <div className="flex items-start justify-between gap-3 mb-4 pb-4 border-b border-gray-200/60 dark:border-white/5">
+                            <div>
+                              <h4 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                {msg.name}
+                              </h4>
+                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                <a href={`mailto:${msg.email}`} className="text-neon-purple hover:underline font-medium flex items-center gap-1">
+                                  <Mail size={12} /> {msg.email}
+                                </a>
+                                {msg.phone && (
+                                  <a href={`tel:${msg.phone}`} className="hover:underline flex items-center gap-1">
+                                    <Phone size={12} /> {msg.phone}
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                            <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 bg-white dark:bg-white/5 px-2.5 py-1 rounded-lg border border-gray-200 dark:border-white/5 whitespace-nowrap">
+                              {msg.createdAt ? formatDate(msg.createdAt) : 'Recent'}
+                            </span>
+                          </div>
+
+                          {/* Details Badges */}
+                          <div className="grid grid-cols-2 gap-2 mb-4">
+                            <div className="p-2.5 bg-white dark:bg-[#0F1320] rounded-xl border border-gray-200/80 dark:border-white/5">
+                              <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-wider">Service Selected</span>
+                              <span className="text-xs font-bold text-neon-purple">{msg.service || selectedServiceTab}</span>
+                            </div>
+                            <div className="p-2.5 bg-white dark:bg-[#0F1320] rounded-xl border border-gray-200/80 dark:border-white/5">
+                              <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-wider">Estimated Budget</span>
+                              <span className="text-xs font-bold text-green-600 dark:text-green-400">{msg.budget || 'Not specified'}</span>
+                            </div>
+                          </div>
+
+                          {/* Extra Service Specific Answers if present */}
+                          {msg.serviceDetails && Object.keys(msg.serviceDetails).length > 0 && (
+                            <div className="mb-4 p-3 bg-white dark:bg-[#0F1320] rounded-xl border border-gray-200/80 dark:border-white/5 space-y-1.5">
+                              <span className="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                Specific Requirements
+                              </span>
+                              <div className="flex flex-wrap gap-1.5">
+                                {Object.entries(msg.serviceDetails).map(([k, v]) => {
+                                  if (k === 'phone') return null;
+                                  return (
+                                    <span key={k} className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-white/5 text-[10px] font-semibold text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-white/5">
+                                      <strong className="text-gray-500 dark:text-gray-400">{k}:</strong> {v}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Message Body */}
+                          <div className="p-3 bg-white dark:bg-[#0F1320] rounded-xl border border-gray-200/80 dark:border-white/5 text-xs text-gray-600 dark:text-gray-300 whitespace-pre-wrap leading-relaxed max-h-32 overflow-y-auto custom-scrollbar mb-4">
+                            {msg.message || 'No additional message text.'}
+                          </div>
+                        </div>
+
+                        {/* Card Footer Actions */}
+                        <div className="pt-3 border-t border-gray-200/60 dark:border-white/5 flex items-center justify-between gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedMessage(msg);
+                              setIsMessageDetailOpen(true);
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-neon-purple/10 border border-neon-purple/20 text-neon-purple hover:bg-neon-purple hover:text-white transition-all text-xs font-bold flex items-center gap-1.5"
+                          >
+                            <Eye size={14} /> Full Details
+                          </button>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => {
+                                setEditingMessage(msg);
+                                setEditName(msg.name || '');
+                                setEditEmail(msg.email || '');
+                                setEditPhone(msg.phone || '');
+                                setEditService(msg.service || '');
+                                setEditBudget(msg.budget || '');
+                                setEditMessageText(msg.message || '');
+                                setIsEditOpen(true);
+                              }}
+                              className="p-1.5 bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-lg text-gray-500 hover:text-black dark:hover:text-white transition-colors"
+                              title="Edit"
+                            >
+                              <Edit3 size={14} />
+                            </button>
+                            <button
+                              onClick={() => setDeletingMessageDoc(msg)}
+                              className="p-1.5 bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-lg text-gray-500 hover:text-red-500 transition-colors"
+                              title="Delete Submission"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
           </div>
         </div>
       )}
@@ -889,7 +1344,10 @@ const Admin: React.FC = () => {
                                 <Edit3 size={14} />
                               </button>
                               <button
-                                onClick={() => handleSoftDeleteProject(p)}
+                                onClick={() => {
+                                  setDeletingProjectDoc(p);
+                                  setIsPermanentDelete(false);
+                                }}
                                 className="p-2 bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-lg text-gray-500 hover:text-red-500 hover:border-red-500/30 hover:shadow-[0_0_10px_rgba(239,68,68,0.2)] transition-all"
                                 title="Delete Project (Move to Recycle Bin)"
                               >
@@ -911,86 +1369,242 @@ const Admin: React.FC = () => {
       )}
 
       {activeTab === 'recycle' && (
-        <div className="glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 flex flex-col min-h-[400px]">
-          <div className="p-6 border-b border-gray-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50/50 dark:bg-[#0A0C11]/50 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-              <Trash2 className="text-red-500" size={16} />
-              <span className="font-semibold text-gray-900 dark:text-white">Deleted Projects (Recycle Bin)</span>
-              <span className="bg-red-500/10 text-red-500 px-2 py-0.5 rounded-full text-xs font-bold font-mono">{projects.filter(p => p.isDeleted).length}</span>
+        <div className="glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 flex flex-col min-h-[500px] shadow-sm dark:shadow-none animate-fade-up">
+          {/* Recycle Bin Top Bar */}
+          <div className="p-6 border-b border-gray-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50 dark:bg-[#0A0C11]/50 backdrop-blur-md">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Trash2 className="text-red-500" size={20} />
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Recycle Bin</h3>
+                <span className="bg-red-500/10 border border-red-500/20 text-red-500 px-2.5 py-0.5 rounded-full text-xs font-bold">
+                  {deletedProjects.length + deletedContactMessages.length + deletedServiceMessages.length} Total Deleted
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Restore items back to active views or permanently delete them from the system.</p>
             </div>
-            <p className="text-xs text-gray-400">Restore deleted projects or delete them permanently from the database.</p>
+
+            {/* 3 Category Sub-Tabs */}
+            <div className="flex flex-wrap items-center gap-2 bg-gray-200/50 dark:bg-[#05070A]/80 p-1.5 rounded-xl border border-gray-200 dark:border-white/5">
+              <button
+                onClick={() => setRecycleSubTab('projects')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  recycleSubTab === 'projects'
+                    ? 'bg-red-500 text-white shadow-md shadow-red-500/20'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'
+                }`}
+              >
+                <FolderPlus size={14} />
+                <span>Projects ({deletedProjects.length})</span>
+              </button>
+
+              <button
+                onClick={() => setRecycleSubTab('contact')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  recycleSubTab === 'contact'
+                    ? 'bg-red-500 text-white shadow-md shadow-red-500/20'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'
+                }`}
+              >
+                <MessageSquare size={14} />
+                <span>Contact Form ({deletedContactMessages.length})</span>
+              </button>
+
+              <button
+                onClick={() => setRecycleSubTab('services')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  recycleSubTab === 'services'
+                    ? 'bg-red-500 text-white shadow-md shadow-red-500/20'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'
+                }`}
+              >
+                <Layers size={14} />
+                <span>Services Form ({deletedServiceMessages.length})</span>
+              </button>
+            </div>
           </div>
 
-          <div className="flex-1 p-6">
-            {projectsLoading ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <RefreshCw className="w-10 h-10 text-neon-purple animate-spin mb-3" />
-                <p className="text-gray-400 text-xs">Loading deleted projects...</p>
-              </div>
-            ) : projects.filter(p => p.isDeleted).length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projects.filter(p => p.isDeleted).map(p => (
-                  <div key={p.id} className="bg-gray-50 dark:bg-[#05070A]/30 border border-red-500/10 dark:border-red-500/5 rounded-2xl overflow-hidden flex flex-col justify-between group animate-fade-up">
-                    <div>
-                      {/* Image Preview with overlay */}
-                      <div className="relative aspect-[16/10] bg-gray-100 dark:bg-white/5 overflow-hidden border-b border-gray-200 dark:border-white/5 opacity-70">
-                        <img 
-                          src={p.image} 
-                          alt={p.title} 
-                          referrerPolicy="no-referrer"
-                          className="w-full h-full object-cover grayscale"
-                        />
-                        <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[9px] font-bold font-mono tracking-widest uppercase bg-black/60 text-white backdrop-blur-sm border border-white/10">
-                          {formatBytes(getProjectStorageSize(p))}
+          {/* Sub-Tab Content */}
+          <div className="flex-1 p-6 overflow-y-auto custom-scrollbar">
+            {/* SUB-TAB 1: PROJECTS */}
+            {recycleSubTab === 'projects' && (
+              projectsLoading ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <RefreshCw className="w-10 h-10 text-red-500 animate-spin mb-3" />
+                  <p className="text-gray-400 text-xs">Loading deleted projects...</p>
+                </div>
+              ) : deletedProjects.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {deletedProjects.map(p => (
+                    <div key={p.id} className="bg-gray-50 dark:bg-[#05070A]/30 border border-red-500/20 rounded-2xl overflow-hidden flex flex-col justify-between group animate-fade-up">
+                      <div>
+                        <div className="relative aspect-[16/10] bg-gray-100 dark:bg-white/5 overflow-hidden border-b border-gray-200 dark:border-white/5 opacity-70">
+                          <img src={p.image} alt={p.title} referrerPolicy="no-referrer" className="w-full h-full object-cover grayscale" />
+                          <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[9px] font-bold font-mono tracking-widest uppercase bg-black/60 text-white backdrop-blur-sm border border-white/10">
+                            {formatBytes(getProjectStorageSize(p))}
+                          </div>
+                          <div className="absolute inset-0 bg-red-950/20 flex items-center justify-center">
+                            <span className="bg-red-500 text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 rounded-full shadow-lg shadow-red-500/20">
+                              Soft Deleted
+                            </span>
+                          </div>
                         </div>
-                        <div className="absolute inset-0 bg-red-950/20 flex items-center justify-center">
-                          <span className="bg-red-500 text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 rounded-full shadow-lg shadow-red-500/20">
-                            Soft Deleted
-                          </span>
+                        <div className="p-5 space-y-2">
+                          <span className="text-[10px] font-bold text-gray-400 tracking-widest uppercase block">{p.category}</span>
+                          <h5 className="font-bold text-base text-gray-900 dark:text-white uppercase line-clamp-1">{p.title}</h5>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">{p.desc}</p>
+                          {p.deletedAt && (
+                            <p className="text-[10px] text-red-400 flex items-center gap-1">
+                              <Clock size={10} /> Deleted on {formatDate(p.deletedAt)}
+                            </p>
+                          )}
                         </div>
                       </div>
 
-                      {/* Project details */}
-                      <div className="p-5 space-y-2">
-                        <span className="text-[10px] font-bold text-gray-400 tracking-widest uppercase block">{p.category}</span>
-                        <h5 className="font-bold text-base text-gray-900 dark:text-white uppercase line-clamp-1">{p.title}</h5>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">{p.desc}</p>
-                        {p.deletedAt && (
-                          <p className="text-[10px] text-red-400 flex items-center gap-1">
-                            <Clock size={10} /> Deleted on {formatDate(p.deletedAt)}
+                      <div className="p-5 pt-0 mt-4 flex items-center gap-3">
+                        <button
+                          onClick={() => setRestoringProjectDoc(p)}
+                          className="flex-1 py-2 rounded-xl bg-neon-purple/10 border border-neon-purple/20 text-neon-purple hover:bg-neon-purple hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <RotateCcw size={12} />
+                          Restore
+                        </button>
+                        <button
+                          onClick={() => {
+                            setDeletingProjectDoc(p);
+                            setIsPermanentDelete(true);
+                          }}
+                          className="flex-1 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <Trash2 size={12} />
+                          Delete Perm
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+                  <Trash2 size={48} className="mb-4 opacity-10" />
+                  <p className="text-sm font-light">No deleted projects in Recycle Bin.</p>
+                </div>
+              )
+            )}
+
+            {/* SUB-TAB 2: CONTACT FORM MESSAGES */}
+            {recycleSubTab === 'contact' && (
+              deletedContactMessages.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {deletedContactMessages.map(msg => (
+                    <div key={msg.id} className="bg-gray-50 dark:bg-[#05070A]/30 border border-red-500/20 rounded-2xl p-5 flex flex-col justify-between group animate-fade-up">
+                      <div>
+                        <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-200/60 dark:border-white/5">
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-900 dark:text-white">{msg.name}</h4>
+                            <p className="text-xs text-gray-500">{msg.email}</p>
+                          </div>
+                          <span className="text-[9px] font-bold text-red-500 bg-red-500/10 px-2 py-0.5 rounded-full uppercase">Contact Form</span>
+                        </div>
+                        <div className="space-y-2 text-xs">
+                          <p><strong className="text-gray-400">Service:</strong> {msg.service || 'Web Development'}</p>
+                          <p><strong className="text-gray-400">Budget:</strong> <span className="text-green-500 font-semibold">{msg.budget || 'Not specified'}</span></p>
+                          <p className="text-gray-600 dark:text-gray-300 line-clamp-3 bg-white dark:bg-[#0F1320] p-2.5 rounded-xl border border-gray-200/60 dark:border-white/5 mt-2">
+                            {msg.message || 'No additional message text.'}
                           </p>
-                        )}
+                          {msg.deletedAt && (
+                            <p className="text-[10px] text-red-400 flex items-center gap-1 mt-2">
+                              <Clock size={10} /> Deleted on {formatDate(msg.deletedAt)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="pt-4 mt-4 border-t border-gray-200/60 dark:border-white/5 flex items-center gap-3">
+                        <button
+                          onClick={() => setRestoringMessageDoc(msg)}
+                          className="flex-1 py-2 rounded-xl bg-neon-purple/10 border border-neon-purple/20 text-neon-purple hover:bg-neon-purple hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <RotateCcw size={12} />
+                          Restore
+                        </button>
+                        <button
+                          onClick={() => setDeletingMessagePermanentDoc(msg)}
+                          className="flex-1 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <Trash2 size={12} />
+                          Delete Perm
+                        </button>
                       </div>
                     </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+                  <Trash2 size={48} className="mb-4 opacity-10" />
+                  <p className="text-sm font-light">No deleted contact forms in Recycle Bin.</p>
+                </div>
+              )
+            )}
 
-                    {/* Footer with Restore & Permanent Delete */}
-                    <div className="p-5 pt-0 mt-4 flex items-center gap-3">
-                      <button
-                        onClick={() => handleRestoreProject(p)}
-                        className="flex-1 py-2 rounded-xl bg-neon-purple/10 border border-neon-purple/20 text-neon-purple hover:bg-neon-purple hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
-                      >
-                        <RotateCcw size={12} />
-                        Restore
-                      </button>
-                      <button
-                        onClick={() => {
-                          setDeletingProjectDoc(p);
-                          setIsPermanentDelete(true);
-                        }}
-                        className="flex-1 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
-                      >
-                        <Trash2 size={12} />
-                        Delete Perm
-                      </button>
+            {/* SUB-TAB 3: SERVICES FORM MESSAGES */}
+            {recycleSubTab === 'services' && (
+              deletedServiceMessages.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {deletedServiceMessages.map(msg => (
+                    <div key={msg.id} className="bg-gray-50 dark:bg-[#05070A]/30 border border-red-500/20 rounded-2xl p-5 flex flex-col justify-between group animate-fade-up">
+                      <div>
+                        <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-200/60 dark:border-white/5">
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-900 dark:text-white">{msg.name}</h4>
+                            <p className="text-xs text-gray-500">{msg.email}</p>
+                          </div>
+                          <span className="text-[9px] font-bold text-neon-purple bg-neon-purple/10 px-2 py-0.5 rounded-full uppercase">{msg.service || 'Service Form'}</span>
+                        </div>
+                        <div className="space-y-2 text-xs">
+                          {msg.phone && <p><strong className="text-gray-400">Phone:</strong> {msg.phone}</p>}
+                          <p><strong className="text-gray-400">Budget:</strong> <span className="text-green-500 font-semibold">{msg.budget || 'Not specified'}</span></p>
+                          {msg.serviceDetails && Object.keys(msg.serviceDetails).length > 0 && (
+                            <div className="p-2 bg-white dark:bg-[#0F1320] rounded-xl border border-gray-200/60 dark:border-white/5 text-[11px] space-y-0.5">
+                              {Object.entries(msg.serviceDetails).map(([k, v]) => (
+                                <p key={k}><strong className="text-gray-400">{k}:</strong> {v}</p>
+                              ))}
+                            </div>
+                          )}
+                          <p className="text-gray-600 dark:text-gray-300 line-clamp-3 bg-white dark:bg-[#0F1320] p-2.5 rounded-xl border border-gray-200/60 dark:border-white/5 mt-2">
+                            {msg.message || 'No additional message text.'}
+                          </p>
+                          {msg.deletedAt && (
+                            <p className="text-[10px] text-red-400 flex items-center gap-1 mt-2">
+                              <Clock size={10} /> Deleted on {formatDate(msg.deletedAt)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="pt-4 mt-4 border-t border-gray-200/60 dark:border-white/5 flex items-center gap-3">
+                        <button
+                          onClick={() => setRestoringMessageDoc(msg)}
+                          className="flex-1 py-2 rounded-xl bg-neon-purple/10 border border-neon-purple/20 text-neon-purple hover:bg-neon-purple hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <RotateCcw size={12} />
+                          Restore
+                        </button>
+                        <button
+                          onClick={() => setDeletingMessagePermanentDoc(msg)}
+                          className="flex-1 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <Trash2 size={12} />
+                          Delete Perm
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-                <Trash2 size={48} className="mb-4 opacity-10" />
-                <p className="text-sm font-light">Your recycle bin is clean and empty.</p>
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+                  <Trash2 size={48} className="mb-4 opacity-10" />
+                  <p className="text-sm font-light">No deleted service forms in Recycle Bin.</p>
+                </div>
+              )
             )}
           </div>
         </div>
@@ -1282,31 +1896,75 @@ const Admin: React.FC = () => {
         </div>
       )}
 
-      {/* --- CUSTOM DELETE CONFIRMATION MODAL --- */}
-      {deletingId && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 animate-scale-in">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Delete Lead Submission?</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Are you sure you want to delete this lead inquiry? This action cannot be undone.</p>
-            <div className="flex justify-end gap-3">
+      {/* --- ADMIN ID CHANGE MODAL --- */}
+      {isChangeAdminIdOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-[24px] border border-gray-200 dark:border-white/10 shadow-2xl p-8 relative animate-scale-in">
+            <button 
+              onClick={() => {
+                setIsChangeAdminIdOpen(false);
+                setAdminIdCurrentPass('');
+                setNewAdminIdInput('');
+                setAdminIdError('');
+                setAdminIdSuccess('');
+                setShowAdminIdPass(false);
+              }}
+              className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors"
+            >
+              <X size={18} />
+            </button>
+            
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+              <User size={22} className="text-blue-500" />
+              Change Admin ID
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Current Admin ID: <strong className="text-blue-500 font-mono">{adminId || 'mohan'}</strong>
+            </p>
+
+            <form onSubmit={handleChangeAdminIdSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">New Admin ID</label>
+                <input 
+                  type="text" 
+                  value={newAdminIdInput} 
+                  onChange={(e) => setNewAdminIdInput(e.target.value)}
+                  placeholder="e.g. admin, mohan, brandique_admin"
+                  required
+                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Current Password (To Confirm)</label>
+                <div className="relative">
+                  <input 
+                    type={showAdminIdPass ? "text" : "password"} 
+                    value={adminIdCurrentPass} 
+                    onChange={(e) => setAdminIdCurrentPass(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAdminIdPass(!showAdminIdPass)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none"
+                  >
+                    {showAdminIdPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              {adminIdError && <p className="text-xs text-red-500 font-medium">{adminIdError}</p>}
+              {adminIdSuccess && <p className="text-xs text-green-500 font-medium">{adminIdSuccess}</p>}
+
               <button 
-                onClick={() => setDeletingId(null)}
-                className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-sm font-bold"
+                type="submit"
+                className="w-full py-3 mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-sm"
               >
-                Cancel
+                Update Admin ID
               </button>
-              <button 
-                onClick={async () => {
-                  if (deletingId) {
-                    await handleDeleteMessage(deletingId);
-                    setDeletingId(null);
-                  }
-                }}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all text-sm font-bold shadow-lg shadow-red-600/20"
-              >
-                Confirm Delete
-              </button>
-            </div>
+            </form>
           </div>
         </div>
       )}
@@ -1420,7 +2078,7 @@ const Admin: React.FC = () => {
               </button>
               <button 
                 onClick={() => {
-                  setDeletingId(selectedMessage.id);
+                  setDeletingMessageDoc(selectedMessage);
                 }}
                 className="px-5 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all text-sm font-bold flex items-center gap-1.5"
               >
@@ -1835,12 +2493,12 @@ const Admin: React.FC = () => {
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
           <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 animate-scale-in">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-              {isPermanentDelete ? "Confirm Permanent Deletion?" : "Confirm to Delete?"}
+              {isPermanentDelete ? "Confirm Permanent Deletion?" : "Confirm Delete Project?"}
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
               {isPermanentDelete 
-                ? "Warning: This action is irreversible. It will permanently delete this project and all its storage size from the database."
-                : "Are you sure you want to delete this project? It will be moved to the Deleted Projects Recycle Bin and hidden from the website."}
+                ? `Warning: Are you sure you want to permanently delete "${deletingProjectDoc.title}"? This action is irreversible.`
+                : `Are you sure you want to delete "${deletingProjectDoc.title}"? It will be moved to the Recycle Bin.`}
             </p>
             <div className="flex justify-end gap-3">
               <button 
@@ -1860,7 +2518,122 @@ const Admin: React.FC = () => {
                 }}
                 className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all text-sm font-bold shadow-lg shadow-red-600/20"
               >
-                {isPermanentDelete ? "Delete Permanently" : "Move to Recycle Bin"}
+                {isPermanentDelete ? "Delete Permanently" : "Confirm Move to Recycle Bin"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- PROJECT RESTORE CONFIRMATION MODAL --- */}
+      {restoringProjectDoc && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 animate-scale-in">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              Confirm Restore Project?
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Are you sure you want to restore "{restoringProjectDoc.title}" back to active projects?
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setRestoringProjectDoc(null)}
+                className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-sm font-bold"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={async () => {
+                  await handleRestoreProject(restoringProjectDoc);
+                  setRestoringProjectDoc(null);
+                }}
+                className="px-4 py-2 rounded-xl bg-neon-purple hover:bg-neon-purple/90 text-white transition-all text-sm font-bold shadow-lg shadow-neon-purple/20"
+              >
+                Confirm Restore
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- MESSAGE SOFT DELETE CONFIRMATION MODAL --- */}
+      {deletingMessageDoc && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 animate-scale-in">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              Confirm Move to Recycle Bin?
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Are you sure you want to delete the submission from <strong className="text-gray-800 dark:text-gray-200">{deletingMessageDoc.name}</strong>? It will be moved to the Recycle Bin.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setDeletingMessageDoc(null)}
+                className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-sm font-bold"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => handleSoftDeleteMessage(deletingMessageDoc)}
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all text-sm font-bold shadow-lg shadow-red-600/20"
+              >
+                Confirm Move to Recycle Bin
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- MESSAGE RESTORE CONFIRMATION MODAL --- */}
+      {restoringMessageDoc && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 animate-scale-in">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              Confirm Restore Form Submission?
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Are you sure you want to restore the submission from <strong className="text-gray-800 dark:text-gray-200">{restoringMessageDoc.name}</strong> back to active forms?
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setRestoringMessageDoc(null)}
+                className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-sm font-bold"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => handleRestoreMessage(restoringMessageDoc)}
+                className="px-4 py-2 rounded-xl bg-neon-purple hover:bg-neon-purple/90 text-white transition-all text-sm font-bold shadow-lg shadow-neon-purple/20"
+              >
+                Confirm Restore
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- MESSAGE PERMANENT DELETE CONFIRMATION MODAL --- */}
+      {deletingMessagePermanentDoc && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 animate-scale-in">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              Confirm Permanent Deletion?
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Warning: Are you sure you want to permanently delete the submission from <strong className="text-gray-800 dark:text-gray-200">{deletingMessagePermanentDoc.name}</strong>? This action is irreversible.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setDeletingMessagePermanentDoc(null)}
+                className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-sm font-bold"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => handlePermanentDeleteMessage(deletingMessagePermanentDoc.id)}
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all text-sm font-bold shadow-lg shadow-red-600/20"
+              >
+                Delete Permanently
               </button>
             </div>
           </div>
