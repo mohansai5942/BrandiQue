@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw } from 'lucide-react';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { Project } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
@@ -162,90 +162,58 @@ export default function Projects() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    setLoading(true);
+    const unsub = onSnapshot(collection(db, 'projects'), async (snapshot) => {
+      if (snapshot.empty) {
+        try {
+          const seeded: Project[] = [];
+          for (const p of INITIAL_PROJECTS) {
+            const { id, ...dataWithoutId } = p;
+            const docRef = await addDoc(collection(db, 'projects'), dataWithoutId);
+            seeded.push({ id: docRef.id, ...dataWithoutId });
+          }
+          const finalList = seeded.length > 0 ? seeded : INITIAL_PROJECTS;
+          localStorage.setItem('brandique_projects', JSON.stringify(finalList));
+          setProjects(finalList);
+        } catch (seedErr) {
+          console.warn("Seeding to Firestore skipped or failed:", seedErr);
+          localStorage.setItem('brandique_projects', JSON.stringify(INITIAL_PROJECTS));
+          setProjects(INITIAL_PROJECTS);
+        }
+        setLoading(false);
+        return;
+      }
+
+      const list: Project[] = [];
+      snapshot.forEach((doc) => {
+        list.push({ id: doc.id, ...doc.data() } as Project);
+      });
+
+      list.sort((a, b) => {
+        const valA = a.createdAt || '';
+        const valB = b.createdAt || '';
+        return valA.localeCompare(valB);
+      });
+
+      localStorage.setItem('brandique_projects', JSON.stringify(list));
+      setProjects(list);
+      setLoading(false);
+    }, (err) => {
+      console.warn("Real-time projects listener error, using cached fallback:", err);
       const cached = localStorage.getItem('brandique_projects');
-      let cachedList: Project[] = [];
       if (cached) {
         try {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            cachedList = parsed;
+            setProjects(parsed);
           }
-        } catch (e) {
-          // ignore
-        }
+        } catch (e) {}
       }
+      handleFirestoreError(err, OperationType.GET, 'projects');
+      setLoading(false);
+    });
 
-      try {
-        const querySnapshot = await getDocs(collection(db, 'projects'));
-        if (!querySnapshot.empty) {
-          const list: Project[] = [];
-          querySnapshot.forEach((doc) => {
-            list.push({ id: doc.id, ...doc.data() } as Project);
-          });
-
-          const cachedMap = new Map<string, Project>();
-          cachedList.forEach(p => {
-            if (p.id) cachedMap.set(p.id, p);
-            if (p.title) cachedMap.set(p.title, p);
-          });
-
-          const mergedList: Project[] = list.map(p => {
-            const cachedItem = cachedMap.get(p.id) || cachedMap.get(p.title);
-            if (cachedItem) {
-              return {
-                ...p,
-                isDeleted: p.isDeleted ?? cachedItem.isDeleted ?? false,
-                deletedAt: p.deletedAt || cachedItem.deletedAt
-              };
-            }
-            return p;
-          });
-
-          cachedList.forEach(c => {
-            if (c.isDeleted && !mergedList.some(m => m.id === c.id || m.title === c.title)) {
-              mergedList.push(c);
-            }
-          });
-
-          mergedList.sort((a, b) => {
-            const valA = a.createdAt || '';
-            const valB = b.createdAt || '';
-            return valA.localeCompare(valB);
-          });
-
-          localStorage.setItem('brandique_projects', JSON.stringify(mergedList));
-          setProjects(mergedList);
-        } else {
-          if (cachedList.length > 0) {
-            setProjects(cachedList);
-          } else {
-            try {
-              const seeded: Project[] = [];
-              for (const p of INITIAL_PROJECTS) {
-                const { id, ...dataWithoutId } = p;
-                const docRef = await addDoc(collection(db, 'projects'), dataWithoutId);
-                seeded.push({ id: docRef.id, ...dataWithoutId });
-              }
-              const finalList = seeded.length > 0 ? seeded : INITIAL_PROJECTS;
-              localStorage.setItem('brandique_projects', JSON.stringify(finalList));
-              setProjects(finalList);
-            } catch (seedErr) {
-              console.log("Silent seeding skipped:", seedErr);
-              localStorage.setItem('brandique_projects', JSON.stringify(INITIAL_PROJECTS));
-              setProjects(INITIAL_PROJECTS);
-            }
-          }
-        }
-      } catch (err) {
-        if (cachedList.length > 0) {
-          setProjects(cachedList);
-        }
-        handleFirestoreError(err, OperationType.GET, 'projects');
-      }
-    };
-
-    fetchProjects();
+    return () => unsub();
   }, []);
 
   const activeProjects = projects.filter(p => !p.isDeleted);

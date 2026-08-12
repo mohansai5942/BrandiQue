@@ -3,7 +3,7 @@ import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, M
 import { useAuth } from '../context/AuthContext';
 import { Message, Project } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
-import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 
 const SERVICE_CATEGORIES = [
@@ -235,162 +235,106 @@ const Admin: React.FC = () => {
   };
 
   const fetchMessages = async () => {
+    // Manual refresh button trigger, snapshot listener updates automatically
     setMessagesLoading(true);
-    const cached = localStorage.getItem('brandique_messages');
-    let cachedList: Message[] = [];
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          cachedList = parsed;
-        }
-      } catch (e) {
-        // Fallback
-      }
-    }
+    setTimeout(() => setMessagesLoading(false), 500);
+  };
 
-    try {
-      const querySnapshot = await getDocs(collection(db, 'messages'));
+  const fetchProjects = async () => {
+    // Manual refresh button trigger, snapshot listener updates automatically
+    setProjectsLoading(true);
+    setTimeout(() => setProjectsLoading(false), 500);
+  };
+
+  useEffect(() => {
+    setMessagesLoading(true);
+    const unsubMessages = onSnapshot(collection(db, 'messages'), (snapshot) => {
       const messagesList: Message[] = [];
-      querySnapshot.forEach((doc) => {
+      snapshot.forEach((doc) => {
         messagesList.push({ id: doc.id, ...doc.data() } as Message);
       });
 
-      // Merge Firestore messages with cached local messages, preserving isDeleted status
-      const map = new Map<string, Message>();
-      messagesList.forEach(m => {
-        if (m.id) {
-          const cachedItem = cachedList.find(c => c.id === m.id);
-          if (cachedItem && cachedItem.isDeleted && !m.isDeleted) {
-            m.isDeleted = true;
-            m.deletedAt = cachedItem.deletedAt;
-          }
-          if (cachedItem && cachedItem.source && !m.source) {
-            m.source = cachedItem.source;
-          }
-          map.set(m.id, m);
-        }
-      });
-      cachedList.forEach(m => {
-        if (m.id && !map.has(m.id)) {
-          map.set(m.id, m);
-        } else if (!m.id) {
-          map.set(`local-${m.createdAt}-${m.email}`, m);
-        }
-      });
-
-      const finalList = Array.from(map.values());
-      finalList.sort((a, b) => {
+      messagesList.sort((a, b) => {
         const valA = a.createdAt || a.id || '';
         const valB = b.createdAt || b.id || '';
         return valB.localeCompare(valA);
       });
 
-      setMessages(finalList);
-      localStorage.setItem('brandique_messages', JSON.stringify(finalList));
-      setIsUsingFallback(false);
-    } catch (error) {
-      setMessages(cachedList);
-      handleFirestoreError(error, OperationType.GET, 'messages');
-    } finally {
+      setMessages(messagesList);
+      localStorage.setItem('brandique_messages', JSON.stringify(messagesList));
       setMessagesLoading(false);
-    }
-  };
-
-  const fetchProjects = async () => {
-    setProjectsLoading(true);
-    const cached = localStorage.getItem('brandique_projects');
-    let cachedList: Project[] = [];
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          cachedList = parsed;
-        }
-      } catch (e) {
-        // Fallback
+      setIsUsingFallback(false);
+    }, (error) => {
+      console.warn("Real-time messages listener error, checking local fallback:", error);
+      const cached = localStorage.getItem('brandique_messages');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setMessages(parsed);
+          }
+        } catch (e) {}
       }
-    }
+      handleFirestoreError(error, OperationType.GET, 'messages');
+      setMessagesLoading(false);
+    });
 
-    try {
-      const querySnapshot = await getDocs(collection(db, 'projects'));
-      const projectsList: Project[] = [];
-      querySnapshot.forEach((doc) => {
-        projectsList.push({ id: doc.id, ...doc.data() } as Project);
-      });
-
-      if (projectsList.length === 0) {
-        if (cachedList.length > 0) {
-          setProjects(cachedList);
-        } else {
-          // If Firestore and localStorage are both empty, seed initial projects
+    setProjectsLoading(true);
+    const unsubProjects = onSnapshot(collection(db, 'projects'), async (snapshot) => {
+      if (snapshot.empty) {
+        // If Firestore projects collection is empty, seed initial projects
+        try {
           const seededList: Project[] = [];
-          try {
-            for (const p of INITIAL_PROJECTS) {
-              const { id, ...dataWithoutId } = p;
-              const docRef = await addDoc(collection(db, 'projects'), dataWithoutId);
-              seededList.push({ id: docRef.id, ...dataWithoutId });
-            }
-          } catch (seedErr) {
-            console.warn("Seeding to Firestore skipped or failed:", seedErr);
+          for (const p of INITIAL_PROJECTS) {
+            const { id, ...dataWithoutId } = p;
+            const docRef = await addDoc(collection(db, 'projects'), dataWithoutId);
+            seededList.push({ id: docRef.id, ...dataWithoutId });
           }
           const finalList = seededList.length > 0 ? seededList : INITIAL_PROJECTS;
           setProjects(finalList);
           localStorage.setItem('brandique_projects', JSON.stringify(finalList));
+        } catch (seedErr) {
+          console.warn("Seeding projects to Firestore skipped or failed:", seedErr);
+          setProjects(INITIAL_PROJECTS);
+          localStorage.setItem('brandique_projects', JSON.stringify(INITIAL_PROJECTS));
         }
-      } else {
-        // Merge Firestore items with cached deleted status
-        const cachedMap = new Map<string, Project>();
-        cachedList.forEach(p => {
-          if (p.id) cachedMap.set(p.id, p);
-          if (p.title) cachedMap.set(p.title, p);
-        });
-
-        const mergedList: Project[] = projectsList.map(p => {
-          const cachedItem = cachedMap.get(p.id) || cachedMap.get(p.title);
-          if (cachedItem) {
-            return {
-              ...p,
-              isDeleted: p.isDeleted ?? cachedItem.isDeleted ?? false,
-              deletedAt: p.deletedAt || cachedItem.deletedAt
-            };
-          }
-          return p;
-        });
-
-        // Preserve any soft-deleted projects in cached list
-        cachedList.forEach(c => {
-          if (c.isDeleted && !mergedList.some(m => m.id === c.id || m.title === c.title)) {
-            mergedList.push(c);
-          }
-        });
-
-        mergedList.sort((a, b) => {
-          const valA = a.createdAt || a.id || '';
-          const valB = b.createdAt || b.id || '';
-          return valB.localeCompare(valA);
-        });
-
-        setProjects(mergedList);
-        localStorage.setItem('brandique_projects', JSON.stringify(mergedList));
+        setProjectsLoading(false);
+        return;
       }
-    } catch (error) {
-      let fallbackList = cachedList.length > 0 ? cachedList : INITIAL_PROJECTS;
-      fallbackList.sort((a, b) => {
+
+      const projectsList: Project[] = [];
+      snapshot.forEach((doc) => {
+        projectsList.push({ id: doc.id, ...doc.data() } as Project);
+      });
+
+      projectsList.sort((a, b) => {
         const valA = a.createdAt || a.id || '';
         const valB = b.createdAt || b.id || '';
         return valB.localeCompare(valA);
       });
-      setProjects(fallbackList);
-      handleFirestoreError(error, OperationType.GET, 'projects');
-    } finally {
-      setProjectsLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    fetchMessages();
-    fetchProjects();
+      setProjects(projectsList);
+      localStorage.setItem('brandique_projects', JSON.stringify(projectsList));
+      setProjectsLoading(false);
+    }, (error) => {
+      console.warn("Real-time projects listener error, checking local fallback:", error);
+      const cached = localStorage.getItem('brandique_projects');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setProjects(parsed);
+          }
+        } catch (e) {}
+      }
+      handleFirestoreError(error, OperationType.GET, 'projects');
+      setProjectsLoading(false);
+    });
+
+    return () => {
+      unsubMessages();
+      unsubProjects();
+    };
   }, []);
 
   useEffect(() => {
