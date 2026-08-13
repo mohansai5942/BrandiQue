@@ -370,8 +370,7 @@ export default function Projects() {
             <motion.div 
               variants={containerVariants}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
+              animate="visible"
               className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
             >
                {mainProjects.map((project, i) => renderProjectCard(project, i, 'main'))}
@@ -392,8 +391,7 @@ export default function Projects() {
             <motion.div 
               variants={containerVariants}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
+              animate="visible"
               className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
             >
                {portfolioProjects.map((project, i) => renderProjectCard(project, i, 'portfolio'))}
@@ -414,8 +412,7 @@ export default function Projects() {
             <motion.div 
               variants={containerVariants}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
+              animate="visible"
               className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12"
             >
                 {figmaProjects.map((project, i) => renderProjectCard(project, i, 'figma'))}
@@ -436,8 +433,7 @@ export default function Projects() {
             <motion.div 
               variants={containerVariants}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
+              animate="visible"
               className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10"
             >
                {clientProjects.map((project, i) => (
