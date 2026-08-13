@@ -28,7 +28,9 @@ export interface Project {
   desc: string;
   tags: string[];
   image: string;
+  images?: string[];
   video?: string;
+  videos?: string[];
   link: string;
   type: 'main' | 'portfolio' | 'figma' | 'client';
   isDeleted?: boolean;

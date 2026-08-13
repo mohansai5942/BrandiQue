@@ -55,20 +55,29 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
 interface ProjectMediaProps {
   image: string;
   video?: string;
+  images?: string[];
+  videos?: string[];
   title: string;
 }
 
-function ProjectMedia({ image, video, title }: ProjectMediaProps) {
-  const [showVideo, setShowVideo] = useState(!!video);
+function ProjectMedia({ image, video, images = [], videos = [], title }: ProjectMediaProps) {
+  const allImages = images && images.length > 0 ? images : (image ? [image] : []);
+  const allVideos = videos && videos.length > 0 ? videos : (video ? [video] : []);
+
+  const [activeImgIndex, setActiveImgIndex] = useState(0);
+  const [showVideo, setShowVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const currentImg = allImages[activeImgIndex] || allImages[0] || image;
+  const currentVid = allVideos[0] || video;
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    if (!showVideo && video) {
+    if (!showVideo && currentVid) {
       timeoutId = setTimeout(() => {
         setShowVideo(true);
-      }, 2000);
+      }, 3500);
     }
 
     return () => {
@@ -76,7 +85,7 @@ function ProjectMedia({ image, video, title }: ProjectMediaProps) {
         clearTimeout(timeoutId);
       }
     };
-  }, [showVideo, video]);
+  }, [showVideo, currentVid]);
 
   useEffect(() => {
     if (showVideo && videoRef.current) {
@@ -92,21 +101,22 @@ function ProjectMedia({ image, video, title }: ProjectMediaProps) {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden group/media">
       {/* Image layer */}
       <img
-        src={image}
+        src={currentImg}
         alt={title}
+        referrerPolicy="no-referrer"
         className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
-          showVideo && video ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+          showVideo && currentVid ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
         }`}
       />
 
       {/* Video layer */}
-      {video && (
+      {currentVid && (
         <video
           ref={videoRef}
-          src={video}
+          src={currentVid}
           muted
           playsInline
           onEnded={handleVideoEnded}
@@ -114,6 +124,28 @@ function ProjectMedia({ image, video, title }: ProjectMediaProps) {
             showVideo ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
           }`}
         />
+      )}
+
+      {/* Multi-image indicators if more than 1 image exists */}
+      {allImages.length > 1 && (
+        <div className="absolute bottom-2 left-2 z-20 flex gap-1 bg-black/60 backdrop-blur-md p-1 rounded-full border border-white/10 opacity-90 group-hover/media:opacity-100 transition-opacity">
+          {allImages.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowVideo(false);
+                setActiveImgIndex(idx);
+              }}
+              className={`w-2 h-2 rounded-full transition-all ${
+                activeImgIndex === idx ? 'bg-neon-purple w-4' : 'bg-white/40 hover:bg-white'
+              }`}
+              title={`Image ${idx + 1}`}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
@@ -236,6 +268,8 @@ export default function Projects() {
           <ProjectMedia 
              image={project.image} 
              video={project.video}
+             images={project.images}
+             videos={project.videos}
              title={project.title}
           />
           
