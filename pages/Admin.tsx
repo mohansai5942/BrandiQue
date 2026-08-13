@@ -1192,7 +1192,126 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-28 pb-20 px-6 max-w-[1600px] mx-auto w-full relative">
+    <div className="admin-container min-h-screen pt-36 sm:pt-40 md:pt-44 pb-10 md:pb-20 px-3 sm:px-4 md:px-6 max-w-[1600px] mx-auto w-full relative">
+      <style>{`
+        @media (max-width: 767px) {
+          /* Complete Mobile View Scaling for Admin Panel */
+          .admin-container {
+            font-size: 0.725rem !important; /* ~11.5px base font on mobile */
+          }
+
+          /* Headings */
+          .admin-container h1 {
+            font-size: 1.35rem !important; /* ~21px vs 36px desktop */
+            line-height: 1.25 !important;
+          }
+          .admin-container h2 {
+            font-size: 1.15rem !important; /* ~18px */
+            line-height: 1.25 !important;
+          }
+          .admin-container h3 {
+            font-size: 0.95rem !important;
+            line-height: 1.25 !important;
+          }
+          .admin-container h4 {
+            font-size: 0.85rem !important;
+          }
+          .admin-container h5 {
+            font-size: 0.8rem !important;
+          }
+
+          /* Padding & Spacing */
+          .admin-container .p-8 {
+            padding: 0.75rem !important;
+          }
+          .admin-container .p-6 {
+            padding: 0.625rem !important;
+          }
+          .admin-container .p-5 {
+            padding: 0.5rem !important;
+          }
+          .admin-container .p-4 {
+            padding: 0.4rem !important;
+          }
+          .admin-container .px-8 {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+          }
+          .admin-container .py-5 {
+            padding-top: 0.4rem !important;
+            padding-bottom: 0.4rem !important;
+          }
+          .admin-container .gap-6,
+          .admin-container .gap-8 {
+            gap: 0.5rem !important;
+          }
+          .admin-container .gap-4,
+          .admin-container .gap-3 {
+            gap: 0.35rem !important;
+          }
+          .admin-container .mb-12 {
+            margin-bottom: 1rem !important;
+          }
+          .admin-container .mb-8,
+          .admin-container .mb-6 {
+            margin-bottom: 0.625rem !important;
+          }
+
+          /* Action Buttons & Navigation Tabs */
+          .admin-container button {
+            font-size: 0.675rem !important; /* ~10.8px */
+            padding-top: 0.35rem !important;
+            padding-bottom: 0.35rem !important;
+            padding-left: 0.55rem !important;
+            padding-right: 0.55rem !important;
+            border-radius: 0.45rem !important;
+          }
+          .admin-container button svg {
+            width: 12px !important;
+            height: 12px !important;
+          }
+
+          /* Input Fields, Textareas, Selects */
+          .admin-container input,
+          .admin-container select,
+          .admin-container textarea {
+            font-size: 0.7rem !important;
+            padding-top: 0.35rem !important;
+            padding-bottom: 0.35rem !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+            border-radius: 0.45rem !important;
+          }
+
+          /* Media & Images on mobile */
+          .admin-container img,
+          .admin-container video,
+          .admin-container iframe {
+            max-height: 150px !important;
+            object-fit: cover !important;
+          }
+
+          /* Badges & Text Sizes */
+          .admin-container .text-xs,
+          .admin-container .text-sm,
+          .admin-container .text-base {
+            font-size: 0.675rem !important;
+          }
+          .admin-container .text-\\[10px\\],
+          .admin-container .text-\\[11px\\],
+          .admin-container .text-\\[9px\\] {
+            font-size: 0.6rem !important;
+          }
+
+          /* Modals & Dialogs */
+          .admin-container .fixed.inset-0 > div,
+          body .fixed.inset-0 > div {
+            padding: 0.75rem !important;
+            max-width: 92vw !important;
+            border-radius: 1rem !important;
+          }
+        }
+      `}</style>
       
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none -z-10 bg-gray-50 dark:bg-transparent">
@@ -1206,10 +1325,10 @@ const Admin: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Admin Dashboard</h1>
           <p className="text-gray-500 dark:text-gray-400">Monitor your contact submissions, lead budgets, and client inquiries.</p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3 overflow-x-auto whitespace-nowrap flex-nowrap max-w-full pb-1 md:pb-0 scrollbar-none">
           <button 
             onClick={() => setActiveTab('storage')}
-            className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
+            className={`shrink-0 px-3.5 md:px-4 py-2 md:py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
               activeTab === 'storage'
                 ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400/50'
                 : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500 hover:text-white shadow-sm'
@@ -1226,35 +1345,35 @@ const Admin: React.FC = () => {
               setAdminIdSuccess('');
               setIsChangeAdminIdOpen(true);
             }}
-            className="p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 hover:border-blue-500/40 transition-all flex items-center gap-2 font-bold text-sm shadow-sm"
+            className="shrink-0 p-2.5 md:p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 hover:border-blue-500/40 transition-all flex items-center gap-2 font-bold text-xs md:text-sm shadow-sm"
           >
-            <User size={18} className="text-blue-500" />
-            Change Admin ID
+            <User size={16} className="text-blue-500" />
+            <span>Change Admin ID</span>
           </button>
           <button 
             onClick={() => setIsChangePasswordOpen(true)}
-            className="p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-neon-purple hover:border-neon-purple/40 transition-all flex items-center gap-2 font-bold text-sm shadow-sm"
+            className="shrink-0 p-2.5 md:p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-neon-purple hover:border-neon-purple/40 transition-all flex items-center gap-2 font-bold text-xs md:text-sm shadow-sm"
           >
-            <Key size={18} className="text-neon-purple" />
-            Change Password
+            <Key size={16} className="text-neon-purple" />
+            <span>Change Password</span>
           </button>
           <button 
             onClick={logout}
-            className="p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:border-red-500/50 transition-all group flex items-center gap-2 font-bold text-sm shadow-sm"
+            className="shrink-0 p-2.5 md:p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:border-red-500/50 transition-all group flex items-center gap-2 font-bold text-xs md:text-sm shadow-sm"
             title="Logout"
           >
-            <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-            Sign Out
+            <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
+            <span>Sign Out</span>
           </button>
         </div>
       </div>
 
-      {/* Navigation Tabs - Reordered & Unique Colors for Each Tab */}
-      <div className="flex flex-wrap items-center gap-3 mb-8 bg-gray-100/50 dark:bg-[#0A0C11]/30 p-2 rounded-2xl border border-gray-200 dark:border-white/5 max-w-fit opacity-0 animate-fade-up">
+      {/* Navigation Tabs - Single line horizontal scroll on mobile */}
+      <div className="flex items-center gap-2 md:gap-3 mb-8 bg-gray-100/50 dark:bg-[#0A0C11]/30 p-2 rounded-2xl border border-gray-200 dark:border-white/5 max-w-full overflow-x-auto whitespace-nowrap flex-nowrap scrollbar-none opacity-0 animate-fade-up">
         {/* 1. PROJECTS (Blue Theme) */}
         <button
           onClick={() => setActiveTab('projects')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+          className={`shrink-0 px-3.5 md:px-4 py-2 md:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
             activeTab === 'projects'
               ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-400/30'
               : 'text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10'
@@ -1267,7 +1386,7 @@ const Admin: React.FC = () => {
         {/* 2. SERVICES FORM (Neon Purple Theme) */}
         <button
           onClick={() => setActiveTab('services')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+          className={`shrink-0 px-3.5 md:px-4 py-2 md:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
             activeTab === 'services'
               ? 'bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-lg shadow-purple-500/30 ring-2 ring-purple-400/30'
               : 'text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-500/10'
@@ -1280,7 +1399,7 @@ const Admin: React.FC = () => {
         {/* 3. CONTACT FORM (Emerald / Teal Theme) */}
         <button
           onClick={() => setActiveTab('leads')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+          className={`shrink-0 px-3.5 md:px-4 py-2 md:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
             activeTab === 'leads'
               ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400/30'
               : 'text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10'
@@ -1293,7 +1412,7 @@ const Admin: React.FC = () => {
         {/* 4. RECYCLE BIN (Red / Rose Theme) */}
         <button
           onClick={() => setActiveTab('recycle')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+          className={`shrink-0 px-3.5 md:px-4 py-2 md:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
             activeTab === 'recycle'
               ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-lg shadow-red-500/30 ring-2 ring-red-400/30'
               : 'text-gray-500 dark:text-gray-400 hover:text-rose-600 dark:hover:text-red-400 hover:bg-red-500/10'
@@ -1337,7 +1456,7 @@ const Admin: React.FC = () => {
           </div>
 
           {/* Messages Table Header */}
-          <div className="grid grid-cols-12 gap-4 px-8 py-4 bg-gray-100 dark:bg-[#0F1320] text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-white/5">
+          <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-4 bg-gray-100 dark:bg-[#0F1320] text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-white/5">
             <div className="col-span-3">User Info</div>
             <div className="col-span-3">Service Required</div>
             <div className="col-span-2">Budget</div>
@@ -1357,35 +1476,35 @@ const Admin: React.FC = () => {
                 {filteredMessages.map((msg, idx) => (
                   <div 
                     key={msg.id} 
-                    className="grid grid-cols-12 gap-4 px-8 py-5 items-center hover:bg-gray-50 dark:hover:bg-white/[0.02] group transition-colors duration-200 opacity-0 animate-fade-up"
+                    className="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-4 px-4 sm:px-6 md:px-8 py-4 md:py-5 items-start md:items-center hover:bg-gray-50 dark:hover:bg-white/[0.02] group transition-colors duration-200 opacity-0 animate-fade-up"
                     style={{ animationDelay: `${idx * 40}ms` }}
                   >
                     {/* Name & Email */}
-                    <div className="col-span-3">
+                    <div className="w-full md:col-span-3">
                       <h4 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-neon-purple transition-colors">{msg.name}</h4>
                       <a href={`mailto:${msg.email}`} className="text-xs text-gray-500 hover:underline">{msg.email}</a>
                     </div>
 
                     {/* Service Required */}
-                    <div className="col-span-3">
+                    <div className="w-full md:col-span-3">
                       <span className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide border bg-neon-purple/10 text-neon-purple border-neon-purple/20">
                         {msg.service || 'Web Development'}
                       </span>
                     </div>
 
                     {/* Budget */}
-                    <div className="col-span-2">
+                    <div className="w-full md:col-span-2">
                       <span className="text-sm font-medium text-green-600 dark:text-green-400">{msg.budget || 'Not specified'}</span>
                     </div>
 
                     {/* Submitted At */}
-                    <div className="col-span-2 flex items-center gap-1.5 text-xs text-gray-500">
+                    <div className="w-full md:col-span-2 flex items-center gap-1.5 text-xs text-gray-500">
                       <Clock size={12} />
                       <span>{msg.createdAt ? formatDate(msg.createdAt) : '-'}</span>
                     </div>
 
                     {/* Actions */}
-                    <div className="col-span-2 flex justify-end gap-2">
+                    <div className="w-full md:col-span-2 flex items-center justify-start md:justify-end gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-gray-100 dark:border-white/5">
                       <button 
                         onClick={() => {
                           setSelectedMessage(msg);
@@ -1739,7 +1858,7 @@ const Admin: React.FC = () => {
                       <RefreshCw className="animate-spin text-neon-purple" size={24} />
                     </div>
                   ) : activeProjectsInType.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                       {activeProjectsInType.map((p, idx) => (
                         <div key={`${p.id}-${idx}`} className="bg-gray-50 dark:bg-[#05070A]/30 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-neon-purple/30 hover:shadow-[0_10px_30px_rgba(160,32,240,0.05)] transition-all duration-300">
                           <div>
@@ -1896,7 +2015,7 @@ const Admin: React.FC = () => {
                   <p className="text-gray-400 text-xs">Loading deleted projects...</p>
                 </div>
               ) : deletedProjects.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                   {deletedProjects.map((p, idx) => (
                     <div key={`deleted-${p.id}-${idx}`} className="bg-gray-50 dark:bg-[#05070A]/30 border border-red-500/20 rounded-2xl overflow-hidden flex flex-col justify-between group animate-fade-up">
                       <div>
