@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User } from 'lucide-react';
+import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Message, Project } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
@@ -118,6 +118,465 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
   console.warn('Firestore Error (Gracefully handled with mock fallback): ', JSON.stringify(errInfo));
 }
 
+interface MultiMediaInputProps {
+  label: string;
+  type: 'image' | 'video';
+  items: string[];
+  onChange: (items: string[]) => void;
+  maxCount: number;
+}
+
+const MultiMediaInput: React.FC<MultiMediaInputProps> = ({ label, type, items, onChange, maxCount }) => {
+  const [urlInput, setUrlInput] = useState('');
+  const [fileError, setFileError] = useState('');
+
+  const handleAddUrl = () => {
+    if (!urlInput.trim()) return;
+    if (items.length >= maxCount) {
+      setFileError(`Maximum ${maxCount} ${type}s allowed.`);
+      return;
+    }
+    onChange([...items, urlInput.trim()]);
+    setUrlInput('');
+    setFileError('');
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setFileError('');
+
+    const newItems = [...items];
+    let remainingSlots = maxCount - newItems.length;
+    if (remainingSlots <= 0) {
+      setFileError(`Maximum ${maxCount} ${type}s allowed.`);
+      return;
+    }
+
+    const filesToProcess = Array.from(files).slice(0, remainingSlots);
+    let processed = 0;
+
+    filesToProcess.forEach(file => {
+      const limitMB = type === 'image' ? 8 : 30;
+      if (file.size > limitMB * 1024 * 1024) {
+        setFileError(`File ${file.name} exceeds ${limitMB}MB size limit.`);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          const result = event.target.result as string;
+          newItems.push(result);
+          processed++;
+          if (processed === filesToProcess.length) {
+            onChange([...newItems]);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    e.target.value = '';
+  };
+
+  const handleRemove = (index: number) => {
+    const updated = items.filter((_, i) => i !== index);
+    onChange(updated);
+  };
+
+  return (
+    <div className="space-y-2 bg-gray-50/80 dark:bg-[#05070A]/60 p-3 rounded-2xl border border-gray-200/80 dark:border-white/10">
+      <div className="flex items-center justify-between">
+        <label className="block text-xs font-bold uppercase text-gray-700 dark:text-gray-300">
+          {label} ({items.length} / {maxCount})
+        </label>
+        <span className="text-[10px] font-semibold text-neon-purple uppercase tracking-wider">
+          URL or Device Upload
+        </span>
+      </div>
+
+      {/* Input row: URL box + File Upload button */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex-1 flex gap-1.5">
+          <input
+            type="url"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            placeholder={type === 'image' ? 'Paste image URL...' : 'Paste YouTube, Vimeo, or MP4 URL...'}
+            className="flex-1 bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple"
+          />
+          <button
+            type="button"
+            onClick={handleAddUrl}
+            disabled={items.length >= maxCount || !urlInput.trim()}
+            className="px-3 py-2 bg-neon-purple/10 border border-neon-purple/20 text-neon-purple hover:bg-neon-purple hover:text-white rounded-xl text-xs font-bold transition-all disabled:opacity-40 shrink-0"
+          >
+            Add URL
+          </button>
+        </div>
+
+        <label className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 ${
+          items.length >= maxCount 
+            ? 'bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/5 text-gray-400 cursor-not-allowed'
+            : 'bg-white dark:bg-[#0F1320] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-200 hover:border-neon-purple hover:text-neon-purple shadow-sm'
+        }`}>
+          <Upload size={14} />
+          <span>Upload {type === 'image' ? 'Image' : 'Video'}</span>
+          <input
+            type="file"
+            accept={type === 'image' ? 'image/*' : 'video/*'}
+            multiple
+            disabled={items.length >= maxCount}
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+        </label>
+      </div>
+
+      {fileError && (
+        <p className="text-[11px] font-semibold text-rose-500">{fileError}</p>
+      )}
+
+      {/* Grid of added media items */}
+      {items.length > 0 ? (
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 pt-1 max-h-40 overflow-y-auto custom-scrollbar p-1">
+          {items.map((item, idx) => (
+            <div key={idx} className="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 bg-black aspect-video flex items-center justify-center shadow-sm">
+              {type === 'image' ? (
+                <img src={item} alt={`Media ${idx + 1}`} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-white bg-black/80">
+                  <Play size={14} className="text-neon-purple" />
+                  <span className="text-[8px] font-mono mt-0.5">Vid {idx + 1}</span>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => handleRemove(idx)}
+                className="absolute top-1 right-1 p-1 bg-black/80 hover:bg-rose-600 text-white rounded-full transition-colors opacity-90 sm:opacity-0 group-hover:opacity-100 shadow-md"
+                title="Remove"
+              >
+                <X size={10} />
+              </button>
+              <span className="absolute bottom-1 left-1 px-1 py-0.5 bg-black/80 text-white text-[8px] font-mono font-bold rounded">
+                #{idx + 1}
+              </span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-[10px] text-gray-400 italic">No {type}s added yet. Add via URL or upload from device (up to {maxCount}).</p>
+      )}
+    </div>
+  );
+};
+
+const ProjectLivePreviewCard: React.FC<{
+  title: string;
+  category: string;
+  desc: string;
+  tags: string;
+  image: string;
+  video: string;
+  images?: string[];
+  videos?: string[];
+  link: string;
+  type: string;
+}> = ({ title, category, desc, tags, image, video, images = [], videos = [], link, type }) => {
+  const [activeMediaTab, setActiveMediaTab] = useState<'image' | 'video' | 'link'>('image');
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState(0);
+  const [imageError, setImageError] = useState(false);
+
+  // Derive full list of images and videos
+  const imageList = images && images.length > 0 ? images : (image ? [image] : []);
+  const videoList = videos && videos.length > 0 ? videos : (video ? [video] : []);
+
+  const currentImage = imageList[selectedImageIndex] || imageList[0] || image || '';
+  const currentVideo = videoList[selectedVideoIndex] || videoList[0] || video || '';
+
+  useEffect(() => {
+    setImageError(false);
+  }, [currentImage]);
+
+  useEffect(() => {
+    if (videoList.length > 0) {
+      setActiveMediaTab('video');
+    } else if (imageList.length > 0) {
+      setActiveMediaTab('image');
+    }
+  }, [videoList.length]);
+
+  const tagList = tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+  const renderVideoPlayer = (url: string) => {
+    if (!url || !url.trim()) {
+      return (
+        <div className="w-full h-44 rounded-xl bg-gray-100 dark:bg-white/5 border border-dashed border-gray-300 dark:border-white/10 flex flex-col items-center justify-center text-gray-400 gap-2 p-4 text-center">
+          <Video size={28} className="text-gray-400 dark:text-gray-500" />
+          <span className="text-xs font-semibold">No Video Selected</span>
+          <span className="text-[10px] text-gray-400">Add an MP4, YouTube, or Vimeo URL/Upload to preview</span>
+        </div>
+      );
+    }
+
+    const trimmed = url.trim();
+
+    // YouTube regex
+    const ytMatch = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+    if (ytMatch && ytMatch[1]) {
+      return (
+        <iframe 
+          src={`https://www.youtube.com/embed/${ytMatch[1]}`} 
+          className="w-full h-48 rounded-xl border border-gray-200 dark:border-white/10 shadow-md" 
+          allowFullScreen 
+          title="YouTube Video Preview"
+        />
+      );
+    }
+
+    // Vimeo regex
+    const vimeoMatch = trimmed.match(/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)/);
+    if (vimeoMatch && vimeoMatch[1]) {
+      return (
+        <iframe 
+          src={`https://player.vimeo.com/video/${vimeoMatch[1]}`} 
+          className="w-full h-48 rounded-xl border border-gray-200 dark:border-white/10 shadow-md" 
+          allowFullScreen 
+          title="Vimeo Video Preview"
+        />
+      );
+    }
+
+    // Direct Video / HTML5 Video player
+    return (
+      <div className="relative w-full h-48 rounded-xl overflow-hidden bg-black border border-gray-200 dark:border-white/10 shadow-md flex items-center justify-center">
+        <video 
+          src={trimmed} 
+          controls 
+          playsInline
+          className="w-full h-full object-contain"
+          onError={() => {
+            console.warn("Video failed to play:", trimmed);
+          }}
+        />
+      </div>
+    );
+  };
+
+  const renderImageFrame = () => {
+    if (!currentImage || !currentImage.trim() || imageError) {
+      return (
+        <div className="w-full h-44 rounded-xl bg-gray-100 dark:bg-white/5 border border-dashed border-gray-300 dark:border-white/10 flex flex-col items-center justify-center text-gray-400 gap-2 p-4 text-center">
+          <ImageIcon size={28} className="text-gray-400 dark:text-gray-500" />
+          <span className="text-xs font-semibold">Image Preview Unavailable</span>
+          <span className="text-[10px] text-gray-400 font-mono">Upload or enter a valid Image URL</span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative w-full h-44 rounded-xl overflow-hidden bg-black/30 border border-gray-200 dark:border-white/10 shadow-md group">
+        <img 
+          src={currentImage} 
+          alt={title || 'Project Preview'} 
+          referrerPolicy="no-referrer"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          onError={() => setImageError(true)}
+        />
+        <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-black/70 text-emerald-400 border border-emerald-500/30 backdrop-blur-md">
+          Image #{selectedImageIndex + 1} / {imageList.length || 1}
+        </div>
+      </div>
+    );
+  };
+
+  const renderLinkTest = () => {
+    if (!link || !link.trim()) {
+      return (
+        <div className="p-3 bg-gray-100 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/5 text-xs text-gray-400 font-mono">
+          No external action link provided.
+        </div>
+      );
+    }
+
+    let hostname = link;
+    try {
+      const u = new URL(link.startsWith('http') ? link : `https://${link}`);
+      hostname = u.hostname;
+    } catch (e) {
+      hostname = link;
+    }
+
+    return (
+      <div className="p-3 bg-white dark:bg-[#05070A] rounded-xl border border-gray-200 dark:border-white/10 shadow-sm flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 overflow-hidden">
+          <Globe size={16} className="text-neon-purple shrink-0" />
+          <div className="truncate">
+            <span className="block text-[9px] font-bold uppercase text-gray-400">Target Host</span>
+            <span className="text-xs font-mono font-bold text-gray-800 dark:text-gray-200 truncate block">{hostname}</span>
+          </div>
+        </div>
+        <a 
+          href={link.startsWith('http') ? link : `https://${link}`} 
+          target="_blank" 
+          rel="noreferrer"
+          className="px-3 py-1.5 rounded-lg bg-neon-purple/10 border border-neon-purple/20 text-neon-purple hover:bg-neon-purple hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shrink-0"
+        >
+          <span>Test Live Link</span>
+          <ExternalLink size={12} />
+        </a>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Media Type Switcher Tabs */}
+      <div className="flex items-center gap-1 p-1 bg-gray-200/60 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/5 text-xs">
+        <button
+          type="button"
+          onClick={() => setActiveMediaTab('image')}
+          className={`flex-1 py-1.5 px-2 rounded-lg font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 ${
+            activeMediaTab === 'image'
+              ? 'bg-white dark:bg-[#0F1320] text-neon-purple shadow-sm border border-neon-purple/20'
+              : 'text-gray-500 hover:text-black dark:hover:text-white'
+          }`}
+        >
+          <ImageIcon size={13} /> Images ({imageList.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveMediaTab('video')}
+          className={`flex-1 py-1.5 px-2 rounded-lg font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 ${
+            activeMediaTab === 'video'
+              ? 'bg-white dark:bg-[#0F1320] text-neon-purple shadow-sm border border-neon-purple/20'
+              : 'text-gray-500 hover:text-black dark:hover:text-white'
+          }`}
+        >
+          <Video size={13} /> Videos ({videoList.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveMediaTab('link')}
+          className={`flex-1 py-1.5 px-2 rounded-lg font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 ${
+            activeMediaTab === 'link'
+              ? 'bg-white dark:bg-[#0F1320] text-neon-purple shadow-sm border border-neon-purple/20'
+              : 'text-gray-500 hover:text-black dark:hover:text-white'
+          }`}
+        >
+          <Globe size={13} /> Link
+        </button>
+      </div>
+
+      {/* Media Display Area */}
+      <div>
+        {activeMediaTab === 'image' && (
+          <div className="space-y-2">
+            {renderImageFrame()}
+            {imageList.length > 1 && (
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 custom-scrollbar">
+                {imageList.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setSelectedImageIndex(idx)}
+                    className={`relative w-12 h-10 rounded-lg overflow-hidden border transition-all shrink-0 ${
+                      selectedImageIndex === idx
+                        ? 'border-neon-purple ring-2 ring-neon-purple/30 scale-105'
+                        : 'border-gray-200 dark:border-white/10 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeMediaTab === 'video' && (
+          <div className="space-y-2">
+            {renderVideoPlayer(currentVideo)}
+            {videoList.length > 1 && (
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 custom-scrollbar">
+                {videoList.map((v, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setSelectedVideoIndex(idx)}
+                    className={`px-3 py-1 rounded-lg text-[10px] font-bold border transition-all shrink-0 flex items-center gap-1 ${
+                      selectedVideoIndex === idx
+                        ? 'bg-neon-purple text-white border-neon-purple'
+                        : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:border-neon-purple'
+                    }`}
+                  >
+                    <Play size={10} /> Video #{idx + 1}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeMediaTab === 'link' && renderLinkTest()}
+      </div>
+
+      {/* Website Card Mockup Section */}
+      <div className="pt-2 border-t border-gray-200/80 dark:border-white/5">
+        <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+          Website Showcase Card Mockup
+        </span>
+        <div className="bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-xl p-4 shadow-sm space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-neon-purple uppercase tracking-widest">
+              {category || 'Category Name'}
+            </span>
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-gray-100 dark:bg-white/5 text-gray-500 uppercase">
+              {type || 'main'}
+            </span>
+          </div>
+
+          <h4 className="font-bold text-sm text-gray-900 dark:text-white uppercase line-clamp-1">
+            {title || 'Project Title Placeholder'}
+          </h4>
+
+          <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
+            {desc || 'Project description will appear here as you type...'}
+          </p>
+
+          <div className="flex flex-wrap gap-1 pt-1">
+            {tagList.length > 0 ? (
+              tagList.map((tg, i) => (
+                <span key={i} className="px-2 py-0.5 rounded-md text-[9px] font-semibold uppercase bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/5">
+                  {tg}
+                </span>
+              ))
+            ) : (
+              <span className="text-[10px] text-gray-400 italic">No tags added</span>
+            )}
+          </div>
+
+          {link && (
+            <div className="pt-2 flex justify-end">
+              <a
+                href={link.startsWith('http') ? link : `https://${link}`}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 py-1 bg-neon-purple text-white text-[10px] font-bold rounded-lg flex items-center gap-1 hover:opacity-90 transition-opacity"
+              >
+                <span>Launch Project</span>
+                <ExternalLink size={10} />
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Admin: React.FC = () => {
   const { logout, changePassword, changeAdminId, adminId } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -145,6 +604,8 @@ const Admin: React.FC = () => {
   const [newTags, setNewTags] = useState('');
   const [newImage, setNewImage] = useState('');
   const [newVideo, setNewVideo] = useState('');
+  const [newImages, setNewImages] = useState<string[]>([]);
+  const [newVideos, setNewVideos] = useState<string[]>([]);
   const [newLink, setNewLink] = useState('');
   const [newType, setNewType] = useState<'main' | 'portfolio' | 'figma' | 'client'>('main');
   const [isAddingProject, setIsAddingProject] = useState(false);
@@ -152,12 +613,15 @@ const Admin: React.FC = () => {
   // States for Edit Project
   const [isEditProjectOpen, setIsEditProjectOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [previewingProject, setPreviewingProject] = useState<Project | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editCategory, setEditCategory] = useState('');
   const [editDesc, setEditDesc] = useState('');
   const [editTags, setEditTags] = useState('');
   const [editImage, setEditImage] = useState('');
   const [editVideo, setEditVideo] = useState('');
+  const [editImages, setEditImages] = useState<string[]>([]);
+  const [editVideos, setEditVideos] = useState<string[]>([]);
   const [editLink, setEditLink] = useState('');
   const [editType, setEditType] = useState<'main' | 'portfolio' | 'figma' | 'client'>('main');
   const [isUpdatingProject, setIsUpdatingProject] = useState(false);
@@ -354,13 +818,20 @@ const Admin: React.FC = () => {
     setIsAddingProject(true);
     try {
       const tagsArray = newTags.split(',').map(t => t.trim()).filter(Boolean);
+      const finalImages = newImages.length > 0 ? newImages : (newImage.trim() ? [newImage.trim()] : []);
+      const finalVideos = newVideos.length > 0 ? newVideos : (newVideo.trim() ? [newVideo.trim()] : []);
+      const primaryImage = finalImages[0] || newImage.trim();
+      const primaryVideo = finalVideos[0] || newVideo.trim();
+
       const newProjectData = {
         title: newTitle.trim(),
         category: newCategory.trim(),
         desc: newDesc.trim(),
         tags: tagsArray,
-        image: newImage.trim(),
-        video: newVideo.trim(),
+        image: primaryImage,
+        video: primaryVideo,
+        images: finalImages,
+        videos: finalVideos,
         link: newLink.trim(),
         type: newType,
         isDeleted: false,
@@ -380,10 +851,17 @@ const Admin: React.FC = () => {
       setNewTags('');
       setNewImage('');
       setNewVideo('');
+      setNewImages([]);
+      setNewVideos([]);
       setNewLink('');
       setNewType('main');
     } catch (error) {
       const tagsArray = newTags.split(',').map(t => t.trim()).filter(Boolean);
+      const finalImages = newImages.length > 0 ? newImages : (newImage.trim() ? [newImage.trim()] : []);
+      const finalVideos = newVideos.length > 0 ? newVideos : (newVideo.trim() ? [newVideo.trim()] : []);
+      const primaryImage = finalImages[0] || newImage.trim();
+      const primaryVideo = finalVideos[0] || newVideo.trim();
+
       const tempId = 'local-added-' + Date.now();
       const fallbackProject = {
         id: tempId,
@@ -391,8 +869,10 @@ const Admin: React.FC = () => {
         category: newCategory.trim(),
         desc: newDesc.trim(),
         tags: tagsArray,
-        image: newImage.trim(),
-        video: newVideo.trim(),
+        image: primaryImage,
+        video: primaryVideo,
+        images: finalImages,
+        videos: finalVideos,
         link: newLink.trim(),
         type: newType,
         isDeleted: false,
@@ -408,6 +888,8 @@ const Admin: React.FC = () => {
       setNewTags('');
       setNewImage('');
       setNewVideo('');
+      setNewImages([]);
+      setNewVideos([]);
       setNewLink('');
       setNewType('main');
 
@@ -423,14 +905,21 @@ const Admin: React.FC = () => {
     setIsUpdatingProject(true);
     try {
       const tagsArray = editTags.split(',').map(t => t.trim()).filter(Boolean);
+      const finalImages = editImages.length > 0 ? editImages : (editImage.trim() ? [editImage.trim()] : []);
+      const finalVideos = editVideos.length > 0 ? editVideos : (editVideo.trim() ? [editVideo.trim()] : []);
+      const primaryImage = finalImages[0] || editImage.trim();
+      const primaryVideo = finalVideos[0] || editVideo.trim();
+
       const docRef = doc(db, 'projects', editingProject.id);
       const updatedData = {
         title: editTitle.trim(),
         category: editCategory.trim(),
         desc: editDesc.trim(),
         tags: tagsArray,
-        image: editImage.trim(),
-        video: editVideo.trim(),
+        image: primaryImage,
+        video: primaryVideo,
+        images: finalImages,
+        videos: finalVideos,
         link: editLink.trim(),
         type: editType,
       };
@@ -442,13 +931,20 @@ const Admin: React.FC = () => {
       setEditingProject(null);
     } catch (error) {
       const tagsArray = editTags.split(',').map(t => t.trim()).filter(Boolean);
+      const finalImages = editImages.length > 0 ? editImages : (editImage.trim() ? [editImage.trim()] : []);
+      const finalVideos = editVideos.length > 0 ? editVideos : (editVideo.trim() ? [editVideo.trim()] : []);
+      const primaryImage = finalImages[0] || editImage.trim();
+      const primaryVideo = finalVideos[0] || editVideo.trim();
+
       const updatedData = {
         title: editTitle.trim(),
         category: editCategory.trim(),
         desc: editDesc.trim(),
         tags: tagsArray,
-        image: editImage.trim(),
-        video: editVideo.trim(),
+        image: primaryImage,
+        video: primaryVideo,
+        images: finalImages,
+        videos: finalVideos,
         link: editLink.trim(),
         type: editType,
       };
@@ -1270,6 +1766,13 @@ const Admin: React.FC = () => {
                             <span className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-widest">Type: {p.type}</span>
                             <div className="flex items-center gap-2">
                               <button
+                                onClick={() => setPreviewingProject(p)}
+                                className="p-2 bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-lg text-gray-500 hover:text-neon-purple hover:border-neon-purple/30 hover:shadow-[0_0_10px_rgba(160,32,240,0.2)] transition-all"
+                                title="Live Media & Card Preview"
+                              >
+                                <Eye size={14} />
+                              </button>
+                              <button
                                 onClick={() => {
                                   setEditingProject(p);
                                   setEditTitle(p.title);
@@ -1278,6 +1781,8 @@ const Admin: React.FC = () => {
                                   setEditTags(p.tags?.join(', ') || '');
                                   setEditImage(p.image);
                                   setEditVideo(p.video || '');
+                                  setEditImages(p.images && p.images.length > 0 ? p.images : (p.image ? [p.image] : []));
+                                  setEditVideos(p.videos && p.videos.length > 0 ? p.videos : (p.video ? [p.video] : []));
                                   setEditLink(p.link);
                                   setEditType(p.type);
                                   setIsEditProjectOpen(true);
@@ -2151,89 +2656,85 @@ const Admin: React.FC = () => {
         </div>
       )}
 
-      {/* --- ADD PROJECT MODAL --- */}
+      {/* --- ADD PROJECT MODAL WITH SIDE PREVIEW --- */}
       {isAddProjectOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-white dark:bg-[#0F1320] w-full max-w-xl rounded-[24px] border border-gray-200 dark:border-white/10 shadow-2xl p-8 relative animate-scale-in max-h-[92vh] flex flex-col">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-5xl rounded-[28px] border border-gray-200 dark:border-white/10 shadow-2xl p-6 md:p-8 relative animate-scale-in max-h-[94vh] flex flex-col">
             <button 
               onClick={() => setIsAddProjectOpen(false)}
-              className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors"
+              className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors z-10"
             >
               <X size={18} />
             </button>
             
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
               <FolderPlus size={22} className="text-neon-purple" />
               Upload New Project
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Publish a new visual design, artifact, or portfolio development.</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">Publish a new visual design, artifact, or portfolio development with live side-by-side media preview.</p>
 
-            <form onSubmit={handleAddProject} className="space-y-4 overflow-y-auto pr-1 flex-1 custom-scrollbar">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Project Title</label>
-                  <input 
-                    type="text" 
-                    value={newTitle} 
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    required
-                    placeholder="e.g. BrandiQue Creative"
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-y-auto pr-1 flex-1 custom-scrollbar">
+              {/* Form Side */}
+              <form onSubmit={handleAddProject} className="lg:col-span-7 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Project Title</label>
+                    <input 
+                      type="text" 
+                      value={newTitle} 
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      required
+                      placeholder="e.g. BrandiQue Creative"
+                      className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Subtitle / Category</label>
+                    <input 
+                      type="text" 
+                      value={newCategory} 
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      required
+                      placeholder="e.g. Branding & Development"
+                      className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Website Section / Type</label>
+                    <select
+                      value={newType}
+                      onChange={(e) => setNewType(e.target.value as any)}
+                      required
+                      className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                    >
+                      <option value="main">Main Projects</option>
+                      <option value="portfolio">Portfolio Projects</option>
+                      <option value="figma">Figma Projects</option>
+                      <option value="client">Client & Personal Projects</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <MultiMediaInput
+                    label="Project Images"
+                    type="image"
+                    items={newImages}
+                    onChange={setNewImages}
+                    maxCount={10}
+                  />
+
+                  <MultiMediaInput
+                    label="Showcase Videos"
+                    type="video"
+                    items={newVideos}
+                    onChange={setNewVideos}
+                    maxCount={5}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Subtitle / Category</label>
-                  <input 
-                    type="text" 
-                    value={newCategory} 
-                    onChange={(e) => setNewCategory(e.target.value)}
-                    required
-                    placeholder="e.g. Branding & Development"
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Website Section / Type</label>
-                  <select
-                    value={newType}
-                    onChange={(e) => setNewType(e.target.value as any)}
-                    required
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                  >
-                    <option value="main">Main Projects</option>
-                    <option value="portfolio">Portfolio Projects</option>
-                    <option value="figma">Figma Projects</option>
-                    <option value="client">Client & Personal Projects</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Image Thumbnail URL</label>
-                  <input 
-                    type="url" 
-                    value={newImage} 
-                    onChange={(e) => setNewImage(e.target.value)}
-                    required
-                    placeholder="https://example.com/image.jpg"
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Tech Stack Tags (Comma separated)</label>
-                <input 
-                  type="text" 
-                  value={newTags} 
-                  onChange={(e) => setNewTags(e.target.value)}
-                  placeholder="React, Tailwind, Framer Motion"
-                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase text-gray-500 mb-1">External Link / Action URL</label>
                   <input 
@@ -2247,133 +2748,167 @@ const Admin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Showcase Video URL (Optional)</label>
+                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Tech Stack Tags (Comma separated)</label>
                   <input 
-                    type="url" 
-                    value={newVideo} 
-                    onChange={(e) => setNewVideo(e.target.value)}
-                    placeholder="https://example.com/video.mp4"
+                    type="text" 
+                    value={newTags} 
+                    onChange={(e) => setNewTags(e.target.value)}
+                    placeholder="React, Tailwind, Framer Motion"
                     className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Description</label>
-                <textarea 
-                  rows={3}
-                  value={newDesc} 
-                  onChange={(e) => setNewDesc(e.target.value)}
-                  required
-                  placeholder="Write a clear, inspiring description of the project, its goals, and solutions..."
-                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Description</label>
+                  <textarea 
+                    rows={3}
+                    value={newDesc} 
+                    onChange={(e) => setNewDesc(e.target.value)}
+                    required
+                    placeholder="Write a clear, inspiring description of the project, its goals, and solutions..."
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
+                  />
+                </div>
+
+                <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-white/5">
+                  <button 
+                    type="button"
+                    onClick={() => setIsAddProjectOpen(false)}
+                    className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-xs font-bold"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit"
+                    disabled={isAddingProject}
+                    className="px-6 py-2.5 bg-neon-purple hover:bg-neon-purple/90 text-white font-bold rounded-xl shadow-lg shadow-neon-purple/20 transition-all text-xs flex items-center gap-1.5"
+                  >
+                    {isAddingProject ? "Uploading..." : "Publish Project"}
+                  </button>
+                </div>
+              </form>
+
+              {/* Side Live Preview Panel */}
+              <div className="lg:col-span-5 bg-gray-50/70 dark:bg-[#05070A]/50 border border-gray-200 dark:border-white/10 rounded-2xl p-4 flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-gray-200/80 dark:border-white/5 pb-2">
+                  <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <Eye size={15} className="text-neon-purple" />
+                    Side Preview Panel
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-neon-purple/10 text-neon-purple border border-neon-purple/20">
+                    Live Updates
+                  </span>
+                </div>
+
+                <ProjectLivePreviewCard
+                  title={newTitle}
+                  category={newCategory}
+                  desc={newDesc}
+                  tags={newTags}
+                  image={newImage}
+                  video={newVideo}
+                  images={newImages}
+                  videos={newVideos}
+                  link={newLink}
+                  type={newType}
                 />
               </div>
-
-              <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-white/5">
-                <button 
-                  type="button"
-                  onClick={() => setIsAddProjectOpen(false)}
-                  className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-xs font-bold"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  disabled={isAddingProject}
-                  className="px-6 py-2.5 bg-neon-purple hover:bg-neon-purple/90 text-white font-bold rounded-xl shadow-lg shadow-neon-purple/20 transition-all text-xs flex items-center gap-1.5"
-                >
-                  {isAddingProject ? "Uploading..." : "Publish Project"}
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
 
-      {/* --- EDIT PROJECT MODAL --- */}
+      {/* --- EDIT PROJECT MODAL WITH SIDE PREVIEW --- */}
       {isEditProjectOpen && editingProject && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-white dark:bg-[#0F1320] w-full max-w-xl rounded-[24px] border border-gray-200 dark:border-white/10 shadow-2xl p-8 relative animate-scale-in max-h-[92vh] flex flex-col">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-5xl rounded-[28px] border border-gray-200 dark:border-white/10 shadow-2xl p-6 md:p-8 relative animate-scale-in max-h-[94vh] flex flex-col">
             <button 
               onClick={() => {
                 setIsEditProjectOpen(false);
                 setEditingProject(null);
               }}
-              className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors"
+              className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors z-10"
             >
               <X size={18} />
             </button>
             
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
               <Edit3 size={22} className="text-neon-purple" />
               Edit Project Details
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Modify any parameters or sections for this project.</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">Modify any parameters or media links with live side-by-side preview.</p>
 
-            <form onSubmit={handleUpdateProject} className="space-y-4 overflow-y-auto pr-1 flex-1 custom-scrollbar">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-y-auto pr-1 flex-1 custom-scrollbar">
+              {/* Form Side */}
+              <form onSubmit={handleUpdateProject} className="lg:col-span-7 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Project Title</label>
+                    <input 
+                      type="text" 
+                      value={editTitle} 
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      required
+                      className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Subtitle / Category</label>
+                    <input 
+                      type="text" 
+                      value={editCategory} 
+                      onChange={(e) => setEditCategory(e.target.value)}
+                      required
+                      className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Website Section / Type</label>
+                    <select
+                      value={editType}
+                      onChange={(e) => setEditType(e.target.value as any)}
+                      required
+                      className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                    >
+                      <option value="main">Main Projects</option>
+                      <option value="portfolio">Portfolio Projects</option>
+                      <option value="figma">Figma Projects</option>
+                      <option value="client">Client & Personal Projects</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <MultiMediaInput
+                    label="Project Images"
+                    type="image"
+                    items={editImages}
+                    onChange={setEditImages}
+                    maxCount={10}
+                  />
+
+                  <MultiMediaInput
+                    label="Showcase Videos"
+                    type="video"
+                    items={editVideos}
+                    onChange={setEditVideos}
+                    maxCount={5}
+                  />
+                </div>
+
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Project Title</label>
+                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Tech Stack Tags (Comma separated)</label>
                   <input 
                     type="text" 
-                    value={editTitle} 
-                    onChange={(e) => setEditTitle(e.target.value)}
-                    required
+                    value={editTags} 
+                    onChange={(e) => setEditTags(e.target.value)}
+                    placeholder="React, Tailwind, Framer Motion"
                     className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Subtitle / Category</label>
-                  <input 
-                    type="text" 
-                    value={editCategory} 
-                    onChange={(e) => setEditCategory(e.target.value)}
-                    required
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Website Section / Type</label>
-                  <select
-                    value={editType}
-                    onChange={(e) => setEditType(e.target.value as any)}
-                    required
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                  >
-                    <option value="main">Main Projects</option>
-                    <option value="portfolio">Portfolio Projects</option>
-                    <option value="figma">Figma Projects</option>
-                    <option value="client">Client & Personal Projects</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Image Thumbnail URL</label>
-                  <input 
-                    type="url" 
-                    value={editImage} 
-                    onChange={(e) => setEditImage(e.target.value)}
-                    required
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Tech Stack Tags (Comma separated)</label>
-                <input 
-                  type="text" 
-                  value={editTags} 
-                  onChange={(e) => setEditTags(e.target.value)}
-                  placeholder="React, Tailwind, Framer Motion"
-                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase text-gray-500 mb-1">External Link / Action URL</label>
                   <input 
@@ -2386,48 +2921,128 @@ const Admin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Showcase Video URL (Optional)</label>
-                  <input 
-                    type="url" 
-                    value={editVideo} 
-                    onChange={(e) => setEditVideo(e.target.value)}
-                    placeholder="https://example.com/video.mp4"
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Description</label>
+                  <textarea 
+                    rows={3}
+                    value={editDesc} 
+                    onChange={(e) => setEditDesc(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Description</label>
-                <textarea 
-                  rows={3}
-                  value={editDesc} 
-                  onChange={(e) => setEditDesc(e.target.value)}
-                  required
-                  className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
+                <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-white/5">
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setIsEditProjectOpen(false);
+                      setEditingProject(null);
+                    }}
+                    className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-xs font-bold"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit"
+                    disabled={isUpdatingProject}
+                    className="px-6 py-2.5 bg-neon-purple hover:bg-neon-purple/90 text-white font-bold rounded-xl shadow-lg shadow-neon-purple/20 transition-all text-xs flex items-center gap-1.5"
+                  >
+                    {isUpdatingProject ? "Updating..." : "Confirm Changes"}
+                  </button>
+                </div>
+              </form>
+
+              {/* Side Live Preview Panel */}
+              <div className="lg:col-span-5 bg-gray-50/70 dark:bg-[#05070A]/50 border border-gray-200 dark:border-white/10 rounded-2xl p-4 flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-gray-200/80 dark:border-white/5 pb-2">
+                  <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <Eye size={15} className="text-neon-purple" />
+                    Side Preview Panel
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-neon-purple/10 text-neon-purple border border-neon-purple/20">
+                    Live Updates
+                  </span>
+                </div>
+
+                <ProjectLivePreviewCard
+                  title={editTitle}
+                  category={editCategory}
+                  desc={editDesc}
+                  tags={editTags}
+                  image={editImage}
+                  video={editVideo}
+                  images={editImages}
+                  videos={editVideos}
+                  link={editLink}
+                  type={editType}
                 />
               </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-              <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-white/5">
-                <button 
-                  type="button"
-                  onClick={() => {
-                    setIsEditProjectOpen(false);
-                    setEditingProject(null);
-                  }}
-                  className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-xs font-bold"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  disabled={isUpdatingProject}
-                  className="px-6 py-2.5 bg-neon-purple hover:bg-neon-purple/90 text-white font-bold rounded-xl shadow-lg shadow-neon-purple/20 transition-all text-xs flex items-center gap-1.5"
-                >
-                  {isUpdatingProject ? "Updating..." : "Confirm Changes"}
-                </button>
-              </div>
-            </form>
+      {/* --- STANDALONE FULL MEDIA PREVIEW MODAL --- */}
+      {previewingProject && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-2xl rounded-[28px] border border-gray-200 dark:border-white/10 shadow-2xl p-6 md:p-8 relative animate-scale-in max-h-[92vh] flex flex-col">
+            <button 
+              onClick={() => setPreviewingProject(null)}
+              className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-black dark:text-white transition-colors z-10"
+            >
+              <X size={18} />
+            </button>
+
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+              <Eye size={22} className="text-neon-purple" />
+              {previewingProject.title}
+            </h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{previewingProject.category} • Section: {previewingProject.type}</p>
+
+            <div className="overflow-y-auto custom-scrollbar flex-1 pr-1 space-y-4">
+              <ProjectLivePreviewCard
+                title={previewingProject.title}
+                category={previewingProject.category}
+                desc={previewingProject.desc}
+                tags={previewingProject.tags?.join(', ') || ''}
+                image={previewingProject.image}
+                video={previewingProject.video || ''}
+                images={previewingProject.images || []}
+                videos={previewingProject.videos || []}
+                link={previewingProject.link}
+                type={previewingProject.type}
+              />
+            </div>
+
+            <div className="pt-4 mt-4 border-t border-gray-200 dark:border-white/10 flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  const p = previewingProject;
+                  setPreviewingProject(null);
+                  setEditingProject(p);
+                  setEditTitle(p.title);
+                  setEditCategory(p.category);
+                  setEditDesc(p.desc);
+                  setEditTags(p.tags?.join(', ') || '');
+                  setEditImage(p.image);
+                  setEditVideo(p.video || '');
+                  setEditImages(p.images && p.images.length > 0 ? p.images : (p.image ? [p.image] : []));
+                  setEditVideos(p.videos && p.videos.length > 0 ? p.videos : (p.video ? [p.video] : []));
+                  setEditLink(p.link);
+                  setEditType(p.type);
+                  setIsEditProjectOpen(true);
+                }}
+                className="px-4 py-2 rounded-xl bg-neon-purple/10 border border-neon-purple/20 text-neon-purple font-bold text-xs hover:bg-neon-purple hover:text-white transition-all flex items-center gap-1.5"
+              >
+                <Edit3 size={14} /> Edit Project
+              </button>
+              <button
+                onClick={() => setPreviewingProject(null)}
+                className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 font-bold text-xs hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
