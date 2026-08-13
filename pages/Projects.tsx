@@ -58,9 +58,10 @@ interface ProjectMediaProps {
   images?: string[];
   videos?: string[];
   title: string;
+  fitMode?: 'cover' | 'contain';
 }
 
-function ProjectMedia({ image, video, images = [], videos = [], title }: ProjectMediaProps) {
+function ProjectMedia({ image, video, images = [], videos = [], title, fitMode = 'cover' }: ProjectMediaProps) {
   const allImages = images && images.length > 0 ? images : (image ? [image] : []);
   const allVideos = videos && videos.length > 0 ? videos : (video ? [video] : []);
 
@@ -100,17 +101,27 @@ function ProjectMedia({ image, video, images = [], videos = [], title }: Project
     setShowVideo(false);
   };
 
+  const objectFitClass = fitMode === 'contain' ? 'object-contain max-w-[85%] max-h-[85%] m-auto' : 'object-cover w-full h-full';
+
   return (
-    <div className="relative w-full h-full overflow-hidden group/media">
+    <div 
+      className="relative w-full h-full overflow-hidden group/media flex items-center justify-center select-none"
+      onContextMenu={(e) => e.preventDefault()}
+    >
       {/* Image layer */}
-      <img
-        src={currentImg}
-        alt={title}
-        referrerPolicy="no-referrer"
-        className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
-          showVideo && currentVid ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
-        }`}
-      />
+      {currentImg && (
+        <img
+          src={currentImg}
+          alt={title}
+          referrerPolicy="no-referrer"
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+          draggable={false}
+          className={`absolute inset-0 ${objectFitClass} grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out select-none pointer-events-none ${
+            showVideo && currentVid ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+          }`}
+        />
+      )}
 
       {/* Video layer */}
       {currentVid && (
@@ -120,15 +131,18 @@ function ProjectMedia({ image, video, images = [], videos = [], title }: Project
           muted
           playsInline
           onEnded={handleVideoEnded}
-          className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
-            showVideo ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+          draggable={false}
+          className={`absolute inset-0 ${objectFitClass} grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out select-none pointer-events-none ${
+            showVideo ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           }`}
         />
       )}
 
       {/* Multi-image indicators if more than 1 image exists */}
       {allImages.length > 1 && (
-        <div className="absolute bottom-2 left-2 z-20 flex gap-1 bg-black/60 backdrop-blur-md p-1 rounded-full border border-white/10 opacity-90 group-hover/media:opacity-100 transition-opacity">
+        <div className="absolute bottom-2 left-2 z-20 flex gap-1 bg-black/60 backdrop-blur-md p-1 rounded-full border border-white/10 opacity-90 group-hover/media:opacity-100 transition-opacity pointer-events-auto">
           {allImages.map((_, idx) => (
             <button
               key={idx}
@@ -139,6 +153,7 @@ function ProjectMedia({ image, video, images = [], videos = [], title }: Project
                 setShowVideo(false);
                 setActiveImgIndex(idx);
               }}
+              onContextMenu={(e) => e.preventDefault()}
               className={`w-2 h-2 rounded-full transition-all ${
                 activeImgIndex === idx ? 'bg-neon-purple w-4' : 'bg-white/40 hover:bg-white'
               }`}
@@ -181,13 +196,17 @@ export default function Projects() {
       try {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          const map = new Map<string, Project>();
+          parsed.forEach((p: Project) => { if (p && p.id) map.set(p.id, p); });
+          return Array.from(map.values());
         }
       } catch (e) {
         // Fallback
       }
     }
-    return INITIAL_PROJECTS;
+    const initMap = new Map<string, Project>();
+    INITIAL_PROJECTS.forEach((p) => { if (p && p.id) initMap.set(p.id, p); });
+    return Array.from(initMap.values());
   };
 
   const [projects, setProjects] = useState<Project[]>(getCachedProjects);
@@ -216,10 +235,11 @@ export default function Projects() {
         return;
       }
 
-      const list: Project[] = [];
+      const map = new Map<string, Project>();
       snapshot.forEach((doc) => {
-        list.push({ id: doc.id, ...doc.data() } as Project);
+        map.set(doc.id, { id: doc.id, ...doc.data() } as Project);
       });
+      const list = Array.from(map.values());
 
       list.sort((a, b) => {
         const valA = a.createdAt || '';
@@ -237,7 +257,9 @@ export default function Projects() {
         try {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setProjects(parsed);
+            const cachedMap = new Map<string, Project>();
+            parsed.forEach((p: Project) => { if (p && p.id) cachedMap.set(p.id, p); });
+            setProjects(Array.from(cachedMap.values()));
           }
         } catch (e) {}
       }
@@ -256,7 +278,7 @@ export default function Projects() {
 
   const renderProjectCard = (project: any, i: number, type: string) => (
     <motion.a
-      key={`${type}-${project.id || i}`}
+      key={`${type}-${project.id || i}-${i}`}
       href={project.link}
       target="_blank"
       rel="noopener noreferrer"
@@ -425,15 +447,21 @@ export default function Projects() {
                    target="_blank"
                    rel="noopener noreferrer"
                    variants={cardVariants}
-                   className="group relative cursor-pointer block"
+                   onContextMenu={(e) => e.preventDefault()}
+                   className="group relative cursor-pointer block select-none"
                  >
                     {/* Visual Logo Card */}
-                    <div className="relative aspect-square bg-white dark:bg-white/[0.02] rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-500 group-hover:bg-gray-100/50 dark:group-hover:bg-white/[0.05] group-hover:border-neon-purple/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(176,38,255,0.08)] flex items-center justify-center p-6 md:p-10">
-                       <img 
-                          src={project.image} 
-                          alt={project.title}
-                          referrerPolicy="no-referrer"
-                          className="max-w-[85%] max-h-[85%] object-contain filter grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                    <div 
+                      className="relative aspect-square bg-white dark:bg-white/[0.02] rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-500 group-hover:bg-gray-100/50 dark:group-hover:bg-white/[0.05] group-hover:border-neon-purple/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(176,38,255,0.08)] flex items-center justify-center p-6 md:p-10 select-none"
+                      onContextMenu={(e) => e.preventDefault()}
+                    >
+                       <ProjectMedia 
+                         image={project.image} 
+                         video={project.video}
+                         images={project.images}
+                         videos={project.videos}
+                         title={project.title}
+                         fitMode="contain"
                        />
                     </div>
 

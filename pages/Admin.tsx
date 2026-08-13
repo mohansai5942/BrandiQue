@@ -713,10 +713,11 @@ const Admin: React.FC = () => {
   useEffect(() => {
     setMessagesLoading(true);
     const unsubMessages = onSnapshot(collection(db, 'messages'), (snapshot) => {
-      const messagesList: Message[] = [];
+      const messagesMap = new Map<string, Message>();
       snapshot.forEach((doc) => {
-        messagesList.push({ id: doc.id, ...doc.data() } as Message);
+        messagesMap.set(doc.id, { id: doc.id, ...doc.data() } as Message);
       });
+      const messagesList = Array.from(messagesMap.values());
 
       messagesList.sort((a, b) => {
         const valA = a.createdAt || a.id || '';
@@ -735,7 +736,9 @@ const Admin: React.FC = () => {
         try {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setMessages(parsed);
+            const cachedMap = new Map<string, Message>();
+            parsed.forEach((m: Message) => { if (m && m.id) cachedMap.set(m.id, m); });
+            setMessages(Array.from(cachedMap.values()));
           }
         } catch (e) {}
       }
@@ -766,10 +769,11 @@ const Admin: React.FC = () => {
         return;
       }
 
-      const projectsList: Project[] = [];
+      const projectsMap = new Map<string, Project>();
       snapshot.forEach((doc) => {
-        projectsList.push({ id: doc.id, ...doc.data() } as Project);
+        projectsMap.set(doc.id, { id: doc.id, ...doc.data() } as Project);
       });
+      const projectsList = Array.from(projectsMap.values());
 
       projectsList.sort((a, b) => {
         const valA = a.createdAt || a.id || '';
@@ -787,7 +791,9 @@ const Admin: React.FC = () => {
         try {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setProjects(parsed);
+            const cachedMap = new Map<string, Project>();
+            parsed.forEach((p: Project) => { if (p && p.id) cachedMap.set(p.id, p); });
+            setProjects(Array.from(cachedMap.values()));
           }
         } catch (e) {}
       }
@@ -817,7 +823,9 @@ const Admin: React.FC = () => {
     e.preventDefault();
     setIsAddingProject(true);
     try {
-      const tagsArray = newTags.split(',').map(t => t.trim()).filter(Boolean);
+      const tagsArray = newType === 'client' ? [] : newTags.split(',').map(t => t.trim()).filter(Boolean);
+      const finalCategory = newType === 'client' ? (newCategory.trim() || 'Client Project') : newCategory.trim();
+      const finalDesc = newType === 'client' ? (newDesc.trim() || 'Client & Personal Project') : newDesc.trim();
       const finalImages = newImages.length > 0 ? newImages : (newImage.trim() ? [newImage.trim()] : []);
       const finalVideos = newVideos.length > 0 ? newVideos : (newVideo.trim() ? [newVideo.trim()] : []);
       const primaryImage = finalImages[0] || newImage.trim();
@@ -825,8 +833,8 @@ const Admin: React.FC = () => {
 
       const newProjectData = {
         title: newTitle.trim(),
-        category: newCategory.trim(),
-        desc: newDesc.trim(),
+        category: finalCategory,
+        desc: finalDesc,
         tags: tagsArray,
         image: primaryImage,
         video: primaryVideo,
@@ -856,7 +864,9 @@ const Admin: React.FC = () => {
       setNewLink('');
       setNewType('main');
     } catch (error) {
-      const tagsArray = newTags.split(',').map(t => t.trim()).filter(Boolean);
+      const tagsArray = newType === 'client' ? [] : newTags.split(',').map(t => t.trim()).filter(Boolean);
+      const finalCategory = newType === 'client' ? (newCategory.trim() || 'Client Project') : newCategory.trim();
+      const finalDesc = newType === 'client' ? (newDesc.trim() || 'Client & Personal Project') : newDesc.trim();
       const finalImages = newImages.length > 0 ? newImages : (newImage.trim() ? [newImage.trim()] : []);
       const finalVideos = newVideos.length > 0 ? newVideos : (newVideo.trim() ? [newVideo.trim()] : []);
       const primaryImage = finalImages[0] || newImage.trim();
@@ -866,8 +876,8 @@ const Admin: React.FC = () => {
       const fallbackProject = {
         id: tempId,
         title: newTitle.trim(),
-        category: newCategory.trim(),
-        desc: newDesc.trim(),
+        category: finalCategory,
+        desc: finalDesc,
         tags: tagsArray,
         image: primaryImage,
         video: primaryVideo,
@@ -904,7 +914,9 @@ const Admin: React.FC = () => {
     if (!editingProject) return;
     setIsUpdatingProject(true);
     try {
-      const tagsArray = editTags.split(',').map(t => t.trim()).filter(Boolean);
+      const tagsArray = editType === 'client' ? [] : editTags.split(',').map(t => t.trim()).filter(Boolean);
+      const finalCategory = editType === 'client' ? (editCategory.trim() || 'Client Project') : editCategory.trim();
+      const finalDesc = editType === 'client' ? (editDesc.trim() || 'Client & Personal Project') : editDesc.trim();
       const finalImages = editImages.length > 0 ? editImages : (editImage.trim() ? [editImage.trim()] : []);
       const finalVideos = editVideos.length > 0 ? editVideos : (editVideo.trim() ? [editVideo.trim()] : []);
       const primaryImage = finalImages[0] || editImage.trim();
@@ -913,8 +925,8 @@ const Admin: React.FC = () => {
       const docRef = doc(db, 'projects', editingProject.id);
       const updatedData = {
         title: editTitle.trim(),
-        category: editCategory.trim(),
-        desc: editDesc.trim(),
+        category: finalCategory,
+        desc: finalDesc,
         tags: tagsArray,
         image: primaryImage,
         video: primaryVideo,
@@ -930,7 +942,9 @@ const Admin: React.FC = () => {
       setIsEditProjectOpen(false);
       setEditingProject(null);
     } catch (error) {
-      const tagsArray = editTags.split(',').map(t => t.trim()).filter(Boolean);
+      const tagsArray = editType === 'client' ? [] : editTags.split(',').map(t => t.trim()).filter(Boolean);
+      const finalCategory = editType === 'client' ? (editCategory.trim() || 'Client Project') : editCategory.trim();
+      const finalDesc = editType === 'client' ? (editDesc.trim() || 'Client & Personal Project') : editDesc.trim();
       const finalImages = editImages.length > 0 ? editImages : (editImage.trim() ? [editImage.trim()] : []);
       const finalVideos = editVideos.length > 0 ? editVideos : (editVideo.trim() ? [editVideo.trim()] : []);
       const primaryImage = finalImages[0] || editImage.trim();
@@ -938,8 +952,8 @@ const Admin: React.FC = () => {
 
       const updatedData = {
         title: editTitle.trim(),
-        category: editCategory.trim(),
-        desc: editDesc.trim(),
+        category: finalCategory,
+        desc: finalDesc,
         tags: tagsArray,
         image: primaryImage,
         video: primaryVideo,
@@ -1726,8 +1740,8 @@ const Admin: React.FC = () => {
                     </div>
                   ) : activeProjectsInType.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {activeProjectsInType.map(p => (
-                        <div key={p.id} className="bg-gray-50 dark:bg-[#05070A]/30 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-neon-purple/30 hover:shadow-[0_10px_30px_rgba(160,32,240,0.05)] transition-all duration-300">
+                      {activeProjectsInType.map((p, idx) => (
+                        <div key={`${p.id}-${idx}`} className="bg-gray-50 dark:bg-[#05070A]/30 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-neon-purple/30 hover:shadow-[0_10px_30px_rgba(160,32,240,0.05)] transition-all duration-300">
                           <div>
                             {/* Image Preview */}
                             <div className="relative aspect-[16/10] bg-gray-100 dark:bg-white/5 overflow-hidden border-b border-gray-200 dark:border-white/5">
@@ -1883,8 +1897,8 @@ const Admin: React.FC = () => {
                 </div>
               ) : deletedProjects.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {deletedProjects.map(p => (
-                    <div key={p.id} className="bg-gray-50 dark:bg-[#05070A]/30 border border-red-500/20 rounded-2xl overflow-hidden flex flex-col justify-between group animate-fade-up">
+                  {deletedProjects.map((p, idx) => (
+                    <div key={`deleted-${p.id}-${idx}`} className="bg-gray-50 dark:bg-[#05070A]/30 border border-red-500/20 rounded-2xl overflow-hidden flex flex-col justify-between group animate-fade-up">
                       <div>
                         <div className="relative aspect-[16/10] bg-gray-100 dark:bg-white/5 overflow-hidden border-b border-gray-200 dark:border-white/5 opacity-70">
                           <img src={p.image} alt={p.title} referrerPolicy="no-referrer" className="w-full h-full object-cover grayscale" />
@@ -2678,25 +2692,15 @@ const Admin: React.FC = () => {
               <form onSubmit={handleAddProject} className="lg:col-span-7 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Project Title</label>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">
+                      {newType === 'client' ? 'Image Name / Project Title' : 'Project Title'}
+                    </label>
                     <input 
                       type="text" 
                       value={newTitle} 
                       onChange={(e) => setNewTitle(e.target.value)}
                       required
-                      placeholder="e.g. BrandiQue Creative"
-                      className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Subtitle / Category</label>
-                    <input 
-                      type="text" 
-                      value={newCategory} 
-                      onChange={(e) => setNewCategory(e.target.value)}
-                      required
-                      placeholder="e.g. Branding & Development"
+                      placeholder={newType === 'client' ? "e.g. Client Design Banner" : "e.g. BrandiQue Creative"}
                       className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
                     />
                   </div>
@@ -2715,6 +2719,20 @@ const Admin: React.FC = () => {
                       <option value="client">Client & Personal Projects</option>
                     </select>
                   </div>
+
+                  {(newType as string) !== 'client' && (
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Subtitle / Category</label>
+                      <input 
+                        type="text" 
+                        value={newCategory} 
+                        onChange={(e) => setNewCategory(e.target.value)}
+                        required={(newType as string) !== 'client'}
+                        placeholder="e.g. Branding & Development"
+                        className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">
@@ -2747,28 +2765,32 @@ const Admin: React.FC = () => {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Tech Stack Tags (Comma separated)</label>
-                  <input 
-                    type="text" 
-                    value={newTags} 
-                    onChange={(e) => setNewTags(e.target.value)}
-                    placeholder="React, Tailwind, Framer Motion"
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                  />
-                </div>
+                {(newType as string) !== 'client' && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Tech Stack Tags (Comma separated)</label>
+                      <input 
+                        type="text" 
+                        value={newTags} 
+                        onChange={(e) => setNewTags(e.target.value)}
+                        placeholder="React, Tailwind, Framer Motion"
+                        className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                      />
+                    </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Description</label>
-                  <textarea 
-                    rows={3}
-                    value={newDesc} 
-                    onChange={(e) => setNewDesc(e.target.value)}
-                    required
-                    placeholder="Write a clear, inspiring description of the project, its goals, and solutions..."
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
-                  />
-                </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Description</label>
+                      <textarea 
+                        rows={3}
+                        value={newDesc} 
+                        onChange={(e) => setNewDesc(e.target.value)}
+                        required={(newType as string) !== 'client'}
+                        placeholder="Write a clear, inspiring description of the project, its goals, and solutions..."
+                        className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
+                      />
+                    </div>
+                  </>
+                )}
 
                 <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-white/5">
                   <button 
@@ -2802,8 +2824,8 @@ const Admin: React.FC = () => {
 
                 <ProjectLivePreviewCard
                   title={newTitle}
-                  category={newCategory}
-                  desc={newDesc}
+                  category={newType === 'client' ? (newCategory || 'Client Project') : newCategory}
+                  desc={newType === 'client' ? (newDesc || 'Client & Personal Project') : newDesc}
                   tags={newTags}
                   image={newImage}
                   video={newVideo}
@@ -2843,22 +2865,13 @@ const Admin: React.FC = () => {
               <form onSubmit={handleUpdateProject} className="lg:col-span-7 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Project Title</label>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">
+                      {editType === 'client' ? 'Image Name / Project Title' : 'Project Title'}
+                    </label>
                     <input 
                       type="text" 
                       value={editTitle} 
                       onChange={(e) => setEditTitle(e.target.value)}
-                      required
-                      className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Subtitle / Category</label>
-                    <input 
-                      type="text" 
-                      value={editCategory} 
-                      onChange={(e) => setEditCategory(e.target.value)}
                       required
                       className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
                     />
@@ -2878,6 +2891,19 @@ const Admin: React.FC = () => {
                       <option value="client">Client & Personal Projects</option>
                     </select>
                   </div>
+
+                  {(editType as string) !== 'client' && (
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Subtitle / Category</label>
+                      <input 
+                        type="text" 
+                        value={editCategory} 
+                        onChange={(e) => setEditCategory(e.target.value)}
+                        required={(editType as string) !== 'client'}
+                        className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">
@@ -2899,17 +2925,6 @@ const Admin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Tech Stack Tags (Comma separated)</label>
-                  <input 
-                    type="text" 
-                    value={editTags} 
-                    onChange={(e) => setEditTags(e.target.value)}
-                    placeholder="React, Tailwind, Framer Motion"
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
-                  />
-                </div>
-
-                <div>
                   <label className="block text-xs font-bold uppercase text-gray-500 mb-1">External Link / Action URL</label>
                   <input 
                     type="url" 
@@ -2920,16 +2935,31 @@ const Admin: React.FC = () => {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Description</label>
-                  <textarea 
-                    rows={3}
-                    value={editDesc} 
-                    onChange={(e) => setEditDesc(e.target.value)}
-                    required
-                    className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
-                  />
-                </div>
+                {(editType as string) !== 'client' && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Tech Stack Tags (Comma separated)</label>
+                      <input 
+                        type="text" 
+                        value={editTags} 
+                        onChange={(e) => setEditTags(e.target.value)}
+                        placeholder="React, Tailwind, Framer Motion"
+                        className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Detailed Description</label>
+                      <textarea 
+                        rows={3}
+                        value={editDesc} 
+                        onChange={(e) => setEditDesc(e.target.value)}
+                        required={(editType as string) !== 'client'}
+                        className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple transition-all resize-none"
+                      />
+                    </div>
+                  </>
+                )}
 
                 <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-white/5">
                   <button 
