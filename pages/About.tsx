@@ -120,20 +120,59 @@ const About: React.FC = () => {
           </ScrollReveal>
 
           <ScrollReveal delay="delay-200">
-            <div className="bg-gray-100 dark:bg-white/5 p-10 md:p-16 rounded-[48px] border border-gray-200 dark:border-white/10 text-left relative overflow-hidden">
+            <div className="bg-gray-100 dark:bg-white/5 p-8 md:p-14 rounded-[48px] border border-gray-200 dark:border-white/10 text-left relative overflow-hidden">
               <div className="absolute top-0 right-0 p-10 opacity-5 dark:opacity-10 text-neon-purple"><Sparkles size={120} /></div>
-              <h3 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8">A Commitment from the Founder</h3>
+              <h3 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8">A Commitment from Leadership</h3>
               <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-xl leading-relaxed font-light max-w-3xl">
-                <p>"Digital transformation can often feel like a daunting hurdle for many business owners. My mission at BrandiQue is to strip away that complexity and replace it with clarity. I personally oversee the technical architecture of every project we take on, ensuring that it meets our uncompromising standards for speed and accessibility."</p>
+                <p>"Digital transformation can often feel like a daunting hurdle for many business owners. Our mission at BrandiQue is to strip away that complexity and replace it with clarity. We personally oversee the technical architecture and operational execution of every project we take on, ensuring that it meets our uncompromising standards for speed, accessibility, and client success."</p>
                 <p>"We aren't here to build just another website. We are here to build your most effective business tool—a platform that works 24/7 to capture leads, represent your values, and grow your brand. Let's create something extraordinary together."</p>
               </div>
-              <div className="flex items-center gap-6 pt-10">
-                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-neon-purple/50 shadow-neon/20">
-                  <img src="https://cdn.imgchest.com/files/3359d7725202.jpg" alt="Mohan" className="w-full h-full object-cover" />
+
+              {/* Leadership Profiles */}
+              <div className="pt-12 border-t border-gray-200 dark:border-white/10 mt-12">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-2.5 h-2.5 rounded-full bg-neon-purple animate-ping"></div>
+                  <h4 className="text-sm uppercase font-bold text-neon-purple tracking-widest">Executive Leadership</h4>
                 </div>
-                <div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-wider">Mohan</div>
-                  <div className="text-sm text-gray-500 font-bold uppercase">Founder & CEO, BrandiQue Web Solutions</div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
+                  {/* Mohan - CEO */}
+                  <div className="relative group p-6 md:p-8 rounded-3xl bg-white dark:bg-[#0A0C11]/80 border border-gray-200 dark:border-white/10 hover:border-neon-purple/60 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-neon-purple/10 rounded-full blur-2xl pointer-events-none group-hover:bg-neon-purple/20 transition-all"></div>
+                    
+                    <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border-2 border-neon-purple/50 shadow-neon/30 shrink-0 relative group-hover:scale-105 transition-transform duration-300">
+                      <img src="https://cdn.imgchest.com/files/3359d7725202.jpg" alt="Mohan" className="w-full h-full object-cover" />
+                    </div>
+
+                    <div className="flex-1 text-center sm:text-left space-y-2">
+                      <div className="inline-block px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-neon-purple/10 text-neon-purple border border-neon-purple/20">
+                        Founder & CEO
+                      </div>
+                      <h5 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Mohan</h5>
+                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 font-medium leading-relaxed">
+                        Lead Digital Architect & Technical Strategy. Spearheading high-performance web engineering and enterprise design.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Praveen - CEO */}
+                  <div className="relative group p-6 md:p-8 rounded-3xl bg-white dark:bg-[#0A0C11]/80 border border-gray-200 dark:border-white/10 hover:border-blue-500/60 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/20 transition-all"></div>
+                    
+                    <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border-2 border-blue-500/50 shadow-blue-500/30 shrink-0 relative group-hover:scale-105 transition-transform duration-300">
+                      <img src="https://files.catbox.moe/ignhd8.jpg" alt="Praveen" className="w-full h-full object-cover" />
+                    </div>
+
+                    <div className="flex-1 text-center sm:text-left space-y-2">
+                      <div className="inline-block px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20">
+                        CEO
+                      </div>
+                      <h5 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Praveen</h5>
+                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 font-medium leading-relaxed">
+                        Operations & Strategic Growth Lead. Driving business expansion, client success, and operational excellence.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
