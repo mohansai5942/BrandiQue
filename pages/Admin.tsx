@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload } from 'lucide-react';
+import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload, MapPin, Save, Instagram } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useSiteSettings, WebsiteItem } from '../context/SiteSettingsContext';
 import { Message, Project } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
 import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -586,10 +587,183 @@ const Admin: React.FC = () => {
   const [isMessageDetailOpen, setIsMessageDetailOpen] = useState(false);
   const [isUsingFallback, setIsUsingFallback] = useState<boolean>(false);
 
+  const { settings: siteSettings, updateSettings, websites, addWebsite, updateWebsite, deleteWebsite, restoreWebsite, permanentlyDeleteWebsite, loadingWebsites } = useSiteSettings();
+
+  const activeWebsites = websites.filter(w => !w.isDeleted);
+  const deletedWebsites = websites.filter(w => w.isDeleted);
+
   // Tab State - Default to 'projects' as requested
-  const [activeTab, setActiveTab] = useState<'projects' | 'services' | 'leads' | 'recycle' | 'storage'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'services' | 'leads' | 'recycle' | 'storage' | 'site-settings' | 'our-websites'>('projects');
   const [selectedServiceTab, setSelectedServiceTab] = useState<string>('Full-Stack Development');
   const [serviceFormSearch, setServiceFormSearch] = useState('');
+
+  // Websites Management State
+  const [newWebName, setNewWebName] = useState('');
+  const [newWebUrl, setNewWebUrl] = useState('');
+  const [newWebDesc, setNewWebDesc] = useState('');
+  const [newWebLogoUrl, setNewWebLogoUrl] = useState('');
+  const [newLogoMode, setNewLogoMode] = useState<'upload' | 'url'>('upload');
+  const [isAddingWebsite, setIsAddingWebsite] = useState(false);
+  const [websiteActionMsg, setWebsiteActionMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const [editingWebsite, setEditingWebsite] = useState<WebsiteItem | null>(null);
+  const [editWebName, setEditWebName] = useState('');
+  const [editWebUrl, setEditWebUrl] = useState('');
+  const [editWebDesc, setEditWebDesc] = useState('');
+  const [editWebLogoUrl, setEditWebLogoUrl] = useState('');
+  const [editLogoMode, setEditLogoMode] = useState<'upload' | 'url'>('upload');
+  const [isUpdatingWebsite, setIsUpdatingWebsite] = useState(false);
+
+  // Soft delete & Permanent delete modal states for websites
+  const [websiteToDelete, setWebsiteToDelete] = useState<WebsiteItem | null>(null);
+  const [websiteToPermanentDelete, setWebsiteToPermanentDelete] = useState<WebsiteItem | null>(null);
+
+  const handleLogoFileUpload = (e: React.ChangeEvent<HTMLInputElement>, setLogoState: (val: string) => void) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image size should be less than 2MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        setLogoState(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleAddWebsiteSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newWebName.trim() || !newWebUrl.trim()) return;
+    setIsAddingWebsite(true);
+    setWebsiteActionMsg(null);
+    try {
+      await addWebsite(newWebName, newWebUrl, newWebDesc, newWebLogoUrl);
+      setNewWebName('');
+      setNewWebUrl('');
+      setNewWebDesc('');
+      setNewWebLogoUrl('');
+      setWebsiteActionMsg({ type: 'success', text: 'Website added successfully with logo! Syncing on all devices.' });
+      setTimeout(() => setWebsiteActionMsg(null), 4000);
+    } catch (err) {
+      console.error('Failed to add website:', err);
+      setWebsiteActionMsg({ type: 'error', text: 'Failed to add website. Please check your connection.' });
+    } finally {
+      setIsAddingWebsite(false);
+    }
+  };
+
+  const handleOpenEditWebsite = (web: WebsiteItem) => {
+    setEditingWebsite(web);
+    setEditWebName(web.name);
+    setEditWebUrl(web.url);
+    setEditWebDesc(web.description || '');
+    setEditWebLogoUrl(web.logoUrl || '');
+    setEditLogoMode(web.logoUrl && !web.logoUrl.startsWith('data:') ? 'url' : 'upload');
+  };
+
+  const handleUpdateWebsiteSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingWebsite || !editWebName.trim() || !editWebUrl.trim()) return;
+    setIsUpdatingWebsite(true);
+    try {
+      await updateWebsite(editingWebsite.id, editWebName, editWebUrl, editWebDesc, editWebLogoUrl);
+      setEditingWebsite(null);
+      setWebsiteActionMsg({ type: 'success', text: 'Website link & logo updated on all devices!' });
+      setTimeout(() => setWebsiteActionMsg(null), 4000);
+    } catch (err) {
+      console.error('Failed to update website:', err);
+      setWebsiteActionMsg({ type: 'error', text: 'Failed to update website.' });
+    } finally {
+      setIsUpdatingWebsite(false);
+    }
+  };
+
+  const handleConfirmSoftDeleteWebsite = async () => {
+    if (!websiteToDelete) return;
+    try {
+      await deleteWebsite(websiteToDelete.id);
+      setWebsiteActionMsg({ type: 'success', text: `"${websiteToDelete.name}" moved to Recycle Bin!` });
+      setTimeout(() => setWebsiteActionMsg(null), 4000);
+    } catch (err) {
+      console.error('Failed to move website to recycle bin:', err);
+      setWebsiteActionMsg({ type: 'error', text: 'Failed to delete website.' });
+    } finally {
+      setWebsiteToDelete(null);
+    }
+  };
+
+  const handleRestoreWebsiteClick = async (web: WebsiteItem) => {
+    try {
+      await restoreWebsite(web.id);
+      setWebsiteActionMsg({ type: 'success', text: `"${web.name}" restored successfully!` });
+      setTimeout(() => setWebsiteActionMsg(null), 4000);
+    } catch (err) {
+      console.error('Failed to restore website:', err);
+      setWebsiteActionMsg({ type: 'error', text: 'Failed to restore website.' });
+    }
+  };
+
+  const handleConfirmPermanentDeleteWebsite = async () => {
+    if (!websiteToPermanentDelete) return;
+    try {
+      await permanentlyDeleteWebsite(websiteToPermanentDelete.id);
+      setWebsiteActionMsg({ type: 'success', text: `"${websiteToPermanentDelete.name}" permanently deleted.` });
+      setTimeout(() => setWebsiteActionMsg(null), 4000);
+    } catch (err) {
+      console.error('Failed to permanently delete website:', err);
+      setWebsiteActionMsg({ type: 'error', text: 'Failed to permanently delete website.' });
+    } finally {
+      setWebsiteToPermanentDelete(null);
+    }
+  };
+
+  // Site Settings Form State
+  const [contactFormEmail, setContactFormEmail] = useState(siteSettings.email);
+  const [contactFormPhone, setContactFormPhone] = useState(siteSettings.phone);
+  const [contactFormLocation, setContactFormLocation] = useState(siteSettings.location);
+  const [contactFormInstagram, setContactFormInstagram] = useState(siteSettings.instagram);
+  const [contactFormWhatsapp, setContactFormWhatsapp] = useState(siteSettings.whatsapp);
+  const [contactFormHours, setContactFormHours] = useState(siteSettings.workingHours);
+  const [isSavingContactSettings, setIsSavingContactSettings] = useState(false);
+  const [contactSaveStatus, setContactSaveStatus] = useState<string | null>(null);
+
+  // Sync form inputs when siteSettings change
+  useEffect(() => {
+    setContactFormEmail(siteSettings.email);
+    setContactFormPhone(siteSettings.phone);
+    setContactFormLocation(siteSettings.location);
+    setContactFormInstagram(siteSettings.instagram);
+    setContactFormWhatsapp(siteSettings.whatsapp);
+    setContactFormHours(siteSettings.workingHours);
+  }, [siteSettings]);
+
+  const handleSaveContactDetails = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingContactSettings(true);
+    setContactSaveStatus(null);
+    try {
+      await updateSettings({
+        email: contactFormEmail.trim(),
+        phone: contactFormPhone.trim(),
+        location: contactFormLocation.trim(),
+        instagram: contactFormInstagram.trim(),
+        whatsapp: contactFormWhatsapp.trim(),
+        workingHours: contactFormHours.trim(),
+      });
+      setContactSaveStatus('success');
+      setTimeout(() => setContactSaveStatus(null), 4000);
+    } catch (err) {
+      console.error('Failed to update contact settings:', err);
+      setContactSaveStatus('error');
+    } finally {
+      setIsSavingContactSettings(false);
+    }
+  };
 
   // Projects State
   const [projects, setProjects] = useState<Project[]>([]);
@@ -643,7 +817,7 @@ const Admin: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   // Recycle Bin Sub-Tab State
-  const [recycleSubTab, setRecycleSubTab] = useState<'projects' | 'contact' | 'services'>('projects');
+  const [recycleSubTab, setRecycleSubTab] = useState<'projects' | 'contact' | 'services' | 'websites'>('projects');
 
   // Message Delete & Restore Confirmation States
   const [deletingMessageDoc, setDeletingMessageDoc] = useState<Message | null>(null);
@@ -769,11 +943,48 @@ const Admin: React.FC = () => {
         return;
       }
 
-      const projectsMap = new Map<string, Project>();
-      snapshot.forEach((doc) => {
-        projectsMap.set(doc.id, { id: doc.id, ...doc.data() } as Project);
+      const deduplicatedMap = new Map<string, Project>();
+      const duplicateDocIdsToDelete: string[] = [];
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data() as Project;
+        const projectItem: Project = { ...data, id: docSnap.id };
+        const titleKey = (projectItem.title || '').trim().toLowerCase();
+
+        if (!titleKey) return;
+
+        if (!deduplicatedMap.has(titleKey)) {
+          deduplicatedMap.set(titleKey, projectItem);
+        } else {
+          // Keep the non-deleted version or primary version and delete redundant doc from Firestore
+          const existing = deduplicatedMap.get(titleKey)!;
+          let keep = existing;
+          let remove = projectItem;
+
+          if (existing.isDeleted && !projectItem.isDeleted) {
+            keep = projectItem;
+            remove = existing;
+          }
+
+          deduplicatedMap.set(titleKey, keep);
+          if (remove.id) {
+            duplicateDocIdsToDelete.push(remove.id);
+          }
+        }
       });
-      const projectsList = Array.from(projectsMap.values());
+
+      // Asynchronously delete duplicate documents from Firestore
+      if (duplicateDocIdsToDelete.length > 0) {
+        duplicateDocIdsToDelete.forEach(async (dupId) => {
+          try {
+            await deleteDoc(doc(db, 'projects', dupId));
+          } catch (e) {
+            console.warn("Failed to delete duplicate project doc:", dupId, e);
+          }
+        });
+      }
+
+      const projectsList = Array.from(deduplicatedMap.values());
 
       projectsList.sort((a, b) => {
         const valA = a.createdAt || a.id || '';
@@ -792,7 +1003,12 @@ const Admin: React.FC = () => {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
             const cachedMap = new Map<string, Project>();
-            parsed.forEach((p: Project) => { if (p && p.id) cachedMap.set(p.id, p); });
+            parsed.forEach((p: Project) => {
+              if (p && p.title) {
+                const key = p.title.trim().toLowerCase();
+                if (!cachedMap.has(key)) cachedMap.set(key, p);
+              }
+            });
             setProjects(Array.from(cachedMap.values()));
           }
         } catch (e) {}
@@ -1421,6 +1637,32 @@ const Admin: React.FC = () => {
           <Trash2 size={14} />
           Recycle Bin ({deletedProjects.length + deletedContactMessages.length + deletedServiceMessages.length})
         </button>
+
+        {/* 5. CONTACT DETAILS & SETTINGS (Amber / Gold Theme) */}
+        <button
+          onClick={() => setActiveTab('site-settings')}
+          className={`shrink-0 px-3.5 md:px-4 py-2 md:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+            activeTab === 'site-settings'
+              ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30 ring-2 ring-amber-400/30'
+              : 'text-gray-500 dark:text-gray-400 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-amber-500/10'
+          }`}
+        >
+          <Settings size={14} />
+          Contact Details
+        </button>
+
+        {/* 6. OUR WEBSITES MANAGER (Cyan / Teal Theme) */}
+        <button
+          onClick={() => setActiveTab('our-websites')}
+          className={`shrink-0 px-3.5 md:px-4 py-2 md:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+            activeTab === 'our-websites'
+              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-400/30'
+              : 'text-gray-500 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-500/10'
+          }`}
+        >
+          <Globe size={14} />
+          Our Websites ({websites.length})
+        </button>
       </div>
 
       {/* CONDITIONAL SECTIONS */}
@@ -2002,6 +2244,18 @@ const Admin: React.FC = () => {
                 <Layers size={14} />
                 <span>Services Form ({deletedServiceMessages.length})</span>
               </button>
+
+              <button
+                onClick={() => setRecycleSubTab('websites')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  recycleSubTab === 'websites'
+                    ? 'bg-red-500 text-white shadow-md shadow-red-500/20'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'
+                }`}
+              >
+                <Globe size={14} />
+                <span>Our Websites ({deletedWebsites.length})</span>
+              </button>
             </div>
           </div>
 
@@ -2188,6 +2442,59 @@ const Admin: React.FC = () => {
                 </div>
               )
             )}
+
+            {/* SUB-TAB 4: OUR WEBSITES */}
+            {recycleSubTab === 'websites' && (
+              deletedWebsites.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {deletedWebsites.map(web => (
+                    <div key={web.id} className="bg-gray-50 dark:bg-[#05070A]/30 border border-red-500/20 rounded-2xl p-5 flex flex-col justify-between group animate-fade-up">
+                      <div>
+                        <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-200/60 dark:border-white/5">
+                          <div className="min-w-0 pr-2">
+                            <h4 className="text-sm font-bold text-gray-900 dark:text-white truncate">{web.name}</h4>
+                            <p className="text-xs text-cyan-500 font-mono truncate">{web.url}</p>
+                          </div>
+                          <span className="text-[9px] font-bold text-red-500 bg-red-500/10 px-2 py-0.5 rounded-full uppercase shrink-0">Soft Deleted</span>
+                        </div>
+                        {web.description && (
+                          <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 bg-white dark:bg-[#0F1320] p-2.5 rounded-xl border border-gray-200/60 dark:border-white/5 mb-3">
+                            {web.description}
+                          </p>
+                        )}
+                        {web.deletedAt && (
+                          <p className="text-[10px] text-red-400 flex items-center gap-1">
+                            <Clock size={10} /> Deleted on {formatDate(web.deletedAt)}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="pt-4 mt-4 border-t border-gray-200/60 dark:border-white/5 flex items-center gap-3">
+                        <button
+                          onClick={() => handleRestoreWebsiteClick(web)}
+                          className="flex-1 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <RotateCcw size={12} />
+                          Restore
+                        </button>
+                        <button
+                          onClick={() => setWebsiteToPermanentDelete(web)}
+                          className="flex-1 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <Trash2 size={12} />
+                          Delete Perm
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+                  <Trash2 size={48} className="mb-4 opacity-10" />
+                  <p className="text-sm font-light">No deleted websites in Recycle Bin.</p>
+                </div>
+              )
+            )}
           </div>
         </div>
       )}
@@ -2348,6 +2655,750 @@ const Admin: React.FC = () => {
           </div>
         );
       })()}
+
+      {/* --- 5. GLOBAL CONTACT DETAILS & SITE SETTINGS TAB --- */}
+      {activeTab === 'site-settings' && (
+        <div className="space-y-8 animate-fade-up">
+          {/* Header Banner */}
+          <div className="glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl p-6 md:p-8 border border-gray-200 dark:border-white/10 relative overflow-hidden shadow-sm dark:shadow-none">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="flex items-start md:items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center text-amber-500 dark:text-amber-400 shrink-0 shadow-lg shadow-amber-500/10">
+                  <Settings size={28} />
+                </div>
+                <div>
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    Global Contact Details Management
+                    <span className="text-[10px] bg-amber-500/10 text-amber-500 dark:text-amber-400 border border-amber-500/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold">Live Sync</span>
+                  </h2>
+                  <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-2xl">
+                    Edit company contact details here. When updated, changes automatically sync across all pages (Footer, Contact page, Navbar, Home hero, Policy pages) on every device in real time.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 px-3.5 py-2 rounded-xl text-xs text-amber-600 dark:text-amber-400 font-medium">
+                <Globe size={14} className="animate-spin-slow" />
+                <span>Syncs via Google Firestore</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Success Status Banner */}
+          {contactSaveStatus === 'success' && (
+            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center gap-3 animate-fade-in text-sm font-semibold">
+              <Check className="w-5 h-5 p-1 bg-emerald-500 text-white rounded-full shrink-0" />
+              <span>Contact details updated successfully! Changes are now live across all pages and devices.</span>
+            </div>
+          )}
+
+          {contactSaveStatus === 'error' && (
+            <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 flex items-center gap-3 animate-fade-in text-sm font-semibold">
+              <X className="w-5 h-5 p-1 bg-red-500 text-white rounded-full shrink-0" />
+              <span>Failed to save contact settings. Please check your network connection and try again.</span>
+            </div>
+          )}
+
+          {/* Settings Form & Live Preview Grid */}
+          <div className="grid lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Form Column */}
+            <div className="lg:col-span-7 glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl p-6 md:p-8 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none">
+              <form onSubmit={handleSaveContactDetails} className="space-y-6">
+                
+                {/* Email Address */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                    <Mail size={14} className="text-neon-purple" />
+                    Company Email Address
+                  </label>
+                  <input 
+                    type="email" 
+                    required 
+                    value={contactFormEmail} 
+                    onChange={(e) => setContactFormEmail(e.target.value)} 
+                    placeholder="brandiquewebsolutions@gmail.com" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple text-sm font-medium transition-colors"
+                  />
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Updates email links in Footer, Contact page, and Legal policy pages.</p>
+                </div>
+
+                {/* Phone Number */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                    <Phone size={14} className="text-blue-500" />
+                    Primary Phone / Mobile Number
+                  </label>
+                  <input 
+                    type="text" 
+                    required 
+                    value={contactFormPhone} 
+                    onChange={(e) => setContactFormPhone(e.target.value)} 
+                    placeholder="+91 70933 20572" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 text-sm font-medium transition-colors"
+                  />
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Updates call buttons and phone cards on all devices.</p>
+                </div>
+
+                {/* HQ Location */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                    <MapPin size={14} className="text-emerald-500" />
+                    HQ / Office Location
+                  </label>
+                  <input 
+                    type="text" 
+                    required 
+                    value={contactFormLocation} 
+                    onChange={(e) => setContactFormLocation(e.target.value)} 
+                    placeholder="Visakhapatnam, India" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors"
+                  />
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Updates location cards and Google Maps navigation targets.</p>
+                </div>
+
+                {/* Instagram URL */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                    <Instagram size={14} className="text-pink-500" />
+                    Instagram Profile Link
+                  </label>
+                  <input 
+                    type="url" 
+                    required 
+                    value={contactFormInstagram} 
+                    onChange={(e) => setContactFormInstagram(e.target.value)} 
+                    placeholder="https://www.instagram.com/brandiquewebsolutions/" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-pink-500 text-sm font-medium transition-colors"
+                  />
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Updates social icons in Header, Footer, and mobile navigation drawer.</p>
+                </div>
+
+                {/* WhatsApp Link */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                    <MessageSquare size={14} className="text-green-500" />
+                    WhatsApp Direct Link
+                  </label>
+                  <input 
+                    type="text" 
+                    required 
+                    value={contactFormWhatsapp} 
+                    onChange={(e) => setContactFormWhatsapp(e.target.value)} 
+                    placeholder="https://wa.me/917093320572" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-green-500 text-sm font-medium transition-colors"
+                  />
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Updates instant WhatsApp action links and floating buttons.</p>
+                </div>
+
+                {/* Working Hours */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                    <Clock size={14} className="text-amber-500" />
+                    Business Working Hours
+                  </label>
+                  <input 
+                    type="text" 
+                    required 
+                    value={contactFormHours} 
+                    onChange={(e) => setContactFormHours(e.target.value)} 
+                    placeholder="Mon - Sat: 9:00 AM - 8:00 PM IST" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-amber-500 text-sm font-medium transition-colors"
+                  />
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Displayed in contact info badges and inquiry dialogs.</p>
+                </div>
+
+                {/* Save Button */}
+                <div className="pt-4 border-t border-gray-200 dark:border-white/10 flex items-center justify-end">
+                  <button 
+                    type="submit" 
+                    disabled={isSavingContactSettings}
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm shadow-lg shadow-amber-500/20 hover:scale-105 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSavingContactSettings ? (
+                      <>
+                        <RefreshCw size={16} className="animate-spin" />
+                        <span>Publishing Changes...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save size={16} />
+                        <span>Update Contact Details</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+              </form>
+            </div>
+
+            {/* Live Preview Side Panel */}
+            <div className="lg:col-span-5 space-y-6">
+              <div className="glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl p-6 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-white/5">
+                  <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <Eye size={16} className="text-amber-500" />
+                    Live Website Preview
+                  </h3>
+                  <span className="text-[10px] text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold">Real-time</span>
+                </div>
+
+                {/* Card 1: Email Box */}
+                <div className="bg-gray-50 dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-neon-purple shrink-0">
+                    <Mail size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Email Us</p>
+                    <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">{contactFormEmail || 'brandiquewebsolutions@gmail.com'}</p>
+                  </div>
+                </div>
+
+                {/* Card 2: Phone Box */}
+                <div className="bg-gray-50 dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 shrink-0">
+                    <Phone size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Call Us</p>
+                    <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">{contactFormPhone || '+91 70933 20572'}</p>
+                  </div>
+                </div>
+
+                {/* Card 3: Location Box */}
+                <div className="bg-gray-50 dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0">
+                    <MapPin size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Visit HQ</p>
+                    <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">{contactFormLocation || 'Visakhapatnam, India'}</p>
+                  </div>
+                </div>
+
+                {/* Card 4: Working Hours */}
+                <div className="bg-gray-50 dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
+                    <Clock size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Working Hours</p>
+                    <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">{contactFormHours || 'Mon - Sat: 9:00 AM - 8:00 PM IST'}</p>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-amber-500/5 border border-amber-500/10 text-xs text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                  <Sparkles size={14} className="shrink-0" />
+                  <span>Clicking "Update Contact Details" saves changes instantly to Google Cloud Firestore.</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* --- OUR WEBSITES MANAGER SECTION --- */}
+      {activeTab === 'our-websites' && (
+        <div className="space-y-8 opacity-0 animate-fade-up">
+          {/* Header Banner */}
+          <div className="glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl p-6 md:p-8 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2.5 rounded-2xl bg-cyan-500/10 text-cyan-500 border border-cyan-500/20">
+                  <Globe size={22} />
+                </div>
+                <div>
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Websites Manager</h2>
+                  <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">Add, edit, or remove website links shown under "Our Websites" submenu in the header on all devices.</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-2 rounded-xl text-emerald-500 text-xs font-bold shrink-0">
+              <Sparkles size={14} />
+              <span>Real-Time Sync Active Across All Devices</span>
+            </div>
+          </div>
+
+          {websiteActionMsg && (
+            <div className={`p-4 rounded-2xl border text-xs md:text-sm font-bold flex items-center gap-2 ${
+              websiteActionMsg.type === 'success'
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                : 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400'
+            }`}>
+              {websiteActionMsg.type === 'success' ? <Check size={16} /> : <X size={16} />}
+              <span>{websiteActionMsg.text}</span>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Add New Website Form Column */}
+            <div className="lg:col-span-5 glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl p-6 md:p-8 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none space-y-6">
+              <div className="flex items-center gap-2 pb-4 border-b border-gray-200 dark:border-white/5">
+                <Plus size={18} className="text-cyan-500" />
+                <h3 className="font-bold text-base text-gray-900 dark:text-white uppercase tracking-wider">Add New Website</h3>
+              </div>
+
+              <form onSubmit={handleAddWebsiteSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+                    Website Name <span className="text-rose-500">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    required
+                    value={newWebName} 
+                    onChange={(e) => setNewWebName(e.target.value)} 
+                    placeholder="e.g. Creator Prompts" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 text-sm font-medium transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+                    Target URL / Link <span className="text-rose-500">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    required
+                    value={newWebUrl} 
+                    onChange={(e) => setNewWebUrl(e.target.value)} 
+                    placeholder="e.g. https://creator.brandique.in/" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 text-sm font-medium transition-colors"
+                  />
+                  <p className="text-[11px] text-gray-400 mt-1">When clicked in header submenu, this URL will open in a new browser tab.</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+                    Short Description (Optional)
+                  </label>
+                  <input 
+                    type="text" 
+                    value={newWebDesc} 
+                    onChange={(e) => setNewWebDesc(e.target.value)} 
+                    placeholder="e.g. AI Prompt Library for Digital Creators" 
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 text-sm font-medium transition-colors"
+                  />
+                </div>
+
+                {/* Logo Upload & URL Options */}
+                <div className="space-y-2 pt-1">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                      Website Logo (Optional)
+                    </label>
+                    <div className="flex items-center gap-1 bg-gray-100 dark:bg-white/5 p-1 rounded-lg text-[11px] font-bold">
+                      <button
+                        type="button"
+                        onClick={() => setNewLogoMode('upload')}
+                        className={`px-2 py-1 rounded-md transition-all flex items-center gap-1 ${
+                          newLogoMode === 'upload' 
+                            ? 'bg-cyan-500 text-white shadow-sm' 
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                      >
+                        <Upload size={12} /> Upload File
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setNewLogoMode('url')}
+                        className={`px-2 py-1 rounded-md transition-all flex items-center gap-1 ${
+                          newLogoMode === 'url' 
+                            ? 'bg-cyan-500 text-white shadow-sm' 
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                      >
+                        <Link2 size={12} /> Image URL
+                      </button>
+                    </div>
+                  </div>
+
+                  {newLogoMode === 'upload' ? (
+                    <div className="space-y-2">
+                      {newWebLogoUrl ? (
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10">
+                          <div className="w-12 h-12 rounded-lg bg-white border border-gray-200 dark:border-white/10 overflow-hidden flex items-center justify-center p-1 shrink-0">
+                            <img src={newWebLogoUrl} alt="Logo preview" className="w-full h-full object-contain" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold text-gray-900 dark:text-white truncate">Logo Uploaded</p>
+                            <p className="text-[10px] text-emerald-500 font-bold flex items-center gap-1"><Check size={10} /> Ready to save</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setNewWebLogoUrl('')}
+                            className="p-1.5 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-colors"
+                            title="Remove logo"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ) : (
+                        <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 dark:border-white/15 rounded-xl bg-gray-50 dark:bg-[#151A25] hover:border-cyan-500/50 cursor-pointer transition-colors group">
+                          <Upload size={20} className="text-gray-400 group-hover:text-cyan-500 mb-1 transition-colors" />
+                          <span className="text-xs font-bold text-gray-700 dark:text-gray-300">Click or drag image file here</span>
+                          <span className="text-[10px] text-gray-400">PNG, JPG, SVG, WebP (Max 2MB)</span>
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={(e) => handleLogoFileUpload(e, setNewWebLogoUrl)}
+                            className="hidden" 
+                          />
+                        </label>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      <input 
+                        type="url" 
+                        value={newWebLogoUrl} 
+                        onChange={(e) => setNewWebLogoUrl(e.target.value)} 
+                        placeholder="e.g. https://example.com/logo.png" 
+                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 text-sm font-medium transition-colors"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Live Submenu Card Preview Panel */}
+                <div className="pt-2">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-[#0C101A] to-slate-900 border border-violet-500/30 text-white space-y-2 shadow-xl relative overflow-hidden">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-violet-400 uppercase tracking-wider">
+                        <Sparkles size={13} className="animate-pulse text-violet-400" />
+                        <span>Live Submenu Card Preview</span>
+                      </div>
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 font-mono">
+                        Header Preview
+                      </span>
+                    </div>
+
+                    <div className="p-3 rounded-xl border border-gray-100/10 dark:border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-between transition-all">
+                      <div className="flex items-center gap-3 min-w-0">
+                        {newWebLogoUrl ? (
+                          <div className="w-8 h-8 rounded-lg bg-white border border-violet-500/30 overflow-hidden flex items-center justify-center p-0.5 shrink-0 shadow-sm">
+                            <img src={newWebLogoUrl} alt="Logo" className="w-full h-full object-contain rounded" />
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 rounded-lg bg-violet-500/20 border border-violet-400/30 flex items-center justify-center text-violet-300 shrink-0 shadow-sm">
+                            <Globe size={16} />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <span className="text-sm font-bold text-white block truncate">
+                            {newWebName.trim() || 'Website Name'}
+                          </span>
+                          <span className="text-[10px] text-gray-400 block truncate font-medium mt-0.5">
+                            {newWebDesc.trim() || 'Short description will appear here...'}
+                          </span>
+                        </div>
+                      </div>
+                      <ExternalLink size={14} className="text-gray-400 shrink-0 ml-2" />
+                    </div>
+                  </div>
+                </div>
+
+                <button 
+                  type="submit" 
+                  disabled={isAddingWebsite || !newWebName.trim() || !newWebUrl.trim()}
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-sm shadow-lg shadow-cyan-500/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isAddingWebsite ? (
+                    <>
+                      <RefreshCw size={16} className="animate-spin" />
+                      <span>Adding Website...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus size={16} />
+                      <span>Add to Our Websites Submenu</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            {/* Existing Websites List Column */}
+            <div className="lg:col-span-7 glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl p-6 md:p-8 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-white/5">
+                <div className="flex items-center gap-2">
+                  <Globe size={18} className="text-cyan-500" />
+                  <h3 className="font-bold text-base text-gray-900 dark:text-white uppercase tracking-wider">
+                    Existing Submenu Links ({activeWebsites.length})
+                  </h3>
+                </div>
+                {loadingWebsites && (
+                  <span className="text-xs text-gray-400 flex items-center gap-1.5">
+                    <RefreshCw size={12} className="animate-spin text-cyan-500" /> Loading...
+                  </span>
+                )}
+              </div>
+
+              {activeWebsites.length === 0 ? (
+                <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-2xl">
+                  <Globe size={36} className="mx-auto text-gray-400 mb-2 opacity-50" />
+                  <p className="text-sm font-bold text-gray-500">No active websites added yet.</p>
+                  <p className="text-xs text-gray-400">Use the form on the left to add your first company website link.</p>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[600px] overflow-y-auto custom-scrollbar pr-1">
+                  {activeWebsites.map((web) => (
+                    <div 
+                      key={web.id} 
+                      className="p-4 rounded-2xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 hover:border-cyan-500/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
+                    >
+                      <div className="min-w-0 flex-1 flex items-start gap-3">
+                        {web.logoUrl ? (
+                          <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-white/10 p-1 overflow-hidden flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                            <img src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded-lg" />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 flex items-center justify-center shrink-0 mt-0.5">
+                            <Globe size={18} />
+                          </div>
+                        )}
+
+                        <div className="min-w-0 flex-1 space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-gray-900 dark:text-white group-hover:text-cyan-400 transition-colors">
+                              {web.name}
+                            </span>
+                            <a 
+                              href={web.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="text-cyan-500 hover:text-cyan-400 p-1 hover:bg-cyan-500/10 rounded-lg transition-colors inline-flex items-center gap-1 text-[11px] font-medium"
+                              title="Test open link"
+                            >
+                              <ExternalLink size={12} />
+                              <span className="hidden sm:inline">Test Link</span>
+                            </a>
+                          </div>
+                          <p className="text-xs text-cyan-600 dark:text-cyan-400 font-mono truncate">{web.url}</p>
+                          {web.description && (
+                            <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{web.description}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                        <button 
+                          onClick={() => handleOpenEditWebsite(web)}
+                          className="px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 hover:bg-cyan-500 hover:text-white transition-all text-xs font-bold flex items-center gap-1"
+                        >
+                          <Edit3 size={12} /> Edit
+                        </button>
+                        <button 
+                          onClick={() => setWebsiteToDelete(web)}
+                          className="px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all text-xs font-bold flex items-center gap-1"
+                        >
+                          <Trash2 size={12} /> Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- EDIT WEBSITE MODAL --- */}
+      {editingWebsite && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-lg rounded-3xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 md:p-8 relative animate-scale-in max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button 
+              onClick={() => setEditingWebsite(null)}
+              className="absolute top-4 right-4 p-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-full text-gray-500 dark:text-gray-400 transition-colors"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-2 mb-4">
+              <Globe size={20} className="text-cyan-500" />
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Edit Website Link & Logo</h3>
+            </div>
+
+            <form onSubmit={handleUpdateWebsiteSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                  Website Name <span className="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  required
+                  value={editWebName} 
+                  onChange={(e) => setEditWebName(e.target.value)} 
+                  className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 text-sm font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                  Target URL / Link <span className="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  required
+                  value={editWebUrl} 
+                  onChange={(e) => setEditWebUrl(e.target.value)} 
+                  className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 text-sm font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                  Description
+                </label>
+                <input 
+                  type="text" 
+                  value={editWebDesc} 
+                  onChange={(e) => setEditWebDesc(e.target.value)} 
+                  className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 text-sm font-medium"
+                />
+              </div>
+
+              {/* Logo Controls in Edit Modal */}
+              <div className="space-y-2 pt-1">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                    Website Logo (Optional)
+                  </label>
+                  <div className="flex items-center gap-1 bg-gray-100 dark:bg-white/5 p-1 rounded-lg text-[11px] font-bold">
+                    <button
+                      type="button"
+                      onClick={() => setEditLogoMode('upload')}
+                      className={`px-2 py-1 rounded-md transition-all flex items-center gap-1 ${
+                        editLogoMode === 'upload' 
+                          ? 'bg-cyan-500 text-white shadow-sm' 
+                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <Upload size={12} /> Upload File
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditLogoMode('url')}
+                      className={`px-2 py-1 rounded-md transition-all flex items-center gap-1 ${
+                        editLogoMode === 'url' 
+                          ? 'bg-cyan-500 text-white shadow-sm' 
+                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <Link2 size={12} /> Image URL
+                    </button>
+                  </div>
+                </div>
+
+                {editLogoMode === 'upload' ? (
+                  <div className="space-y-2">
+                    {editWebLogoUrl ? (
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10">
+                        <div className="w-12 h-12 rounded-lg bg-white border border-gray-200 dark:border-white/10 overflow-hidden flex items-center justify-center p-1 shrink-0">
+                          <img src={editWebLogoUrl} alt="Logo preview" className="w-full h-full object-contain" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-gray-900 dark:text-white truncate">Logo Ready</p>
+                          <p className="text-[10px] text-emerald-500 font-bold flex items-center gap-1"><Check size={10} /> Custom logo attached</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setEditWebLogoUrl('')}
+                          className="p-1.5 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-colors"
+                          title="Remove logo"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 dark:border-white/15 rounded-xl bg-gray-50 dark:bg-[#151A25] hover:border-cyan-500/50 cursor-pointer transition-colors group">
+                        <Upload size={20} className="text-gray-400 group-hover:text-cyan-500 mb-1 transition-colors" />
+                        <span className="text-xs font-bold text-gray-700 dark:text-gray-300">Click or drag image file here</span>
+                        <span className="text-[10px] text-gray-400">PNG, JPG, SVG, WebP (Max 2MB)</span>
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={(e) => handleLogoFileUpload(e, setEditWebLogoUrl)}
+                          className="hidden" 
+                        />
+                      </label>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <input 
+                      type="url" 
+                      value={editWebLogoUrl} 
+                      onChange={(e) => setEditWebLogoUrl(e.target.value)} 
+                      placeholder="e.g. https://example.com/logo.png" 
+                      className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 text-sm font-medium"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Live Submenu Preview Panel in Edit Modal */}
+              <div className="pt-2">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-[#0C101A] to-slate-900 border border-violet-500/30 text-white space-y-2 shadow-xl relative overflow-hidden">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-violet-400 uppercase tracking-wider">
+                      <Sparkles size={13} className="animate-pulse text-violet-400" />
+                      <span>Live Submenu Card Preview</span>
+                    </div>
+                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 font-mono">
+                      Header Preview
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-xl border border-gray-100/10 dark:border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-between transition-all">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {editWebLogoUrl ? (
+                        <div className="w-8 h-8 rounded-lg bg-white border border-violet-500/30 overflow-hidden flex items-center justify-center p-0.5 shrink-0 shadow-sm">
+                          <img src={editWebLogoUrl} alt="Logo" className="w-full h-full object-contain rounded" />
+                        </div>
+                      ) : (
+                        <div className="w-8 h-8 rounded-lg bg-violet-500/20 border border-violet-400/30 flex items-center justify-center text-violet-300 shrink-0 shadow-sm">
+                          <Globe size={16} />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <span className="text-sm font-bold text-white block truncate">
+                          {editWebName.trim() || 'Website Name'}
+                        </span>
+                        <span className="text-[10px] text-gray-400 block truncate font-medium mt-0.5">
+                          {editWebDesc.trim() || 'Short description will appear here...'}
+                        </span>
+                      </div>
+                    </div>
+                    <ExternalLink size={14} className="text-gray-400 shrink-0 ml-2" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 dark:border-white/5 flex justify-end gap-3">
+                <button 
+                  type="button"
+                  onClick={() => setEditingWebsite(null)}
+                  className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white text-xs font-bold transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={isUpdatingWebsite || !editWebName.trim() || !editWebUrl.trim()}
+                  className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                >
+                  {isUpdatingWebsite ? "Updating..." : "Save Link Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
 
       {/* --- PASSWORD CHANGE MODAL --- */}
@@ -3348,6 +4399,61 @@ const Admin: React.FC = () => {
         </div>
       )}
 
+      {/* --- WEBSITE SOFT DELETE CONFIRMATION MODAL --- */}
+      {websiteToDelete && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 animate-scale-in">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              Confirm Move to Recycle Bin?
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Are you sure you want to delete <strong className="text-gray-800 dark:text-gray-200">"{websiteToDelete.name}"</strong> ({websiteToDelete.url})? It will be removed from the header menu on all devices and moved to the Recycle Bin.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setWebsiteToDelete(null)}
+                className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-sm font-bold"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleConfirmSoftDeleteWebsite}
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all text-sm font-bold shadow-lg shadow-red-600/20"
+              >
+                Confirm Move to Recycle Bin
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- WEBSITE PERMANENT DELETE CONFIRMATION MODAL --- */}
+      {websiteToPermanentDelete && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0F1320] w-full max-w-md rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl p-6 animate-scale-in">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              Confirm Permanent Deletion?
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Warning: Are you sure you want to permanently delete <strong className="text-gray-800 dark:text-gray-200">"{websiteToPermanentDelete.name}"</strong>? This action is irreversible.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setWebsiteToPermanentDelete(null)}
+                className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white transition-colors text-sm font-bold"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleConfirmPermanentDeleteWebsite}
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all text-sm font-bold shadow-lg shadow-red-600/20"
+              >
+                Delete Permanently
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

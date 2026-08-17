@@ -1,6 +1,9 @@
 import React from 'react';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const PrivacyPolicy: React.FC = () => {
+  const { settings } = useSiteSettings();
+
   return (
     <div className="min-h-screen pt-32 pb-20 px-6 max-w-4xl mx-auto w-full text-gray-900 dark:text-gray-300">
       <h1 className="text-4xl md:text-5xl font-bold mb-4 text-black dark:text-white">Privacy Policy</h1>
@@ -66,7 +69,7 @@ const PrivacyPolicy: React.FC = () => {
           <h2 className="text-2xl font-bold text-black dark:text-white mb-4">7. Contact Us</h2>
           <p>
             If you have questions or comments about this policy, you may email us at: <br/>
-            <a href="mailto:brandiquewebsolutions@gmail.com" className="text-neon-purple hover:underline font-bold">brandiquewebsolutions@gmail.com</a>
+            <a href={`mailto:${settings.email}`} className="text-neon-purple hover:underline font-bold">{settings.email}</a>
           </p>
         </section>
       </div>

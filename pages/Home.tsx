@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import {
    ArrowRight, Trophy, Rocket, Clock, LayoutTemplate, Play, Code,
    PenTool, Megaphone, Zap, Cpu, Copy, Command, BarChart3, Search,
@@ -126,6 +127,9 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
 };
 
 const Home: React.FC = () => {
+   const { getRawPhone, projects } = useSiteSettings();
+   const activeProjects = projects.filter(p => !p.isDeleted);
+   const previewProjects = activeProjects.length > 0 ? activeProjects.slice(0, 4) : SELECTED_PREVIEW_PROJECTS;
    const [currentWordIndex, setCurrentWordIndex] = useState(0);
    const [typedCode, setTypedCode] = useState('');
    const heroRef = useRef<HTMLElement>(null);
@@ -448,7 +452,7 @@ const Home: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 md:gap-12">
-                     {SELECTED_PREVIEW_PROJECTS.map((project, idx) => (
+                     {previewProjects.map((project, idx) => (
                         <div 
                            key={idx} 
                            className="group flex flex-col bg-gray-50 dark:bg-[#0A0C11] rounded-2xl md:rounded-[32px] border border-gray-200 dark:border-white/5 overflow-hidden hover:border-neon-purple/30 transition-all duration-500 hover:shadow-2xl"
@@ -789,7 +793,7 @@ const Home: React.FC = () => {
                      <Link to="/contact" className="px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
                         Request Consultation <ArrowRight size={20} />
                      </Link>
-                     <a href="tel:+917093320572" className="px-10 py-5 border border-gray-300 dark:border-white/10 rounded-full font-bold text-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                     <a href={`tel:${getRawPhone()}`} className="px-10 py-5 border border-gray-300 dark:border-white/10 rounded-full font-bold text-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
                         Call an Expert
                      </a>
                   </div>

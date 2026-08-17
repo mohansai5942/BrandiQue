@@ -1,16 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Twitter, AtSign, Mail, ArrowRight } from 'lucide-react';
+import { Instagram, Twitter, AtSign, Mail, ArrowRight, Phone, MapPin } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const { settings, getRawPhone } = useSiteSettings();
 
   const SOCIAL_LINKS = [
-    { icon: Instagram, href: "https://www.instagram.com/brandiquewebsolutions/" },
+    { icon: Instagram, href: settings.instagram || "https://www.instagram.com/brandiquewebsolutions/" },
     { icon: Twitter, href: "https://x.com/Mohan_Creator" }, // Twitter (X)
     { icon: AtSign, href: "https://www.threads.com/@mohan_creator/" }, // Threads
-    { icon: Mail, href: "mailto:brandiquewebsolutions@gmail.com" }
+    { icon: Mail, href: `mailto:${settings.email}` }
   ];
 
   return (

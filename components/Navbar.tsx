@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag, Bot, Briefcase, Settings } from 'lucide-react';
+import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag, Bot, Briefcase, Settings, Phone, Globe } from 'lucide-react';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const Navbar: React.FC = () => {
+  const { settings, getRawPhone, websites } = useSiteSettings();
+  const activeWebsites = websites.filter(w => !w.isDeleted);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [websitesOpen, setWebsitesOpen] = useState(false);
   const [isServicesHovered, setIsServicesHovered] = useState(false);
+  const [isWebsitesHovered, setIsWebsitesHovered] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState<any>(null);
+  const [websiteHoverTimeout, setWebsiteHoverTimeout] = useState<any>(null);
 
   const location = useLocation();
 
@@ -90,11 +96,25 @@ const Navbar: React.FC = () => {
     setHoverTimeout(timeout);
   };
 
+  const handleWebsitesEnter = () => {
+    if (websiteHoverTimeout) clearTimeout(websiteHoverTimeout);
+    setIsWebsitesHovered(true);
+  };
+
+  const handleWebsitesLeave = () => {
+    const timeout = setTimeout(() => {
+      setIsWebsitesHovered(false);
+    }, 200);
+    setWebsiteHoverTimeout(timeout);
+  };
+
   interface NavItem {
     label: string;
     path: string;
     icon: React.ComponentType<any>;
     hasDropdown?: boolean;
+    hasWebsitesDropdown?: boolean;
+    badgeStyle?: 'cyan' | 'amber' | 'violet';
     isHighlighted?: boolean;
     isExternal?: boolean;
   }
@@ -102,12 +122,37 @@ const Navbar: React.FC = () => {
   const NAV_ITEMS: NavItem[] = [
     { label: 'Home', path: '/', icon: Home },
     { label: 'Services', path: '/services', icon: Layers, hasDropdown: true },
-    { label: 'Web Development', path: '/web-development', icon: Code, isHighlighted: true },
-    { label: 'Projects', path: '/projects', icon: Briefcase, isHighlighted: true },
+    { label: 'Web Development', path: '/web-development', icon: Code, badgeStyle: 'cyan' },
+    { label: 'Projects', path: '/projects', icon: Briefcase, badgeStyle: 'cyan' },
+    { label: 'Websites', path: '#websites', icon: Globe, hasWebsitesDropdown: true, badgeStyle: 'violet' },
     { label: 'About', path: '/about', icon: Info },
     { label: 'Contact', path: '/contact', icon: Mail },
     { label: 'Admin', path: '/admin', icon: Settings },
   ];
+
+  const getBadgeStyles = (style?: 'cyan' | 'amber' | 'violet') => {
+    switch (style) {
+      case 'cyan':
+        return {
+          bg: 'bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:via-blue-500 hover:to-indigo-500',
+          shadow: 'shadow-[0_4px_18px_rgba(6,182,212,0.35)] hover:shadow-[0_6px_28px_rgba(59,130,246,0.65)]',
+          ring: 'ring-2 ring-cyan-300 shadow-[0_0_22px_rgba(6,182,212,0.8)]',
+        };
+      case 'amber':
+        return {
+          bg: 'bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-400 hover:via-orange-500 hover:to-rose-500',
+          shadow: 'shadow-[0_4px_18px_rgba(245,158,11,0.35)] hover:shadow-[0_6px_28px_rgba(225,29,72,0.65)]',
+          ring: 'ring-2 ring-amber-300 shadow-[0_0_22px_rgba(245,158,11,0.8)]',
+        };
+      case 'violet':
+      default:
+        return {
+          bg: 'bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-500 hover:from-fuchsia-500 hover:via-purple-500 hover:to-cyan-400',
+          shadow: 'shadow-[0_4px_18px_rgba(192,38,211,0.35)] hover:shadow-[0_6px_28px_rgba(6,182,212,0.65)]',
+          ring: 'ring-2 ring-fuchsia-300 shadow-[0_0_22px_rgba(192,38,211,0.8)]',
+        };
+    }
+  };
 
   const SERVICE_ITEMS = [
     { title: "Full-Stack Web Development", path: "/services/full-stack", desc: "Custom-coded websites with modern UI/UX", icon: Code, color: "text-neon-purple", gradient: "group-hover:border-neon-purple/50 group-hover:shadow-[0_0_20px_rgba(176,38,255,0.2)]" },
@@ -140,6 +185,71 @@ const Navbar: React.FC = () => {
 
           <nav className="hidden lg:flex items-center gap-2 p-1.5 rounded-full bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/5 backdrop-blur-md relative z-50 shadow-sm dark:shadow-none transition-colors duration-500">
             {NAV_ITEMS.filter(item => item.path !== '/admin').map((item) => {
+              if (item.hasWebsitesDropdown) {
+                const styles = getBadgeStyles(item.badgeStyle || 'violet');
+                return (
+                  <div key={item.path} className="relative flex items-center justify-center" onMouseEnter={handleWebsitesEnter} onMouseLeave={handleWebsitesLeave}>
+                    <button 
+                      onClick={() => {
+                        setIsWebsitesHovered(!isWebsitesHovered);
+                      }}
+                      className={`relative group cursor-pointer overflow-hidden rounded-full px-4 py-1.5 ${styles.bg} text-white font-bold text-xs md:text-sm ${styles.shadow} hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 border border-white/30`}
+                    >
+                      {/* Continuous Automatic Top Shine Animation */}
+                      <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shine pointer-events-none"></span>
+
+                      {/* Interactive Hover Reflection Sweep */}
+                      <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></span>
+
+                      <span className="relative flex items-center gap-2 text-xs md:text-sm font-extrabold text-white">
+                        <Globe size={15} className="text-white group-hover:rotate-[180deg] transition-transform duration-700 ease-out shrink-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]" />
+                        
+                        <span className="tracking-wide text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] font-extrabold">
+                          {item.label}
+                        </span>
+
+                        <ChevronDown size={13} className={`text-white/90 transition-transform duration-300 ${isWebsitesHovered ? 'rotate-180' : ''}`} />
+                      </span>
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[320px] bg-white dark:bg-[#0A0C11]/95 backdrop-blur-2xl border border-gray-200 dark:border-white/10 rounded-2xl p-3 shadow-2xl transition-all duration-300 origin-top transform ${isWebsitesHovered ? 'opacity-100 translate-y-0 visible scale-100' : 'opacity-0 translate-y-4 invisible scale-95 pointer-events-none'}`}>
+                      <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#0A0C11]/95 border-t border-l border-gray-200 dark:border-white/10 rotate-45 transition-colors duration-500"></div>
+                      <div className="space-y-1.5 relative z-10">
+                        {activeWebsites.map((web) => (
+                          <a 
+                            key={web.id} 
+                            href={web.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="relative overflow-hidden flex items-center justify-between p-3 rounded-xl border border-gray-100 dark:border-white/5 bg-gray-50/70 dark:bg-white/[0.04] hover:bg-gradient-to-r hover:from-violet-600/10 hover:via-purple-600/10 hover:to-cyan-500/10 hover:border-violet-500/30 dark:hover:border-violet-400/30 hover:shadow-[0_4px_20px_rgba(147,51,234,0.15)] transition-all duration-300 group"
+                          >
+                            {/* Light Reflection Sweep */}
+                            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 dark:via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></span>
+
+                            <div className="flex items-center gap-3 min-w-0 relative z-10">
+                              {web.logoUrl ? (
+                                <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border border-violet-500/30 overflow-hidden flex items-center justify-center p-0.5 shrink-0 group-hover:scale-105 group-hover:border-violet-500 transition-all duration-300 shadow-sm">
+                                  <img src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded" />
+                                </div>
+                              ) : (
+                                <div className="w-8 h-8 rounded-lg bg-violet-500/10 dark:bg-violet-500/20 border border-violet-500/20 dark:border-violet-400/30 flex items-center justify-center text-violet-600 dark:text-violet-300 shrink-0 group-hover:scale-110 group-hover:bg-violet-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                                  <Globe size={16} className="group-hover:rotate-12 transition-transform duration-300" />
+                                </div>
+                              )}
+                              <div className="min-w-0">
+                                <span className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors block truncate">{web.name}</span>
+                                {web.description && <span className="text-[10px] text-gray-500 dark:text-gray-400 block truncate font-medium mt-0.5">{web.description}</span>}
+                              </div>
+                            </div>
+                            <ExternalLink size={14} className="text-gray-400 group-hover:text-violet-600 dark:group-hover:text-violet-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0 ml-2 relative z-10" />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
               if (item.hasDropdown) {
                 return (
                   <div key={item.path} className="relative" onMouseEnter={handleServicesEnter} onMouseLeave={handleServicesLeave}>
@@ -166,6 +276,33 @@ const Navbar: React.FC = () => {
                       </div>
                     </div>
                   </div>
+                );
+              }
+              if (item.badgeStyle) {
+                const active = isActive(item.path);
+                const styles = getBadgeStyles(item.badgeStyle);
+                return (
+                  <Link 
+                    key={item.path} 
+                    to={item.path} 
+                    className={`relative group cursor-pointer overflow-hidden rounded-full px-4 py-1.5 ${styles.bg} text-white font-bold text-xs md:text-sm ${styles.shadow} hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 border border-white/30 ${
+                      active ? `${styles.ring} scale-105` : ''
+                    }`}
+                  >
+                    {/* Continuous Automatic Top Shine Animation */}
+                    <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shine pointer-events-none"></span>
+
+                    {/* Interactive Hover Reflection Sweep */}
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></span>
+
+                    <span className="relative flex items-center gap-2 text-xs md:text-sm font-extrabold text-white">
+                      {item.icon && <item.icon size={15} className="text-white group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300 shrink-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]" />}
+                      
+                      <span className="tracking-wide text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] font-extrabold">
+                        {item.label}
+                      </span>
+                    </span>
+                  </Link>
                 );
               }
               if (item.isExternal) {
@@ -209,11 +346,19 @@ const Navbar: React.FC = () => {
               <span>Admin</span>
             </Link>
 
-            <a href="https://www.instagram.com/brandiquewebsolutions/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:border-neon-purple hover:bg-neon-purple/20 transition-all duration-300 hover:scale-110 shadow-sm dark:shadow-none"><Instagram size={18} /></a>
+            <a href={settings.instagram || "https://www.instagram.com/brandiquewebsolutions/"} target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:border-neon-purple hover:bg-neon-purple/20 transition-all duration-300 hover:scale-110 shadow-sm dark:shadow-none"><Instagram size={18} /></a>
             <button onClick={toggleTheme} className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 hover:border-yellow-400/50 hover:bg-yellow-400/10 transition-all duration-300 hover:rotate-90 shadow-sm dark:shadow-none">{isDark ? <Sun size={18} /> : <Moon size={18} />}</button>
           </div>
 
-          <button className="lg:hidden relative z-50 p-1.5 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors focus:outline-none" onClick={() => setIsOpen(true)} aria-label="Open Menu"><Menu size={24} strokeWidth={2} /></button>
+          <div className="lg:hidden flex items-center gap-2 relative z-50">
+            <button 
+              className="p-2 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors focus:outline-none flex items-center justify-center" 
+              onClick={() => setIsOpen(true)} 
+              aria-label="Open Menu"
+            >
+              <Menu size={24} strokeWidth={2} />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -227,6 +372,45 @@ const Navbar: React.FC = () => {
         <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-6 space-y-2">
           {NAV_ITEMS.map((item, idx) => {
             const active = isActive(item.path);
+            if (item.hasWebsitesDropdown) {
+              return (
+                <div key={item.path} className={`rounded-2xl transition-all duration-300 overflow-hidden border ${websitesOpen ? 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10' : 'bg-transparent border-transparent'} ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: `${Math.min(idx * 30, 150)}ms` }}>
+                  <button 
+                    onClick={() => setWebsitesOpen(!websitesOpen)} 
+                    className="w-full flex items-center justify-between p-3.5 rounded-2xl relative overflow-hidden bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-500 text-white font-extrabold shadow-md border border-white/20 transition-all active:scale-[0.98]"
+                  >
+                    {/* Continuous Automatic Top Shine Animation */}
+                    <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shine pointer-events-none"></span>
+
+                    <div className="relative flex items-center gap-3 z-10">
+                      <div className="p-2 rounded-xl bg-white/20 text-white shadow-inner"><Globe size={18} /></div>
+                      <span className="text-base font-extrabold text-white tracking-wide">{item.label}</span>
+                    </div>
+                    <ChevronDown size={18} className={`text-white transition-transform duration-300 relative z-10 ${websitesOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  <div className={`grid gap-2 px-3 transition-all duration-300 ease-in-out ${websitesOpen ? 'pb-4 pt-2 max-h-[600px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                    {activeWebsites.map((web) => (
+                      <a key={web.id} href={web.url} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)} className="relative overflow-hidden flex items-center justify-between p-3 rounded-xl bg-white dark:bg-[#151A25] border border-gray-200/80 dark:border-white/10 shadow-sm active:scale-[0.98] transition-all group">
+                        <div className="flex items-center gap-3 min-w-0">
+                          {web.logoUrl ? (
+                            <div className="w-9 h-9 rounded-lg bg-white dark:bg-slate-900 border border-violet-500/30 overflow-hidden flex items-center justify-center p-0.5 shrink-0 shadow-sm">
+                              <img src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded" />
+                            </div>
+                          ) : (
+                            <div className="p-2 rounded-lg text-violet-600 dark:text-violet-300 bg-violet-500/10 border border-violet-500/20 group-hover:scale-110 transition-transform"><Globe size={18} /></div>
+                          )}
+                          <div className="min-w-0">
+                            <span className="text-sm font-bold text-gray-900 dark:text-white block truncate">{web.name}</span>
+                            {web.description && <span className="text-[10px] text-gray-500 dark:text-gray-400 block truncate">{web.description}</span>}
+                          </div>
+                        </div>
+                        <ExternalLink size={14} className="text-violet-600 dark:text-violet-300 shrink-0 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
             if (item.hasDropdown) {
               return (
                 <div key={item.path} className={`rounded-2xl transition-all duration-300 overflow-hidden border ${servicesOpen ? 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10' : 'bg-transparent border-transparent'} ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: `${Math.min(idx * 30, 150)}ms` }}>
@@ -249,8 +433,30 @@ const Navbar: React.FC = () => {
                 </div>
               );
             }
-            const commonClasses = `flex items-center gap-4 p-3 rounded-xl transition-all duration-300 border border-transparent ${active ? 'bg-gray-100 dark:bg-white/10 shadow-sm border-gray-200 dark:border-white/10' : 'hover:bg-gray-50 dark:hover:bg-white/5 active:scale-[0.98]'} ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} ${item.isHighlighted ? 'nav-highlight' : ''}`;
             const delayStyle = { transitionDelay: `${Math.min(idx * 30, 150)}ms` };
+
+            if (item.badgeStyle) {
+              const styles = getBadgeStyles(item.badgeStyle);
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`relative flex items-center justify-between p-3.5 rounded-xl transition-all duration-300 overflow-hidden ${styles.bg} text-white font-bold shadow-md border border-white/20 ${
+                    active ? 'ring-2 ring-white/90' : ''
+                  }`}
+                  style={delayStyle}
+                >
+                  <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-shine pointer-events-none"></span>
+                  <div className="relative flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-white/20 text-white"><item.icon size={18} /></div>
+                    <span className="text-sm font-extrabold text-white">{item.label}</span>
+                  </div>
+                  <ChevronRight size={18} className="text-white/80" />
+                </Link>
+              );
+            }
+            const commonClasses = `flex items-center gap-4 p-3 rounded-xl transition-all duration-300 border border-transparent ${active ? 'bg-gray-100 dark:bg-white/10 shadow-sm border-gray-200 dark:border-white/10' : 'hover:bg-gray-50 dark:hover:bg-white/5 active:scale-[0.98]'} ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} ${item.isHighlighted ? 'nav-highlight' : ''}`;
 
             if (item.isExternal) {
               return (
@@ -278,7 +484,10 @@ const Navbar: React.FC = () => {
             </div>
             <div className={`w-10 h-6 rounded-full p-1 transition-colors ${isDark ? 'bg-neon-purple' : 'bg-gray-300'}`}><div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${isDark ? 'translate-x-4' : 'translate-x-0'}`}></div></div>
           </button>
-          <div className="flex gap-3"><a href="https://www.instagram.com/brandiquewebsolutions/" target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-bold text-sm hover:text-neon-purple transition-colors"><Instagram size={16} /> Social</a></div>
+          <div className="flex gap-3">
+            <a href={settings.instagram || "https://www.instagram.com/brandiquewebsolutions/"} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-bold text-sm hover:text-neon-purple transition-colors"><Instagram size={16} /> Social</a>
+            <a href={`tel:${getRawPhone()}`} className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-neon-purple/10 border border-neon-purple/20 text-neon-purple font-bold text-sm hover:bg-neon-purple/20 transition-colors"><Phone size={16} /> Call Us</a>
+          </div>
           <div className="text-center"><p className="text-[10px] text-gray-400 font-medium">v1.2.0 • BrandiQue Web Solutions</p></div>
         </div>
       </aside>

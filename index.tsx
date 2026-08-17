@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { InquiryProvider } from './context/InquiryContext';
+import { SiteSettingsProvider } from './context/SiteSettingsContext';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -13,9 +14,11 @@ const root = createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <InquiryProvider>
-        <App />
-      </InquiryProvider>
+      <SiteSettingsProvider>
+        <InquiryProvider>
+          <App />
+        </InquiryProvider>
+      </SiteSettingsProvider>
     </AuthProvider>
   </React.StrictMode>
 );
