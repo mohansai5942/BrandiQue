@@ -3,11 +3,13 @@ import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, C
 import ScrollReveal from '../components/ScrollReveal';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 // --- CONFIGURATION ---
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgvgdpng";
 
 const Contact: React.FC = () => {
+  const { settings, getRawPhone } = useSiteSettings();
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [formData, setFormData] = useState({ name: '', email: '', budget: '', message: '' });
   const [selectedService, setSelectedService] = useState('Full-Stack Development');
@@ -151,10 +153,10 @@ const Contact: React.FC = () => {
                         </div>
                         <div>
                             <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Email Us</p>
-                            <a href="mailto:brandiquewebsolutions@gmail.com" className="text-gray-900 dark:text-white font-medium hover:text-neon-purple transition-colors">brandiquewebsolutions@gmail.com</a>
+                            <a href={`mailto:${settings.email}`} className="text-gray-900 dark:text-white font-medium hover:text-neon-purple transition-colors break-all">{settings.email}</a>
                         </div>
                     </div>
-                    <button onClick={() => copyToClipboard('brandiquewebsolutions@gmail.com', 'email')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors">
+                    <button onClick={() => copyToClipboard(settings.email, 'email')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
                         {copiedField === 'email' ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
                     </button>
                  </div>
@@ -168,10 +170,10 @@ const Contact: React.FC = () => {
                         </div>
                         <div>
                             <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Call Us</p>
-                            <a href="tel:+917093320572" className="text-gray-900 dark:text-white font-medium hover:text-blue-500 dark:hover:text-blue-400 transition-colors">+91 70933 20572</a>
+                            <a href={`tel:${getRawPhone()}`} className="text-gray-900 dark:text-white font-medium hover:text-blue-500 dark:hover:text-blue-400 transition-colors">{settings.phone}</a>
                         </div>
                     </div>
-                    <button onClick={() => copyToClipboard('+917093320572', 'phone')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors">
+                    <button onClick={() => copyToClipboard(settings.phone, 'phone')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
                         {copiedField === 'phone' ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
                     </button>
                  </div>
@@ -185,10 +187,10 @@ const Contact: React.FC = () => {
                         </div>
                         <div>
                             <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Visit HQ</p>
-                            <p className="text-gray-900 dark:text-white font-medium">Visakhapatnam, India</p>
+                            <p className="text-gray-900 dark:text-white font-medium">{settings.location}</p>
                         </div>
                     </div>
-                    <a href="https://maps.google.com/?q=Visakhapatnam" target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors">
+                    <a href={`https://maps.google.com/?q=${encodeURIComponent(settings.location)}`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
                         <ExternalLink size={18} />
                     </a>
                  </div>

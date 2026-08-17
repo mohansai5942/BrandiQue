@@ -15,5 +15,15 @@ service cloud.firestore {
     match /projects/{projectId} {
       allow read, create, update, delete: if true;
     }
+
+    // Settings collection: Allow reading and updating site contact settings across all devices
+    match /settings/{settingId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Websites collection: Allow reading and managing custom website links across all devices
+    match /websites/{websiteId} {
+      allow read, create, update, delete: if true;
+    }
   }
 }

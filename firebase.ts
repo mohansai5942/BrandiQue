@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { initializeFirestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import config from './firebase-applet-config.json';
 
@@ -14,10 +14,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with experimentalForceLongPolling to guarantee robust connection in all client environments
+// Initialize Firestore with automatic connection management
 export const db = config.firestoreDatabaseId 
-  ? initializeFirestore(app, { experimentalForceLongPolling: true }, config.firestoreDatabaseId)
-  : initializeFirestore(app, { experimentalForceLongPolling: true });
+  ? getFirestore(app, config.firestoreDatabaseId)
+  : getFirestore(app);
 
 export const auth = getAuth(app);
 

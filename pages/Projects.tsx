@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw } from 'lucide-react';
-import { collection, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, addDoc, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { Project } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 enum OperationType {
   CREATE = 'create',
@@ -197,7 +198,12 @@ export default function Projects() {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
           const map = new Map<string, Project>();
-          parsed.forEach((p: Project) => { if (p && p.id) map.set(p.id, p); });
+          parsed.forEach((p: Project) => {
+            if (p && p.title) {
+              const key = p.title.trim().toLowerCase();
+              if (!map.has(key)) map.set(key, p);
+            }
+          });
           return Array.from(map.values());
         }
       } catch (e) {
@@ -205,70 +211,16 @@ export default function Projects() {
       }
     }
     const initMap = new Map<string, Project>();
-    INITIAL_PROJECTS.forEach((p) => { if (p && p.id) initMap.set(p.id, p); });
+    INITIAL_PROJECTS.forEach((p) => {
+      if (p && p.title) {
+        const key = p.title.trim().toLowerCase();
+        if (!initMap.has(key)) initMap.set(key, p);
+      }
+    });
     return Array.from(initMap.values());
   };
 
-  const [projects, setProjects] = useState<Project[]>(getCachedProjects);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    const unsub = onSnapshot(collection(db, 'projects'), async (snapshot) => {
-      if (snapshot.empty) {
-        try {
-          const seeded: Project[] = [];
-          for (const p of INITIAL_PROJECTS) {
-            const { id, ...dataWithoutId } = p;
-            const docRef = await addDoc(collection(db, 'projects'), dataWithoutId);
-            seeded.push({ id: docRef.id, ...dataWithoutId });
-          }
-          const finalList = seeded.length > 0 ? seeded : INITIAL_PROJECTS;
-          localStorage.setItem('brandique_projects', JSON.stringify(finalList));
-          setProjects(finalList);
-        } catch (seedErr) {
-          console.warn("Seeding to Firestore skipped or failed:", seedErr);
-          localStorage.setItem('brandique_projects', JSON.stringify(INITIAL_PROJECTS));
-          setProjects(INITIAL_PROJECTS);
-        }
-        setLoading(false);
-        return;
-      }
-
-      const map = new Map<string, Project>();
-      snapshot.forEach((doc) => {
-        map.set(doc.id, { id: doc.id, ...doc.data() } as Project);
-      });
-      const list = Array.from(map.values());
-
-      list.sort((a, b) => {
-        const valA = a.createdAt || '';
-        const valB = b.createdAt || '';
-        return valA.localeCompare(valB);
-      });
-
-      localStorage.setItem('brandique_projects', JSON.stringify(list));
-      setProjects(list);
-      setLoading(false);
-    }, (err) => {
-      console.warn("Real-time projects listener error, using cached fallback:", err);
-      const cached = localStorage.getItem('brandique_projects');
-      if (cached) {
-        try {
-          const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            const cachedMap = new Map<string, Project>();
-            parsed.forEach((p: Project) => { if (p && p.id) cachedMap.set(p.id, p); });
-            setProjects(Array.from(cachedMap.values()));
-          }
-        } catch (e) {}
-      }
-      handleFirestoreError(err, OperationType.GET, 'projects');
-      setLoading(false);
-    });
-
-    return () => unsub();
-  }, []);
+  const { projects, loadingProjects: loading } = useSiteSettings();
 
   const activeProjects = projects.filter(p => !p.isDeleted);
   const mainProjects = activeProjects.filter(p => p.type === 'main');
