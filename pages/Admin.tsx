@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload, MapPin, Save, Instagram } from 'lucide-react';
+import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload, MapPin, Save, Instagram, LayoutGrid, Lock, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSiteSettings, WebsiteItem } from '../context/SiteSettingsContext';
 import { Message, Project } from '../types';
@@ -722,13 +722,16 @@ const Admin: React.FC = () => {
     }
   };
 
-  // Site Settings Form State
+  // Site Settings & Admin Avatar Form State
+  const defaultAdminAvatar = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300';
   const [contactFormEmail, setContactFormEmail] = useState(siteSettings.email);
   const [contactFormPhone, setContactFormPhone] = useState(siteSettings.phone);
   const [contactFormLocation, setContactFormLocation] = useState(siteSettings.location);
   const [contactFormInstagram, setContactFormInstagram] = useState(siteSettings.instagram);
   const [contactFormWhatsapp, setContactFormWhatsapp] = useState(siteSettings.whatsapp);
   const [contactFormHours, setContactFormHours] = useState(siteSettings.workingHours);
+  const [contactFormAdminAvatar, setContactFormAdminAvatar] = useState(siteSettings.adminAvatarUrl || defaultAdminAvatar);
+  const [adminAvatarUploadMode, setAdminAvatarUploadMode] = useState<'upload' | 'url'>('upload');
   const [isSavingContactSettings, setIsSavingContactSettings] = useState(false);
   const [contactSaveStatus, setContactSaveStatus] = useState<string | null>(null);
 
@@ -740,7 +743,26 @@ const Admin: React.FC = () => {
     setContactFormInstagram(siteSettings.instagram);
     setContactFormWhatsapp(siteSettings.whatsapp);
     setContactFormHours(siteSettings.workingHours);
+    setContactFormAdminAvatar(siteSettings.adminAvatarUrl || defaultAdminAvatar);
   }, [siteSettings]);
+
+  const handleAdminAvatarFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image size should be less than 2MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        setContactFormAdminAvatar(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSaveContactDetails = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -754,6 +776,7 @@ const Admin: React.FC = () => {
         instagram: contactFormInstagram.trim(),
         whatsapp: contactFormWhatsapp.trim(),
         workingHours: contactFormHours.trim(),
+        adminAvatarUrl: contactFormAdminAvatar.trim() || defaultAdminAvatar,
       });
       setContactSaveStatus('success');
       setTimeout(() => setContactSaveStatus(null), 4000);
@@ -824,7 +847,13 @@ const Admin: React.FC = () => {
   const [restoringMessageDoc, setRestoringMessageDoc] = useState<Message | null>(null);
   const [deletingMessagePermanentDoc, setDeletingMessagePermanentDoc] = useState<Message | null>(null);
 
-  // States for Password Change modal
+  // States for Consolidated Admin Credentials modal
+  const [isAdminCredentialsOpen, setIsAdminCredentialsOpen] = useState(false);
+  const [credentialsActiveTab, setCredentialsActiveTab] = useState<'avatar' | 'id' | 'password'>('avatar');
+  const [avatarSaveStatus, setAvatarSaveStatus] = useState<string | null>(null);
+  const [isSavingAvatar, setIsSavingAvatar] = useState(false);
+
+  // States for Password Change
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -835,13 +864,67 @@ const Admin: React.FC = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
-  // States for Admin ID Change modal
+  // States for Admin ID Change
   const [isChangeAdminIdOpen, setIsChangeAdminIdOpen] = useState(false);
   const [newAdminIdInput, setNewAdminIdInput] = useState('');
   const [adminIdCurrentPass, setAdminIdCurrentPass] = useState('');
   const [adminIdError, setAdminIdError] = useState('');
   const [adminIdSuccess, setAdminIdSuccess] = useState('');
   const [showAdminIdPass, setShowAdminIdPass] = useState(false);
+
+  const handleSaveAvatarSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingAvatar(true);
+    setAvatarSaveStatus(null);
+    try {
+      await updateSettings({
+        adminAvatarUrl: contactFormAdminAvatar.trim() || defaultAdminAvatar,
+      });
+      setAvatarSaveStatus('success');
+      setTimeout(() => setAvatarSaveStatus(null), 3000);
+    } catch (err) {
+      console.error('Failed to save avatar:', err);
+      setAvatarSaveStatus('error');
+    } finally {
+      setIsSavingAvatar(false);
+    }
+  };
+
+  const handleChangePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPassError('');
+    setPassSuccess('');
+
+    if (!oldPassword) {
+      setPassError('Please enter your current password.');
+      return;
+    }
+    if (!newPassword) {
+      setPassError('Please enter a new password.');
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setPassError('New password and confirmation do not match.');
+      return;
+    }
+    if (newPassword.length < 6) {
+      setPassError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    const res = await changePassword(oldPassword, newPassword);
+    if (res.success) {
+      setPassSuccess(res.message);
+      setOldPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      setTimeout(() => {
+        setPassSuccess('');
+      }, 3000);
+    } else {
+      setPassError(res.message);
+    }
+  };
 
   const handleChangeAdminIdSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1559,19 +1642,18 @@ const Admin: React.FC = () => {
               setAdminIdCurrentPass('');
               setAdminIdError('');
               setAdminIdSuccess('');
-              setIsChangeAdminIdOpen(true);
+              setOldPassword('');
+              setNewPassword('');
+              setConfirmNewPassword('');
+              setPassError('');
+              setPassSuccess('');
+              setCredentialsActiveTab('avatar');
+              setIsAdminCredentialsOpen(true);
             }}
-            className="shrink-0 p-2.5 md:p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 hover:border-blue-500/40 transition-all flex items-center gap-2 font-bold text-xs md:text-sm shadow-sm"
+            className="shrink-0 p-2.5 md:p-3 rounded-xl bg-gradient-to-r from-neon-purple/10 via-blue-500/10 to-cyan-500/10 hover:from-neon-purple/20 hover:to-cyan-500/20 border border-neon-purple/30 text-gray-900 dark:text-white hover:border-cyan-400 transition-all flex items-center gap-2 font-bold text-xs md:text-sm shadow-sm"
           >
-            <User size={16} className="text-blue-500" />
-            <span>Change Admin ID</span>
-          </button>
-          <button 
-            onClick={() => setIsChangePasswordOpen(true)}
-            className="shrink-0 p-2.5 md:p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-neon-purple hover:border-neon-purple/40 transition-all flex items-center gap-2 font-bold text-xs md:text-sm shadow-sm"
-          >
-            <Key size={16} className="text-neon-purple" />
-            <span>Change Password</span>
+            <Shield size={16} className="text-cyan-400" />
+            <span>Admin Credentials</span>
           </button>
           <button 
             onClick={logout}
@@ -2699,6 +2781,181 @@ const Admin: React.FC = () => {
               <span>Failed to save contact settings. Please check your network connection and try again.</span>
             </div>
           )}
+
+          {/* --- ADMIN LOGIN AVATAR MANAGEMENT SECTION --- */}
+          <div className="glass-morphism bg-white dark:bg-[#0A0C11]/50 rounded-3xl p-6 md:p-8 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-200 dark:border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-neon-purple/20 via-fuchsia-500/20 to-cyan-500/20 border border-neon-purple/30 flex items-center justify-center text-neon-purple shrink-0 shadow-lg shadow-neon-purple/10">
+                  <User size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    Admin Login Profile Image
+                    <span className="text-[10px] bg-neon-purple/10 text-neon-purple dark:text-cyan-400 border border-neon-purple/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold">Live Preview</span>
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Upload an image or enter a URL link to customize the circular profile avatar on the Admin Login screen (/login).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column: Avatar Source Inputs */}
+              <div className="lg:col-span-7 space-y-5">
+                {/* Mode Selector Tabs */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+                    Select Avatar Input Method
+                  </label>
+                  <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-[#151A25] rounded-xl border border-gray-200 dark:border-white/10 w-fit">
+                    <button
+                      type="button"
+                      onClick={() => setAdminAvatarUploadMode('upload')}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                        adminAvatarUploadMode === 'upload'
+                          ? 'bg-gradient-to-r from-neon-purple to-cyan-500 text-white shadow-md'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <Upload size={14} />
+                      <span>Upload File</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAdminAvatarUploadMode('url')}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                        adminAvatarUploadMode === 'url'
+                          ? 'bg-gradient-to-r from-neon-purple to-cyan-500 text-white shadow-md'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <Globe size={14} />
+                      <span>Image URL</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Upload Mode UI */}
+                {adminAvatarUploadMode === 'upload' ? (
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2 flex items-center justify-between">
+                      <span>Upload Avatar Image File</span>
+                      <span className="text-[10px] text-gray-400 font-normal">Max 2MB (PNG, JPG, WEBP)</span>
+                    </label>
+                    <div className="relative border-2 border-dashed border-gray-300 dark:border-white/20 hover:border-neon-purple dark:hover:border-cyan-400 rounded-2xl p-6 text-center transition-all bg-gray-50/50 dark:bg-[#0F1320]/50 group">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAdminAvatarFileUpload}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <div className="w-12 h-12 rounded-full bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-neon-purple group-hover:scale-110 transition-transform">
+                          <Upload size={20} />
+                        </div>
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                          Click to browse or drag & drop avatar image here
+                        </p>
+                        <p className="text-[11px] text-gray-400">
+                          Supports PNG, JPEG, SVG or WEBP
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* URL Mode UI */
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+                      Image Direct Link (URL)
+                    </label>
+                    <input
+                      type="url"
+                      value={contactFormAdminAvatar}
+                      onChange={(e) => setContactFormAdminAvatar(e.target.value)}
+                      placeholder="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300"
+                      className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple text-sm font-medium transition-colors"
+                    />
+                    <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">
+                      Paste any direct image URL link from Unsplash, Imgur, or CDN.
+                    </p>
+                  </div>
+                )}
+
+                {/* Quick Actions */}
+                <div className="flex items-center gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setContactFormAdminAvatar(defaultAdminAvatar)}
+                    className="px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                  >
+                    <RefreshCw size={13} />
+                    <span>Reset to Default Avatar</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Side-by-Side Live Round Preview Panel */}
+              <div className="lg:col-span-5 flex flex-col items-center justify-center bg-gray-900/90 dark:bg-[#07090F] border border-cyan-500/30 rounded-2xl p-6 relative overflow-hidden shadow-2xl">
+                {/* Ambience Glow */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-tr from-neon-purple/30 via-cyan-500/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+
+                <div className="relative z-10 flex flex-col items-center text-center w-full">
+                  <div className="flex items-center gap-2 mb-4 text-[10px] uppercase font-bold tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1 rounded-full">
+                    <Eye size={12} />
+                    <span>Live Admin Login Preview</span>
+                  </div>
+
+                  {/* Round Profile Avatar with Glowing Ring */}
+                  <div className="relative mb-4 group">
+                    {/* Outer Glow Ring in Website Neon Purple / Cyan Theme */}
+                    <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-neon-purple via-fuchsia-500 to-cyan-400 opacity-80 blur-md group-hover:opacity-100 transition duration-500 animate-pulse"></div>
+
+                    {/* Profile Ring Container */}
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-r from-neon-purple via-violet-500 to-cyan-400 shadow-[0_0_25px_rgba(176,38,255,0.4)]">
+                      <div className="w-full h-full rounded-full overflow-hidden bg-[#0F1320] flex items-center justify-center border-2 border-white/20">
+                        <img
+                          src={contactFormAdminAvatar || defaultAdminAvatar}
+                          alt="Admin Profile Preview"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = defaultAdminAvatar;
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Badge Icon */}
+                    <div className="absolute bottom-1 right-1 w-7 h-7 rounded-full bg-gradient-to-r from-neon-purple to-cyan-400 p-0.5 shadow-lg flex items-center justify-center border border-white/40">
+                      <div className="w-full h-full bg-[#0A0D16] rounded-full flex items-center justify-center text-cyan-300">
+                        <LayoutGrid size={12} className="text-cyan-400" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Login Card Mock details */}
+                  <h4 className="text-sm font-extrabold bg-gradient-to-r from-white via-gray-200 to-cyan-300 bg-clip-text text-transparent uppercase tracking-wider">
+                    Admin Login
+                  </h4>
+                  <p className="text-[11px] text-gray-400 mt-0.5 max-w-[220px] leading-tight">
+                    Enter the admin ID & Password to access the dashboard.
+                  </p>
+
+                  <div className="mt-3 w-full max-w-[220px] bg-white/5 border border-white/10 rounded-xl p-2 text-left space-y-1.5 text-[10px] text-gray-400">
+                    <div className="flex items-center gap-1.5 bg-black/30 px-2 py-1 rounded border border-white/5">
+                      <User size={10} className="text-cyan-400" />
+                      <span>Admin ID: admin</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-black/30 px-2 py-1 rounded border border-white/5">
+                      <Lock size={10} className="text-neon-purple" />
+                      <span>Password: ••••••••</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Settings Form & Live Preview Grid */}
           <div className="grid lg:grid-cols-12 gap-8 items-start">
@@ -4451,6 +4708,419 @@ const Admin: React.FC = () => {
                 Delete Permanently
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- CONSOLIDATED ADMIN CREDENTIALS & AVATAR MODAL --- */}
+      {isAdminCredentialsOpen && (
+        <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/70 dark:bg-black/85 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-[#0A0D16] w-full max-w-4xl rounded-[28px] border border-gray-200 dark:border-cyan-500/30 shadow-2xl p-6 md:p-8 relative animate-scale-in max-h-[92vh] flex flex-col overflow-hidden">
+            
+            {/* Header & Close */}
+            <div className="flex items-start justify-between pb-4 border-b border-gray-200 dark:border-white/10 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-neon-purple via-violet-600 to-cyan-500 p-0.5 shadow-lg shadow-neon-purple/20">
+                  <div className="w-full h-full bg-[#0A0D16] rounded-[14px] flex items-center justify-center text-cyan-400">
+                    <Shield size={24} />
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                    Admin Credentials & Security
+                  </h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Manage your Admin Login Avatar, Admin ID, and Account Password.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsAdminCredentialsOpen(false)}
+                className="p-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-300 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Sub-Tab Navigation Bar */}
+            <div className="flex items-center gap-2 p-1.5 bg-gray-100 dark:bg-[#151A25] rounded-2xl border border-gray-200 dark:border-white/10 my-4 shrink-0 overflow-x-auto custom-scrollbar">
+              <button
+                type="button"
+                onClick={() => setCredentialsActiveTab('avatar')}
+                className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shrink-0 ${
+                  credentialsActiveTab === 'avatar'
+                    ? 'bg-gradient-to-r from-neon-purple to-cyan-500 text-white shadow-lg shadow-neon-purple/20'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                }`}
+              >
+                <User size={15} />
+                <span>Login Avatar Image</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCredentialsActiveTab('id')}
+                className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shrink-0 ${
+                  credentialsActiveTab === 'id'
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                }`}
+              >
+                <Shield size={15} />
+                <span>Change Admin ID</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCredentialsActiveTab('password')}
+                className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shrink-0 ${
+                  credentialsActiveTab === 'password'
+                    ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-600/20'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                }`}
+              >
+                <Key size={15} />
+                <span>Change Password</span>
+              </button>
+            </div>
+
+            {/* Scrollable Modal Content */}
+            <div className="overflow-y-auto custom-scrollbar flex-1 pr-1 space-y-6 pt-2">
+              
+              {/* TAB 1: LOGIN AVATAR IMAGE */}
+              {credentialsActiveTab === 'avatar' && (
+                <div className="space-y-6 animate-fade-in">
+                  
+                  {avatarSaveStatus === 'success' && (
+                    <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
+                      <Check size={16} className="p-0.5 bg-emerald-500 text-white rounded-full shrink-0" />
+                      <span>Admin Login Profile Image updated successfully! Synced on all devices.</span>
+                    </div>
+                  )}
+
+                  {avatarSaveStatus === 'error' && (
+                    <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs font-semibold flex items-center gap-2">
+                      <X size={16} className="p-0.5 bg-red-500 text-white rounded-full shrink-0" />
+                      <span>Failed to update avatar. Please check your network connection.</span>
+                    </div>
+                  )}
+
+                  <div className="grid lg:grid-cols-12 gap-6 items-center">
+                    {/* Left Column: Input options */}
+                    <div className="lg:col-span-7 space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+                          Select Image Method
+                        </label>
+                        <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-[#151A25] rounded-xl border border-gray-200 dark:border-white/10 w-fit">
+                          <button
+                            type="button"
+                            onClick={() => setAdminAvatarUploadMode('upload')}
+                            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                              adminAvatarUploadMode === 'upload'
+                                ? 'bg-gradient-to-r from-neon-purple to-cyan-500 text-white'
+                                : 'text-gray-600 dark:text-gray-400'
+                            }`}
+                          >
+                            <Upload size={13} />
+                            <span>Upload File</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setAdminAvatarUploadMode('url')}
+                            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                              adminAvatarUploadMode === 'url'
+                                ? 'bg-gradient-to-r from-neon-purple to-cyan-500 text-white'
+                                : 'text-gray-600 dark:text-gray-400'
+                            }`}
+                          >
+                            <Globe size={13} />
+                            <span>Image URL</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {adminAvatarUploadMode === 'upload' ? (
+                        <div>
+                          <label className="block text-xs font-bold uppercase text-gray-700 dark:text-gray-300 mb-2 flex justify-between">
+                            <span>Upload Avatar File</span>
+                            <span className="text-[10px] text-gray-400 font-normal">Max 2MB (PNG, JPG, WEBP)</span>
+                          </label>
+                          <div className="relative border-2 border-dashed border-gray-300 dark:border-white/20 hover:border-neon-purple rounded-2xl p-5 text-center bg-gray-50/50 dark:bg-[#0F1320]/50 transition-all group">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleAdminAvatarFileUpload}
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            />
+                            <div className="flex flex-col items-center justify-center space-y-2">
+                              <div className="w-10 h-10 rounded-full bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-neon-purple group-hover:scale-110 transition-transform">
+                                <Upload size={18} />
+                              </div>
+                              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Click or drag & drop avatar image here
+                              </p>
+                              <p className="text-[10px] text-gray-400">
+                                Supports PNG, JPEG, SVG or WEBP
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="block text-xs font-bold uppercase text-gray-700 dark:text-gray-300 mb-2">
+                            Image Direct Link (URL)
+                          </label>
+                          <input
+                            type="url"
+                            value={contactFormAdminAvatar}
+                            onChange={(e) => setContactFormAdminAvatar(e.target.value)}
+                            placeholder="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300"
+                            className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple text-xs font-medium transition-colors"
+                          />
+                          <p className="text-[10px] text-gray-400 mt-1">
+                            Paste direct CDN or image link.
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setContactFormAdminAvatar(defaultAdminAvatar)}
+                          className="px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                        >
+                          <RefreshCw size={12} />
+                          <span>Reset Default Avatar</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleSaveAvatarSubmit}
+                          disabled={isSavingAvatar}
+                          className="px-5 py-2 rounded-xl bg-gradient-to-r from-neon-purple to-cyan-500 hover:from-neon-purple/90 hover:to-cyan-500/90 text-white font-bold text-xs shadow-lg shadow-neon-purple/20 flex items-center gap-1.5 disabled:opacity-50"
+                        >
+                          {isSavingAvatar ? <RefreshCw size={13} className="animate-spin" /> : <Save size={13} />}
+                          <span>Update Avatar Image</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Right Column: Live Round Preview Panel */}
+                    <div className="lg:col-span-5 flex flex-col items-center justify-center bg-gray-900/90 dark:bg-[#07090F] border border-cyan-500/30 rounded-2xl p-5 relative overflow-hidden shadow-2xl">
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-gradient-to-tr from-neon-purple/30 via-cyan-500/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+
+                      <div className="relative z-10 flex flex-col items-center text-center w-full">
+                        <div className="flex items-center gap-1.5 mb-3 text-[9px] uppercase font-bold tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-full">
+                          <Eye size={11} />
+                          <span>Live Login Screen Preview</span>
+                        </div>
+
+                        {/* Round Profile Avatar with Glowing Ring */}
+                        <div className="relative mb-3 group">
+                          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-neon-purple via-fuchsia-500 to-cyan-400 opacity-80 blur-md animate-pulse"></div>
+                          <div className="relative w-22 h-22 sm:w-24 sm:h-24 rounded-full p-1 bg-gradient-to-r from-neon-purple via-violet-500 to-cyan-400 shadow-[0_0_25px_rgba(176,38,255,0.4)]">
+                            <div className="w-full h-full rounded-full overflow-hidden bg-[#0F1320] flex items-center justify-center border-2 border-white/20">
+                              <img
+                                src={contactFormAdminAvatar || defaultAdminAvatar}
+                                alt="Admin Profile Preview"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = defaultAdminAvatar;
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-gradient-to-r from-neon-purple to-cyan-400 p-0.5 shadow-lg flex items-center justify-center border border-white/40">
+                            <div className="w-full h-full bg-[#0A0D16] rounded-full flex items-center justify-center text-cyan-300">
+                              <LayoutGrid size={10} className="text-cyan-400" />
+                            </div>
+                          </div>
+                        </div>
+
+                        <h4 className="text-xs font-extrabold bg-gradient-to-r from-white via-gray-200 to-cyan-300 bg-clip-text text-transparent uppercase tracking-wider">
+                          Admin Login
+                        </h4>
+                        <p className="text-[10px] text-gray-400 mt-0.5 max-w-[200px] leading-tight">
+                          Enter the admin ID & Password to access the dashboard.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: CHANGE ADMIN ID */}
+              {credentialsActiveTab === 'id' && (
+                <form onSubmit={handleChangeAdminIdSubmit} className="space-y-4 max-w-lg mx-auto animate-fade-in">
+                  
+                  {adminIdSuccess && (
+                    <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
+                      <Check size={16} className="p-0.5 bg-emerald-500 text-white rounded-full shrink-0" />
+                      <span>{adminIdSuccess}</span>
+                    </div>
+                  )}
+
+                  {adminIdError && (
+                    <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs font-semibold flex items-center gap-2">
+                      <X size={16} className="p-0.5 bg-red-500 text-white rounded-full shrink-0" />
+                      <span>{adminIdError}</span>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                      Current Password (Required for Security)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showAdminIdPass ? "text" : "password"}
+                        required
+                        value={adminIdCurrentPass}
+                        onChange={(e) => setAdminIdCurrentPass(e.target.value)}
+                        placeholder="Enter current password"
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 text-xs font-medium pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowAdminIdPass(!showAdminIdPass)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                      >
+                        {showAdminIdPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                      New Admin ID
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={newAdminIdInput}
+                      onChange={(e) => setNewAdminIdInput(e.target.value)}
+                      placeholder="e.g. mohan or admin@brandique.in"
+                      className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 text-xs font-medium"
+                    />
+                    <p className="text-[10px] text-gray-400 mt-1">Current ID: <span className="text-cyan-400 font-mono">{adminId}</span></p>
+                  </div>
+
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      type="submit"
+                      className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2"
+                    >
+                      <Save size={14} />
+                      <span>Save New Admin ID</span>
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* TAB 3: CHANGE PASSWORD */}
+              {credentialsActiveTab === 'password' && (
+                <form onSubmit={handleChangePasswordSubmit} className="space-y-4 max-w-lg mx-auto animate-fade-in">
+                  
+                  {passSuccess && (
+                    <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
+                      <Check size={16} className="p-0.5 bg-emerald-500 text-white rounded-full shrink-0" />
+                      <span>{passSuccess}</span>
+                    </div>
+                  )}
+
+                  {passError && (
+                    <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs font-semibold flex items-center gap-2">
+                      <X size={16} className="p-0.5 bg-red-500 text-white rounded-full shrink-0" />
+                      <span>{passError}</span>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                      Current Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showOldPassword ? "text" : "password"}
+                        required
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                        placeholder="Enter current password"
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple text-xs font-medium pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowOldPassword(!showOldPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                      >
+                        {showOldPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                      New Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showNewPassword ? "text" : "password"}
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="Enter new password (min 6 chars)"
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple text-xs font-medium pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                      >
+                        {showNewPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                      Confirm New Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showConfirmNewPassword ? "text" : "password"}
+                        required
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                        placeholder="Confirm new password"
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-[#151A25] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:border-neon-purple text-xs font-medium pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                      >
+                        {showConfirmNewPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      type="submit"
+                      className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-violet-600/20 transition-all flex items-center justify-center gap-2"
+                    >
+                      <Save size={14} />
+                      <span>Update Password</span>
+                    </button>
+                  </div>
+                </form>
+              )}
+
+            </div>
+
           </div>
         </div>
       )}
