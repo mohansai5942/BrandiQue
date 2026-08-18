@@ -11,6 +11,7 @@ export interface SiteSettings {
   instagram: string;
   whatsapp: string;
   workingHours: string;
+  adminAvatarUrl?: string;
 }
 
 export interface WebsiteItem {
@@ -31,6 +32,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   instagram: 'https://www.instagram.com/brandiquewebsolutions/',
   whatsapp: 'https://wa.me/917093320572',
   workingHours: 'Mon - Sat: 9:00 AM - 8:00 PM IST',
+  adminAvatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300',
 };
 
 export const DEFAULT_WEBSITES: WebsiteItem[] = [
@@ -98,6 +100,7 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
             instagram: data.instagram || DEFAULT_SETTINGS.instagram,
             whatsapp: data.whatsapp || DEFAULT_SETTINGS.whatsapp,
             workingHours: data.workingHours || DEFAULT_SETTINGS.workingHours,
+            adminAvatarUrl: data.adminAvatarUrl || DEFAULT_SETTINGS.adminAvatarUrl,
           });
         } else {
           setSettings(DEFAULT_SETTINGS);
