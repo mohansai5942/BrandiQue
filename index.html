@@ -399,10 +399,10 @@
       /* Mobile & Tablet responsiveness */
       @media (max-width: 1024px) {
         :root {
-          --chat--window--width: 320px; /* smaller width */
-          --chat--window--height: 440px; /* smaller height */
+          --chat--window--width: 310px;
+          --chat--window--height: 430px;
           --chat--window--max-height: calc(100dvh - 5.5rem);
-          --chat--toggle--size: 44px;
+          --chat--toggle--size: 48px;
           --chat--spacing: 1rem;
           --chat--window--right: 1rem;
           --chat--window--bottom: 1rem;
@@ -417,35 +417,128 @@
         }
         
         .chat-layout .chat-header h1 {
-          font-size: 1rem !important;
+          font-size: 0.95rem !important;
         }
 
         .chat-inputs textarea {
           padding: 8px 12px !important;
-          font-size: 0.95rem !important;
-          height: 40px !important;
-          min-height: 40px !important;
-          line-height: 22px !important;
+          font-size: 0.875rem !important;
+          height: 38px !important;
+          min-height: 38px !important;
+          line-height: 20px !important;
         }
         
         .chat-input-send-button {
-          height: 40px !important;
-          width: 40px !important;
+          height: 38px !important;
+          width: 38px !important;
         }
 
         .chat-message {
-          font-size: 0.95rem !important;
-          padding: 10px 14px !important;
+          font-size: 0.85rem !important;
+          padding: 8px 12px !important;
         }
 
         .chat-window-toggle {
-          width: 57px !important;
-          height: 57px !important;
+          width: 52px !important;
+          height: 52px !important;
         }
 
         .chat-window-toggle::before {
-          width: 26px !important;
-          height: 26px !important;
+          width: 24px !important;
+          height: 24px !important;
+        }
+      }
+
+      /* Balanced sizing exclusively for Mobile devices (max-width: 640px) */
+      @media (max-width: 640px) {
+        :root {
+          --chat--window--width: 290px !important;
+          --chat--window--height: 410px !important;
+          --chat--window--max-height: calc(100dvh - 80px) !important;
+          --chat--toggle--size: 48px !important;
+          --chat--spacing: 0.875rem !important;
+          --chat--window--right: 0.875rem !important;
+          --chat--window--bottom: 0.875rem !important;
+          --chat--message--font-size: 0.825rem !important;
+        }
+
+        .chat-window, .chat-layout {
+          width: 290px !important;
+          height: 410px !important;
+          max-height: calc(100dvh - 80px) !important;
+          border-radius: 16px !important;
+        }
+
+        .chat-layout .chat-header {
+          padding: 0.625rem 0.875rem !important;
+        }
+
+        .chat-layout .chat-header h1 {
+          font-size: 0.88rem !important;
+          line-height: 1.25 !important;
+        }
+
+        .chat-layout .chat-header p {
+          font-size: 0.68rem !important;
+          gap: 5px !important;
+        }
+
+        .chat-layout .chat-header p::before {
+          width: 6px !important;
+          height: 6px !important;
+        }
+
+        .chat-layout .chat-body {
+          padding: 0.625rem 0.75rem !important;
+        }
+
+        .chat-layout .chat-footer {
+          padding: 0.625rem 0.75rem !important;
+        }
+
+        .chat-inputs textarea {
+          padding: 7px 11px !important;
+          font-size: 0.825rem !important;
+          height: 36px !important;
+          min-height: 36px !important;
+          line-height: 20px !important;
+          border-radius: 18px !important;
+        }
+        
+        .chat-input-send-button {
+          height: 36px !important;
+          width: 36px !important;
+          min-width: 36px !important;
+          margin-left: 6px !important;
+        }
+
+        .chat-input-send-button svg {
+          width: 14px !important;
+          height: 14px !important;
+        }
+
+        .chat-message {
+          font-size: 0.825rem !important;
+          padding: 7px 11px !important;
+          border-radius: 12px !important;
+          margin-bottom: 0.4rem !important;
+        }
+
+        /* Floating Toggle Button on Mobile */
+        .chat-window-toggle,
+        div#n8n-chat > div > div:nth-of-type(2),
+        [class*="chat-window-toggle"] {
+          width: 48px !important;
+          height: 48px !important;
+          bottom: 14px !important;
+          right: 14px !important;
+          box-shadow: 0 4px 18px rgba(176, 38, 255, 0.45) !important;
+        }
+
+        .chat-window-toggle::before,
+        div#n8n-chat > div > div:nth-of-type(2)::before {
+          width: 22px !important;
+          height: 22px !important;
         }
       }
 
