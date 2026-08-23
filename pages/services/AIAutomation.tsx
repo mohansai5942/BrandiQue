@@ -91,7 +91,7 @@ const WorkflowVisual = () => {
     { id: 'webhook', title: 'Webhook Start', icon: Webhook, x: 120, y: 300, color: 'blue', active: true, hideInput: true, delay: 0 },
     
     // Column 2
-    { id: 'agent', title: 'AI Agent', icon: Bot, x: 340, y: 300, color: 'purple', active: true, delay: 0.2 },
+    { id: 'agent', title: 'Darling AI', icon: Bot, x: 340, y: 300, color: 'purple', active: true, delay: 0.2 },
     
     // Column 3
     { id: 'model', title: 'Google Gemini', icon: Sparkles, x: 560, y: 150, color: 'blue', delay: 0.4 },
