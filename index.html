@@ -20,17 +20,24 @@
     }
     </script>
     <script>
-      // Prevent crash from scripts trying to overwrite window.fetch
+      // Ensure fetch is always bound to window and safely handles reassignment
       (function() {
-        if (window.fetch && Object.getOwnPropertyDescriptor(window, 'fetch').set) return;
-        try {
-          const originalFetch = window.fetch;
-          Object.defineProperty(window, 'fetch', {
-            get: function() { return originalFetch; },
-            set: function() { console.warn('Fetch overwrite blocked'); },
-            configurable: true
-          });
-        } catch (e) {}
+        if (typeof window !== 'undefined' && window.fetch) {
+          try {
+            const originalFetch = window.fetch;
+            let currentFetch = originalFetch.bind(window);
+            Object.defineProperty(window, 'fetch', {
+              get: function() { return currentFetch; },
+              set: function(fn) {
+                if (typeof fn === 'function') {
+                  currentFetch = fn;
+                }
+              },
+              configurable: true,
+              enumerable: true
+            });
+          } catch (e) {}
+        }
       })();
     </script>
     <link rel="icon" type="image/png" href="https://cdn.imgchest.com/files/bde72aa20905.png" />
@@ -628,6 +635,21 @@
         display: none !important;
       }
 
+      /* Hide chatbot widget while video intro is playing */
+      body:not(.intro-finished) .chat-window-toggle,
+      body:not(.intro-finished) .chat-window-wrapper,
+      body:not(.intro-finished) .chat-layout,
+      body:not(.intro-finished) [class*="chat-window"],
+      body.intro-playing .chat-window-toggle,
+      body.intro-playing .chat-window-wrapper,
+      body.intro-playing .chat-layout,
+      body.intro-playing [class*="chat-window"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
       /* AI Focus Mode Overrides */
       div#root:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > section:nth-of-type(1) {
       }
@@ -643,6 +665,55 @@
       }
     </style>
 
+    <!-- BrandiQue n8n AI Agent Chat Bot -->
+    <script type="module">
+      import('https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js')
+        .then(({ createChat }) => {
+          let initialized = false;
 
+          const initBot = () => {
+            if (initialized) return;
+            initialized = true;
+
+            createChat({
+              webhookUrl: 'https://mohan-iiaj.onrender.com/webhook/0b561328-3fc7-4e04-a677-ad8ac0a70ea1/chat',
+              webhookConfig: {
+                method: 'POST',
+                headers: {}
+              },
+              mode: 'window',
+              chatInputKey: 'chatInput',
+              chatSessionKey: 'sessionId',
+              metadata: {},
+              showWelcomeScreen: false,
+              defaultLanguage: 'en',
+              initialMessages: [
+                'Hi there! 👋 Welcome to BrandiQue Web Solutions. How can I help you today?'
+              ],
+              i18n: {
+                en: {
+                  title: 'BrandiQue AI Agent 🤖',
+                  subtitle: '24/7 Smart Assistant',
+                  footer: '',
+                  getStarted: 'Start Chat',
+                  inputPlaceholder: 'Type your message...',
+                },
+              },
+            });
+          };
+
+          if (document.body.classList.contains('intro-finished')) {
+            initBot();
+          } else {
+            window.addEventListener('videoIntroEnded', initBot, { once: true });
+            setTimeout(() => {
+              if (!initialized) initBot();
+            }, 18000);
+          }
+        })
+        .catch((err) => {
+          console.warn('n8n AI Agent Chat Bot initialization skipped:', err);
+        });
+    </script>
   </body>
 </html>

@@ -27,18 +27,23 @@ const VideoIntro: React.FC = () => {
     setShowIntro(false);
   };
 
-  // Prevent scrolling while intro is playing
+  // Prevent scrolling while intro is playing and signal intro status for chatbot
   useEffect(() => {
     const preventScroll = (e: Event) => {
       e.preventDefault();
     };
 
     if (showIntro) {
+      document.body.classList.add('intro-playing');
+      document.body.classList.remove('intro-finished');
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
       window.addEventListener('touchmove', preventScroll, { passive: false });
       window.addEventListener('wheel', preventScroll, { passive: false });
     } else {
+      document.body.classList.remove('intro-playing');
+      document.body.classList.add('intro-finished');
+      window.dispatchEvent(new CustomEvent('videoIntroEnded'));
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
       window.removeEventListener('touchmove', preventScroll);
@@ -66,6 +71,7 @@ const VideoIntro: React.FC = () => {
             muted
             playsInline
             onEnded={handleVideoEnd}
+            onError={handleVideoEnd}
             src={isMobile ? "https://cdn.imgchest.com/files/f54be27e0e3c.mp4" : "https://cdn.imgchest.com/files/151b55323eb5.mp4"}
           />
           
