@@ -25,5 +25,15 @@ service cloud.firestore {
     match /websites/{websiteId} {
       allow read, create, update, delete: if true;
     }
+
+    // n8n Projects collection: Allow reading and managing n8n workflows across all devices
+    match /n8n_projects/{projectId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // n8n Project Forms & Client Inquiries collection: Allow visitors to submit and manage across all devices
+    match /n8n_project_forms/{formId} {
+      allow read, create, update, delete: if true;
+    }
   }
 }

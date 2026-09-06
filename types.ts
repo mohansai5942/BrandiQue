@@ -37,3 +37,31 @@ export interface Project {
   deletedAt?: string;
   createdAt: string;
 }
+
+export interface N8nProject {
+  id: string;
+  title: string;
+  category?: string;
+  desc: string;
+  tags: string[];
+  workflowJson: string;
+  nodeCount?: number;
+  testWorkflowUrl?: string;
+  allowClientRequest?: boolean;
+  isDeleted?: boolean;
+  deletedAt?: string;
+  createdAt: string;
+}
+
+export interface N8nProjectForm {
+  id: string;
+  projectId: string;
+  projectTitle: string;
+  name: string;
+  email: string;
+  phone: string;
+  message?: string;
+  createdAt: string;
+  isDeleted?: boolean;
+  deletedAt?: string;
+}

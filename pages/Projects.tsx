@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw } from 'lucide-react';
+import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw, Bot, Layers, Eye, Copy, Check, X, Phone, Mail, Send, CheckCircle2, FileText } from 'lucide-react';
 import { collection, getDocs, addDoc, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
-import { Project } from '../types';
+import { Project, N8nProject } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
 import { useSiteSettings } from '../context/SiteSettingsContext';
+import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
 
 enum OperationType {
   CREATE = 'create',
@@ -220,9 +221,65 @@ export default function Projects() {
     return Array.from(initMap.values());
   };
 
-  const { projects, loadingProjects: loading } = useSiteSettings();
+  const { projects, n8nProjects, loadingProjects: loading, addN8nFormSubmission } = useSiteSettings();
+
+  const [selectedN8nProject, setSelectedN8nProject] = useState<N8nProject | null>(null);
+  const [copiedJsonId, setCopiedJsonId] = useState<string | null>(null);
+
+  // Client Request Form Modal State
+  const [isClientFormOpen, setIsClientFormOpen] = useState(false);
+  const [clientName, setClientName] = useState('');
+  const [clientEmail, setClientEmail] = useState('');
+  const [clientPhone, setClientPhone] = useState('');
+  const [clientMessage, setClientMessage] = useState('');
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formSuccess, setFormSuccess] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const handleClientFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+
+    if (!clientEmail.trim() || !clientEmail.includes('@')) {
+      setFormError('Please enter a valid email address.');
+      return;
+    }
+    if (!clientPhone.trim() || clientPhone.replace(/[^\d]/g, '').length < 7) {
+      setFormError('Please enter a valid phone number.');
+      return;
+    }
+
+    if (!selectedN8nProject) return;
+
+    setFormSubmitting(true);
+    try {
+      await addN8nFormSubmission({
+        projectId: selectedN8nProject.id,
+        projectTitle: selectedN8nProject.title,
+        name: clientName.trim() || 'Interested Client',
+        email: clientEmail.trim(),
+        phone: clientPhone.trim(),
+        message: clientMessage.trim()
+      });
+
+      setFormSubmitting(false);
+      setFormSuccess(true);
+      setTimeout(() => {
+        setFormSuccess(false);
+        setIsClientFormOpen(false);
+        setClientName('');
+        setClientEmail('');
+        setClientPhone('');
+        setClientMessage('');
+      }, 2500);
+    } catch (err) {
+      setFormSubmitting(false);
+      setFormError('Failed to submit inquiry. Please try again.');
+    }
+  };
 
   const activeProjects = projects.filter(p => !p.isDeleted);
+  const activeN8nProjects = (n8nProjects || []).filter(p => !p.isDeleted);
   const mainProjects = activeProjects.filter(p => p.type === 'main');
   const portfolioProjects = activeProjects.filter(p => p.type === 'portfolio');
   const figmaProjects = activeProjects.filter(p => p.type === 'figma');
@@ -353,6 +410,102 @@ export default function Projects() {
           )}
         </div>
 
+        {/* Section: N8N Projects & 24/7 Automation Workflows */}
+        <div className="mb-20 md:mb-36">
+          <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
+            <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-orange-500 dark:text-orange-400 flex items-center gap-2">
+              <Bot className="w-5 h-5 md:w-7 md:h-7" />
+              // N8N PROJECTS & 24/7 AUTOMATION WORKFLOWS
+            </h2>
+            <span className="text-[10px] md:text-xs font-mono text-gray-500 dark:text-gray-400 bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
+              Interactive Canvas
+            </span>
+          </div>
+
+          {activeN8nProjects.length > 0 ? (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {activeN8nProjects.map((project, i) => {
+                let nodeCount = project.nodeCount || 0;
+                try {
+                  if (!nodeCount && project.workflowJson) {
+                    const parsed = JSON.parse(project.workflowJson);
+                    nodeCount = (parsed.nodes || []).length;
+                  }
+                } catch (e) {}
+
+                return (
+                  <motion.div
+                    key={`n8n-${project.id || i}`}
+                    variants={cardVariants}
+                    onClick={() => setSelectedN8nProject(project)}
+                    className="group relative cursor-pointer bg-white dark:bg-[#0F1320] rounded-2xl md:rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 hover:border-orange-500/50 hover:shadow-[0_20px_50px_rgba(255,109,0,0.15)] transition-all duration-500 flex flex-col justify-between"
+                  >
+                    {/* Visual Workflow Canvas Header */}
+                    <div className="h-48 md:h-52 bg-[#17181c] relative overflow-hidden border-b border-gray-200 dark:border-white/10 pointer-events-none">
+                      <N8nWorkflowViewer workflowJson={project.workflowJson} height="100%" showControls={false} fitPadding={0.18} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0F1320]/80 via-transparent to-transparent" />
+                      
+                      <div className="absolute top-3 right-3 z-10">
+                        <span className="px-3 py-1 bg-black/70 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-bold text-orange-400 flex items-center gap-1.5 shadow-lg">
+                          <Layers size={12} />
+                          {nodeCount} Nodes
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 flex-1 flex flex-col justify-between">
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-md inline-block mb-2">
+                          {project.category || 'n8n Automation'}
+                        </span>
+                        <h3 className="text-xl font-heading font-bold text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">
+                          {project.title}
+                        </h3>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 line-clamp-2 leading-relaxed">
+                          {project.desc || 'Interactive n8n automation workflow diagram.'}
+                        </p>
+
+                        {/* Tags */}
+                        {project.tags && project.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-4">
+                            {project.tags.map((tag, tIdx) => (
+                              <span 
+                                key={tIdx}
+                                className="text-[9px] bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded-md font-mono"
+                              >
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Footer CTA */}
+                      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between text-xs font-bold text-orange-500 dark:text-orange-400">
+                        <span className="flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
+                          <Eye size={14} />
+                          Interactive Workflow Canvas
+                        </span>
+                        <span className="text-[10px] bg-orange-500/10 px-2.5 py-1 rounded-full group-hover:bg-orange-500 group-hover:text-white transition-all">
+                          Inspect Flow →
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 font-light italic">No n8n workflow projects available yet.</p>
+          )}
+        </div>
+
         {/* Section: Figma Projects */}
         <div className="mb-20 md:mb-36">
           <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14">
@@ -471,6 +624,220 @@ export default function Projects() {
            </motion.a>
         </div>
       </div>
+
+      {/* Interactive n8n Workflow Modal Popup */}
+      {selectedN8nProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-[#13151b] border border-white/10 rounded-3xl w-full max-w-6xl h-[88vh] flex flex-col shadow-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#191b22]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold">
+                  <Bot size={22} />
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-orange-400 bg-orange-500/10 px-2.5 py-0.5 rounded-md">
+                    {selectedN8nProject.category || 'n8n Workflow'}
+                  </span>
+                  <h3 className="text-base md:text-lg font-bold text-white mt-0.5">
+                    {selectedN8nProject.title}
+                  </h3>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                {selectedN8nProject.testWorkflowUrl && (
+                  <a
+                    href={selectedN8nProject.testWorkflowUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-cyan-500/25 flex items-center gap-1.5 transition-all active:scale-95"
+                  >
+                    <ExternalLink size={14} />
+                    Test Workflow
+                  </a>
+                )}
+
+                {selectedN8nProject.allowClientRequest !== false && (
+                  <button
+                    onClick={() => setIsClientFormOpen(true)}
+                    className="px-3.5 py-2 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-orange-500/20 flex items-center gap-1.5 transition-all active:scale-95"
+                  >
+                    <FileText size={14} />
+                    Request Custom Setup
+                  </button>
+                )}
+
+                <button
+                  onClick={() => {
+                    setSelectedN8nProject(null);
+                    setIsClientFormOpen(false);
+                  }}
+                  className="p-2 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Canvas Body */}
+            <div className="flex-1 relative w-full h-full bg-[#17181c]">
+              <N8nWorkflowViewer 
+                workflowJson={selectedN8nProject.workflowJson} 
+                height="100%" 
+                showControls={true}
+                fitPadding={0.15}
+              />
+            </div>
+
+            {/* Modal Footer Description */}
+            {selectedN8nProject.desc && (
+              <div className="p-4 md:p-6 bg-[#191b22] border-t border-white/10 text-xs md:text-sm text-gray-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <p className="line-clamp-2 leading-relaxed">{selectedN8nProject.desc}</p>
+                <button
+                  onClick={() => setIsClientFormOpen(true)}
+                  className="shrink-0 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-orange-500/20 transition-all flex items-center gap-1.5"
+                >
+                  <FileText size={13} />
+                  Request Custom Setup
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* CLIENT INQUIRY FORM POPUP MODAL */}
+      {isClientFormOpen && selectedN8nProject && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+          <div className="bg-[#13151b] border border-orange-500/30 rounded-3xl w-full max-w-lg p-6 md:p-8 shadow-2xl relative overflow-hidden">
+            {/* Background glow */}
+            <div className="absolute -top-12 -right-12 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold">
+                  <FileText size={20} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Request Custom Workflow Setup</h3>
+                  <p className="text-xs text-orange-400 font-medium truncate max-w-[260px]">
+                    {selectedN8nProject.title}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsClientFormOpen(false)}
+                className="p-1.5 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {formSuccess ? (
+              <div className="py-8 text-center space-y-3">
+                <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center">
+                  <CheckCircle2 size={32} />
+                </div>
+                <h4 className="text-lg font-bold text-white">Request Received!</h4>
+                <p className="text-xs text-gray-300 max-w-sm mx-auto leading-relaxed">
+                  Thank you! We have received your request for <strong>{selectedN8nProject.title}</strong>. Our team will get in touch with you shortly on your provided phone & email.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleClientFormSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                    Your Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={clientName}
+                    onChange={e => setClientName(e.target.value)}
+                    placeholder="e.g. Rahul Sharma"
+                    className="w-full px-4 py-2.5 bg-[#1a1c24] border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-orange-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                    <Mail size={12} /> Email Address * (Mandatory)
+                  </label>
+                  <input
+                    type="email"
+                    value={clientEmail}
+                    onChange={e => setClientEmail(e.target.value)}
+                    placeholder="e.g. rahul@company.com"
+                    className="w-full px-4 py-2.5 bg-[#1a1c24] border border-orange-500/30 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                    <Phone size={12} /> Phone Number * (Mandatory)
+                  </label>
+                  <input
+                    type="tel"
+                    value={clientPhone}
+                    onChange={e => setClientPhone(e.target.value)}
+                    placeholder="e.g. +91 98765 43210"
+                    className="w-full px-4 py-2.5 bg-[#1a1c24] border border-emerald-500/30 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                    Specific Business Requirements / Notes
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={clientMessage}
+                    onChange={e => setClientMessage(e.target.value)}
+                    placeholder="Tell us about your workflow automation goals or custom integration needs..."
+                    className="w-full px-4 py-2.5 bg-[#1a1c24] border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 resize-none"
+                  />
+                </div>
+
+                {formError && (
+                  <p className="text-xs text-red-400 font-semibold bg-red-950/50 p-2.5 rounded-xl border border-red-800/50">
+                    {formError}
+                  </p>
+                )}
+
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setIsClientFormOpen(false)}
+                    className="px-4 py-2 text-xs font-semibold text-gray-400 hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={formSubmitting}
+                    className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-orange-500/20 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+                  >
+                    {formSubmitting ? (
+                      <>
+                        <RefreshCw size={14} className="animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <Send size={14} />
+                        Submit Request
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }
