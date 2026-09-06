@@ -14,11 +14,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with auto-detect long polling for iframe & sandbox proxy resilience
+// Initialize Firestore with forced long polling for iframe & sandbox proxy resilience
 export const db = initializeFirestore(
   app,
   {
-    experimentalAutoDetectLongPolling: true,
+    experimentalForceLongPolling: true,
   },
   config.firestoreDatabaseId || undefined
 );

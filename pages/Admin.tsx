@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSiteSettings, WebsiteItem } from '../context/SiteSettingsContext';
 import { Message, Project } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
+import { AdminN8nProjects } from '../components/AdminN8nProjects';
 import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 
@@ -587,13 +588,13 @@ const Admin: React.FC = () => {
   const [isMessageDetailOpen, setIsMessageDetailOpen] = useState(false);
   const [isUsingFallback, setIsUsingFallback] = useState<boolean>(false);
 
-  const { settings: siteSettings, updateSettings, websites, addWebsite, updateWebsite, deleteWebsite, restoreWebsite, permanentlyDeleteWebsite, loadingWebsites } = useSiteSettings();
+  const { settings: siteSettings, updateSettings, websites, addWebsite, updateWebsite, deleteWebsite, restoreWebsite, permanentlyDeleteWebsite, loadingWebsites, n8nProjects } = useSiteSettings();
 
   const activeWebsites = websites.filter(w => !w.isDeleted);
   const deletedWebsites = websites.filter(w => w.isDeleted);
 
   // Tab State - Default to 'projects' as requested
-  const [activeTab, setActiveTab] = useState<'projects' | 'services' | 'leads' | 'recycle' | 'storage' | 'site-settings' | 'our-websites'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'n8n-projects' | 'services' | 'leads' | 'recycle' | 'storage' | 'site-settings' | 'our-websites'>('projects');
   const [selectedServiceTab, setSelectedServiceTab] = useState<string>('Full-Stack Development');
   const [serviceFormSearch, setServiceFormSearch] = useState('');
 
@@ -1681,6 +1682,19 @@ const Admin: React.FC = () => {
           Projects ({projects.filter(p => !p.isDeleted).length})
         </button>
 
+        {/* 1.5. N8N PROJECTS (Orange / Automation Theme) */}
+        <button
+          onClick={() => setActiveTab('n8n-projects')}
+          className={`shrink-0 px-3.5 md:px-4 py-2 md:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+            activeTab === 'n8n-projects'
+              ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/30 ring-2 ring-orange-400/30'
+              : 'text-gray-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 hover:bg-orange-500/10'
+          }`}
+        >
+          <Bot size={14} />
+          n8n Projects ({n8nProjects.filter(p => !p.isDeleted).length})
+        </button>
+
         {/* 2. SERVICES FORM (Neon Purple Theme) */}
         <button
           onClick={() => setActiveTab('services')}
@@ -2272,6 +2286,10 @@ const Admin: React.FC = () => {
             );
           })}
         </div>
+      )}
+
+      {activeTab === 'n8n-projects' && (
+        <AdminN8nProjects />
       )}
 
       {activeTab === 'recycle' && (
