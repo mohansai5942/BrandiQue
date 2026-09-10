@@ -627,33 +627,35 @@ export default function Projects() {
 
       {/* Interactive n8n Workflow Modal Popup */}
       {selectedN8nProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-[#13151b] border border-white/10 rounded-3xl w-full max-w-6xl h-[88vh] flex flex-col shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-8 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-[#13151b] border border-white/10 rounded-2xl sm:rounded-3xl w-full max-w-6xl h-[92vh] sm:h-[88vh] flex flex-col shadow-2xl overflow-hidden">
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#191b22]">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold">
-                  <Bot size={22} />
+            <div className="px-3 py-2 sm:px-6 sm:py-4 border-b border-white/10 flex items-center justify-between bg-[#191b22] gap-1.5 sm:gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold shrink-0">
+                  <Bot size={15} className="sm:hidden" />
+                  <Bot size={22} className="hidden sm:block" />
                 </div>
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-orange-400 bg-orange-500/10 px-2.5 py-0.5 rounded-md">
+                <div className="min-w-0">
+                  <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-orange-400 bg-orange-500/10 px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md inline-block">
                     {selectedN8nProject.category || 'n8n Workflow'}
                   </span>
-                  <h3 className="text-base md:text-lg font-bold text-white mt-0.5">
+                  <h3 className="text-xs sm:text-base md:text-lg font-bold text-white mt-0.5 truncate">
                     {selectedN8nProject.title}
                   </h3>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+              <div className="flex items-center gap-1 sm:gap-3 shrink-0">
                 {selectedN8nProject.testWorkflowUrl && (
                   <a
                     href={selectedN8nProject.testWorkflowUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3.5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-cyan-500/25 flex items-center gap-1.5 transition-all active:scale-95"
+                    className="px-2 py-1 sm:px-3.5 sm:py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-[9px] sm:text-xs rounded-lg sm:rounded-xl shadow-lg shadow-cyan-500/25 flex items-center gap-1 sm:gap-1.5 transition-all active:scale-95 whitespace-nowrap"
                   >
-                    <ExternalLink size={14} />
+                    <ExternalLink size={10} className="sm:hidden" />
+                    <ExternalLink size={14} className="hidden sm:block" />
                     Test Workflow
                   </a>
                 )}
@@ -661,9 +663,10 @@ export default function Projects() {
                 {selectedN8nProject.allowClientRequest !== false && (
                   <button
                     onClick={() => setIsClientFormOpen(true)}
-                    className="px-3.5 py-2 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-orange-500/20 flex items-center gap-1.5 transition-all active:scale-95"
+                    className="px-2 py-1 sm:px-3.5 sm:py-2 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold text-[9px] sm:text-xs rounded-lg sm:rounded-xl shadow-lg shadow-orange-500/20 flex items-center gap-1 sm:gap-1.5 transition-all active:scale-95 whitespace-nowrap"
                   >
-                    <FileText size={14} />
+                    <FileText size={10} className="sm:hidden" />
+                    <FileText size={14} className="hidden sm:block" />
                     Request Custom Setup
                   </button>
                 )}
@@ -673,9 +676,10 @@ export default function Projects() {
                     setSelectedN8nProject(null);
                     setIsClientFormOpen(false);
                   }}
-                  className="p-2 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
+                  className="p-1 sm:p-2 text-gray-400 hover:text-white rounded-lg sm:rounded-xl hover:bg-white/10 transition-colors ml-0.5 sm:ml-0"
                 >
-                  <X size={20} />
+                  <X size={16} className="sm:hidden" />
+                  <X size={20} className="hidden sm:block" />
                 </button>
               </div>
             </div>
@@ -692,13 +696,14 @@ export default function Projects() {
 
             {/* Modal Footer Description */}
             {selectedN8nProject.desc && (
-              <div className="p-4 md:p-6 bg-[#191b22] border-t border-white/10 text-xs md:text-sm text-gray-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <p className="line-clamp-2 leading-relaxed">{selectedN8nProject.desc}</p>
+              <div className="p-2.5 sm:p-4 md:p-6 bg-[#191b22] border-t border-white/10 text-[10px] sm:text-xs md:text-sm text-gray-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5 sm:gap-4">
+                <p className="line-clamp-2 leading-tight sm:leading-relaxed text-[10px] sm:text-xs md:text-sm">{selectedN8nProject.desc}</p>
                 <button
                   onClick={() => setIsClientFormOpen(true)}
-                  className="shrink-0 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-orange-500/20 transition-all flex items-center gap-1.5"
+                  className="shrink-0 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-[10px] sm:text-xs rounded-lg sm:rounded-xl shadow-lg shadow-orange-500/20 transition-all flex items-center gap-1 sm:gap-1.5"
                 >
-                  <FileText size={13} />
+                  <FileText size={11} className="sm:hidden" />
+                  <FileText size={13} className="hidden sm:block" />
                   Request Custom Setup
                 </button>
               </div>
