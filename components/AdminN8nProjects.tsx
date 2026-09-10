@@ -951,8 +951,8 @@ export function AdminN8nProjects() {
 
       {/* FULL PREVIEW MODAL */}
       {previewProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-[#13151b] border border-white/10 rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-[#13151b] border border-white/10 rounded-2xl w-full max-w-5xl h-[78vh] sm:h-[85vh] flex flex-col shadow-2xl overflow-hidden my-auto">
             <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-[#191b22]">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-md">

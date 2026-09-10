@@ -627,8 +627,8 @@ export default function Projects() {
 
       {/* Interactive n8n Workflow Modal Popup */}
       {selectedN8nProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-8 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-[#13151b] border border-white/10 rounded-2xl sm:rounded-3xl w-full max-w-6xl h-[92vh] sm:h-[88vh] flex flex-col shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 md:p-8 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-[#13151b] border border-white/10 rounded-2xl sm:rounded-3xl w-full max-w-6xl h-[78vh] sm:h-[88vh] max-h-[85vh] sm:max-h-none flex flex-col shadow-2xl overflow-hidden my-auto">
             {/* Modal Header */}
             <div className="px-3 py-2 sm:px-6 sm:py-4 border-b border-white/10 flex items-center justify-between bg-[#191b22] gap-1.5 sm:gap-3">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0">
