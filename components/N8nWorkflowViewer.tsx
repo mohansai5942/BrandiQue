@@ -352,37 +352,41 @@ function CustomCanvasToolbar({ fitPadding = 0.2 }: { fitPadding?: number }) {
   const { fitView, zoomIn, zoomOut } = useReactFlow();
 
   return (
-    <Panel position="bottom-right" className="m-4 z-30">
-      <div className="flex items-center gap-1 bg-[#191b22]/90 backdrop-blur-md p-1.5 rounded-xl border border-white/10 shadow-2xl">
+    <Panel position="bottom-right" className="m-2 sm:m-4 z-30">
+      <div className="flex items-center gap-0.5 sm:gap-1 bg-[#191b22]/90 backdrop-blur-md p-1 sm:p-1.5 rounded-lg sm:rounded-xl border border-white/10 shadow-2xl">
         <button
           onClick={() => fitView({ padding: fitPadding, duration: 300 })}
-          className="p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-lg transition-all flex items-center gap-1.5 text-xs font-semibold"
+          className="p-1.5 sm:p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-md sm:rounded-lg transition-all flex items-center gap-1 text-[10px] sm:text-xs font-semibold"
           title="Fit to Screen"
         >
-          <Maximize2 size={15} />
+          <Maximize2 size={13} className="sm:hidden" />
+          <Maximize2 size={15} className="hidden sm:block" />
           <span className="hidden sm:inline">Fit Screen</span>
         </button>
-        <div className="w-[1px] h-4 bg-white/10 mx-1" />
+        <div className="w-[1px] h-3.5 sm:h-4 bg-white/10 mx-0.5 sm:mx-1" />
         <button
           onClick={() => zoomIn({ duration: 200 })}
-          className="p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-lg transition-all"
+          className="p-1.5 sm:p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
           title="Zoom In (+)"
         >
-          <ZoomIn size={16} />
+          <ZoomIn size={13} className="sm:hidden" />
+          <ZoomIn size={16} className="hidden sm:block" />
         </button>
         <button
           onClick={() => zoomOut({ duration: 200 })}
-          className="p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-lg transition-all"
+          className="p-1.5 sm:p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
           title="Zoom Out (-)"
         >
-          <ZoomOut size={16} />
+          <ZoomOut size={13} className="sm:hidden" />
+          <ZoomOut size={16} className="hidden sm:block" />
         </button>
         <button
           onClick={() => fitView({ padding: 0.1, duration: 300 })}
-          className="p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-lg transition-all"
+          className="p-1.5 sm:p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
           title="Reset Zoom"
         >
-          <RotateCcw size={15} />
+          <RotateCcw size={13} className="sm:hidden" />
+          <RotateCcw size={15} className="hidden sm:block" />
         </button>
       </div>
     </Panel>
