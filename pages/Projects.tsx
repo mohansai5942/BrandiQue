@@ -521,12 +521,12 @@ export default function Projects() {
         {(activeCategory === 'all' || activeCategory === 'n8n') && (
           <div className="mb-20 md:mb-36">
             <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between flex-wrap gap-2">
-              <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-orange-500 dark:text-orange-400 flex items-center gap-2">
-                <Bot className="w-5 h-5 md:w-7 md:h-7" />
-                // N8N PROJECTS & 24/7 AUTOMATION WORKFLOWS
+              <h2 className="text-[10px] sm:text-sm md:text-2xl font-bold tracking-[0.1em] sm:tracking-[0.2em] md:tracking-[0.3em] uppercase text-orange-500 dark:text-orange-400 flex items-center gap-1.5 sm:gap-2">
+                <Bot className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 shrink-0" />
+                <span>// N8N PROJECTS & 24/7 AUTOMATION WORKFLOWS</span>
               </h2>
               <div className="flex items-center gap-3">
-                <span className="text-[10px] md:text-xs font-mono text-gray-500 dark:text-gray-400 bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
+                <span className="hidden md:inline-block text-[10px] md:text-xs font-mono text-gray-500 dark:text-gray-400 bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
                   Interactive Canvas
                 </span>
                 {activeCategory === 'all' && activeN8nProjects.length > 4 && (
@@ -535,7 +535,9 @@ export default function Projects() {
                       setActiveCategory('n8n');
                       window.scrollTo({ top: 320, behavior: 'smooth' });
                     }}
-                    className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-orange-500 dark:text-orange-400 hover:underline flex items-center gap-1"
+                    className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider text-orange-500 dark:text-orange-400 hover:underline flex items-center gap-1 ${
+                      activeN8nProjects.length <= 6 ? 'lg:hidden' : ''
+                    }`}
                   >
                     View More ({activeN8nProjects.length}) <ArrowRight size={12} />
                   </button>
@@ -551,7 +553,7 @@ export default function Projects() {
                   animate="visible"
                   className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8"
                 >
-                  {(activeCategory === 'all' ? activeN8nProjects.slice(0, 4) : activeN8nProjects).map((project, i) => {
+                  {(activeCategory === 'all' ? activeN8nProjects.slice(0, 6) : activeN8nProjects).map((project, i) => {
                     let nodeCount = project.nodeCount || 0;
                     try {
                       if (!nodeCount && project.workflowJson) {
@@ -560,12 +562,16 @@ export default function Projects() {
                       }
                     } catch (e) {}
 
+                    const isExtraMobileCard = activeCategory === 'all' && i >= 4;
+
                     return (
                       <motion.div
                         key={`n8n-${project.id || i}`}
                         variants={cardVariants}
                         onClick={() => setSelectedN8nProject(project)}
-                        className="group relative cursor-pointer bg-white dark:bg-[#0F1320] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 hover:border-orange-500/50 hover:shadow-[0_20px_50px_rgba(255,109,0,0.15)] transition-all duration-500 flex flex-col justify-between"
+                        className={`group relative cursor-pointer bg-white dark:bg-[#0F1320] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 hover:border-orange-500/50 hover:shadow-[0_20px_50px_rgba(255,109,0,0.15)] transition-all duration-500 flex flex-col justify-between ${
+                          isExtraMobileCard ? 'hidden lg:flex' : ''
+                        }`}
                       >
                         {/* Visual Workflow Canvas Header */}
                         <div className="h-28 sm:h-48 md:h-52 bg-[#17181c] relative overflow-hidden border-b border-gray-200 dark:border-white/10 pointer-events-none">
@@ -628,7 +634,7 @@ export default function Projects() {
                 </motion.div>
 
                 {activeCategory === 'all' && activeN8nProjects.length > 4 && (
-                  <div className="mt-8 md:mt-12 text-center">
+                  <div className={`mt-8 md:mt-12 text-center ${activeN8nProjects.length <= 6 ? 'lg:hidden' : ''}`}>
                     <button
                       onClick={() => {
                         setActiveCategory('n8n');
