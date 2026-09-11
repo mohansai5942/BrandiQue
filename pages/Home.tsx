@@ -14,6 +14,8 @@ import TextReveal from '../components/TextReveal';
 import SpotlightCard from '../components/SpotlightCard';
 import ViewOptimizer from '../components/ViewOptimizer';
 import DealsSection from '../components/DealsSection';
+import { INITIAL_N8N_PROJECTS } from './N8nProjectsData';
+import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
 
 const STATS = [
    { label: "Projects Completed", value: "100+", icon: Rocket, color: "text-neon-purple" },
@@ -60,12 +62,13 @@ const SELECTED_PREVIEW_PROJECTS = [
 ];
 
 interface PreviewProjectMediaProps {
-   image: string;
+   image?: string;
    video?: string;
    title: string;
+   workflowJson?: string;
 }
 
-const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video, title }) => {
+const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video, title, workflowJson }) => {
    const [showVideo, setShowVideo] = useState(!!video);
    const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -98,16 +101,27 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
       setShowVideo(false);
    };
 
+   if (workflowJson) {
+      return (
+         <div className="relative w-full h-full bg-[#17181c] overflow-hidden pointer-events-none">
+            <N8nWorkflowViewer workflowJson={workflowJson} height="100%" showControls={false} fitPadding={0.18} />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0F1320]/80 via-transparent to-transparent" />
+         </div>
+      );
+   }
+
    return (
       <div className="relative w-full h-full overflow-hidden">
          {/* Image layer */}
-         <img
-            src={image}
-            alt={title}
-            className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
-               showVideo && video ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
-            }`}
-         />
+         {image && (
+            <img
+               src={image}
+               alt={title}
+               className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
+                  showVideo && video ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+               }`}
+            />
+         )}
 
          {/* Video layer */}
          {video && (
@@ -127,9 +141,19 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
 };
 
 const Home: React.FC = () => {
-   const { getRawPhone, projects } = useSiteSettings();
+   const { getRawPhone, projects, n8nProjects } = useSiteSettings();
    const activeProjects = projects.filter(p => !p.isDeleted);
-   const previewProjects = activeProjects.length > 0 ? activeProjects.slice(0, 4) : SELECTED_PREVIEW_PROJECTS;
+   const mainPreviewProjects = activeProjects.length > 0 ? activeProjects.slice(0, 4) : SELECTED_PREVIEW_PROJECTS;
+
+   const activeN8nProjects = (n8nProjects || []).filter(p => !p.isDeleted);
+   const quotationProject = activeN8nProjects.find(p => p.title.toLowerCase().includes('quotation')) || INITIAL_N8N_PROJECTS[0];
+   const instagramProject = activeN8nProjects.find(p => p.title.toLowerCase().includes('instagram')) || INITIAL_N8N_PROJECTS[1];
+   
+   const featuredProjectsList = [
+      ...mainPreviewProjects,
+      ...(quotationProject ? [quotationProject] : []),
+      ...(instagramProject ? [instagramProject] : []),
+   ];
    const [currentWordIndex, setCurrentWordIndex] = useState(0);
    const [typedCode, setTypedCode] = useState('');
    const heroRef = useRef<HTMLElement>(null);
@@ -452,58 +476,74 @@ const Home: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 md:gap-12">
-                     {previewProjects.map((project, idx) => (
-                        <div 
-                           key={idx} 
-                           className="group flex flex-col bg-gray-50 dark:bg-[#0A0C11] rounded-2xl md:rounded-[32px] border border-gray-200 dark:border-white/5 overflow-hidden hover:border-neon-purple/30 transition-all duration-500 hover:shadow-2xl"
-                        >
-                           {/* Media layer */}
-                           <div className="relative aspect-[16/9] w-full bg-gray-900 border-b border-gray-100 dark:border-white/5">
-                              <ProjectPreviewMedia 
-                                 image={project.image} 
-                                 video={"video" in project ? project.video : undefined} 
-                                 title={project.title} 
-                              />
-                              <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-black/60 backdrop-blur-md px-2 py-0.5 md:px-3 md:py-1 text-[8px] md:text-[10px] font-bold tracking-wider rounded-full text-white uppercase">
-                                 {project.category}
+                     {featuredProjectsList.map((project: any, idx) => {
+                        const isWorkflow = Boolean(project.workflowJson);
+                        const linkUrl = isWorkflow ? '/projects' : (project.link || '/projects');
+                        const isExternal = !isWorkflow && linkUrl.startsWith('http');
+
+                        return (
+                           <div 
+                              key={project.id || idx} 
+                              className="group flex flex-col bg-gray-50 dark:bg-[#0A0C11] rounded-2xl md:rounded-[32px] border border-gray-200 dark:border-white/5 overflow-hidden hover:border-neon-purple/30 transition-all duration-500 hover:shadow-2xl"
+                           >
+                              {/* Media layer */}
+                              <div className="relative aspect-[16/9] w-full bg-gray-900 border-b border-gray-100 dark:border-white/5">
+                                 <ProjectPreviewMedia 
+                                    image={project.image} 
+                                    video={"video" in project ? project.video : undefined} 
+                                    title={project.title} 
+                                    workflowJson={project.workflowJson}
+                                 />
+                                 <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-black/60 backdrop-blur-md px-2 py-0.5 md:px-3 md:py-1 text-[8px] md:text-[10px] font-bold tracking-wider rounded-full text-white uppercase z-10">
+                                    {project.category || 'Automation'}
+                                 </div>
+                              </div>
+
+                              {/* Content layer */}
+                              <div className="p-3 md:p-8 flex-grow flex flex-col justify-between space-y-3 md:space-y-6">
+                                 <div className="space-y-1.5 md:space-y-3">
+                                    <h3 className="text-xs md:text-2xl font-bold text-gray-900 dark:text-white group-hover:text-neon-purple transition-colors flex items-center gap-1 md:gap-2 uppercase line-clamp-2 md:line-clamp-none">
+                                       {project.title}
+                                    </h3>
+                                    <p className="text-[10px] md:text-sm text-gray-500 dark:text-gray-400 font-light leading-relaxed line-clamp-2 md:line-clamp-none">
+                                       {project.desc}
+                                    </p>
+                                 </div>
+
+                                 <div className="flex flex-wrap gap-1 md:gap-2 pt-1 md:pt-2">
+                                    {(project.tags || []).map((tag: string, tIdx: number) => (
+                                       <span 
+                                          key={tIdx} 
+                                          className="text-[8px] md:text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 md:px-2.5 md:py-1 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 text-gray-600 dark:text-gray-400 rounded-full"
+                                       >
+                                          #{tag}
+                                       </span>
+                                    ))}
+                                 </div>
+
+                                 <div className="pt-2 md:pt-4 border-t border-gray-200/50 dark:border-white/5 flex justify-end">
+                                    {isExternal ? (
+                                       <a 
+                                          href={linkUrl} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer" 
+                                          className="inline-flex items-center gap-1 md:gap-2 text-[9px] md:text-xs font-bold uppercase tracking-widest text-neon-purple hover:text-neon-blue transition-colors"
+                                       >
+                                          Launch Concept <ExternalLink className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
+                                       </a>
+                                    ) : (
+                                       <Link 
+                                          to={linkUrl} 
+                                          className="inline-flex items-center gap-1 md:gap-2 text-[9px] md:text-xs font-bold uppercase tracking-widest text-neon-purple hover:text-neon-blue transition-colors"
+                                       >
+                                          View Creation <ArrowRight className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
+                                       </Link>
+                                    )}
+                                 </div>
                               </div>
                            </div>
-
-                           {/* Content layer */}
-                           <div className="p-3 md:p-8 flex-grow flex flex-col justify-between space-y-3 md:space-y-6">
-                              <div className="space-y-1.5 md:space-y-3">
-                                 <h3 className="text-xs md:text-2xl font-bold text-gray-900 dark:text-white group-hover:text-neon-purple transition-colors flex items-center gap-1 md:gap-2 uppercase">
-                                    {project.title}
-                                 </h3>
-                                 <p className="text-[10px] md:text-sm text-gray-500 dark:text-gray-400 font-light leading-relaxed line-clamp-2 md:line-clamp-none">
-                                    {project.desc}
-                                 </p>
-                              </div>
-
-                              <div className="flex flex-wrap gap-1 md:gap-2 pt-1 md:pt-2">
-                                 {project.tags.map((tag, tIdx) => (
-                                    <span 
-                                       key={tIdx} 
-                                       className="text-[8px] md:text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 md:px-2.5 md:py-1 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 text-gray-600 dark:text-gray-400 rounded-full"
-                                    >
-                                       {tag}
-                                    </span>
-                                 ))}
-                              </div>
-
-                              <div className="pt-2 md:pt-4 border-t border-gray-200/50 dark:border-white/5 flex justify-end">
-                                 <a 
-                                    href={project.link} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    className="inline-flex items-center gap-1 md:gap-2 text-[9px] md:text-xs font-bold uppercase tracking-widest text-neon-purple hover:text-neon-blue transition-colors"
-                                 >
-                                    Launch Concept <ExternalLink className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
-                                 </a>
-                              </div>
-                           </div>
-                        </div>
-                     ))}
+                        );
+                     })}
                   </div>
 
                   <div className="flex flex-col items-center justify-center pt-16">
