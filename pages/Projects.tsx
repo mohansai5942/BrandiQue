@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw, Bot, Layers, Eye, Copy, Check, X, Phone, Mail, Send, CheckCircle2, FileText } from 'lucide-react';
+import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw, Bot, Layers, Eye, Copy, Check, X, Phone, Mail, Send, CheckCircle2, FileText, ArrowRight, ArrowLeft } from 'lucide-react';
 import { collection, getDocs, addDoc, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { Project, N8nProject } from '../types';
@@ -225,6 +225,7 @@ export default function Projects() {
 
   const [selectedN8nProject, setSelectedN8nProject] = useState<N8nProject | null>(null);
   const [copiedJsonId, setCopiedJsonId] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<'all' | 'main' | 'portfolio' | 'n8n' | 'figma' | 'client'>('all');
 
   // Client Request Form Modal State
   const [isClientFormOpen, setIsClientFormOpen] = useState(false);
@@ -295,7 +296,7 @@ export default function Projects() {
       className="group relative cursor-pointer block"
     >
        {/* Image / Visual Card */}
-       <div className="relative aspect-[16/10] bg-gray-100 dark:bg-white/[0.03] rounded-2xl md:rounded-[2.5rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-700 group-hover:bg-neon-purple/5 group-hover:border-neon-purple/20 group-hover:translate-y-[-10px] group-hover:shadow-[0_25px_60px_rgba(176,38,255,0.15)]">
+       <div className="relative aspect-[16/10] bg-gray-100 dark:bg-white/[0.03] rounded-xl sm:rounded-2xl md:rounded-[2.5rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-700 group-hover:bg-neon-purple/5 group-hover:border-neon-purple/20 group-hover:translate-y-[-10px] group-hover:shadow-[0_25px_60px_rgba(176,38,255,0.15)]">
           <ProjectMedia 
              image={project.image} 
              video={project.video}
@@ -307,11 +308,12 @@ export default function Projects() {
           {/* Hover Overlay */}
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6">
              <div className="flex flex-col items-center gap-2">
-                <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-black hover:scale-110 transition-transform">
-                   <ExternalLink size={20} />
+                <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white flex items-center justify-center text-black hover:scale-110 transition-transform">
+                   <ExternalLink size={16} className="sm:hidden" />
+                   <ExternalLink size={20} className="hidden sm:block" />
                 </div>
                 {type === 'client' && (
-                  <span className="text-[10px] font-bold text-white uppercase tracking-widest mt-2 bg-black/40 px-3 py-1 rounded-full">
+                  <span className="text-[8px] sm:text-[10px] font-bold text-white uppercase tracking-widest mt-1 sm:mt-2 bg-black/40 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full">
                      Click to view project
                   </span>
                 )}
@@ -320,18 +322,18 @@ export default function Projects() {
        </div>
 
        {/* Info */}
-       <div className="mt-4 md:mt-8 px-2 md:px-4">
-          <p className="text-[10px] font-semibold text-neon-purple dark:text-neon-blue tracking-[0.3em] uppercase mb-1.5 md:mb-3">{project.category}</p>
-          <h3 className={`text-lg ${type === 'figma' || type === 'client' ? 'md:text-[28px]' : type === 'portfolio' ? 'md:text-[29px]' : 'md:text-3xl'} font-heading font-bold text-gray-900 dark:text-white mb-2 md:mb-4 group-hover:text-neon-purple dark:group-hover:text-neon-blue transition-colors uppercase`}>{project.title}</h3>
-          <p className="text-gray-600 dark:text-gray-400 text-[11px] md:text-sm leading-relaxed mb-3 md:mb-6">{project.desc}</p>
-          <div className="flex flex-wrap gap-2 text-[8px] md:text-[9px] font-bold text-gray-400 dark:text-white/40 uppercase tracking-widest mb-3">
+       <div className="mt-2 sm:mt-4 md:mt-8 px-1 sm:px-2 md:px-4">
+          <p className="text-[8px] sm:text-[10px] font-semibold text-neon-purple dark:text-neon-blue tracking-wider sm:tracking-[0.3em] uppercase mb-0.5 sm:mb-1.5 md:mb-3">{project.category}</p>
+          <h3 className={`text-xs sm:text-lg ${type === 'figma' || type === 'client' ? 'md:text-[28px]' : type === 'portfolio' ? 'md:text-[29px]' : 'md:text-3xl'} font-heading font-bold text-gray-900 dark:text-white mb-1 sm:mb-2 md:mb-4 group-hover:text-neon-purple dark:group-hover:text-neon-blue transition-colors uppercase line-clamp-2`}>{project.title}</h3>
+          <p className="text-gray-600 dark:text-gray-400 text-[9px] sm:text-[11px] md:text-sm leading-tight sm:leading-relaxed mb-1.5 sm:mb-3 md:mb-6 line-clamp-2">{project.desc}</p>
+          <div className="flex flex-wrap gap-1 sm:gap-2 text-[7px] sm:text-[8px] md:text-[9px] font-bold text-gray-400 dark:text-white/40 uppercase tracking-widest mb-1.5 sm:mb-3">
              {project.tags?.map((tag: string, tIndex: number) => (
                <span key={tIndex}>{tag} {tIndex < project.tags.length - 1 ? "•" : ""}</span>
              ))}
           </div>
           {type === 'client' && (
-            <div className="inline-flex items-center gap-1.5 text-[9px] md:text-[11px] font-bold text-neon-purple dark:text-neon-blue group-hover:underline uppercase tracking-widest mt-1">
-              CLICK HERE TO VIEW PROJECT <ExternalLink size={11} className="text-neon-purple dark:text-neon-blue" />
+            <div className="inline-flex items-center gap-1 sm:gap-1.5 text-[7px] sm:text-[9px] md:text-[11px] font-bold text-neon-purple dark:text-neon-blue group-hover:underline uppercase tracking-wider sm:tracking-widest mt-0.5 sm:mt-1">
+              CLICK HERE TO VIEW PROJECT <ExternalLink size={9} className="sm:hidden text-neon-purple dark:text-neon-blue" /><ExternalLink size={11} className="hidden sm:block text-neon-purple dark:text-neon-blue" />
             </div>
           )}
        </div>
@@ -368,218 +370,419 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* Section: Main Projects */}
-        <div className="mb-20 md:mb-36">
-          <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14">
-            <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
-              // MAIN PROJECTS
-            </h2>
-          </div>
-          {mainProjects.length > 0 ? (
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
+        {/* Category Filter Pills / Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-12 sm:mb-16 scrollbar-none max-w-full justify-start md:justify-center">
+          {[
+            { id: 'all', label: 'ALL', count: activeProjects.length + activeN8nProjects.length },
+            { id: 'main', label: 'MAIN PROJECTS', count: mainProjects.length },
+            { id: 'portfolio', label: 'PORTFOLIO PROJECTS', count: portfolioProjects.length },
+            { id: 'n8n', label: 'N8N AUTOMATIONS', count: activeN8nProjects.length },
+            { id: 'figma', label: 'FIGMA DESIGNS', count: figmaProjects.length },
+            { id: 'client', label: 'CLIENT PROJECTS', count: clientProjects.length },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                setActiveCategory(tab.id as any);
+                window.scrollTo({ top: 320, behavior: 'smooth' });
+              }}
+              className={`px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 flex items-center gap-1.5 sm:gap-2 border ${
+                activeCategory === tab.id
+                  ? 'bg-gradient-to-r from-neon-purple to-neon-blue text-white border-transparent shadow-lg shadow-neon-purple/20 scale-105'
+                  : 'bg-white dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border-gray-200 dark:border-white/10 hover:border-neon-purple/30'
+              }`}
             >
-               {mainProjects.map((project, i) => renderProjectCard(project, i, 'main'))}
-            </motion.div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400 font-light italic">No main projects uploaded.</p>
-          )}
+              <span>{tab.label}</span>
+              <span className={`text-[8px] sm:text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                activeCategory === tab.id ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-white/10 text-gray-500 dark:text-gray-400'
+              }`}>
+                {tab.count}
+              </span>
+            </button>
+          ))}
         </div>
+
+        {/* Back button when a specific category tab is selected */}
+        {activeCategory !== 'all' && (
+          <div className="mb-8">
+            <button
+              onClick={() => setActiveCategory('all')}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-200/70 dark:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-800 dark:text-gray-200 hover:text-neon-purple dark:hover:text-neon-blue text-xs font-bold uppercase tracking-wider transition-all hover:scale-105"
+            >
+              <ArrowLeft size={14} />
+              <span>← View All Categories</span>
+            </button>
+          </div>
+        )}
+
+        {/* Section: Main Projects */}
+        {(activeCategory === 'all' || activeCategory === 'main') && (
+          <div className="mb-20 md:mb-36">
+            <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
+              <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
+                // MAIN PROJECTS
+              </h2>
+              {activeCategory === 'all' && mainProjects.length > 4 && (
+                <button
+                  onClick={() => {
+                    setActiveCategory('main');
+                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                  }}
+                  className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neon-purple dark:text-neon-blue hover:underline flex items-center gap-1"
+                >
+                  View More ({mainProjects.length}) <ArrowRight size={12} />
+                </button>
+              )}
+            </div>
+            {mainProjects.length > 0 ? (
+              <>
+                <motion.div 
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-6 md:gap-16"
+                >
+                   {(activeCategory === 'all' ? mainProjects.slice(0, 4) : mainProjects).map((project, i) => renderProjectCard(project, i, 'main'))}
+                </motion.div>
+
+                {activeCategory === 'all' && mainProjects.length > 4 && (
+                  <div className="mt-8 md:mt-12 text-center">
+                    <button
+                      onClick={() => {
+                        setActiveCategory('main');
+                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-neon-purple dark:hover:text-neon-blue hover:border-neon-purple/50 dark:hover:border-neon-blue/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
+                    >
+                      <span>View More Main Projects ({mainProjects.length})</span>
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 font-light italic">No main projects uploaded.</p>
+            )}
+          </div>
+        )}
 
         {/* Section: Portfolio Projects */}
-        <div className="mb-20 md:mb-36">
-          <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14">
-            <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
-              // PORTFOLIO PROJECTS
-            </h2>
+        {(activeCategory === 'all' || activeCategory === 'portfolio') && (
+          <div className="mb-20 md:mb-36">
+            <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
+              <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
+                // PORTFOLIO PROJECTS
+              </h2>
+              {activeCategory === 'all' && portfolioProjects.length > 4 && (
+                <button
+                  onClick={() => {
+                    setActiveCategory('portfolio');
+                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                  }}
+                  className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neon-purple dark:text-neon-blue hover:underline flex items-center gap-1"
+                >
+                  View More ({portfolioProjects.length}) <ArrowRight size={12} />
+                </button>
+              )}
+            </div>
+            {portfolioProjects.length > 0 ? (
+              <>
+                <motion.div 
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-6 md:gap-16"
+                >
+                   {(activeCategory === 'all' ? portfolioProjects.slice(0, 4) : portfolioProjects).map((project, i) => renderProjectCard(project, i, 'portfolio'))}
+                </motion.div>
+
+                {activeCategory === 'all' && portfolioProjects.length > 4 && (
+                  <div className="mt-8 md:mt-12 text-center">
+                    <button
+                      onClick={() => {
+                        setActiveCategory('portfolio');
+                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-neon-purple dark:hover:text-neon-blue hover:border-neon-purple/50 dark:hover:border-neon-blue/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
+                    >
+                      <span>View More Portfolio Projects ({portfolioProjects.length})</span>
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 font-light italic">No portfolio projects uploaded.</p>
+            )}
           </div>
-          {portfolioProjects.length > 0 ? (
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
-            >
-               {portfolioProjects.map((project, i) => renderProjectCard(project, i, 'portfolio'))}
-            </motion.div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400 font-light italic">No portfolio projects uploaded.</p>
-          )}
-        </div>
+        )}
 
         {/* Section: N8N Projects & 24/7 Automation Workflows */}
-        <div className="mb-20 md:mb-36">
-          <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
-            <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-orange-500 dark:text-orange-400 flex items-center gap-2">
-              <Bot className="w-5 h-5 md:w-7 md:h-7" />
-              // N8N PROJECTS & 24/7 AUTOMATION WORKFLOWS
-            </h2>
-            <span className="text-[10px] md:text-xs font-mono text-gray-500 dark:text-gray-400 bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
-              Interactive Canvas
-            </span>
-          </div>
-
-          {activeN8nProjects.length > 0 ? (
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              {activeN8nProjects.map((project, i) => {
-                let nodeCount = project.nodeCount || 0;
-                try {
-                  if (!nodeCount && project.workflowJson) {
-                    const parsed = JSON.parse(project.workflowJson);
-                    nodeCount = (parsed.nodes || []).length;
-                  }
-                } catch (e) {}
-
-                return (
-                  <motion.div
-                    key={`n8n-${project.id || i}`}
-                    variants={cardVariants}
-                    onClick={() => setSelectedN8nProject(project)}
-                    className="group relative cursor-pointer bg-white dark:bg-[#0F1320] rounded-2xl md:rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 hover:border-orange-500/50 hover:shadow-[0_20px_50px_rgba(255,109,0,0.15)] transition-all duration-500 flex flex-col justify-between"
+        {(activeCategory === 'all' || activeCategory === 'n8n') && (
+          <div className="mb-20 md:mb-36">
+            <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between flex-wrap gap-2">
+              <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-orange-500 dark:text-orange-400 flex items-center gap-2">
+                <Bot className="w-5 h-5 md:w-7 md:h-7" />
+                // N8N PROJECTS & 24/7 AUTOMATION WORKFLOWS
+              </h2>
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] md:text-xs font-mono text-gray-500 dark:text-gray-400 bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
+                  Interactive Canvas
+                </span>
+                {activeCategory === 'all' && activeN8nProjects.length > 4 && (
+                  <button
+                    onClick={() => {
+                      setActiveCategory('n8n');
+                      window.scrollTo({ top: 320, behavior: 'smooth' });
+                    }}
+                    className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-orange-500 dark:text-orange-400 hover:underline flex items-center gap-1"
                   >
-                    {/* Visual Workflow Canvas Header */}
-                    <div className="h-48 md:h-52 bg-[#17181c] relative overflow-hidden border-b border-gray-200 dark:border-white/10 pointer-events-none">
-                      <N8nWorkflowViewer workflowJson={project.workflowJson} height="100%" showControls={false} fitPadding={0.18} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0F1320]/80 via-transparent to-transparent" />
-                      
-                      <div className="absolute top-3 right-3 z-10">
-                        <span className="px-3 py-1 bg-black/70 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-bold text-orange-400 flex items-center gap-1.5 shadow-lg">
-                          <Layers size={12} />
-                          {nodeCount} Nodes
-                        </span>
-                      </div>
-                    </div>
+                    View More ({activeN8nProjects.length}) <ArrowRight size={12} />
+                  </button>
+                )}
+              </div>
+            </div>
 
-                    {/* Content */}
-                    <div className="p-6 flex-1 flex flex-col justify-between">
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-md inline-block mb-2">
-                          {project.category || 'n8n Automation'}
-                        </span>
-                        <h3 className="text-xl font-heading font-bold text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">
-                          {project.title}
-                        </h3>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 line-clamp-2 leading-relaxed">
-                          {project.desc || 'Interactive n8n automation workflow diagram.'}
-                        </p>
+            {activeN8nProjects.length > 0 ? (
+              <>
+                <motion.div 
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8"
+                >
+                  {(activeCategory === 'all' ? activeN8nProjects.slice(0, 4) : activeN8nProjects).map((project, i) => {
+                    let nodeCount = project.nodeCount || 0;
+                    try {
+                      if (!nodeCount && project.workflowJson) {
+                        const parsed = JSON.parse(project.workflowJson);
+                        nodeCount = (parsed.nodes || []).length;
+                      }
+                    } catch (e) {}
 
-                        {/* Tags */}
-                        {project.tags && project.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mt-4">
-                            {project.tags.map((tag, tIdx) => (
-                              <span 
-                                key={tIdx}
-                                className="text-[9px] bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded-md font-mono"
-                              >
-                                #{tag}
-                              </span>
-                            ))}
+                    return (
+                      <motion.div
+                        key={`n8n-${project.id || i}`}
+                        variants={cardVariants}
+                        onClick={() => setSelectedN8nProject(project)}
+                        className="group relative cursor-pointer bg-white dark:bg-[#0F1320] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 hover:border-orange-500/50 hover:shadow-[0_20px_50px_rgba(255,109,0,0.15)] transition-all duration-500 flex flex-col justify-between"
+                      >
+                        {/* Visual Workflow Canvas Header */}
+                        <div className="h-28 sm:h-48 md:h-52 bg-[#17181c] relative overflow-hidden border-b border-gray-200 dark:border-white/10 pointer-events-none">
+                          <N8nWorkflowViewer workflowJson={project.workflowJson} height="100%" showControls={false} fitPadding={0.18} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0F1320]/80 via-transparent to-transparent" />
+                          
+                          <div className="absolute top-1.5 right-1.5 sm:top-3 sm:right-3 z-10">
+                            <span className="px-1.5 py-0.5 sm:px-3 sm:py-1 bg-black/70 backdrop-blur-md border border-white/10 rounded-full text-[8px] sm:text-[10px] font-bold text-orange-400 flex items-center gap-1 sm:gap-1.5 shadow-lg">
+                              <Layers size={10} className="sm:hidden" />
+                              <Layers size={12} className="hidden sm:block" />
+                              {nodeCount} Nodes
+                            </span>
                           </div>
-                        )}
-                      </div>
+                        </div>
 
-                      {/* Footer CTA */}
-                      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between text-xs font-bold text-orange-500 dark:text-orange-400">
-                        <span className="flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
-                          <Eye size={14} />
-                          Interactive Workflow Canvas
-                        </span>
-                        <span className="text-[10px] bg-orange-500/10 px-2.5 py-1 rounded-full group-hover:bg-orange-500 group-hover:text-white transition-all">
-                          Inspect Flow →
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400 font-light italic">No n8n workflow projects available yet.</p>
-          )}
-        </div>
+                        {/* Content */}
+                        <div className="p-2.5 sm:p-6 flex-1 flex flex-col justify-between">
+                          <div>
+                            <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider sm:tracking-widest text-orange-500 dark:text-orange-400 bg-orange-500/10 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md inline-block mb-1 sm:mb-2">
+                              {project.category || 'n8n Automation'}
+                            </span>
+                            <h3 className="text-xs sm:text-xl font-heading font-bold text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors line-clamp-2">
+                              {project.title}
+                            </h3>
+                            <p className="text-[9px] sm:text-xs text-gray-600 dark:text-gray-400 mt-1 sm:mt-2 line-clamp-2 leading-tight sm:leading-relaxed">
+                              {project.desc || 'Interactive n8n automation workflow diagram.'}
+                            </p>
+
+                            {/* Tags */}
+                            {project.tags && project.tags.length > 0 && (
+                              <div className="flex flex-wrap gap-1 sm:gap-1.5 mt-2 sm:mt-4">
+                                {project.tags.map((tag, tIdx) => (
+                                  <span 
+                                    key={tIdx}
+                                    className="text-[7px] sm:text-[9px] bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 px-1 py-0.5 sm:px-2 sm:py-0.5 rounded font-mono"
+                                  >
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Footer CTA */}
+                          <div className="mt-2.5 sm:mt-6 pt-2 sm:pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between text-[8px] sm:text-xs font-bold text-orange-500 dark:text-orange-400">
+                            <span className="flex items-center gap-1 sm:gap-1.5 group-hover:translate-x-1 transition-transform truncate">
+                              <Eye size={10} className="sm:hidden shrink-0" />
+                              <Eye size={14} className="hidden sm:block shrink-0" />
+                              <span className="hidden sm:inline">Interactive Workflow Canvas</span>
+                              <span className="sm:hidden truncate">Workflow Canvas</span>
+                            </span>
+                            <span className="text-[7px] sm:text-[10px] bg-orange-500/10 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full group-hover:bg-orange-500 group-hover:text-white transition-all shrink-0">
+                              Inspect →
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
+
+                {activeCategory === 'all' && activeN8nProjects.length > 4 && (
+                  <div className="mt-8 md:mt-12 text-center">
+                    <button
+                      onClick={() => {
+                        setActiveCategory('n8n');
+                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-orange-500 dark:hover:text-orange-400 hover:border-orange-500/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
+                    >
+                      <span>View More n8n Workflows ({activeN8nProjects.length})</span>
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 font-light italic">No n8n workflow projects available yet.</p>
+            )}
+          </div>
+        )}
 
         {/* Section: Figma Projects */}
-        <div className="mb-20 md:mb-36">
-          <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14">
-            <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
-              // FIGMA PROJECTS
-            </h2>
+        {(activeCategory === 'all' || activeCategory === 'figma') && (
+          <div className="mb-20 md:mb-36">
+            <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
+              <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
+                // FIGMA PROJECTS
+              </h2>
+              {activeCategory === 'all' && figmaProjects.length > 4 && (
+                <button
+                  onClick={() => {
+                    setActiveCategory('figma');
+                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                  }}
+                  className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neon-purple dark:text-neon-blue hover:underline flex items-center gap-1"
+                >
+                  View More ({figmaProjects.length}) <ArrowRight size={12} />
+                </button>
+              )}
+            </div>
+            {figmaProjects.length > 0 ? (
+              <>
+                <motion.div 
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 md:gap-12"
+                >
+                    {(activeCategory === 'all' ? figmaProjects.slice(0, 4) : figmaProjects).map((project, i) => renderProjectCard(project, i, 'figma'))}
+                </motion.div>
+
+                {activeCategory === 'all' && figmaProjects.length > 4 && (
+                  <div className="mt-8 md:mt-12 text-center">
+                    <button
+                      onClick={() => {
+                        setActiveCategory('figma');
+                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-neon-purple dark:hover:text-neon-blue hover:border-neon-purple/50 dark:hover:border-neon-blue/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
+                    >
+                      <span>View More Figma Designs ({figmaProjects.length})</span>
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 font-light italic">No Figma projects uploaded.</p>
+            )}
           </div>
-          {figmaProjects.length > 0 ? (
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12"
-            >
-                {figmaProjects.map((project, i) => renderProjectCard(project, i, 'figma'))}
-            </motion.div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400 font-light italic">No Figma projects uploaded.</p>
-          )}
-        </div>
+        )}
 
         {/* Section: Client & Personal Projects */}
-        <div className="mb-20 md:mb-36">
-          <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14">
-            <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
-              // CLIENT & PERSONAL PROJECTS
-            </h2>
-          </div>
-          {clientProjects.length > 0 ? (
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10"
-            >
-               {clientProjects.map((project, i) => (
-                 <motion.a
-                   key={`client-${project.id || i}`}
-                   href={project.link}
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   variants={cardVariants}
-                   onContextMenu={(e) => e.preventDefault()}
-                   className="group relative cursor-pointer block select-none"
-                 >
-                    {/* Visual Logo Card */}
-                    <div 
-                      className="relative aspect-square bg-white dark:bg-white/[0.02] rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-500 group-hover:bg-gray-100/50 dark:group-hover:bg-white/[0.05] group-hover:border-neon-purple/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(176,38,255,0.08)] flex items-center justify-center p-6 md:p-10 select-none"
-                      onContextMenu={(e) => e.preventDefault()}
-                    >
-                       <ProjectMedia 
-                         image={project.image} 
-                         video={project.video}
-                         images={project.images}
-                         videos={project.videos}
-                         title={project.title}
-                         fitMode="contain"
-                       />
-                    </div>
+        {(activeCategory === 'all' || activeCategory === 'client') && (
+          <div className="mb-20 md:mb-36">
+            <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
+              <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
+                // CLIENT & PERSONAL PROJECTS
+              </h2>
+              {activeCategory === 'all' && clientProjects.length > 4 && (
+                <button
+                  onClick={() => {
+                    setActiveCategory('client');
+                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                  }}
+                  className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neon-purple dark:text-neon-blue hover:underline flex items-center gap-1"
+                >
+                  View More ({clientProjects.length}) <ArrowRight size={12} />
+                </button>
+              )}
+            </div>
+            {clientProjects.length > 0 ? (
+              <>
+                <motion.div 
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-10"
+                >
+                   {(activeCategory === 'all' ? clientProjects.slice(0, 4) : clientProjects).map((project, i) => (
+                     <motion.a
+                       key={`client-${project.id || i}`}
+                       href={project.link}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       variants={cardVariants}
+                       onContextMenu={(e) => e.preventDefault()}
+                       className="group relative cursor-pointer block select-none"
+                     >
+                        {/* Visual Logo Card */}
+                        <div 
+                          className="relative aspect-square bg-white dark:bg-white/[0.02] rounded-xl sm:rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-500 group-hover:bg-gray-100/50 dark:group-hover:bg-white/[0.05] group-hover:border-neon-purple/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(176,38,255,0.08)] flex items-center justify-center p-3 sm:p-6 md:p-10 select-none"
+                          onContextMenu={(e) => e.preventDefault()}
+                        >
+                           <ProjectMedia 
+                             image={project.image} 
+                             video={project.video}
+                             images={project.images}
+                             videos={project.videos}
+                             title={project.title}
+                             fitMode="contain"
+                           />
+                        </div>
 
-                    {/* Hover Information Below the Card */}
-                    <div className="mt-4 text-center transition-all duration-300 opacity-60 group-hover:opacity-100">
-                       <p className="inline-flex items-center gap-1.5 text-[8px] md:text-[9px] font-bold text-gray-500 dark:text-white/30 group-hover:text-neon-purple dark:group-hover:text-neon-blue tracking-[0.2em] uppercase transition-colors">
-                          View Creation 
-                          <ExternalLink size={9} className="text-neon-purple dark:text-neon-blue" />
-                       </p>
-                    </div>
-                 </motion.a>
-               ))}
-            </motion.div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400 font-light italic">No client or personal projects uploaded.</p>
-          )}
-        </div>
+                        {/* Hover Information Below the Card */}
+                        <div className="mt-2 sm:mt-4 text-center transition-all duration-300 opacity-60 group-hover:opacity-100">
+                           <p className="inline-flex items-center gap-1 sm:gap-1.5 text-[7px] sm:text-[8px] md:text-[9px] font-bold text-gray-500 dark:text-white/30 group-hover:text-neon-purple dark:group-hover:text-neon-blue tracking-wider sm:tracking-[0.2em] uppercase transition-colors">
+                              View Creation 
+                              <ExternalLink size={8} className="sm:hidden text-neon-purple dark:text-neon-blue" />
+                              <ExternalLink size={9} className="hidden sm:block text-neon-purple dark:text-neon-blue" />
+                           </p>
+                        </div>
+                     </motion.a>
+                   ))}
+                </motion.div>
+
+                {activeCategory === 'all' && clientProjects.length > 4 && (
+                  <div className="mt-8 md:mt-12 text-center">
+                    <button
+                      onClick={() => {
+                        setActiveCategory('client');
+                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-neon-purple dark:hover:text-neon-blue hover:border-neon-purple/50 dark:hover:border-neon-blue/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
+                    >
+                      <span>View More Client Projects ({clientProjects.length})</span>
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 font-light italic">No client or personal projects uploaded.</p>
+            )}
+          </div>
+        )}
 
 
         {/* Process Section */}
