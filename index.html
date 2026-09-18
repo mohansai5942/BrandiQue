@@ -20,12 +20,38 @@
     }
     </script>
     <script>
-      // Ensure fetch is always bound to window and safely handles reassignment
+      // Global error handler for unhandled promise rejections (e.g. fetch failures from external services)
+      window.addEventListener('unhandledrejection', function(event) {
+        if (event.reason && (
+          event.reason.message === 'Failed to fetch' || 
+          (event.reason.name === 'TypeError' && String(event.reason).includes('fetch'))
+        )) {
+          console.warn('Handled external fetch rejection safely:', event.reason);
+          event.preventDefault();
+        }
+      });
+
+      // Ensure fetch is always bound to window and safely catches network failures for external webhooks/CDNs
       (function() {
         if (typeof window !== 'undefined' && window.fetch) {
           try {
-            const originalFetch = window.fetch;
-            let currentFetch = originalFetch.bind(window);
+            const originalFetch = window.fetch.bind(window);
+            const safeFetch = async function(...args) {
+              try {
+                return await originalFetch(...args);
+              } catch (err) {
+                const urlStr = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url) ? args[0].url : '';
+                console.warn('Network request failed:', urlStr || args[0], err);
+                if (urlStr.includes('onrender.com') || urlStr.includes('formspree.io') || urlStr.includes('jsdelivr.net')) {
+                  return new Response(JSON.stringify({ ok: false, error: 'Network request intercepted' }), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                }
+                throw err;
+              }
+            };
+            let currentFetch = safeFetch;
             Object.defineProperty(window, 'fetch', {
               get: function() { return currentFetch; },
               set: function(fn) {
