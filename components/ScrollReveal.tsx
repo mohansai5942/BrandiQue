@@ -34,7 +34,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({ children, className = '', d
     <div
       ref={ref}
       className={`transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) will-change-transform transform ${
-        isVisible ? 'opacity-100 translate-y-0 blur-0' : 'opacity-100 translate-y-0 blur-0'
+        isVisible ? 'opacity-100 translate-y-0 blur-0' : 'opacity-0 translate-y-12 blur-sm'
       } ${className} ${isVisible ? delay : ''}`}
     >
       {children}

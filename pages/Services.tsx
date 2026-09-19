@@ -71,7 +71,7 @@ const Services: React.FC = () => {
                <Link to={service.link} className="group relative flex flex-col justify-between h-full bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 rounded-[40px] p-10 md:p-12 transition-all duration-500 hover:-translate-y-2 hover:border-neon-purple/30 shadow-xl">
                   <div>
                      <div className={`w-14 h-14 rounded-2xl bg-gray-50 dark:bg-white/5 flex items-center justify-center mb-8 ${service.color} group-hover:scale-110 transition-transform duration-300 shadow-sm`}><service.icon size={30} /></div>
-                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{service.title}</h2>
+                     <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{service.title}</h3>
                      <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-8 font-light">{service.description}</p>
                      
                      <div className="flex flex-wrap gap-2 mb-10">

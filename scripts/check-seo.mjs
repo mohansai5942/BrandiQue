@@ -15,11 +15,7 @@ for (const url of urls) {
  assert(!titles.has(title),`${pathname}: duplicate title`); titles.add(title);
  const desc=document.querySelectorAll('meta[name="description"]'); assert.equal(desc.length,1);
  assert(!descriptions.has(desc[0].content),`${pathname}: duplicate description`);descriptions.add(desc[0].content);
- assert.equal(document.querySelectorAll('h1').length,1,`${pathname}: H1 count`);
- let previousLevel=0;
- for(const heading of document.querySelectorAll('main h1, main h2, main h3, main h4, main h5, main h6')) {
-  const level=Number(heading.tagName[1]);assert(level<=previousLevel+1,`${pathname}: heading level jump at ${heading.textContent}`);previousLevel=level;
- }
+ assert.equal(document.querySelectorAll('h1').length,pathname==='/' ? 2 : 1,`${pathname}: original responsive H1 structure`);
  assert.equal(document.querySelectorAll('link[rel="canonical"]').length,1);
  assert.equal(document.querySelector('link[rel="canonical"]').href,url);
  assert.equal(document.querySelectorAll('meta[name="robots"]').length,1);
@@ -27,7 +23,6 @@ for (const url of urls) {
  for(const selector of ['meta[property="og:title"]','meta[property="og:description"]','meta[property="og:url"]','meta[property="og:image"]','meta[name="twitter:card"]']) assert(document.querySelector(selector),`${pathname}: ${selector}`);
  for(const img of document.querySelectorAll('img')) {
   assert(img.hasAttribute('alt'),`${pathname}: missing alt`);
-  assert(img.getAttribute('width') && img.getAttribute('height'),`${pathname}: image dimensions ${img.src}`);
   if(img.src.startsWith('/')) await access(`dist${img.src}`);
  }
  const graph=JSON.parse(document.querySelector('#page-schema').textContent)['@graph'];
@@ -57,7 +52,7 @@ for(const path of ['404.html','login/index.html','admin/index.html']) {
 const robots=await readFile('dist/robots.txt','utf8');assert(robots.includes('Sitemap: https://brandique.in/sitemap.xml'));assert(!robots.includes('Disallow: /\n'));
 assert(!urls.some(url=>/admin|login|404/.test(url)));
 await access('dist/images/brandique-social.png');
-console.log(`PASS: ${urls.length} pages; unique metadata, H1s, canonical URLs, JSON-LD, founder image consistency, internal links/fragments, image attributes, sitemap and private/404 noindex.`);
+console.log(`PASS: ${urls.length} pages; unique metadata, responsive heading structure, canonical URLs, JSON-LD, founder image consistency, internal links/fragments, image alt text, sitemap and private/404 noindex.`);
 // A founder source replacement must update both visible profile images and head data.
 const {createServer}=await import('vite');
 const vite=await createServer({server:{middlewareMode:true},appType:'custom'});

@@ -1,86 +1,37 @@
-# BrandiQue SEO implementation — 19 September 2026
+# BrandiQue SEO — current implementation
 
-## Scope and findings
+## Design restored at the owner's request
 
-Audited the tracked repository tree, React Router routes, public page source, shared navigation/footer, settings, metadata, public assets and hosting configuration. The site uses React 18, TypeScript and Vite with Firebase-backed features. The live homepage responded with HTTP 200; its HTML used Tailwind's runtime CDN and a single global head.
+The original pre-SEO presentation from commit `a5ef2a9` has been restored: mobile font sizes (including the original 11px base), logo sizing, homepage text and layout, service layouts, Tailwind CDN configuration, all inline CSS, intro video, cursor effects, animations and media behavior.
 
-Problems found: no page-specific metadata/canonicals; sitemap used www and three nonexistent service paths; missing AI automation/legal sitemap entries; no founder Person/Organization connection; duplicate founder image URLs; inaccurate Praveen CEO/co-founder labels; missing service H1s and duplicated home H1; heading-level gaps; unknown routes redirected to home; all page/admin code loaded eagerly; blocking intro and runtime CSS compilation.
+Removed the added visible breadcrumbs, service FAQ/planning sections, About expansion, custom CSS, build-time Tailwind/PostCSS setup and deferred visual components. The later owner edits to Praveen's displayed name and job description are preserved, as is the requested Co-Founder display label. No further layout or sizing adjustments are part of this correction.
 
-## A. Files changed
+## SEO retained
 
-- Build and entry: `App.tsx`, `index.tsx`, `index.html`, `package.json`, `package-lock.json`, `tailwind.config.cjs`, `postcss.config.cjs`, `styles.css`. Removed stale `bun.lock`; npm is the documented package manager.
-- SEO source: `seo/site.ts`, `seo/service-content.ts`, `seo/render.tsx`.
-- Shared components: `components/SEO.tsx`, `PageContext.tsx`, `DeferredWorkflowViewer.tsx`, `Navbar.tsx`, `Footer.tsx`, `ScrollReveal.tsx`, `TextReveal.tsx`.
-- Pages: `pages/About.tsx`, `Home.tsx`, `Projects.tsx`, `Services.tsx`, `WebDevelopment.tsx`, `NotFound.tsx`; all five files in `pages/services/`.
-- SSR safety: browser-storage guards in `context/AuthContext.tsx` and `pages/Projects.tsx`; existing authentication behavior was not redesigned.
-- Hosting/assets: `public/sitemap.xml`, `robots.txt`, `_redirects`, `_headers`, `images/brandique-social.png`, `vercel.json`.
-- Validation/documentation: `scripts/prerender.mjs`, `check-seo.mjs`, `serve-static.mjs`, `README.md`, this report.
+- Unique titles, descriptions, canonical URLs, robots directives and Open Graph/Twitter metadata on 14 public routes.
+- Build-time HTML from the actual public React pages, plus metadata updates on client navigation.
+- Organization, WebSite, WebPage/AboutPage/ContactPage/CollectionPage, Service and BreadcrumbList structured data.
+- One Person entity for Kutikuppala Mohan Rao, Founder of BrandiQue Web Solutions, linked through stable @id references. The existing founder introduction includes his full name; the original short-name hero, design and sizing are retained.
+- Shared founder.image in `seo/site.ts` for both original About portraits, Person schema and About social metadata. Original photo URL and presentation are retained.
+- Canonical sitemap, corrected robots.txt, old-service URL redirects, noindex login/admin pages and real 404 handling.
+- Service hero headings use H1 without changing their classes, appearance or text.
 
-## B–C. SEO changes and pages optimized
+Pages: home, About, Contact, Services, Web Development, Projects, Full Stack, WordPress, Branding, Digital Marketing, AI Automation, Privacy Policy, Terms and Conditions, Cookie Policy.
 
-14 public routes now receive real build-time rendered React content, one unique title and description, a canonical URL, index directives, Open Graph, Twitter cards and valid JSON-LD. Client navigation updates the same metadata source. Home has one stable, descriptive H1; service H1s and heading levels were corrected. Service planning guidance adds audiences, scope considerations, FAQs, related services and contact links without extra doorway pages or invented prices.
+## Praveen
 
-Routes: `/`, `/about`, `/contact`, `/services`, `/web-development`, `/projects`, `/services/full-stack`, `/services/wordpress`, `/services/branding`, `/services/digital-marketing`, `/services/ai-automation`, `/privacy-policy`, `/terms-and-conditions`, `/cookie-policy`.
+No Praveen Person schema, founder/employee schema entry, dedicated page or name-targeted metadata was added. His visible Co-Founder label was explicitly requested by the owner, who identified his actual role as employee. Search engines may read that visible label regardless of structured data; no guarantee of excluding that association is possible.
 
-Login/admin and 404 output are noindex and excluded from the sitemap. Unknown routes display a real not-found page instead of silently redirecting to home.
+## Validation
 
-## D–E. Structured data and founder identity
+`npm run lint`, `npm run build`, `npm run test:seo`, and source comparison against the pre-SEO commit. The SEO test checks all 14 pages, unique metadata, canonicals, schema, founder image propagation, original responsive heading structure, internal links/fragments, sitemap and noindex directives.
 
-Stable linked entities: Organization `https://brandique.in/#organization`, WebSite `/#website`, route WebPage/AboutPage/ContactPage/CollectionPage, Service on six service-related routes, and BreadcrumbList on non-home public pages.
+Source comparison verifies exact restoration of Home, Services, WebDevelopment, Navbar, Footer, ScrollReveal, TextReveal and the client entry; all original inline CSS and Tailwind configuration; and unchanged service styling. The homepage retains its original separate mobile/desktop headings. Original image layout behavior and heading hierarchy are not redesigned.
 
-The About page contains one Person: **Kutikuppala Mohan Rao**, `jobTitle: Founder`, `worksFor` referencing the Organization. Organization.founder points to `https://brandique.in/about#founder`. Supported short name variants appear in alternateName; visible copy uses the full name and a natural K. Mohan reference. No invented personal social profiles, credentials or achievements were added. The existing company Instagram is used for Organization.sameAs.
+Browser visual verification remains unavailable because Chromium downloads failed in this environment. No new Lighthouse or Core Web Vitals score is claimed. Original heavy effects, runtime Tailwind and bundle behavior are restored to honor the design requirement.
 
-Praveen’s biography describes his team-member web-development/design work. At the owner’s subsequent explicit request, his two visible display labels say “Co-Founder”, despite the owner confirming his actual role is employee. This is a known inconsistency in visible content, not a verified founder claim. No Person schema, founder/employee property, dedicated page or name-targeting metadata was created for him. Search engines may extract the visible label independently of structured data; excluding his founder role from schema cannot prevent that. Use an accurate visible role to remove this inconsistency.
+## Deployment and follow-up
 
-## F. Image SEO
+Run `npm ci`, `npm run build` and deploy `dist`. Then verify the deployed host's canonical routes, redirects and 404 status. Submit `https://brandique.in/sitemap.xml` in Google Search Console; no submission has been performed here.
 
-Both founder portraits, Person schema and About social metadata read **founder.image in seo/site.ts**. A regression test changes that source in memory and verifies every reference updates. Rebuild after replacing the source image or path.
-
-The original founder CDN returned a challenge instead of image bytes. Its URL was preserved; no claim of successful compression or modern-format conversion is made. Photo presentation dimensions and eager/lazy loading were added. Other public images have descriptive alt attributes and dimensions; project images load lazily. A local 1200×630 PNG provides a dependable company social card.
-
-## G–H. Sitemap and robots
-
-The sitemap is generated from the same 14 canonical route entries on every build, using `https://brandique.in`. No fabricated last-modified dates or private/parameter URLs. robots.txt permits crawling and references the corrected sitemap. Private noindex pages remain crawlable so crawlers can read the noindex instruction; robots.txt is not an access-control mechanism.
-
-## I–J. Links and performance
-
-Added visible breadcrumbs, founder links to About, service cross-links and project/contact links. All generated internal routes and fragments passed checks. Old sitemap service URLs have permanent redirects. www-to-apex and static 404 hosting rules were added.
-
-Tailwind now compiles locally at build time. Removed the blocking introductory video from the initial app render; retained its source component. Non-home pages/admin load in separate chunks. Workflow visualization waits until near the viewport. Desktop pointer effects are delayed and disabled for touch/reduced-motion conditions. Text appears without per-character animation delay. Mobile base text increased from 11px to 14px. Reduced-motion CSS is included.
-
-The main JavaScript bundle remains approximately 1.14 MB (307 KB gzip), largely due to existing shared application dependencies including Firebase. No Lighthouse, CrUX or numerical Core Web Vitals improvement is claimed.
-
-## K. Remaining limitations
-
-- Browser visual/mobile runtime QA and Lighthouse could not run: no browser was installed, and Chromium/headless-shell download attempts timed out or returned HTTP 502. Responsive source was reviewed, but visual correctness is not fully verified.
-- External founder/logo/portfolio image availability remains dependent on their CDNs. Upload original media locally for reliable optimization and serving.
-- Prerendered data uses the repository's default public settings/projects; browser Firebase updates remain functional. Keep default data current and rebuild when business information changes.
-- Existing application authentication uses client-side fallback behavior and needs a separate security review before treating the admin system as production-secure. This SEO change is not an authentication remediation.
-- Existing marketing metrics and testimonials were not independently substantiated. No ratings, review schema, awards or ranking guarantees were added.
-- Production routing, hostname redirects and the new build must be checked on the actual host after deployment. Source push is not proof of a completed deployment or indexing.
-
-## L. Validation
-
-Passed:
-
-```sh
-npm ci --no-audit --no-fund
-npm run lint
-npm run build
-npm run test:seo
-git diff --check
-```
-
-Dependencies were installed with npm before the final lint/build/test cycle. The production build generates 14 public HTML pages plus login/admin shells and 404. SEO tests validate metadata uniqueness, H1/heading levels, canonical URLs, schema JSON, founder links and photo propagation, image attributes, internal links/fragments, sitemap and noindex pages.
-
-`node scripts/serve-static.mjs` plus Node fetch checks returned 200 for home/About/full-stack, 301 for the old WordPress service URL, and 404 for an unknown route. This is local verification, not a measurement of the live host.
-
-Attempted browser setup: Playwright `install chromium` and `install chromium --only-shell`; blocked by download timeouts/502 responses. No browser screenshot or mobile performance score is reported.
-
-## M. Google Search Console setup
-
-The existing HTML verification token is preserved. After deployment, verify the domain property/ownership if needed, submit `https://brandique.in/sitemap.xml`, inspect home/About/service URLs and request indexing where useful. Confirm Google's selected canonical, crawl status and rendered content, then monitor Page Indexing and Core Web Vitals. No Search Console submission was performed.
-
-## N. Next steps
-
-Publish original case studies explaining the problem, implementation and outcomes that can be evidenced. Add focused articles answering real customer questions and link them to relevant services. Keep the founder/company identity consistent on legitimate business profiles. If eligible, maintain an accurate Google Business Profile for the real business location. Prioritize local media hosting, third-party dependency reduction and security remediation over creating large numbers of keyword pages.
+External photos remain CDN-dependent; the founder CDN challenged automated downloads, so the photo was not recompressed. Prerendered public data uses repository defaults; keep them current when Firebase content changes. The pre-existing admin authentication fallback still warrants a separate security review. No ranking guarantees, fake reviews or awards were added.
