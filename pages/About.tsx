@@ -90,19 +90,12 @@ const About: React.FC = () => {
          </div>
       </section>
 
-      <section className="seo-content" aria-labelledby="company-story">
-        <h2 id="company-story">About BrandiQue Web Solutions</h2>
-        <p>Founded by Kutikuppala Mohan Rao, BrandiQue Web Solutions brings together web development, design and automation. Based in Visakhapatnam (Vizag), Andhra Pradesh, our work helps businesses turn their requirements into usable digital products.</p>
-        <p>Our mission is to make digital projects easier to understand and manage. Our vision is to be a long-term technical partner, supporting a business from its first website through changing content, integrations and workflows.</p>
-        <p>Explore our <Link to="/services/full-stack">full-stack development</Link>, <Link to="/services/wordpress">WordPress websites</Link>, <Link to="/services/ai-automation">AI agents and automation</Link>, <Link to="/services/branding">branding</Link> and <Link to="/services/digital-marketing">digital marketing services</Link>. <Link to="/contact">Contact the team</Link> to discuss a project.</p>
-      </section>
-
       {/* 2. PRAVEEN SECTION (BELOW MOHAN, ABOVE DIGITAL PHILOSOPHY) */}
-      <section className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 mb-32 px-4 lg:px-12 relative z-10">
+      <section className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 mb-20 px-4 lg:px-12 relative z-10">
          <div className="relative shrink-0 order-1 group">
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/30 to-cyan-500/30 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
             <div className="w-64 h-64 md:w-80 md:h-80 lg:w-[420px] lg:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
-                <img src="https://files.catbox.moe/ignhd8.jpg" alt="Praveen, team member" width={420} height={420} loading="lazy" decoding="async" className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" />
+                <img src="https://files.catbox.moe/ignhd8.jpg" alt="Karri Praveen Kumar, team member" width={420} height={420} loading="lazy" decoding="async" className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" />
             </div>
          </div>
 
@@ -114,11 +107,11 @@ const About: React.FC = () => {
                 
                 <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
                    Meet <br />
-                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 animate-gradient-x bg-[length:200%_auto]">Praveen.</span>
+                   <span className="text-[52px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 animate-gradient-x bg-[length:200%_auto]">Karri Praveen Kumar.</span>
                 </h2>
                 
                 <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left">
-                   <p>As <strong>Team Member</strong> & Web Developer at BrandiQue Web Solutions, I contribute to projects by crafting modern web applications with <span className="text-blue-500 font-medium">React & Next.js</span>.</p>
+                   <p>As <strong>Graphic Designer & Web Developer</strong> at BrandiQue Web Solutions, I contribute to projects by crafting modern web applications with <span className="text-blue-500 font-medium">React & Next.js</span>.</p>
                    <p>By blending clean front-end architecture with creative <span className="text-cyan-500 dark:text-cyan-400 font-medium">Graphic Design</span>, I deliver intuitive digital experiences and impactful visual brand assets.</p>
                 </div>
 
@@ -129,6 +122,13 @@ const About: React.FC = () => {
                 </div>
             </ScrollReveal>
          </div>
+      </section>
+
+      <section className="seo-content mb-16" aria-labelledby="company-story">
+        <h2 id="company-story">About BrandiQue Web Solutions</h2>
+        <p>Founded by Kutikuppala Mohan Rao, BrandiQue Web Solutions brings together web development, design and automation. Based in Visakhapatnam (Vizag), Andhra Pradesh, our work helps businesses turn their requirements into usable digital products.</p>
+        <p>Our mission is to make digital projects easier to understand and manage. Our vision is to be a long-term technical partner, supporting a business from its first website through changing content, integrations and workflows.</p>
+        <p>Explore our <Link to="/services/full-stack">full-stack development</Link>, <Link to="/services/wordpress">WordPress websites</Link>, <Link to="/services/ai-automation">AI agents and automation</Link>, <Link to="/services/branding">branding</Link> and <Link to="/services/digital-marketing">digital marketing services</Link>. <Link to="/contact">Contact the team</Link> to discuss a project.</p>
       </section>
 
       {/* 2. EXTENDED AGENCY NARRATIVE */}
