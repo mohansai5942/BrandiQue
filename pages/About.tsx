@@ -109,7 +109,7 @@ const About: React.FC = () => {
          <div className="text-center lg:text-left max-w-2xl order-2">
             <ScrollReveal>
                 <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 dark:border-blue-500/40 backdrop-blur-md mb-6 shadow-sm mx-auto lg:mx-0">
-                   <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase">Team Member</span>
+                   <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase">Co-Founder</span>
                 </div>
                 
                 <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
@@ -207,7 +207,7 @@ const About: React.FC = () => {
 
                     <div className="flex-1 text-center sm:text-left space-y-2">
                       <div className="inline-block px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20">
-                        Team Member
+                        Co-Founder
                       </div>
                       <h5 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Praveen</h5>
                       <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 font-medium leading-relaxed">
