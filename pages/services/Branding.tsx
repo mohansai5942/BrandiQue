@@ -85,9 +85,9 @@ const Branding: React.FC = () => {
                <div className="order-2 lg:order-1">
                   <ScrollReveal>
                      <div className="overflow-hidden mb-2">
-                        <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight leading-[1.1] animate-reveal-text">
+                        <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight leading-[1.1] animate-reveal-text">
                            Branding & Identity
-                        </h2>
+                        </h1>
                      </div>
                      
                      <div className="mb-4 md:mb-6">
@@ -245,7 +245,7 @@ const Branding: React.FC = () => {
             <div className="mb-20 md:mb-32">
                <ScrollReveal>
                   <div className="text-center mb-10 md:mb-16">
-                     <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Our Branding Process</h3>
+                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Our Branding Process</h2>
                      <div className="h-1 w-16 md:w-20 bg-pink-500 mx-auto rounded-full"></div>
                   </div>
                   
@@ -265,7 +265,7 @@ const Branding: React.FC = () => {
                                </div>
                                <item.icon size={24} className="md:w-[32px] md:h-[32px] text-gray-400 group-hover:text-pink-400 transition-colors" />
                            </div>
-                           <h4 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">{item.title}</h4>
+                           <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">{item.title}</h3>
                            <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm leading-relaxed max-w-xs">{item.desc}</p>
                         </div>
                      ))}
@@ -277,7 +277,7 @@ const Branding: React.FC = () => {
       <div className="max-w-[1400px] mx-auto px-6 relative z-10 mb-20 md:mb-32">
          <ScrollReveal>
             <div className="text-center mb-10 md:mb-16">
-               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Detailed Packages</h3>
+               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Detailed Packages</h2>
                <div className="h-1 w-20 bg-pink-500 mx-auto rounded-full mb-6"></div>
                <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">Explore our extensive branding and identity solutions.</p>
             </div>
@@ -293,7 +293,7 @@ const Branding: React.FC = () => {
                             <div className="absolute inset-0 bg-pink-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all opacity-0 group-hover:opacity-100"></div>
                             <pkg.icon size={32} className="relative z-10" />
                         </div>
-                        <h4 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">{pkg.title}</h4>
+                        <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">{pkg.title}</h3>
                         <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base leading-relaxed max-w-4xl mx-auto">{pkg.desc}</p>
                      </div>
                   </ScrollReveal>
@@ -309,7 +309,7 @@ const Branding: React.FC = () => {
                               <TrendingUp size={120} className="text-white" />
                            </div>
                            <div className="relative z-10 flex-grow">
-                              <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h4>
+                              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h3>
                               <p className="text-pink-100 text-sm mb-8 leading-relaxed">
                                  Flexible plans tailored to your growth ambitions. We deliver measurable results.
                               </p>
@@ -340,7 +340,7 @@ const Branding: React.FC = () => {
                               <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-500 shrink-0">
                                  <Sparkles size={24} />
                               </div>
-                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Features</h4>
+                              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Features</h3>
                            </div>
                            <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                               {pkg.features.map((item, i) => (
@@ -357,7 +357,7 @@ const Branding: React.FC = () => {
                               <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
                                  <Package size={24} />
                               </div>
-                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Deliverables</h4>
+                              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Deliverables</h3>
                            </div>
                            <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                               {pkg.deliverables.map((item, i) => (
@@ -375,7 +375,7 @@ const Branding: React.FC = () => {
                               <div className="w-12 h-12 rounded-xl bg-pink-500 flex items-center justify-center text-white shrink-0">
                                  <LayoutTemplate size={24} />
                               </div>
-                              <h4 className="text-xl md:text-2xl font-bold text-white">Full Cycle Process</h4>
+                              <h3 className="text-xl md:text-2xl font-bold text-white">Full Cycle Process</h3>
                            </div>
                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8 relative z-10 flex-grow">
                               {pkg.process.map((item, i) => (
@@ -397,7 +397,7 @@ const Branding: React.FC = () => {
                               <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 shrink-0">
                                  <Layers size={24} />
                               </div>
-                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Requirements</h4>
+                              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Requirements</h3>
                            </div>
                            <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                               {pkg.requirements.map((item, i) => (
@@ -414,7 +414,7 @@ const Branding: React.FC = () => {
                               <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 shrink-0">
                                  <Code size={24} />
                               </div>
-                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Tech & Tools</h4>
+                              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Tech & Tools</h3>
                            </div>
                            <div className="flex flex-wrap gap-2 flex-grow">
                               {pkg.tech.map((item, i) => (
@@ -433,7 +433,7 @@ const Branding: React.FC = () => {
                               <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 shrink-0">
                                  <ShieldCheck size={24} />
                               </div>
-                              <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Promises</h4>
+                              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Promises</h3>
                            </div>
                            <div className="grid md:grid-cols-2 gap-y-3 gap-x-6 flex-grow text-sm text-gray-600 dark:text-gray-400">
                               {pkg.promises.map((item, i) => (
@@ -461,7 +461,7 @@ const Branding: React.FC = () => {
                
                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
                   <ScrollReveal>
-                     <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">Why Branding Matters?</h3>
+                     <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">Why Branding Matters?</h2>
                      <ul className="space-y-4 md:space-y-6">
                         {[
                            { title: "Trust", text: "Your brand is the first impression customers trust.", icon: ShieldCheck },
@@ -474,7 +474,7 @@ const Branding: React.FC = () => {
                                  <item.icon size={16} className="md:w-[20px] md:h-[20px]" />
                               </div>
                               <div>
-                                 <h4 className="text-gray-900 dark:text-white font-bold text-base md:text-lg mb-0.5 md:mb-1">{item.title}</h4>
+                                 <h3 className="text-gray-900 dark:text-white font-bold text-base md:text-lg mb-0.5 md:mb-1">{item.title}</h3>
                                  <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">{item.text}</p>
                               </div>
                            </li>

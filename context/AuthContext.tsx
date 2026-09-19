@@ -24,11 +24,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('isAdminAuthenticated') === 'true';
+    return typeof localStorage !== 'undefined' && localStorage.getItem('isAdminAuthenticated') === 'true';
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [adminId, setAdminId] = useState<string>(() => {
-    return localStorage.getItem('adminUsername') || 'mohan';
+    return (typeof localStorage !== 'undefined' && localStorage.getItem('adminUsername')) || 'mohan';
   });
 
   // Monitor Firebase Auth state change

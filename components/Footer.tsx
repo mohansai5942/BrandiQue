@@ -36,16 +36,16 @@ const Footer: React.FC = () => {
               onContextMenu={(e) => e.preventDefault()}
             >
               {/* Light Theme Logo (Visible in Light Mode) */}
-              <img 
+              <img width={240} height={96} loading="lazy" decoding="async"
                 src="https://cdn.imgchest.com/files/c912299e5353.png" 
                 alt="BrandiQue Web Solutions" 
-                className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 block dark:hidden" 
+                className="h-[40px] md:h-[48px] lg:h-[64px] w-[150px] md:w-[190px] object-contain transition-transform duration-300 group-hover:scale-105 block dark:hidden"
               />
               {/* Dark Theme Logo (Visible in Dark Mode) */}
-              <img 
+              <img width={240} height={96} loading="lazy" decoding="async"
                 src="https://cdn.imgchest.com/files/1b3230978aa9.png" 
                 alt="BrandiQue Web Solutions" 
-                className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 hidden dark:block" 
+                className="h-[40px] md:h-[48px] lg:h-[64px] w-[150px] md:w-[190px] object-contain transition-transform duration-300 group-hover:scale-105 hidden dark:block"
               />
             </Link>
             
@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
 
           {/* Services Column */}
           <ScrollReveal className="col-span-1" delay="delay-200">
-            <h4 className="text-gray-900 dark:text-white font-bold mb-3 md:mb-4 lg:mb-6 text-sm md:text-sm lg:text-lg">Services</h4>
+            <h2 className="text-gray-900 dark:text-white font-bold mb-3 md:mb-4 lg:mb-6 text-sm md:text-sm lg:text-lg">Services</h2>
             <ul className="space-y-2 md:space-y-2 lg:space-y-3">
               {[
                 { label: 'Full-Stack Dev', to: '/services/full-stack' },
@@ -85,7 +85,7 @@ const Footer: React.FC = () => {
 
           {/* Company Column */}
           <ScrollReveal className="col-span-1" delay="delay-400">
-            <h4 className="text-gray-900 dark:text-white font-bold mb-3 md:mb-4 lg:mb-6 text-sm md:text-sm lg:text-lg">Company</h4>
+            <h2 className="text-gray-900 dark:text-white font-bold mb-3 md:mb-4 lg:mb-6 text-sm md:text-sm lg:text-lg">Company</h2>
             <ul className="space-y-2 md:space-y-2 lg:space-y-3">
               {[
                 { label: 'About Us', to: '/about' },
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
 
           {/* Resources Column */}
           <ScrollReveal className="col-span-1" delay="delay-500">
-            <h4 className="text-gray-900 dark:text-white font-bold mb-3 md:mb-4 lg:mb-6 text-sm md:text-sm lg:text-lg">Resources</h4>
+            <h2 className="text-gray-900 dark:text-white font-bold mb-3 md:mb-4 lg:mb-6 text-sm md:text-sm lg:text-lg">Resources</h2>
             <ul className="space-y-2 md:space-y-2 lg:space-y-3">
               {[
                 { label: 'Privacy Policy', to: '/privacy-policy' },
@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
             &copy; {currentYear} BrandiQue Web Solutions. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-             <span className="text-gray-500 dark:text-gray-500 text-[10px] md:text-xs lg:text-sm">Created by <Link to="/about" className="text-black dark:text-white font-bold hover:text-neon-purple transition-colors cursor-pointer">Mohan</Link></span>
+             <span className="text-gray-500 dark:text-gray-500 text-[10px] md:text-xs lg:text-sm">Founded by <Link to="/about#founder" className="text-black dark:text-white font-bold hover:text-neon-purple transition-colors cursor-pointer">Kutikuppala Mohan Rao</Link></span>
           </div>
         </ScrollReveal>
       </div>

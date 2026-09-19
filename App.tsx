@@ -1,26 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import SEO from './components/SEO';
+import PageContext, { Breadcrumbs } from './components/PageContext';
+import NotFound from './pages/NotFound';
+import { redirects } from './seo/site';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import VideoIntro from './components/VideoIntro';
-import SplashCursor from './components/SplashCursor';
+
+const SplashCursor = lazy(() => import('./components/SplashCursor'));
 import ClickSpark from './components/ClickSpark';
 import Home from './pages/Home';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import WebDevelopment from './pages/WebDevelopment';
-import Projects from './pages/Projects';
-import Services from './pages/Services';
-import FullStack from './pages/services/FullStack';
-import WordPress from './pages/services/WordPress';
-import Branding from './pages/services/Branding';
-import DigitalMarketing from './pages/services/DigitalMarketing';
-import AIAutomation from './pages/services/AIAutomation';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsAndConditions from './pages/TermsAndConditions';
-import CookiePolicy from './pages/CookiePolicy';
-import Login from './pages/Login';
-import Admin from './pages/Admin';
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const WebDevelopment = lazy(() => import('./pages/WebDevelopment'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Services = lazy(() => import('./pages/Services'));
+const FullStack = lazy(() => import('./pages/services/FullStack'));
+const WordPress = lazy(() => import('./pages/services/WordPress'));
+const Branding = lazy(() => import('./pages/services/Branding'));
+const DigitalMarketing = lazy(() => import('./pages/services/DigitalMarketing'));
+const AIAutomation = lazy(() => import('./pages/services/AIAutomation'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
+const Login = lazy(() => import('./pages/Login'));
+const Admin = lazy(() => import('./pages/Admin'));
 import ProtectedRoute from './components/ProtectedRoute';
 import FloatingPromotions from './components/FloatingPromotions';
 
@@ -48,11 +52,21 @@ const ScrollToTop = () => {
   return null;
 }
 
+const DeferredEffects = () => {
+ const [enabled, setEnabled] = useState(false);
+ useEffect(() => {
+  if (!window.matchMedia('(pointer: fine) and (min-width: 1024px) and (prefers-reduced-motion: no-preference)').matches) return;
+  const timer = window.setTimeout(() => setEnabled(true), 2500);
+  return () => window.clearTimeout(timer);
+ }, []);
+ return enabled ? <Suspense fallback={null}><SplashCursor /></Suspense> : null;
+};
+
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <SplashCursor />
-      <VideoIntro />
+      <SEO />
+      <DeferredEffects />
       <ScrollToTop />
       <ClickSpark
         sparkColor="#e8eb14"
@@ -64,7 +78,9 @@ const App: React.FC = () => {
       >
         <Navbar />
         
-        <main className="flex-grow">
+        <main id="main-content" className="flex-grow">
+          <Breadcrumbs />
+          <Suspense fallback={<p className="seo-content" role="status">Loading page…</p>}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -94,8 +110,11 @@ const App: React.FC = () => {
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             
             {/* Catch-all route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {Object.entries(redirects).map(([from,to]) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
+            <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
+          <PageContext />
         </main>
 
         <Footer />

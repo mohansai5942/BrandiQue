@@ -1,8 +1,14 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/:path*", "has": [{ "type": "host", "value": "www.brandique.in" }], "destination": "https://brandique.in/:path*", "permanent": true },
+    { "source": "/services/full-stack-web-development", "destination": "/services/full-stack", "permanent": true },
+    { "source": "/services/wordpress-development", "destination": "/services/wordpress", "permanent": true },
+    { "source": "/services/branding-identity", "destination": "/services/branding", "permanent": true }
+  ],
+  "headers": [
+    { "source": "/admin/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
+    { "source": "/login", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
   ]
 }
