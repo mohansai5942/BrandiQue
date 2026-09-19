@@ -41,10 +41,10 @@ const TiltCard = ({ children, className = '' }: { children?: React.ReactNode, cl
   );
 };
 
-const TechBadge = ({ icon: Icon, label }: { icon: any, label: string }) => (
-  <div className="flex items-center gap-1.5 md:gap-2 px-3 md:px-3.5 py-1.5 md:py-2 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/5 hover:bg-white dark:hover:bg-white/10 hover:border-gray-300 dark:hover:border-white/20 transition-all cursor-default shadow-sm shrink-0 whitespace-nowrap">
-    <Icon size={15} className="text-neon-purple shrink-0" />
-    <span className="text-xs md:text-sm text-gray-700 dark:text-gray-300 font-mono font-bold">{label}</span>
+const TechBadge = ({ icon: Icon, label, color = 'purple' }: { icon: any, label: React.ReactNode, color?: 'purple' | 'blue' }) => (
+  <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 px-1.5 sm:px-2.5 md:px-3 py-0.5 sm:py-1 md:py-1.5 rounded-md sm:rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/5 hover:bg-white dark:hover:bg-white/10 hover:border-gray-300 dark:hover:border-white/20 transition-all cursor-default shadow-sm shrink-0 whitespace-nowrap">
+    <Icon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 ${color === 'blue' ? 'text-blue-500 dark:text-blue-400' : 'text-neon-purple'} shrink-0`} />
+    <span className="text-[10px] sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 font-mono font-bold whitespace-nowrap">{label}</span>
   </div>
 );
 
@@ -56,27 +56,27 @@ const About: React.FC = () => {
     <div className="min-h-screen pt-28 md:pt-36 pb-20 px-4 md:px-6 max-w-[1500px] mx-auto w-full relative overflow-hidden bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
       
       {/* 1. HERO SECTION - MOHAN */}
-      <section id="founder" className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 mb-20 px-4 lg:px-12 relative z-10">
-         <div className="text-center lg:text-left max-w-2xl order-2 lg:order-1">
+      <section id="founder" className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-20 mb-8 sm:mb-12 md:mb-16 lg:mb-20 px-4 lg:px-12 relative z-10">
+         <div className="text-center lg:text-left max-w-2xl order-2 lg:order-1 w-full">
             <ScrollReveal>
                 <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-neon-purple/10 dark:bg-neon-purple/20 border border-neon-purple/30 dark:border-neon-purple/40 backdrop-blur-md mb-6 shadow-sm mx-auto lg:mx-0">
                     <span className="text-xs font-extrabold tracking-widest text-neon-purple dark:text-purple-300 uppercase">Founder</span>
                 </div>
                 
-                <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
-                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-black dark:via-white to-blue-500 animate-gradient-x bg-[length:200%_auto]">{founder.name}</span>
+                <h1 className="text-[25.5px] xs:text-[31.5px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight tracking-tight whitespace-nowrap">
+                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-purple-400 to-blue-500 animate-gradient-x bg-[length:200%_auto]">{founder.name}</span>
                 </h1>
                 
-                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left">
+                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left w-full break-words">
                    <p><strong>{founder.name}</strong> is the Founder of <strong>{COMPANY}</strong>, specializing in <span className="text-neon-purple font-medium">Web & App Engineering</span>, <span className="text-blue-500 font-medium">AI Agents</span>, workflow automation, <span className="text-cyan-500 dark:text-cyan-400 font-medium">UI/UX</span>, and strategic branding.</p>
                    <p>Known as K. Mohan, I combine technology and creativity to turn complex ideas into elegant digital products that help ambitious businesses build a strong online presence and accelerate growth.</p>
                 </div>
 
-                <div className="flex flex-nowrap overflow-x-auto sm:overflow-visible items-center justify-start gap-2 md:gap-2.5 pt-8 pb-1 scrollbar-none max-w-full">
-                   <TechBadge icon={Smartphone} label="Web/App Developer" />
-                   <TechBadge icon={Bot} label="AI Agent & Automation Expert" />
+                <div className="flex flex-nowrap items-center justify-start gap-1 sm:gap-2 md:gap-2.5 pt-4 sm:pt-6 md:pt-8 pb-1 max-w-full overflow-hidden">
+                   <TechBadge icon={Smartphone} label="Web/App Dev" />
+                   <TechBadge icon={Bot} label="AI & Auto" />
                    <TechBadge icon={Share2} label="Influencer" />
-                   <TechBadge icon={Palette} label="UI/UX Design" />
+                   <TechBadge icon={Palette} label="UI/UX" />
                 </div>
             </ScrollReveal>
          </div>
@@ -90,7 +90,7 @@ const About: React.FC = () => {
       </section>
 
       {/* 2. PRAVEEN SECTION (BELOW MOHAN, ABOVE DIGITAL PHILOSOPHY) */}
-      <section className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 mb-20 px-4 lg:px-12 relative z-10">
+      <section className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-20 mb-12 sm:mb-16 lg:mb-20 px-4 lg:px-12 relative z-10">
          <div className="relative shrink-0 order-1 group">
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/30 to-cyan-500/30 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
             <div className="w-64 h-64 md:w-80 md:h-80 lg:w-[420px] lg:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
@@ -98,26 +98,25 @@ const About: React.FC = () => {
             </div>
          </div>
 
-         <div className="text-center lg:text-left max-w-2xl order-2">
+         <div className="text-center lg:text-left max-w-2xl order-2 w-full">
             <ScrollReveal>
                 <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 dark:border-blue-500/40 backdrop-blur-md mb-6 shadow-sm mx-auto lg:mx-0">
                    <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase">Co-Founder</span>
                 </div>
                 
-                <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
-                   Meet <br />
-                   <span className="text-[52px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 animate-gradient-x bg-[length:200%_auto]">Karri Praveen Kumar.</span>
+                <h2 className="text-[24.72px] xs:text-[30.9px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight tracking-tight whitespace-nowrap">
+                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 animate-gradient-x bg-[length:200%_auto]">Karri Praveen Kumar</span>
                 </h2>
                 
-                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left">
+                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left w-full break-words">
                    <p>As <strong>Graphic Designer & Web Developer</strong> at BrandiQue Web Solutions, I contribute to projects by crafting modern web applications with <span className="text-blue-500 font-medium">React & Next.js</span>.</p>
                    <p>By blending clean front-end architecture with creative <span className="text-cyan-500 dark:text-cyan-400 font-medium">Graphic Design</span>, I deliver intuitive digital experiences and impactful visual brand assets.</p>
                 </div>
 
-                <div className="flex flex-nowrap overflow-x-auto sm:overflow-visible items-center justify-start gap-2 md:gap-2.5 pt-8 pb-1 scrollbar-none max-w-full">
-                   <TechBadge icon={PenTool} label="Graphic Designer" />
-                   <TechBadge icon={Code} label="React / Next.js" />
-                   <TechBadge icon={Monitor} label="Web Developer" />
+                <div className="flex flex-nowrap items-center justify-start gap-1 sm:gap-2 md:gap-2.5 pt-6 md:pt-8 pb-1 max-w-full overflow-hidden">
+                   <TechBadge icon={PenTool} label="Graphic Design" color="blue" />
+                   <TechBadge icon={Code} label="React / Next.js" color="blue" />
+                   <TechBadge icon={Monitor} label="Web Dev" color="blue" />
                 </div>
             </ScrollReveal>
          </div>
