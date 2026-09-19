@@ -39,7 +39,8 @@ for (const url of urls) {
   const image=document.querySelector('#founder img').src;
   assert.equal(people[0].image,new URL(image,url).href);
   assert.equal(document.querySelector('meta[property="og:image"]').content,people[0].image);
-  assert(!/Co-Founder|Chief Executive Officer|\bCEO\b/.test(document.querySelector('main').textContent));
+  assert(!/Chief Executive Officer|\bCEO\b/.test(document.querySelector('main').textContent));
+  assert.equal((document.querySelector('main').textContent.match(/Co-Founder/g)||[]).length,2,'Requested display labels');
  }
 }
 for (const [path,document] of documents) for(const a of document.querySelectorAll('a[href]')) {

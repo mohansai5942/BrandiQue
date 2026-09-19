@@ -30,7 +30,7 @@ Stable linked entities: Organization `https://brandique.in/#organization`, WebSi
 
 The About page contains one Person: **Kutikuppala Mohan Rao**, `jobTitle: Founder`, `worksFor` referencing the Organization. Organization.founder points to `https://brandique.in/about#founder`. Supported short name variants appear in alternateName; visible copy uses the full name and a natural K. Mohan reference. No invented personal social profiles, credentials or achievements were added. The existing company Instagram is used for Organization.sameAs.
 
-Praveen remains a visible team member with web-development/design skills. CEO/co-founder labels were removed from the live page source. No Person schema, founder/employee property, dedicated page or name-targeting metadata was created for him.
+Praveen’s biography describes his team-member web-development/design work. At the owner’s subsequent explicit request, his two visible display labels say “Co-Founder”, despite the owner confirming his actual role is employee. This is a known inconsistency in visible content, not a verified founder claim. No Person schema, founder/employee property, dedicated page or name-targeting metadata was created for him. Search engines may extract the visible label independently of structured data; excluding his founder role from schema cannot prevent that. Use an accurate visible role to remove this inconsistency.
 
 ## F. Image SEO
 
