@@ -72,7 +72,7 @@ const WebDevelopment = () => {
          {/* 2. OVERVIEW */}
          <ScrollReveal>
             <div className="text-center mb-10 md:mb-16">
-               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Website Types & Pricing</h3>
+               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Website Types & Pricing</h2>
                <div className="h-1 w-20 bg-neon-purple mx-auto rounded-full mb-6"></div>
                <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">Explore our pricing models for various website types. Choose between Full Stack Custom Coding or WordPress Development based on your needs.</p>
             </div>
@@ -126,7 +126,7 @@ const WebDevelopment = () => {
                                  <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-900 dark:text-white shrink-0">
                                     <pkg.icon size={24} />
                                  </div>
-                                 <h4 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{pkg.title}</h4>
+                                 <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{pkg.title}</h3>
                               </div>
                               <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base max-w-3xl relative z-10">{pkg.desc}</p>
                            </div>
@@ -140,7 +140,7 @@ const WebDevelopment = () => {
                         <div className="p-6 md:p-8 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors flex flex-col items-start h-full">
                            <div className="flex items-center gap-2 mb-4">
                               <Code size={18} className="text-neon-purple"/>
-                              <h5 className="font-bold text-lg text-gray-900 dark:text-white">Full Stack Custom Coding</h5>
+                              <h4 className="font-bold text-lg text-gray-900 dark:text-white">Full Stack Custom Coding</h4>
                            </div>
                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex-grow">
                               High-performance, completely custom-coded. Best for unique designs and maximum speed.
@@ -159,7 +159,7 @@ const WebDevelopment = () => {
                         <div className="p-6 md:p-8 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors flex flex-col items-start h-full">
                            <div className="flex items-center gap-2 mb-4">
                               <LayoutTemplate size={18} className="text-blue-500"/>
-                              <h5 className="font-bold text-lg text-gray-900 dark:text-white">WordPress Development</h5>
+                              <h4 className="font-bold text-lg text-gray-900 dark:text-white">WordPress Development</h4>
                            </div>
                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex-grow">
                               Flexible, easily manageable, and fast-to-deploy built on the world's most popular CMS.
@@ -198,7 +198,7 @@ const WebDevelopment = () => {
                     <div key={i} className="flex items-start gap-6">
                        <div className="w-12 h-12 rounded-xl bg-neon-blue/10 flex items-center justify-center text-neon-blue shrink-0"><item.icon size={24} /></div>
                        <div>
-                          <h4 className="text-xl font-bold mb-2">{item.title}</h4>
+                          <h3 className="text-xl font-bold mb-2">{item.title}</h3>
                           <p className="text-gray-500 text-sm font-light leading-relaxed">{item.desc}</p>
                        </div>
                     </div>
@@ -245,7 +245,7 @@ const WebDevelopment = () => {
               <ScrollReveal key={i} delay={`delay-${i*100}`}>
                  <div className="p-8 bg-white dark:bg-[#0F1320] border border-gray-100 dark:border-white/5 rounded-3xl text-center group hover:bg-neon-purple hover:border-neon-purple transition-all duration-500">
                     <div className="text-5xl font-black text-gray-100 dark:text-white/5 mb-6 group-hover:text-white/20 transition-colors">{item.step}</div>
-                    <h4 className="text-xl font-bold mb-4 text-gray-900 dark:text-white group-hover:text-white transition-colors">{item.title}</h4>
+                    <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white group-hover:text-white transition-colors">{item.title}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 font-light group-hover:text-white/80 transition-colors">{item.desc}</p>
                  </div>
               </ScrollReveal>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.brandique.in/sitemap.xml
+Sitemap: https://brandique.in/sitemap.xml

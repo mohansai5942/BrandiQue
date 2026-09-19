@@ -421,9 +421,9 @@ await agent.deploy();`;
                <div>
                   <ScrollReveal>
                      <div className="overflow-hidden mb-2">
-                        <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight leading-[1.1] animate-reveal-text">
+                        <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight leading-[1.1] animate-reveal-text">
                            AI Automation & Smart Chatbot Systems
-                        </h2>
+                        </h1>
                      </div>
                      <div className="mb-4 md:mb-6">
                         <TextReveal text="Automate your business operations with powerful AI agents and intelligent workflows." className="text-base md:text-lg lg:text-xl text-neon-blue font-medium" delay={300} />
@@ -492,7 +492,7 @@ await agent.deploy();`;
             <div className="mb-20 md:mb-24 lg:mb-32">
                <ScrollReveal>
                   <div className="text-center mb-10 md:mb-16">
-                     <h3 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Intelligence <span className="text-neon-blue">In Action.</span></h3>
+                     <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Intelligence <span className="text-neon-blue">In Action.</span></h2>
                      <p className="text-gray-500 max-w-xl mx-auto font-light">Custom automation solutions designed to grow with your business.</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -510,7 +510,7 @@ await agent.deploy();`;
                            <div className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center ${item.color} mb-6 group-hover:scale-110 transition-transform duration-300`}>
                               <item.icon size={24} />
                            </div>
-                           <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{item.title}</h4>
+                           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{item.title}</h3>
                            <p className="text-gray-500 dark:text-gray-400 text-sm font-light leading-relaxed">{item.desc}</p>
                         </div>
                      ))}
@@ -521,7 +521,7 @@ await agent.deploy();`;
             {/* Detailed Services & Packages */}
             <div className="mb-20 md:mb-24 lg:mb-32">
                <div className="text-center mb-10 md:mb-16">
-                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Detailed Packages</h3>
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Detailed Packages</h2>
                   <div className="h-1 w-20 bg-neon-blue mx-auto rounded-full mb-6"></div>
                   <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">Explore our extensive automation and chatbot solutions.</p>
                </div>
@@ -537,7 +537,7 @@ await agent.deploy();`;
                                   <div className="absolute inset-0 bg-neon-blue/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all opacity-0 group-hover:opacity-100"></div>
                                   <pkg.icon size={32} className="relative z-10" />
                               </div>
-                              <h4 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">{pkg.title}</h4>
+                              <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">{pkg.title}</h3>
                               <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base leading-relaxed max-w-4xl mx-auto">{pkg.desc}</p>
                            </div>
                         </ScrollReveal>
@@ -553,7 +553,7 @@ await agent.deploy();`;
                                     <TrendingUp size={120} className="text-white" />
                                  </div>
                                  <div className="relative z-10 flex-grow">
-                                    <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h4>
+                                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h3>
                                     <p className="text-blue-100 text-sm mb-8 leading-relaxed">
                                        Flexible plans tailored to your technical needs. We deliver robust automated capabilities.
                                     </p>
@@ -596,7 +596,7 @@ await agent.deploy();`;
                                     <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
                                        <Sparkles size={24} />
                                     </div>
-                                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Features</h4>
+                                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Features</h3>
                                  </div>
                                  <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                                     {pkg.features.map((item, i) => (
@@ -613,7 +613,7 @@ await agent.deploy();`;
                                     <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-500 shrink-0">
                                        <Package size={24} />
                                     </div>
-                                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Deliverables</h4>
+                                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Deliverables</h3>
                                  </div>
                                  <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                                     {pkg.deliverables.map((item, i) => (
@@ -631,7 +631,7 @@ await agent.deploy();`;
                                     <div className="w-12 h-12 rounded-xl bg-blue-500 flex items-center justify-center text-white shrink-0">
                                        <LayoutTemplate size={24} />
                                     </div>
-                                    <h4 className="text-xl md:text-2xl font-bold text-white">Full Cycle Process</h4>
+                                    <h3 className="text-xl md:text-2xl font-bold text-white">Full Cycle Process</h3>
                                  </div>
                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 relative z-10 flex-grow">
                                     {pkg.process.map((item, i) => (
@@ -653,7 +653,7 @@ await agent.deploy();`;
                                     <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
                                        <Layers size={24} />
                                     </div>
-                                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Requirements</h4>
+                                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Requirements</h3>
                                  </div>
                                  <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                                     {pkg.requirements.map((item, i) => (
@@ -670,7 +670,7 @@ await agent.deploy();`;
                                     <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 shrink-0">
                                        <Code size={24} />
                                     </div>
-                                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Tech & Tools</h4>
+                                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Tech & Tools</h3>
                                  </div>
                                  <div className="flex flex-wrap gap-2 flex-grow">
                                     {pkg.tech.map((item, i) => (
@@ -689,7 +689,7 @@ await agent.deploy();`;
                                     <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shrink-0">
                                        <ShieldCheck size={24} />
                                     </div>
-                                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Promises</h4>
+                                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Promises</h3>
                                  </div>
                                  <div className="grid md:grid-cols-2 gap-y-3 gap-x-6 flex-grow text-sm text-gray-600 dark:text-gray-400">
                                     {pkg.promises.map((item, i) => (
@@ -714,7 +714,7 @@ await agent.deploy();`;
             <div className="mb-20 md:mb-24 lg:mb-32">
                <ScrollReveal>
                   <div className="text-center mb-10 md:mb-16">
-                     <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Real-World Use Cases</h3>
+                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Real-World Use Cases</h2>
                      <div className="h-1 w-20 bg-neon-blue mx-auto rounded-full"></div>
                   </div>
                   <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
@@ -726,7 +726,7 @@ await agent.deploy();`;
                         { title: "Order Tracking", desc: "Automated status updates for your customers." }
                      ].map((item, i) => (
                         <div key={i} className="p-6 rounded-2xl bg-neon-blue/5 border border-neon-blue/10 text-center hover:bg-neon-blue/10 transition-colors pointer-events-none">
-                           <h4 className="font-bold text-gray-900 dark:text-white mb-2">{item.title}</h4>
+                           <h3 className="font-bold text-gray-900 dark:text-white mb-2">{item.title}</h3>
                            <p className="text-xs text-gray-500 dark:text-gray-400 font-light leading-relaxed">{item.desc}</p>
                         </div>
                      ))}
@@ -737,7 +737,7 @@ await agent.deploy();`;
             {/* FEATURES CHECKLIST SECTION */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-20 md:mb-24 lg:mb-32">
                <ScrollReveal>
-                  <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Powerful AI Capabilities</h3>
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Powerful AI Capabilities</h2>
                   <div className="space-y-4">
                      {[
                         { title: "24/7 Automated Responses", desc: "Instant engagement for every customer, any time." },
@@ -750,7 +750,7 @@ await agent.deploy();`;
                               <Check size={20} strokeWidth={3} />
                            </div>
                            <div>
-                              <h4 className="text-gray-900 dark:text-white font-bold">{item.title}</h4>
+                              <h3 className="text-gray-900 dark:text-white font-bold">{item.title}</h3>
                               <p className="text-sm text-gray-500 font-light">{item.desc}</p>
                            </div>
                         </div>
@@ -760,7 +760,7 @@ await agent.deploy();`;
                <ScrollReveal>
                   <div className="p-8 md:p-12 bg-white dark:bg-[#0F1320] rounded-[40px] border border-gray-200 dark:border-white/5 shadow-2xl relative overflow-hidden group">
                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-neon-blue to-neon-purple opacity-50"></div>
-                     <h3 className="text-2xl md:text-3xl font-bold mb-6">Why Choose BrandiQue?</h3>
+                     <h2 className="text-2xl md:text-3xl font-bold mb-6">Why Choose BrandiQue?</h2>
                      <div className="space-y-6">
                         {[
                            { title: "Custom Solutions", desc: "Every system is built specifically for your needs, not a template.", icon: Sparkles },
@@ -773,7 +773,7 @@ await agent.deploy();`;
                                  <item.icon size={20} />
                               </div>
                               <div>
-                                 <h4 className="text-gray-900 dark:text-white font-bold mb-1">{item.title}</h4>
+                                 <h3 className="text-gray-900 dark:text-white font-bold mb-1">{item.title}</h3>
                                  <p className="text-sm text-gray-500 dark:text-gray-400 font-light">{item.desc}</p>
                               </div>
                            </div>
@@ -789,7 +789,7 @@ await agent.deploy();`;
                <div className="mb-24 py-16 md:py-24 bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 rounded-[48px] border border-neon-blue/30 text-center relative overflow-hidden group shadow-2xl animate-pulse-glow">
                   <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
                   <div className="relative z-10 px-6">
-                     <h3 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">Start Automating Your Business Today.</h3>
+                     <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">Start Automating Your Business Today.</h2>
                      <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-light mb-10">Get your custom AI automation setup and save hours of manual work every single day.</p>
                      <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <button onClick={() => openInquiry('AI Automation & Agents')} className="inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-xs md:text-xs lg:text-sm uppercase tracking-wider hover:bg-neon-blue hover:text-white dark:hover:bg-neon-blue dark:hover:text-white transition-all shadow-lg hover:shadow-neon-blue/40 group transform hover:-translate-y-1">

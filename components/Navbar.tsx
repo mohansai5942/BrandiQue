@@ -167,17 +167,17 @@ const Navbar: React.FC = () => {
       <header className={`fixed top-0 z-50 w-full -mt-[19px] transition-all duration-500 ease-custom will-change-transform ${scrolled ? 'bg-white/95 dark:bg-[#05070A]/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-1.5 md:py-2 shadow-sm' : 'bg-transparent py-2.5 md:py-4 lg:py-6'}`}>
         <div className="max-w-[1600px] mx-auto px-4 md:px-6 mt-[20px] m-0 flex items-center justify-between relative">
           <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)} onContextMenu={(e) => e.preventDefault()}>
-            <img
+            <img width={240} height={96} decoding="async"
               src="https://cdn.imgchest.com/files/c912299e5353.png"
               alt="BrandiQue Web Solutions"
-              className="h-[52px] sm:h-[62px] lg:h-[78px] w-auto object-contain transition-all duration-300 block dark:hidden"
+              className="h-[52px] sm:h-[62px] lg:h-[78px] w-[150px] md:w-[190px] object-contain transition-all duration-300 block dark:hidden"
               loading="eager"
             />
 
-            <img
+            <img width={240} height={96} decoding="async"
               src="https://cdn.imgchest.com/files/1b3230978aa9.png"
               alt="BrandiQue Web Solutions"
-              className="h-[52px] sm:h-[62px] lg:h-[78px] w-auto object-contain transition-all duration-300 hidden dark:block"
+              className="h-[52px] sm:h-[62px] lg:h-[78px] w-[150px] md:w-[190px] object-contain transition-all duration-300 hidden dark:block"
               loading="eager"
             />
 
@@ -230,7 +230,7 @@ const Navbar: React.FC = () => {
                             <div className="flex items-center gap-3 min-w-0 relative z-10">
                               {web.logoUrl ? (
                                 <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border border-violet-500/30 overflow-hidden flex items-center justify-center p-0.5 shrink-0 group-hover:scale-105 group-hover:border-violet-500 transition-all duration-300 shadow-sm">
-                                  <img src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded" />
+                                  <img width={32} height={32} loading="lazy" decoding="async" src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded" />
                                 </div>
                               ) : (
                                 <div className="w-8 h-8 rounded-lg bg-violet-500/10 dark:bg-violet-500/20 border border-violet-500/20 dark:border-violet-400/30 flex items-center justify-center text-violet-600 dark:text-violet-300 shrink-0 group-hover:scale-110 group-hover:bg-violet-600 group-hover:text-white transition-all duration-300 shadow-sm">
@@ -394,7 +394,7 @@ const Navbar: React.FC = () => {
                         <div className="flex items-center gap-3 min-w-0">
                           {web.logoUrl ? (
                             <div className="w-9 h-9 rounded-lg bg-white dark:bg-slate-900 border border-violet-500/30 overflow-hidden flex items-center justify-center p-0.5 shrink-0 shadow-sm">
-                              <img src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded" />
+                              <img width={32} height={32} loading="lazy" decoding="async" src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded" />
                             </div>
                           ) : (
                             <div className="p-2 rounded-lg text-violet-600 dark:text-violet-300 bg-violet-500/10 border border-violet-500/20 group-hover:scale-110 transition-transform"><Globe size={18} /></div>

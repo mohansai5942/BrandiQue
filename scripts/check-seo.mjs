@@ -1,0 +1,78 @@
+import assert from 'node:assert/strict';
+import {readFile,access} from 'node:fs/promises';
+import {parseHTML} from 'linkedom';
+const sitemap=await readFile('dist/sitemap.xml','utf8');
+const urls=[...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>m[1]);
+assert.equal(new Set(urls).size,urls.length,'Duplicate sitemap URLs');
+const titles=new Set(), descriptions=new Set(), documents=new Map();
+for (const url of urls) {
+ const {pathname}=new URL(url);
+ assert.equal(new URL(url).origin,'https://brandique.in');
+ const file=pathname==='/' ? 'dist/index.html' : `dist${pathname}/index.html`;
+ const {document}=parseHTML(await readFile(file,'utf8')); documents.set(pathname,document);
+ assert.equal(document.querySelectorAll('title').length,1,`${pathname}: title count`);
+ const title=document.querySelector('title').textContent;
+ assert(!titles.has(title),`${pathname}: duplicate title`); titles.add(title);
+ const desc=document.querySelectorAll('meta[name="description"]'); assert.equal(desc.length,1);
+ assert(!descriptions.has(desc[0].content),`${pathname}: duplicate description`);descriptions.add(desc[0].content);
+ assert.equal(document.querySelectorAll('h1').length,1,`${pathname}: H1 count`);
+ let previousLevel=0;
+ for(const heading of document.querySelectorAll('main h1, main h2, main h3, main h4, main h5, main h6')) {
+  const level=Number(heading.tagName[1]);assert(level<=previousLevel+1,`${pathname}: heading level jump at ${heading.textContent}`);previousLevel=level;
+ }
+ assert.equal(document.querySelectorAll('link[rel="canonical"]').length,1);
+ assert.equal(document.querySelector('link[rel="canonical"]').href,url);
+ assert.equal(document.querySelectorAll('meta[name="robots"]').length,1);
+ assert(!document.querySelector('meta[name="robots"]').content.includes('noindex'));
+ for(const selector of ['meta[property="og:title"]','meta[property="og:description"]','meta[property="og:url"]','meta[property="og:image"]','meta[name="twitter:card"]']) assert(document.querySelector(selector),`${pathname}: ${selector}`);
+ for(const img of document.querySelectorAll('img')) {
+  assert(img.hasAttribute('alt'),`${pathname}: missing alt`);
+  assert(img.getAttribute('width') && img.getAttribute('height'),`${pathname}: image dimensions ${img.src}`);
+  if(img.src.startsWith('/')) await access(`dist${img.src}`);
+ }
+ const graph=JSON.parse(document.querySelector('#page-schema').textContent)['@graph'];
+ const org=graph.find(n=>n['@type']==='Organization');assert.equal(org.founder['@id'],'https://brandique.in/about#founder');
+ assert(!JSON.stringify(graph).includes('Praveen'));
+ const people=graph.filter(n=>n['@type']==='Person'); assert.equal(people.length,pathname==='/about'?1:0);
+ if(pathname==='/about') {
+  assert.equal(people[0].name,'Kutikuppala Mohan Rao');assert.equal(people[0].jobTitle,'Founder');assert.equal(people[0].worksFor['@id'],org['@id']);
+  const image=document.querySelector('#founder img').src;
+  assert.equal(people[0].image,new URL(image,url).href);
+  assert.equal(document.querySelector('meta[property="og:image"]').content,people[0].image);
+  assert(!/Co-Founder|Chief Executive Officer|\bCEO\b/.test(document.querySelector('main').textContent));
+ }
+}
+for (const [path,document] of documents) for(const a of document.querySelectorAll('a[href]')) {
+ const href=a.getAttribute('href');
+ if(!href || href==='#' || /^(mailto:|tel:|javascript:)/.test(href))continue;
+ const target=new URL(href,`https://brandique.in${path}`);
+ if(target.origin!=='https://brandique.in')continue;
+ assert(documents.has(target.pathname)||['/login','/admin'].includes(target.pathname),`${path}: broken internal link ${href}`);
+ if(target.hash && documents.has(target.pathname)) assert(documents.get(target.pathname).getElementById(decodeURIComponent(target.hash.slice(1))),`${path}: broken fragment ${href}`);
+}
+for(const path of ['404.html','login/index.html','admin/index.html']) {
+ const {document}=parseHTML(await readFile(`dist/${path}`,'utf8'));assert(document.querySelector('meta[name="robots"]').content.includes('noindex'));
+}
+const robots=await readFile('dist/robots.txt','utf8');assert(robots.includes('Sitemap: https://brandique.in/sitemap.xml'));assert(!robots.includes('Disallow: /\n'));
+assert(!urls.some(url=>/admin|login|404/.test(url)));
+await access('dist/images/brandique-social.png');
+console.log(`PASS: ${urls.length} pages; unique metadata, H1s, canonical URLs, JSON-LD, founder image consistency, internal links/fragments, image attributes, sitemap and private/404 noindex.`);
+// A founder source replacement must update both visible profile images and head data.
+const {createServer}=await import('vite');
+const vite=await createServer({server:{middlewareMode:true},appType:'custom'});
+try {
+ const site=await vite.ssrLoadModule('/seo/site.ts');
+ const {render}=await vite.ssrLoadModule('/seo/render.tsx');
+ const original=site.founder.image;
+ try {
+  site.founder.image='/images/replacement-test.webp';
+  const {document}=parseHTML(site.headHTML('/about')+render('/about'));
+  assert.equal(document.querySelector('#founder img').src,site.founder.image);
+  assert.equal(document.querySelectorAll('img[src="/images/replacement-test.webp"]').length,2);
+  const person=site.structuredData('/about')['@graph'].find(n=>n['@type']==='Person');
+  assert.equal(person.image,'https://brandique.in/images/replacement-test.webp');
+  assert.equal(document.querySelector('meta[property="og:image"]').content,person.image);
+  assert.equal(document.querySelector('meta[name="twitter:image"]').content,person.image);
+ } finally {site.founder.image=original;}
+ console.log('PASS: replacing the shared founder image updates both portraits, Person, Open Graph and Twitter metadata.');
+} finally {await vite.close();}

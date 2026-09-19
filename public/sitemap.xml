@@ -1,64 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://www.brandique.in/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/services</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/services/full-stack-web-development</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/services/wordpress-development</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/services/branding-identity</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/services/digital-marketing</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/projects</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/web-development</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/about</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.brandique.in/contact</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
+  <url><loc>https://brandique.in/</loc></url>
+  <url><loc>https://brandique.in/about</loc></url>
+  <url><loc>https://brandique.in/contact</loc></url>
+  <url><loc>https://brandique.in/services</loc></url>
+  <url><loc>https://brandique.in/web-development</loc></url>
+  <url><loc>https://brandique.in/services/full-stack</loc></url>
+  <url><loc>https://brandique.in/services/wordpress</loc></url>
+  <url><loc>https://brandique.in/services/branding</loc></url>
+  <url><loc>https://brandique.in/services/digital-marketing</loc></url>
+  <url><loc>https://brandique.in/services/ai-automation</loc></url>
+  <url><loc>https://brandique.in/projects</loc></url>
+  <url><loc>https://brandique.in/privacy-policy</loc></url>
+  <url><loc>https://brandique.in/terms-and-conditions</loc></url>
+  <url><loc>https://brandique.in/cookie-policy</loc></url>
 </urlset>
