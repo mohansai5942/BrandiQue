@@ -64,13 +64,12 @@ const About: React.FC = () => {
                 </div>
                 
                 <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
-                   Hello, I'm <br />
-                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-black dark:via-white to-blue-500 animate-gradient-x bg-[length:200%_auto]">Mohan.</span>
+                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-black dark:via-white to-blue-500 animate-gradient-x bg-[length:200%_auto]">{founder.name}</span>
                 </h1>
                 
                 <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left">
-                   <p>I’m Kutikuppala Mohan Rao (K. Mohan), the Founder & Lead Engineer at <strong>BrandiQue Web Solutions</strong>, specializing in <span className="text-neon-purple font-medium">Web & App Engineering</span>, <span className="text-blue-500 font-medium">AI Agents</span>, workflow automation, <span className="text-cyan-500 dark:text-cyan-400 font-medium">UI/UX</span>, and strategic branding.</p>
-                   <p>I combine technology and creativity to turn complex ideas into elegant digital products that help ambitious businesses build a strong online presence and accelerate growth.</p>
+                   <p><strong>{founder.name}</strong> is the Founder of <strong>{COMPANY}</strong>, specializing in <span className="text-neon-purple font-medium">Web & App Engineering</span>, <span className="text-blue-500 font-medium">AI Agents</span>, workflow automation, <span className="text-cyan-500 dark:text-cyan-400 font-medium">UI/UX</span>, and strategic branding.</p>
+                   <p>Known as K. Mohan, I combine technology and creativity to turn complex ideas into elegant digital products that help ambitious businesses build a strong online presence and accelerate growth.</p>
                 </div>
 
                 <div className="flex flex-nowrap overflow-x-auto sm:overflow-visible items-center justify-start gap-2 md:gap-2.5 pt-8 pb-1 scrollbar-none max-w-full">
@@ -122,6 +121,15 @@ const About: React.FC = () => {
                 </div>
             </ScrollReveal>
          </div>
+      </section>
+
+      <section className="max-w-[1100px] mx-auto px-6 py-8 mb-16" aria-labelledby="company-story">
+        <h2 id="company-story" className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">About BrandiQue Web Solutions</h2>
+        <div className="space-y-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+          <p>Founded by Kutikuppala Mohan Rao, BrandiQue Web Solutions brings together web development, design and automation. Based in Visakhapatnam (Vizag), Andhra Pradesh, our work helps businesses turn their requirements into usable digital products.</p>
+          <p>Our mission is to make digital projects easier to understand and manage. Our vision is to be a long-term technical partner, supporting a business from its first website through changing content, integrations and workflows.</p>
+          <p>Explore our <Link className="underline underline-offset-4" to="/services/full-stack">full-stack development</Link>, <Link className="underline underline-offset-4" to="/services/wordpress">WordPress websites</Link>, <Link className="underline underline-offset-4" to="/services/ai-automation">AI agents and automation</Link>, <Link className="underline underline-offset-4" to="/services/branding">branding</Link> and <Link className="underline underline-offset-4" to="/services/digital-marketing">digital marketing services</Link>. <Link className="underline underline-offset-4" to="/contact">Contact the team</Link> to discuss a project.</p>
+        </div>
       </section>
 
       {/* 2. EXTENDED AGENCY NARRATIVE */}
