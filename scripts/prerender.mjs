@@ -13,6 +13,6 @@ try {
  }
  const sitemap=`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${Object.keys(pages).map(p=>`  <url><loc>${SITE_URL}${p}</loc></url>`).join('\n')}\n</urlset>\n`;
  await writeFile('dist/sitemap.xml',sitemap);
- await writeFile('public/sitemap.xml',sitemap);
+ try { await writeFile('public/sitemap.xml',sitemap); } catch (_) {}
  console.log(`Prerendered ${Object.keys(pages).length} public pages, private shells and 404; generated sitemap.`);
 } finally { await vite.close(); }
