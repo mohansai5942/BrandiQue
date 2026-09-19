@@ -3,3 +3,5 @@ dist
 .DS_Store
 migrated_prompt_history
 .env
+bun.lock
+bun.lockb
