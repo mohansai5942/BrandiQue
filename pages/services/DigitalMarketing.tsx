@@ -110,9 +110,9 @@ const DigitalMarketing: React.FC = () => {
 
                                   {/* Main Post Content - Updated with New Image */}
                                   <div className="flex-1 bg-[#050505] relative group cursor-pointer overflow-hidden">
-                                      <img width={480} height={600} decoding="async"
+                                      <img 
                                           src="https://cdn.imgchest.com/files/63bb11beb595.jpg" 
-                                          alt="Example social media creative in a mobile post preview"
+                                          alt="Social Post Content" 
                                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                       />
 
@@ -239,7 +239,7 @@ const DigitalMarketing: React.FC = () => {
               <div className="mb-20 md:mb-24 lg:mb-32">
                   <ScrollReveal>
                       <div className="text-center mb-10 md:mb-16">
-                          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">How We Grow Your Digital Presence</h2>
+                          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">How We Grow Your Digital Presence</h3>
                           <div className="h-1 w-16 md:w-20 bg-green-500 mx-auto rounded-full"></div>
                       </div>
                       
@@ -259,7 +259,7 @@ const DigitalMarketing: React.FC = () => {
                                       </div>
                                       <item.icon size={24} className="md:w-[32px] md:h-[32px] text-gray-400 group-hover:text-green-400 transition-colors" />
                                   </div>
-                                  <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">{item.title}</h3>
+                                  <h4 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">{item.title}</h4>
                                   <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm leading-relaxed max-w-xs">{item.desc}</p>
                               </div>
                           ))}
@@ -272,7 +272,7 @@ const DigitalMarketing: React.FC = () => {
       <div className="max-w-[1400px] mx-auto px-6 relative z-10 mb-20 md:mb-32">
          <ScrollReveal>
              <div className="text-center mb-10 md:mb-16">
-                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Detailed Packages & Strategy</h2>
+                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Detailed Packages & Strategy</h3>
                  <div className="h-1 w-20 bg-green-500 mx-auto rounded-full mb-6"></div>
                  <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">
                     Result-driven digital marketing solutions to help businesses increase their online visibility, reach the right audience, and grow effectively.
@@ -291,7 +291,7 @@ const DigitalMarketing: React.FC = () => {
                      <TrendingUp size={120} className="text-white" />
                   </div>
                   <div className="relative z-10 flex-grow">
-                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h3>
+                     <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h4>
                      <p className="text-green-100 text-sm mb-8 leading-relaxed">
                         Flexible plans tailored to your growth ambitions. From brand awareness to customer acquisition, we deliver measurable results.
                      </p>
@@ -331,7 +331,7 @@ const DigitalMarketing: React.FC = () => {
                      <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500 shrink-0">
                         <Sparkles size={24} />
                      </div>
-                     <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Features</h3>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Features</h4>
                   </div>
                   <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                      {["Brand awareness campaigns", "Content planning & strategy", "Social media management", "Audience targeting & research", "Paid ad campaign setup", "Engagement improvement", "Performance tracking", "Monthly reporting"].map((item, i) => (
@@ -348,7 +348,7 @@ const DigitalMarketing: React.FC = () => {
                      <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
                         <Package size={24} />
                      </div>
-                     <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Deliverables</h3>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Deliverables</h4>
                   </div>
                   <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                      {["Monthly marketing plan", "Content calendar (schedule)", "Social media posts/designs", "Ad campaign setup & reports", "Audience targeting report", "Performance analytics", "Growth insights", "Monthly progress report"].map((item, i) => (
@@ -366,7 +366,7 @@ const DigitalMarketing: React.FC = () => {
                      <div className="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center text-white shrink-0">
                         <ListChecks size={24} />
                      </div>
-                     <h3 className="text-xl md:text-2xl font-bold text-white">Full Cycle Process</h3>
+                     <h4 className="text-xl md:text-2xl font-bold text-white">Full Cycle Process</h4>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 relative z-10 flex-grow">
                      {[
@@ -398,7 +398,7 @@ const DigitalMarketing: React.FC = () => {
                      <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 shrink-0">
                         <Layers size={24} />
                      </div>
-                     <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Requirements</h3>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Requirements</h4>
                   </div>
                   <ul className="space-y-3 flex-grow text-sm text-gray-600 dark:text-gray-400">
                      {["Business details", "Target audience info", "Products / services", "Social media access", "Brand logo/assets", "Marketing goals", "Ads budget", "Competitor references"].map((item, i) => (
@@ -415,7 +415,7 @@ const DigitalMarketing: React.FC = () => {
                      <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 shrink-0">
                         <Cpu size={24} />
                      </div>
-                     <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Tech & Tools</h3>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Tech & Tools</h4>
                   </div>
                   <div className="flex flex-wrap gap-2 flex-grow">
                      {["Meta Ads", "Google Ads", "Analytics", "Canva", "Business Suite", "SEO tools", "Notion / Sheets", "Search Console"].map((item, i) => (
@@ -434,7 +434,7 @@ const DigitalMarketing: React.FC = () => {
                      <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 shrink-0">
                         <Target size={24} />
                      </div>
-                     <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Promises</h3>
+                     <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Our Promises</h4>
                   </div>
                   <div className="grid md:grid-cols-2 gap-y-3 gap-x-6 flex-grow text-sm text-gray-600 dark:text-gray-400">
                      {["Clear transparent strategy", "Consistent campaign execution", "Regular performance tracking", "On-time monthly reporting", "Data-driven optimization", "Professional support", "Revisions based on results", "Focus on improving reach"].map((item, i) => (
@@ -458,7 +458,7 @@ const DigitalMarketing: React.FC = () => {
                   <div className="lg:col-span-2 bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/5 rounded-2xl md:rounded-3xl p-6 md:p-8 relative overflow-hidden group shadow-xl dark:shadow-none">
                       <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
                       <ScrollReveal>
-                          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">Why Digital Marketing Matters?</h2>
+                          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">Why Digital Marketing Matters?</h3>
                           <ul className="space-y-3 md:space-y-4 grid md:grid-cols-2 gap-x-4">
                               {[
                                   "Consistent visuals increase brand trust.",
@@ -481,9 +481,9 @@ const DigitalMarketing: React.FC = () => {
                   {/* Usage Block */}
                   <div className="lg:col-span-1 bg-white dark:bg-[#151A25] border border-gray-200 dark:border-white/5 rounded-2xl md:rounded-3xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden shadow-xl dark:shadow-none">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-2xl"></div>
-                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6 flex items-center gap-2">
+                      <h4 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6 flex items-center gap-2">
                           <Megaphone size={20} className="text-green-400" /> Perfect For
-                      </h3>
+                      </h4>
                       <div className="flex flex-wrap gap-2">
                           {["Social Branding", "Product Promotions", "Business Visibility", "Event Marketing", "Creator Growth", "Portfolio"].map((tag, i) => (
                               <span key={i} className="px-2.5 py-1.5 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/5 text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-bold uppercase hover:bg-gray-200 dark:hover:bg-white/10 hover:text-black dark:hover:text-white transition-colors cursor-default">

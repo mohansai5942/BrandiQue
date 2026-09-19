@@ -15,7 +15,7 @@ import SpotlightCard from '../components/SpotlightCard';
 import ViewOptimizer from '../components/ViewOptimizer';
 import DealsSection from '../components/DealsSection';
 import { INITIAL_N8N_PROJECTS } from './N8nProjectsData';
-import { N8nWorkflowViewer } from '../components/DeferredWorkflowViewer';
+import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
 
 const STATS = [
    { label: "Projects Completed", value: "100+", icon: Rocket, color: "text-neon-purple" },
@@ -114,7 +114,7 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
       <div className="relative w-full h-full overflow-hidden">
          {/* Image layer */}
          {image && (
-            <img width={800} height={450} loading="lazy" decoding="async"
+            <img
                src={image}
                alt={title}
                className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
@@ -217,12 +217,66 @@ const Home: React.FC = () => {
             <div className="max-w-[1500px] w-full mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center z-10">
                <div className="space-y-6 text-left">
 
-                  <div className="mt-8">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">Web Development &amp; <span className="text-neon-purple">AI Automation</span></h1>
-                    <p className="mt-6 text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">BrandiQue Web Solutions builds business websites, custom applications and AI workflows, with design and branding shaped around your goals.</p>
-                    <div className="flex flex-wrap gap-4 mt-8"><Link to="/services" className="px-6 py-3.5 rounded-full bg-neon-purple text-white font-bold">Explore services</Link><Link to="/web-development" className="px-6 py-3.5 rounded-full border border-gray-400">Website packages</Link></div>
+                  {/* ✅ Mobile (<lg): NO entrance animations */}
+                  <div className="block lg:hidden mt-[48px]">
+                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-purple/10 border border-neon-purple/20 text-neon-purple text-[10px] font-bold uppercase tracking-widest">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
+                        Engineered for Excellence
+                     </div>
+
+                     <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-[22px]">
+                        We Architect <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-gradient-x bg-[length:200%_auto]">
+                           {ROTATING_WORDS[currentWordIndex]}.
+                        </span>
+                     </h1>
+
+                     <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
+                        <TextReveal text="Merging precision code with avant-garde design to build digital platforms that command authority." delay={300} />
+                     </div>
+
+                     <div className="flex flex-wrap gap-4 mt-8">
+                        <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
+                           Start Project <ArrowRight size={18} />
+                        </Link>
+                        <Link to="/web-development" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
+                           Web Pricing
+                        </Link>
+                     </div>
                   </div>
+
+                  {/* ✅ Desktop (lg+): Keep entrance animations */}
+                  <div className="hidden lg:block">
+                     <ScrollReveal>
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-purple/10 border border-neon-purple/20 text-neon-purple text-[10px] font-bold uppercase tracking-widest">
+                           <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
+                           Engineered for Excellence
+                        </div>
+
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-4">
+                           We Architect <br />
+                           <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-gradient-x bg-[length:200%_auto]">
+                              {ROTATING_WORDS[currentWordIndex]}.
+                           </span>
+                        </h1>
+
+                        <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
+                           <TextReveal text="Merging precision code with avant-garde design to build digital platforms that command authority." delay={300} />
+                        </div>
+
+                        <div className="flex flex-wrap gap-4 mt-8">
+                           <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
+                              Start Project <ArrowRight size={18} />
+                           </Link>
+                           <Link to="/web-development" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
+                              Web Pricing
+                           </Link>
+                        </div>
+                     </ScrollReveal>
+                  </div>
+
                </div>
+
 
                {/* IDE / Terminal Block with Typewriter Effect */}
                <div className="relative block">
@@ -340,7 +394,7 @@ const Home: React.FC = () => {
                               { t: "Visual Authority", d: "Crafting bespoke design systems that communicate luxury, trust, and professional depth." }
                            ].map((item, i) => (
                               <li key={i} className="space-y-1">
-                                 <h3 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-xs">{item.t}</h3>
+                                 <h4 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-xs">{item.t}</h4>
                                  <p className="text-sm text-gray-500 font-light">{item.d}</p>
                               </li>
                            ))}
@@ -519,7 +573,7 @@ const Home: React.FC = () => {
                            Statistics prove that for every second your website takes to load beyond 3 seconds, your conversion rate drops by over 20%. At BrandiQue, we treat performance as a core business metric. We don't just optimize images; we architect entire data-fetching strategies using Incremental Static Regeneration (ISR) and Server-Side Rendering (SSR) to ensure your users never see a loading spinner.
                         </p>
                         <p>
-                           Our SEO work includes useful page content, clear metadata, JSON-LD structured data and accessible page structure. We review loading speed, layout stability and responsiveness through LCP, CLS and INP. These improvements help users and search engines understand a website; search visibility also depends on content quality, competition and ongoing work.
+                           Our SEO strategy is equally rigorous. Most Solutions Providers stop at meta titles and descriptions. We go deeper, implementing JSON-LD Schema markup, ensuring perfect Core Web Vital scores (LCP, FID, CLS), and building accessible DOM structures. When Google sees a technically perfect website that serves users instantly, your organic visibility skyrockets, providing a sustainable ROI that far outweighs paid advertising costs in the long run.
                         </p>
                      </div>
                      <div className="pt-6">
@@ -610,11 +664,11 @@ const Home: React.FC = () => {
                      <div className="order-2 lg:order-1 relative">
                         <div className="grid grid-cols-2 gap-4">
                            <div className="bg-[#0F1320] p-6 rounded-2xl border border-white/5 shadow-xl">
-                              <h3 className="text-neon-purple font-bold text-3xl mb-2">99.9%</h3>
+                              <h4 className="text-neon-purple font-bold text-3xl mb-2">99.9%</h4>
                               <p className="text-xs text-gray-500 uppercase tracking-widest">Uptime Promise</p>
                            </div>
                            <div className="bg-[#0F1320] p-6 rounded-2xl border border-white/5 shadow-xl mt-8">
-                              <h3 className="text-neon-blue font-bold text-3xl mb-2">256-bit</h3>
+                              <h4 className="text-neon-blue font-bold text-3xl mb-2">256-bit</h4>
                               <p className="text-xs text-gray-500 uppercase tracking-widest">SSL Security</p>
                            </div>
                         </div>
@@ -678,7 +732,7 @@ const Home: React.FC = () => {
                         <div className="w-20 h-20 mx-auto rounded-full bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 flex items-center justify-center text-2xl font-black text-neon-purple shadow-xl group-hover:scale-110 group-hover:bg-neon-purple group-hover:text-white transition-all">
                            {item.step}
                         </div>
-                        <h3 className="font-bold text-sm uppercase tracking-widest">{item.title}</h3>
+                        <h4 className="font-bold text-sm uppercase tracking-widest">{item.title}</h4>
                      </div>
                   ))}
                </div>
@@ -699,7 +753,7 @@ const Home: React.FC = () => {
                      { q: "Do you offer maintenance?", a: "Yes, we act as long-term technical partners for our clients." }
                   ].map((faq, i) => (
                      <ScrollReveal key={i} className="p-6 bg-white dark:bg-[#0F1320] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm">
-                        <h3 className="font-bold mb-3 flex items-center gap-2"><HelpCircle size={16} className="text-neon-purple" /> {faq.q}</h3>
+                        <h4 className="font-bold mb-3 flex items-center gap-2"><HelpCircle size={16} className="text-neon-purple" /> {faq.q}</h4>
                         <p className="text-sm text-gray-500 font-light leading-relaxed">{faq.a}</p>
                      </ScrollReveal>
                   ))}
@@ -733,14 +787,14 @@ const Home: React.FC = () => {
                         <div className="flex items-start gap-4 p-8 rounded-3xl bg-neon-purple/5 border border-neon-purple/10">
                            <HeartHandshake className="text-neon-purple shrink-0" size={32} />
                            <div>
-                              <h3 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">Radical Transparency</h3>
+                              <h4 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">Radical Transparency</h4>
                               <p className="text-sm text-gray-500 font-light leading-relaxed">We provide real-time project tracking and clear communication throughout the lifecycle of your project.</p>
                            </div>
                         </div>
                         <div className="flex items-start gap-4 p-8 rounded-3xl bg-neon-blue/5 border border-neon-blue/10">
                            <Sparkles className="text-neon-blue shrink-0" size={32} />
                            <div>
-                              <h3 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">Uncompromising Quality</h3>
+                              <h4 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">Uncompromising Quality</h4>
                               <p className="text-sm text-gray-500 font-light leading-relaxed">Every line of code undergoes rigorous peer review and testing before it ever reaches a production environment.</p>
                            </div>
                         </div>
@@ -784,15 +838,15 @@ const Home: React.FC = () => {
                      </a>
                   </div>
                   <div className="pt-20 opacity-30">
-                     <img width={800} height={450} loading="lazy" decoding="async"
+                     <img
                         src="https://cdn.imgchest.com/files/1b3230978aa9.png"
-                        alt="BrandiQue Web Solutions"
+                        alt="Logo"
                         onContextMenu={(e) => e.preventDefault()}
                         className="h-12 md:h-16 mx-auto object-contain hidden dark:block"
                      />
-                     <img width={800} height={450} loading="lazy" decoding="async"
+                     <img
                         src="https://cdn.imgchest.com/files/c912299e5353.png"
-                        alt="BrandiQue Web Solutions"
+                        alt="Logo"
                         onContextMenu={(e) => e.preventDefault()}
                         className="h-12 md:h-16 mx-auto object-contain block dark:hidden"
                      />

@@ -186,7 +186,7 @@ const FullStack: React.FC = () => {
             <div className="mb-20 md:mb-24 lg:mb-32">
                <ScrollReveal>
                   <div className="text-center mb-10 md:mb-16">
-                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">How We Build Your Website</h2>
+                     <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">How We Build Your Website</h3>
                      <div className="h-1 w-16 md:w-20 bg-neon-purple mx-auto rounded-full"></div>
                   </div>
                   <div className="grid md:grid-cols-3 gap-6 md:gap-8 relative">
@@ -203,7 +203,7 @@ const FullStack: React.FC = () => {
                                </div>
                                <item.icon size={24} className="md:w-[32px] md:h-[32px] text-gray-400 group-hover:text-neon-purple transition-colors" />
                            </div>
-                           <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">{item.title}</h3>
+                           <h4 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">{item.title}</h4>
                            <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm leading-relaxed max-w-xs">{item.desc}</p>
                         </div>
                      ))}
@@ -218,7 +218,7 @@ const FullStack: React.FC = () => {
             <div className="mb-24 lg:mb-32">
                <ScrollReveal>
                   <div className="text-center mb-10 md:mb-16">
-                     <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Full Stack Development Services</h2>
+                     <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Full Stack Development Services</h3>
                      <div className="h-1 w-20 bg-neon-purple mx-auto rounded-full mb-6"></div>
                      <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto">Comprehensive solutions tailored to your unique needs, completely custom-coded.</p>
                   </div>
@@ -290,7 +290,7 @@ const FullStack: React.FC = () => {
                                   <div className="w-12 h-12 rounded-xl bg-neon-purple/10 flex items-center justify-center text-neon-purple shrink-0">
                                      <pkg.icon size={24} />
                                   </div>
-                                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{pkg.title}</h3>
+                                  <h4 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{pkg.title}</h4>
                                </div>
                                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-3xl">{pkg.desc}</p>
                             </div>
@@ -310,7 +310,7 @@ const FullStack: React.FC = () => {
                          
                          <div className="p-6 md:p-10 grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-x-12 md:gap-y-10 bg-gray-50 dark:bg-white/[0.02]">
                             <div>
-                               <h4 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Sparkles size={16} className="text-neon-purple"/> Features</h4>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Sparkles size={16} className="text-neon-purple"/> Features</h5>
                                <ul className="space-y-2">
                                   {pkg.features.map((f, i) => (
                                     <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400"><Check size={14} className="text-green-500 shrink-0 mt-0.5" /> <span>{f}</span></li>
@@ -318,7 +318,7 @@ const FullStack: React.FC = () => {
                                </ul>
                             </div>
                             <div>
-                               <h4 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Package size={16} className="text-neon-purple"/> Deliverables</h4>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Package size={16} className="text-neon-purple"/> Deliverables</h5>
                                <ul className="space-y-2">
                                   {pkg.deliverables.map((f, i) => (
                                     <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400"><Check size={14} className="text-blue-400 shrink-0 mt-0.5" /> <span>{f}</span></li>
@@ -326,7 +326,7 @@ const FullStack: React.FC = () => {
                                </ul>
                             </div>
                             <div>
-                               <h4 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Layers size={16} className="text-neon-purple"/> Requirements</h4>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Layers size={16} className="text-neon-purple"/> Requirements</h5>
                                <ul className="space-y-2">
                                   {pkg.requirements.map((f, i) => (
                                     <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400"><Check size={14} className="text-yellow-500 shrink-0 mt-0.5" /> <span>{f}</span></li>
@@ -334,7 +334,7 @@ const FullStack: React.FC = () => {
                                </ul>
                             </div>
                             <div>
-                               <h4 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><LayoutTemplate size={16} className="text-neon-purple"/> Process</h4>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><LayoutTemplate size={16} className="text-neon-purple"/> Process</h5>
                                <ul className="space-y-2">
                                   {pkg.process.map((f, i) => (
                                     <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400">
@@ -345,7 +345,7 @@ const FullStack: React.FC = () => {
                                </ul>
                             </div>
                             <div>
-                               <h4 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Code size={16} className="text-neon-purple"/> Tech Stack</h4>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Code size={16} className="text-neon-purple"/> Tech Stack</h5>
                                <div className="flex flex-wrap gap-2">
                                   {pkg.tech.map((t, i) => (
                                     <span key={i} className="px-2.5 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider bg-gray-200 dark:bg-[#151A25] text-gray-700 dark:text-gray-300 rounded-md border border-gray-300 dark:border-white/5 shadow-sm">{t}</span>
@@ -353,7 +353,7 @@ const FullStack: React.FC = () => {
                                </div>
                             </div>
                             <div>
-                               <h4 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><ShieldCheck size={16} className="text-neon-purple"/> Promises</h4>
+                               <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><ShieldCheck size={16} className="text-neon-purple"/> Promises</h5>
                                <ul className="space-y-2">
                                   {pkg.promises.map((f, i) => (
                                     <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400"><Check size={14} className="text-neon-purple shrink-0 mt-0.5" /> <span>{f}</span></li>
@@ -377,7 +377,7 @@ const FullStack: React.FC = () => {
                <div className="absolute inset-0 bg-gradient-to-r from-neon-purple/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
                   <ScrollReveal>
-                     <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">Why Custom Development Matters?</h2>
+                     <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">Why Custom Development Matters?</h3>
                      <ul className="space-y-4 md:space-y-6">
                         {[
                            { title: "Total Control", text: "Custom code gives you full control over design and functionality.", icon: Server },
@@ -390,7 +390,7 @@ const FullStack: React.FC = () => {
                                  <item.icon size={16} className="md:w-[20px] md:h-[20px]" />
                               </div>
                               <div>
-                                 <h3 className="text-gray-900 dark:text-white font-bold text-base md:text-lg mb-0.5 md:mb-1">{item.title}</h3>
+                                 <h4 className="text-gray-900 dark:text-white font-bold text-base md:text-lg mb-0.5 md:mb-1">{item.title}</h4>
                                  <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">{item.text}</p>
                               </div>
                            </li>

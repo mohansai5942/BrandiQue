@@ -6,7 +6,7 @@ import { db, auth } from '../firebase';
 import { Project, N8nProject } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
 import { useSiteSettings } from '../context/SiteSettingsContext';
-import { N8nWorkflowViewer } from '../components/DeferredWorkflowViewer';
+import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
 
 enum OperationType {
   CREATE = 'create',
@@ -112,7 +112,7 @@ function ProjectMedia({ image, video, images = [], videos = [], title, fitMode =
     >
       {/* Image layer */}
       {currentImg && (
-        <img width={800} height={450} loading="lazy" decoding="async"
+        <img
           src={currentImg}
           alt={title}
           referrerPolicy="no-referrer"
@@ -342,7 +342,7 @@ export default function Projects() {
 
   return (
     <motion.div
-      initial={false}
+      initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white min-h-screen pt-28 md:pt-36 pb-20 transition-colors duration-300"
@@ -351,14 +351,14 @@ export default function Projects() {
         {/* Header */}
         <div className="max-w-4xl mx-auto mb-16 md:mb-32 text-center md:text-left">
           <motion.span 
-            initial={false}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-[10px] font-bold text-neon-purple dark:text-neon-blue tracking-[0.4em] md:tracking-[0.5em] uppercase mb-3 md:mb-4 block"
           >
             Showcase
           </motion.span>
           <motion.h1 
-            initial={false}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-4 md:mb-8 uppercase text-balance leading-[1.1]"
@@ -438,7 +438,7 @@ export default function Projects() {
               <>
                 <motion.div 
                   variants={containerVariants}
-                  initial={false}
+                  initial="hidden"
                   animate="visible"
                   className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-6 md:gap-16"
                 >
@@ -489,7 +489,7 @@ export default function Projects() {
               <>
                 <motion.div 
                   variants={containerVariants}
-                  initial={false}
+                  initial="hidden"
                   animate="visible"
                   className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-6 md:gap-16"
                 >
@@ -549,7 +549,7 @@ export default function Projects() {
               <>
                 <motion.div 
                   variants={containerVariants}
-                  initial={false}
+                  initial="hidden"
                   animate="visible"
                   className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8"
                 >
@@ -677,7 +677,7 @@ export default function Projects() {
               <>
                 <motion.div 
                   variants={containerVariants}
-                  initial={false}
+                  initial="hidden"
                   animate="visible"
                   className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 md:gap-12"
                 >
@@ -728,7 +728,7 @@ export default function Projects() {
               <>
                 <motion.div 
                   variants={containerVariants}
-                  initial={false}
+                  initial="hidden"
                   animate="visible"
                   className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-10"
                 >
@@ -805,7 +805,7 @@ export default function Projects() {
                       <div key={i} className="flex gap-4 md:gap-8 group">
                          <span className="text-lg md:text-2xl font-bold text-neon-purple/20 group-hover:text-neon-purple dark:text-neon-blue/20 dark:group-hover:text-neon-blue transition-colors">{item.step}</span>
                          <div>
-                            <h3 className="text-base md:text-xl font-bold mb-1.5 md:mb-3 tracking-widest uppercase text-gray-900 dark:text-white">{item.title}</h3>
+                            <h4 className="text-base md:text-xl font-bold mb-1.5 md:mb-3 tracking-widest uppercase text-gray-900 dark:text-white">{item.title}</h4>
                             <p className="text-[11px] md:text-base text-gray-500 dark:text-gray-400 leading-relaxed font-light">{item.desc}</p>
                          </div>
                       </div>

@@ -6,7 +6,6 @@ import { InquiryProvider } from '../context/InquiryContext';
 import { SiteSettingsProvider } from '../context/SiteSettingsContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import PageContext, { Breadcrumbs } from '../components/PageContext';
 import Home from '../pages/Home';
 import About from '../pages/About';
 import Contact from '../pages/Contact';
@@ -25,5 +24,5 @@ import NotFound from '../pages/NotFound';
 const components: Record<string, React.ComponentType> = {'/': Home,'/about': About,'/contact': Contact,'/web-development': WebDevelopment,'/projects': Projects,'/services': Services,'/services/full-stack': FullStack,'/services/wordpress': WordPress,'/services/branding': Branding,'/services/digital-marketing': DigitalMarketing,'/services/ai-automation': AIAutomation,'/privacy-policy': PrivacyPolicy,'/terms-and-conditions': TermsAndConditions,'/cookie-policy': CookiePolicy,'/404': NotFound};
 export function render(path: string) {
  const Page=components[path] || NotFound;
- return renderToString(<StaticRouter location={path}><AuthProvider><SiteSettingsProvider><InquiryProvider><div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white"><Navbar /><main id="main-content" className="flex-grow"><Breadcrumbs /><Page /><PageContext /></main><Footer /></div></InquiryProvider></SiteSettingsProvider></AuthProvider></StaticRouter>);
+ return renderToString(<StaticRouter location={path}><AuthProvider><SiteSettingsProvider><InquiryProvider><div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white"><Navbar /><main id="main-content" className="flex-grow"><Page /></main><Footer /></div></InquiryProvider></SiteSettingsProvider></AuthProvider></StaticRouter>);
 }
