@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { X, MessageSquare } from 'lucide-react';
+import { X, MessageSquare, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const EMBED_CHATBOT_HTML = `<!doctype html>
+const STORAGE_KEY = 'brandique_darling_chat_history';
+const MEMORY_STORAGE_KEY = 'brandique_darling_user_memory';
+
+const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
 <html lang="en" class="embed-mode">
 <head>
   <meta charset="UTF-8">
@@ -62,15 +65,16 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
     .message-row.user {
       justify-content: flex-end;
     }
+    /* Desktop chat text sizes */
     .bubble {
       max-width: min(85%, 440px);
-      padding: 10px 14px;
+      padding: 9px 13px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 16px 16px 16px 4px;
       background: rgba(255, 255, 255, 0.05);
       color: #f1f5f9;
-      line-height: 1.55;
-      font-size: 13.5px;
+      line-height: 1.5;
+      font-size: 14px;
       word-break: break-word;
     }
     .message-row.user .bubble {
@@ -78,36 +82,71 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
       border-radius: 16px 16px 4px 16px;
       background: linear-gradient(135deg, #7c3aed, #2563eb);
       color: #ffffff;
-      font-size: 13.5px;
+      font-size: 14px;
+      line-height: 1.5;
       box-shadow: 0 4px 14px rgba(124, 58, 237, 0.28);
     }
-    .welcome-card {
-      padding: 2px 0 4px;
+    .welcome-row {
+      width: 100%;
     }
-    .welcome-card h2 {
+    .welcome-row .bubble.welcome-card {
+      max-width: 100% !important;
+      width: 100%;
+      padding: 13px 15px;
+      border-radius: 16px;
+      background: linear-gradient(140deg, rgba(124, 58, 237, 0.14) 0%, rgba(37, 99, 235, 0.08) 55%, rgba(15, 23, 42, 0.5) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.28);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .welcome-card h2.welcome-title {
       font-family: 'Manrope', sans-serif;
-      font-size: 15px;
+      font-size: 15.5px;
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 5px;
-      letter-spacing: -0.01em;
+      margin: 0 0 7px 0;
+      letter-spacing: -0.015em;
+      line-height: 1.35;
     }
-    .welcome-card p {
-      font-size: 13px;
-      color: #94a3b8;
-      line-height: 1.5;
+    .welcome-card p.welcome-desc {
+      font-size: 12.8px;
+      color: #cbd5e1;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .welcome-brand {
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .welcome-chip {
+      display: inline-block;
+      padding: 0.5px 5.5px;
+      margin: 1px 1px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      color: #f1f5f9;
+      font-size: 11.5px;
+      font-weight: 500;
+      white-space: nowrap;
     }
     .suggestions {
       display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      padding: 2px 16px 8px;
+      flex-wrap: nowrap;
+      overflow-x: hidden;
+      gap: 4px;
+      padding: 2px 10px 8px;
       flex-shrink: 0;
+      width: 100%;
+      box-sizing: border-box;
+      justify-content: center;
+      align-items: center;
     }
     .suggestions button {
-      padding: 6px 12px;
+      flex: 0 0 auto;
+      width: auto;
+      padding: 4px 7px;
       border-radius: 999px;
-      font-size: 11.5px;
+      font-size: 10px;
       font-weight: 500;
       color: #cbd5e1;
       background: rgba(255, 255, 255, 0.04);
@@ -115,10 +154,15 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
       cursor: pointer;
       transition: all 0.18s ease;
       white-space: nowrap;
+      text-align: center;
+      letter-spacing: -0.015em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .suggestions button:hover {
       border-color: rgba(6, 182, 212, 0.6);
-      background: rgba(124, 58, 237, 0.16);
+      background: rgba(124, 58, 237, 0.18);
       color: #ffffff;
       transform: translateY(-1px);
     }
@@ -150,25 +194,25 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
       line-height: 1.4;
       font-size: 14px;
       font-family: inherit;
-      padding: 6px 0;
+      padding: 5px 0;
     }
     #input::placeholder {
       color: #64748b;
-      font-size: 13.5px;
+      font-size: 13px;
     }
     #sendBtn {
-      flex: 0 0 40px;
-      width: 40px;
-      height: 40px;
-      min-width: 40px;
-      min-height: 40px;
+      flex: 0 0 36px;
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
       display: grid;
       place-items: center;
       border: 0;
-      border-radius: 12px;
+      border-radius: 11px;
       background: linear-gradient(135deg, #7c3aed, #2563eb, #06b6d4);
       color: #ffffff;
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.15s ease, opacity 0.15s ease;
@@ -209,13 +253,83 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Mobile view styles (applied ONLY when is-mobile class is present) */
+    body.is-mobile .messages-area {
+      padding: 8px 10px 4px;
+      gap: 7px;
+    }
+    body.is-mobile .bubble {
+      padding: 7px 11px;
+      font-size: 11.6px;
+      line-height: 1.45;
+      border-radius: 13px 13px 13px 4px;
+    }
+    body.is-mobile .message-row.user .bubble {
+      border-radius: 13px 13px 4px 13px;
+      font-size: 11.6px;
+      line-height: 1.45;
+    }
+    body.is-mobile .welcome-row .bubble.welcome-card {
+      padding: 9px 11px;
+      border-radius: 13px;
+    }
+    body.is-mobile .welcome-card h2.welcome-title {
+      font-size: 12.5px;
+      margin-bottom: 4px;
+    }
+    body.is-mobile .welcome-card p.welcome-desc {
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    body.is-mobile .welcome-chip {
+      padding: 0 4px;
+      font-size: 10px;
+      border-radius: 4px;
+    }
+    body.is-mobile .suggestions {
+      padding: 0 6px 6px;
+      gap: 2.5px;
+      flex-wrap: nowrap;
+      overflow-x: hidden;
+      justify-content: center;
+    }
+    body.is-mobile .suggestions button {
+      flex: 0 0 auto;
+      width: auto;
+      padding: 3px 4.5px;
+      font-size: 8px;
+      letter-spacing: -0.025em;
+    }
+    body.is-mobile .composer-form {
+      margin: 2px 8px 8px;
+      padding: 3px 4px 3px 10px;
+      border-radius: 13px;
+    }
+    body.is-mobile #input {
+      font-size: 11.6px;
+      padding: 3px 0;
+    }
+    body.is-mobile #input::placeholder {
+      font-size: 11px;
+    }
+    body.is-mobile #sendBtn {
+      flex: 0 0 32px;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      min-height: 32px;
+      font-size: 14px;
+      border-radius: 9px;
+    }
   </style>
 </head>
-<body class="embed-mode">
+<body class="embed-mode \${initialIsMobile ? 'is-mobile' : 'is-desktop'}">
   <div class="embed-shell">
     <div id="messages" class="messages-area"></div>
     <div id="suggestions" class="suggestions">
       <button data-prompt="What services does BrandiQue offer?">Services</button>
+      <button data-prompt="Tell me about BrandiQue's branding and design services.">Branding</button>
       <button data-prompt="I need a custom website for my business. What do you recommend?">Website</button>
       <button data-prompt="How can BrandiQue help with SEO & marketing?">SEO & Marketing</button>
       <button data-prompt="I want an AI chatbot or automation. What can you build?">AI & Automation</button>
@@ -228,15 +342,79 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
     </form>
   </div>
   <script>
+    function detectAndSetViewport(forcedMobile) {
+      var isMob = false;
+      if (typeof forcedMobile === 'boolean') {
+        isMob = forcedMobile;
+      } else {
+        try {
+          if (window.parent && typeof window.parent.innerWidth === 'number') {
+            isMob = window.parent.innerWidth < 640;
+          } else if (window.screen && typeof window.screen.width === 'number') {
+            isMob = window.screen.width < 640;
+          }
+        } catch(e) {
+          isMob = false;
+        }
+      }
+      if (isMob) {
+        document.body.classList.add('is-mobile');
+        document.body.classList.remove('is-desktop');
+      } else {
+        document.body.classList.add('is-desktop');
+        document.body.classList.remove('is-mobile');
+      }
+    }
+    detectAndSetViewport();
+    window.addEventListener('resize', function() {
+      detectAndSetViewport();
+    });
+    window.addEventListener('message', function(e) {
+      if (!e.data) return;
+      if (typeof e.data.isMobile === 'boolean') {
+        detectAndSetViewport(e.data.isMobile);
+      }
+      if (e.data.type === 'CLEAR_CHAT') {
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem("brandique_chat_history_v2");
+          localStorage.removeItem(MEMORY_STORAGE_KEY);
+        } catch(err) {}
+        history = [];
+        userMemory = {};
+        messagesEl.innerHTML = "";
+        if (suggestions) suggestions.style.display = "flex";
+        if (input) {
+          input.value = "";
+          input.style.height = "auto";
+        }
+        restoreChat();
+      }
+      if (e.data.type === 'INIT_STORAGE') {
+        if (e.data.memory && typeof e.data.memory === 'object' && Object.keys(e.data.memory).length > 0) {
+          userMemory = Object.assign({}, userMemory, e.data.memory);
+          saveMemory();
+        }
+        if (Array.isArray(e.data.history) && e.data.history.length > 0 && history.length === 0) {
+          history = e.data.history;
+          saveHistory();
+          messagesEl.innerHTML = "";
+          restoreChat();
+        }
+      }
+    });
+
     const messagesEl = document.getElementById("messages");
     const input = document.getElementById("input");
     const form = document.getElementById("chatForm");
     const sendBtn = document.getElementById("sendBtn");
     const suggestions = document.getElementById("suggestions");
     const STORAGE_KEY = "brandique_darling_chat_history";
+    const MEMORY_STORAGE_KEY = "brandique_darling_user_memory";
     const API_ENDPOINT = "https://brandique-chatbot.vercel.app/api/chat";
 
     let history = loadHistory();
+    let userMemory = loadMemory();
 
     function loadHistory() {
       try {
@@ -250,7 +428,7 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
           .filter(function(m) {
             return m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string";
           })
-          .slice(-40);
+          .slice(-50);
       } catch (e) {
         return [];
       }
@@ -258,8 +436,60 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
 
     function saveHistory() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(-40)));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(-50)));
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "SYNC_STORAGE", history: history.slice(-50), memory: userMemory }, "*");
+        }
       } catch (e) {}
+    }
+
+    function loadMemory() {
+      try {
+        const raw = localStorage.getItem(MEMORY_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveMemory() {
+      try {
+        localStorage.setItem(MEMORY_STORAGE_KEY, JSON.stringify(userMemory));
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "SYNC_STORAGE", history: history.slice(-50), memory: userMemory }, "*");
+        }
+      } catch (e) {}
+    }
+
+    function extractMemory(text) {
+      if (!text || typeof text !== "string") return;
+      const clean = text.trim();
+
+      // Extract user's name in English, Telugu, Tanglish
+      const namePatterns = [
+        /(?:my name is|i am|i'm|call me|this is)\s+([A-Za-z]{2,25})/i,
+        /(?:na peru|naa peru|na name|peru(?:\s+vachi)?|nenu)\s+([A-Za-z]{2,25})/i
+      ];
+
+      for (let i = 0; i < namePatterns.length; i++) {
+        const match = clean.match(namePatterns[i]);
+        if (match && match[1]) {
+          const candidate = match[1].trim();
+          const skipWords = [
+            "looking", "interested", "trying", "here", "ready", "asking",
+            "wondering", "just", "from", "very", "planning", "searching",
+            "brandique", "website", "good", "fine", "online", "developer",
+            "boss", "darling", "user", "client", "hello", "okay", "yes", "need"
+          ];
+          if (!skipWords.includes(candidate.toLowerCase())) {
+            const capitalized = candidate.charAt(0).toUpperCase() + candidate.slice(1).toLowerCase();
+            userMemory.name = capitalized;
+            userMemory.lastUpdated = new Date().toISOString();
+            saveMemory();
+            break;
+          }
+        }
+      }
     }
 
     function scrollBottom() {
@@ -278,10 +508,17 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
     function addMessage(role, content, options) {
       options = options || {};
       const row = document.createElement("div");
-      row.className = "message-row " + role;
       if (role === "assistant" && options.welcome) {
-        row.innerHTML = '<div class="bubble welcome-card"><h2>Hi 👋 How can I help you?</h2><p>' + formatMessage(content) + '</p></div>';
+        row.className = "message-row assistant welcome-row";
+        row.innerHTML =
+          '<div class="bubble welcome-card">' +
+            '<h2 class="welcome-title">Hi 👋 How can I help you?</h2>' +
+            '<p class="welcome-desc">' +
+              'I’m <strong class="welcome-brand">Darling</strong>, BrandiQue’s AI assistant. Ask me about our <span class="welcome-chip">Branding</span>, <span class="welcome-chip">Services</span>, <span class="welcome-chip">Websites</span>, <span class="welcome-chip">SEO</span>, <span class="welcome-chip">AI Automation</span>, <span class="welcome-chip">Pricing</span> or <span class="welcome-chip">E-commerce</span>.' +
+            '</p>' +
+          '</div>';
       } else {
+        row.className = "message-row " + role;
         row.innerHTML = '<div class="bubble">' + formatMessage(content) + '</div>';
       }
       messagesEl.appendChild(row);
@@ -307,22 +544,46 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
       const trimmed = (text || "").trim();
       if (!trimmed || sendBtn.disabled) return;
       if (suggestions) suggestions.style.display = "none";
+
+      // 1. Extract memory facts from user message
+      extractMemory(trimmed);
+
+      // 2. Add message to UI and history
       addMessage("user", trimmed);
       history.push({ role: "user", content: trimmed });
       saveHistory();
+
       input.value = "";
       input.style.height = "auto";
       setLoading(true);
       const typing = addTyping();
+
       try {
+        // 3. Prepare message payload for API
+        let recentSlice = history.slice(-20);
+
+        // If user memory has name (e.g. Kishore), ensure Darling AI has the memory anchor across days/sessions
+        if (userMemory && userMemory.name) {
+          const hasName = recentSlice.some(function(m) {
+            return m.role === "user" && m.content.toLowerCase().includes(userMemory.name.toLowerCase());
+          });
+          if (!hasName) {
+            recentSlice = [
+              { role: "user", content: "My name is " + userMemory.name },
+              { role: "assistant", content: "Nice to meet you " + userMemory.name + "! How can I help you today?" }
+            ].concat(recentSlice);
+          }
+        }
+
         const response = await fetch(API_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: history.slice(-20) })
+          body: JSON.stringify({ messages: recentSlice })
         });
         const data = await response.json();
         typing.remove();
         if (!response.ok) throw new Error(data && data.error ? data.error : "Unable to get a response.");
+
         history.push({ role: "assistant", content: data.message });
         saveHistory();
         addMessage("assistant", data.message);
@@ -362,7 +623,7 @@ const EMBED_CHATBOT_HTML = `<!doctype html>
       if (!history.length) {
         addMessage(
           "assistant",
-          "I’m Darling, BrandiQue’s AI assistant. Ask me about our services, pricing, websites, SEO, AI automation or e-commerce.",
+          "I’m Darling, BrandiQue’s AI assistant. Ask me about our branding, services, websites, SEO, AI automation, pricing or e-commerce.",
           { welcome: true }
         );
         return;
@@ -385,6 +646,61 @@ interface DarlingAIChatbotProps {
 export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinished: propIntroFinished }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [clearedNotice, setClearedNotice] = useState(false);
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
+
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 640;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mob = window.innerWidth < 640;
+      setIsMobile(mob);
+      if (iframeRef.current && iframeRef.current.contentWindow) {
+        iframeRef.current.contentWindow.postMessage({ type: 'SET_VIEWPORT', isMobile: mob }, '*');
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Sync storage events between parent page and iframe
+  useEffect(() => {
+    const handleStorageSync = (e: MessageEvent) => {
+      if (e.data && e.data.type === 'SYNC_STORAGE') {
+        try {
+          if (Array.isArray(e.data.history)) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(e.data.history));
+          }
+          if (e.data.memory && typeof e.data.memory === 'object') {
+            localStorage.setItem(MEMORY_STORAGE_KEY, JSON.stringify(e.data.memory));
+          }
+        } catch (err) {}
+      }
+    };
+    window.addEventListener('message', handleStorageSync);
+    return () => window.removeEventListener('message', handleStorageSync);
+  }, []);
+
+  const handleClearChat = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('brandique_chat_history_v2');
+      localStorage.removeItem(MEMORY_STORAGE_KEY);
+    } catch (err) {}
+
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      iframeRef.current.contentWindow.postMessage({ type: 'CLEAR_CHAT' }, '*');
+    }
+
+    setClearedNotice(true);
+    setTimeout(() => setClearedNotice(false), 2000);
+  };
 
   // Initialize introFinished strictly checking props and DOM
   const [introFinished, setIntroFinished] = useState(() => {
@@ -453,38 +769,80 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 12, transition: { duration: 0.16 } }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed z-[99999] bottom-[72px] sm:bottom-[86px] right-3 sm:right-6 w-[calc(100vw-24px)] max-w-[360px] sm:max-w-none sm:w-[410px] md:w-[420px] h-[520px] min-[360px]:h-[540px] sm:h-[640px] md:h-[670px] max-h-[calc(100vh-88px)] sm:max-h-[calc(100vh-100px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.22)] overflow-hidden flex flex-col font-sans"
+            className="fixed z-[99999] bottom-[68px] sm:bottom-[86px] right-3 sm:right-6 w-[calc(100vw-24px)] max-w-[320px] min-[380px]:max-w-[340px] sm:max-w-none sm:w-[380px] md:w-[395px] h-[400px] min-[360px]:h-[420px] min-[400px]:h-[440px] sm:h-[550px] md:h-[575px] max-h-[68vh] sm:max-h-[calc(100vh-100px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.22)] overflow-hidden flex flex-col font-sans"
             role="dialog"
             aria-modal="true"
             aria-label="Darling AI Assistant"
           >
-            {/* Header bar - clean BrandiQue styling with X close button */}
-            <div className="relative px-3.5 py-2.5 sm:px-4 sm:py-3 bg-[#0F121C] border-b border-white/10 flex items-center justify-between shrink-0 select-none z-10">
+            {/* Header bar - clean BrandiQue styling with Clear Chat and X close button */}
+            <div className="relative px-3 py-2 sm:px-4 sm:py-2.5 bg-[#0F121C] border-b border-white/10 flex items-center justify-between shrink-0 select-none z-10">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
                 <div>
-                  <h3 className="font-bold text-[14px] sm:text-base text-white tracking-wide leading-tight">Darling AI</h3>
-                  <p className="text-[10px] sm:text-[11px] text-gray-400 font-normal leading-none mt-0.5">24/7 Support Online</p>
+                  <h3 className="font-bold text-[14.5px] sm:text-base text-white tracking-wide leading-tight">Darling AI</h3>
+                  <p className="text-[8.5px] sm:text-[11px] text-gray-400 font-normal leading-none mt-0.5">24/7 Support Online</p>
                 </div>
               </div>
 
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                title="Close chat"
-                aria-label="Close chat"
-                className="p-1 sm:p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none cursor-pointer"
-              >
-                <X size={18} className="text-white" />
-              </button>
+              {/* Action Buttons: Clear Chat & Close */}
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                {/* Clear Chat Button */}
+                <button
+                  type="button"
+                  onClick={handleClearChat}
+                  title={clearedNotice ? "Chat & memory cleared!" : "Clear chat"}
+                  aria-label="Clear chat history and memory"
+                  className={`p-1 sm:p-1.5 rounded-lg transition-all focus:outline-none cursor-pointer flex items-center gap-1 relative ${
+                    clearedNotice
+                      ? "text-emerald-400 bg-emerald-500/15"
+                      : "text-gray-400 hover:text-rose-400 hover:bg-rose-500/10"
+                  }`}
+                >
+                  <Trash2 size={16} className={clearedNotice ? "text-emerald-400" : "transition-colors"} />
+                  {clearedNotice && (
+                    <span className="text-[10px] font-medium text-emerald-400 pr-0.5">Cleared</span>
+                  )}
+                </button>
+
+                {/* Close Button */}
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  title="Close chat"
+                  aria-label="Close chat"
+                  className="p-1 sm:p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none cursor-pointer"
+                >
+                  <X size={17} className="text-white" />
+                </button>
+              </div>
             </div>
 
             {/* Chatbot Iframe Container - Fills the entire popup */}
             <div className="relative flex-1 w-full h-full bg-[#090C12] overflow-hidden">
               <iframe
+                ref={iframeRef}
                 src="https://brandique-chatbot.vercel.app/?embed=1"
-                srcDoc={EMBED_CHATBOT_HTML}
+                srcDoc={getEmbedChatbotHtml(isMobile)}
+                onLoad={() => {
+                  if (iframeRef.current && iframeRef.current.contentWindow) {
+                    const mob = typeof window !== 'undefined' ? window.innerWidth < 640 : false;
+                    let savedHist = [];
+                    let savedMem = {};
+                    try {
+                      const hRaw = localStorage.getItem(STORAGE_KEY);
+                      if (hRaw) savedHist = JSON.parse(hRaw);
+                      const mRaw = localStorage.getItem(MEMORY_STORAGE_KEY);
+                      if (mRaw) savedMem = JSON.parse(mRaw);
+                    } catch (e) {}
+
+                    iframeRef.current.contentWindow.postMessage({
+                      type: 'INIT_STORAGE',
+                      isMobile: mob,
+                      history: savedHist,
+                      memory: savedMem
+                    }, '*');
+                  }
+                }}
                 title="Darling AI Assistant"
                 className="w-full h-full border-0 block"
                 allow="clipboard-write"
