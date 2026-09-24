@@ -254,7 +254,7 @@ const WebDevelopment = () => {
       </section>
 
       {/* 5. FULL FAQ SECTION */}
-      <section className="py-24 bg-gray-50 dark:bg-white/[0.02] rounded-[48px] border border-gray-200 dark:border-white/5 px-6 md:px-12 mb-32">
+      <section id="faq" className="py-24 bg-gray-50 dark:bg-white/[0.02] rounded-[48px] border border-gray-200 dark:border-white/5 px-6 md:px-12 mb-32">
          <div className="max-w-[1500px] mx-auto">
             <ScrollReveal className="text-center mb-16">
                <h2 className="text-3xl font-bold">Frequently Asked <span className="text-neon-purple">Questions.</span></h2>

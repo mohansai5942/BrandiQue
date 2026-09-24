@@ -26,6 +26,7 @@ import Login from './pages/Login';
 import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import FloatingPromotions from './components/FloatingPromotions';
+import DarlingAIChatbot from './components/DarlingAIChatbot';
 
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
@@ -52,11 +53,13 @@ const ScrollToTop = () => {
 }
 
 const App: React.FC = () => {
+  const [isIntroComplete, setIsIntroComplete] = useState(false);
+
   return (
     <BrowserRouter>
       <SEO />
       <SplashCursor />
-      <VideoIntro />
+      <VideoIntro onIntroComplete={() => setIsIntroComplete(true)} />
       <ScrollToTop />
       <ClickSpark
         sparkColor="#e8eb14"
@@ -104,7 +107,8 @@ const App: React.FC = () => {
         </main>
 
         <Footer />
-        <FloatingPromotions />
+        {isIntroComplete && <FloatingPromotions />}
+        {isIntroComplete && <DarlingAIChatbot isIntroFinished={isIntroComplete} />}
       </ClickSpark>
     </BrowserRouter>
   );
