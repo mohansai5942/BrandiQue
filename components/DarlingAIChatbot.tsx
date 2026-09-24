@@ -14,7 +14,7 @@ interface DarlingAIChatbotProps {
 
 const STORAGE_KEY = 'brandique_darling_chat_history';
 
-// Connects directly to the user's Darling AI backend
+// User's official Darling AI backend API endpoint
 const BACKEND_URL = 'https://brandique-chatbot.vercel.app/api/chat';
 
 const WELCOME_TEXT = "I’m Darling, BrandiQue’s AI assistant. Ask me about our services, websites, branding, SEO, AI automation or e-commerce solutions.";
@@ -148,7 +148,67 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     } catch {}
   };
 
-  // Connects directly to https://brandique-chatbot.vercel.app/api/chat with fallback to /api/chat
+  /**
+   * Helper that executes the chat request against the user's Darling AI backend.
+   * Uses simple CORS request headers (text/plain) which avoids browser preflight OPTIONS
+   * failure on static CDN deployments like brandique.in and Vercel.
+   */
+  const requestChatFromBackend = async (payload: { messages: { role: string; content: string }[] }): Promise<string> => {
+    const jsonString = JSON.stringify(payload);
+
+    // Strategy 1: Simple CORS POST directly to the user's Darling AI Vercel backend
+    // text/plain;charset=UTF-8 is an HTTP "simple request" content type — browsers do NOT emit
+    // a preflight OPTIONS request, bypassing CORS block completely!
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: jsonString
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.message || data.reply || data.content;
+        if (reply) return reply;
+      }
+    } catch (e) {
+      console.warn('Direct simple-cors fetch attempt failed, trying fallback...', e);
+    }
+
+    // Strategy 2: Standard application/json POST to backend (for environments where CORS is accepted)
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: jsonString
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.message || data.reply || data.content;
+        if (reply) return reply;
+      }
+    } catch (e) {
+      console.warn('Direct application/json fetch failed...', e);
+    }
+
+    // Strategy 3: Local proxy (/api/chat) for Vite dev server or Node full-stack
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: jsonString
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.message || data.reply || data.content;
+        if (reply) return reply;
+      }
+    } catch (e) {
+      console.warn('Local proxy fetch failed...', e);
+    }
+
+    throw new Error('All connection attempts failed');
+  };
+
   const sendMessage = async (textToSend?: string) => {
     const text = (textToSend !== undefined ? textToSend : inputMessage).trim();
     if (!text || isLoading) return;
@@ -170,54 +230,27 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     };
 
     try {
-      let res: Response;
-      try {
-        res = await fetch(BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch {
-        // Fallback through local proxy if direct fetch is blocked
-        res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      }
+      const reply = await requestChatFromBackend(payload);
 
-      if (!res.ok) {
-        res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      }
-
-      if (!res.ok) {
-        throw new Error(`Server returned ${res.status}`);
-      }
-
-      const data = await res.json();
-      const reply = data.message || data.reply || data.content;
-
-      if (!reply) {
-        throw new Error('No message in response');
-      }
-
-      setMessages(prev => [...prev, {
-        id: `bot-${Date.now()}`,
-        role: 'assistant',
-        content: reply
-      }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `bot-${Date.now()}`,
+          role: 'assistant',
+          content: reply
+        }
+      ]);
     } catch (err: any) {
       console.error('Chat error:', err);
       setErrorStatus('Connection issue. Retrying in a moment...');
-      setMessages(prev => [...prev, {
-        id: `bot-err-${Date.now()}`,
-        role: 'assistant',
-        content: "Sorry, I'm having trouble connecting to the cloud right now. Please try sending again or reach out at hello@brandique.in."
-      }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `bot-err-${Date.now()}`,
+          role: 'assistant',
+          content: "Sorry, I'm having trouble connecting to the cloud right now. Please try sending again or reach out at hello@brandique.in."
+        }
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -267,7 +300,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                   onClick={handleClearHistory}
                   title="Clear chat history"
                   aria-label="Clear chat history"
-                  className="p-1 sm:p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+                  className="p-1 sm:p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none cursor-pointer"
                 >
                   <Trash2 size={14} className="sm:w-[15px] sm:h-[15px]" />
                 </button>
@@ -278,7 +311,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                   onClick={() => setIsOpen(false)}
                   title="Close chat"
                   aria-label="Close chat"
-                  className="p-1 sm:p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+                  className="p-1 sm:p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none cursor-pointer"
                 >
                   <X size={16} className="sm:w-[17px] sm:h-[17px]" />
                 </button>
