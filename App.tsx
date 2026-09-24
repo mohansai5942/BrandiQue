@@ -1,11 +1,10 @@
 import SEO from './components/SEO';
 import NotFound from './pages/NotFound';
 import { redirects } from './seo/site';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import VideoIntro from './components/VideoIntro';
 import SplashCursor from './components/SplashCursor';
 import ClickSpark from './components/ClickSpark';
 import Home from './pages/Home';
@@ -53,13 +52,10 @@ const ScrollToTop = () => {
 }
 
 const App: React.FC = () => {
-  const [isIntroComplete, setIsIntroComplete] = useState(false);
-
   return (
     <BrowserRouter>
       <SEO />
       <SplashCursor />
-      <VideoIntro onIntroComplete={() => setIsIntroComplete(true)} />
       <ScrollToTop />
       <ClickSpark
         sparkColor="#e8eb14"
@@ -107,8 +103,8 @@ const App: React.FC = () => {
         </main>
 
         <Footer />
-        {isIntroComplete && <FloatingPromotions />}
-        {isIntroComplete && <DarlingAIChatbot isIntroFinished={isIntroComplete} />}
+        <FloatingPromotions />
+        <DarlingAIChatbot isIntroFinished={true} />
       </ClickSpark>
     </BrowserRouter>
   );
