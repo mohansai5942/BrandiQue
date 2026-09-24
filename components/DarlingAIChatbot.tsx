@@ -510,6 +510,7 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       const row = document.createElement("div");
       if (role === "assistant" && options.welcome) {
         row.className = "message-row assistant welcome-row";
+        row.id = "welcomeMessage";
         row.innerHTML =
           '<div class="bubble welcome-card">' +
             '<h2 class="welcome-title">Hi 👋 How can I help you?</h2>' +
@@ -544,6 +545,17 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       const trimmed = (text || "").trim();
       if (!trimmed || sendBtn.disabled) return;
       if (suggestions) suggestions.style.display = "none";
+
+      // Remove the welcome message card as soon as user sends a message
+      const welcomeEl = document.getElementById("welcomeMessage");
+      if (welcomeEl) {
+        welcomeEl.remove();
+      }
+      const extraWelcome = document.querySelectorAll(".welcome-row, .welcome-card");
+      extraWelcome.forEach(function(el) {
+        const row = el.closest(".message-row") || el;
+        row.remove();
+      });
 
       // 1. Extract memory facts from user message
       extractMemory(trimmed);
@@ -702,14 +714,10 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     setTimeout(() => setClearedNotice(false), 2000);
   };
 
-  // Initialize introFinished strictly checking props and DOM
+  // Initialize introFinished strictly checking props and DOM (default true)
   const [introFinished, setIntroFinished] = useState(() => {
     if (propIntroFinished !== undefined) return propIntroFinished;
-    if (typeof document === 'undefined') return false;
-    return (
-      document.body.classList.contains('intro-finished') &&
-      !document.body.classList.contains('intro-playing')
-    );
+    return true;
   });
 
   // Sync prop changes
@@ -718,28 +726,6 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
       setIntroFinished(propIntroFinished);
     }
   }, [propIntroFinished]);
-
-  // Watch video intro completion strictly
-  useEffect(() => {
-    const handleIntroEnd = () => setIntroFinished(true);
-    window.addEventListener('videoIntroEnded', handleIntroEnd);
-
-    const observer = new MutationObserver(() => {
-      if (
-        document.body.classList.contains('intro-finished') &&
-        !document.body.classList.contains('intro-playing')
-      ) {
-        setIntroFinished(true);
-      }
-    });
-
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
-    return () => {
-      window.removeEventListener('videoIntroEnded', handleIntroEnd);
-      observer.disconnect();
-    };
-  }, []);
 
   // Keyboard accessibility: ESC closes modal
   useEffect(() => {
