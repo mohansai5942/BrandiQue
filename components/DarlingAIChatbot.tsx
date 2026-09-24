@@ -6,7 +6,6 @@ interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
-  timestamp: string;
 }
 
 interface DarlingAIChatbotProps {
@@ -15,24 +14,16 @@ interface DarlingAIChatbotProps {
 
 const STORAGE_KEY = 'brandique_darling_chat_history';
 
-// Primary backend endpoint: uses local proxy in dev/Cloud Run, direct endpoint on production
-const API_URL = '/api/chat';
-const FALLBACK_DIRECT_API_URL = 'https://brandique-chatbot.vercel.app/api/chat';
+// Connects directly to the user's Darling AI backend
+const BACKEND_URL = 'https://brandique-chatbot.vercel.app/api/chat';
 
-const INITIAL_MESSAGES: ChatMessage[] = [
-  {
-    id: 'welcome-1',
-    role: 'assistant',
-    content: "Hi! How can I help you with your website or project today?",
-    timestamp: 'Just now'
-  }
-];
+const WELCOME_TEXT = "I’m Darling, BrandiQue’s AI assistant. Ask me about our services, websites, branding, SEO, AI automation or e-commerce solutions.";
 
 const SUGGESTIONS = [
-  'What services does BrandiQue offer?',
-  'I need a website for my business',
-  'How can BrandiQue help with SEO?',
-  'I want an AI chatbot or automation'
+  'Tell me about BrandiQue',
+  'What kind of websites do you build?',
+  'I need a custom quote',
+  'What services does BrandiQue offer?'
 ];
 
 export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinished: propIntroFinished }) => {
@@ -59,36 +50,32 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     }
   }, [propIntroFinished]);
 
-  // Initialize messages from localStorage if available
+  // Load history from the exact same storage key
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string');
         }
       }
-    } catch {
-      // ignore parsing error
-    }
-    return INITIAL_MESSAGES;
+    } catch {}
+    return [{ id: 'init-1', role: 'assistant', content: WELCOME_TEXT }];
   });
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sync messages to localStorage
+  // Sync history to localStorage
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-40)));
-    } catch {
-      // storage unavailable
-    }
+    } catch {}
   }, [messages]);
 
-  // Robust function to scroll chat container directly to bottom (avoiding whole-page window scrolls)
+  // Scroll to bottom without page jumping
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -100,46 +87,28 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     }
   };
 
-  // When chatbot is opened, immediately snap to bottom without moving the page top
   useEffect(() => {
     if (isOpen) {
       scrollToBottom('auto');
-      
-      const r1 = requestAnimationFrame(() => {
-        scrollToBottom('auto');
-      });
       const t1 = setTimeout(() => {
         scrollToBottom('auto');
         inputRef.current?.focus();
-      }, 80);
-      const t2 = setTimeout(() => {
-        scrollToBottom('smooth');
-      }, 220);
-
-      return () => {
-        cancelAnimationFrame(r1);
-        clearTimeout(t1);
-        clearTimeout(t2);
-      };
+      }, 70);
+      return () => clearTimeout(t1);
     }
   }, [isOpen]);
 
-  // When new messages arrive or loading state changes, smoothly scroll down
   useEffect(() => {
     if (isOpen) {
       scrollToBottom('smooth');
     }
   }, [messages, isLoading]);
 
-  // Watch video intro completion strictly via custom event or DOM changes
+  // Watch video intro completion strictly
   useEffect(() => {
-    const handleIntroEnd = () => {
-      setIntroFinished(true);
-    };
-
+    const handleIntroEnd = () => setIntroFinished(true);
     window.addEventListener('videoIntroEnded', handleIntroEnd);
 
-    // Watch body class mutation
     const observer = new MutationObserver(() => {
       if (
         document.body.classList.contains('intro-finished') &&
@@ -157,7 +126,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     };
   }, []);
 
-  // Keyboard accessibility: ESC closes modal
+  // Keyboard accessibility
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -168,97 +137,87 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
-  const toggleChat = () => {
-    setIsOpen(prev => !prev);
-  };
+  const toggleChat = () => setIsOpen(prev => !prev);
 
   const handleClearHistory = () => {
-    setMessages(INITIAL_MESSAGES);
+    const defaultMsg: ChatMessage[] = [{ id: 'init-1', role: 'assistant', content: WELCOME_TEXT }];
+    setMessages(defaultMsg);
     setErrorStatus(null);
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
   };
 
+  // Connects directly to https://brandique-chatbot.vercel.app/api/chat with fallback to /api/chat
   const sendMessage = async (textToSend?: string) => {
     const text = (textToSend !== undefined ? textToSend : inputMessage).trim();
     if (!text || isLoading) return;
 
-    const userMessageId = `usr-${Date.now()}`;
     const userMsg: ChatMessage = {
-      id: userMessageId,
+      id: `usr-${Date.now()}`,
       role: 'user',
-      content: text,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      content: text
     };
 
-    const updatedMessages = [...messages, userMsg];
-    setMessages(updatedMessages);
+    const updated = [...messages, userMsg];
+    setMessages(updated);
     setInputMessage('');
     setIsLoading(true);
     setErrorStatus(null);
 
-    const apiPayload = {
-      messages: updatedMessages.map(m => ({
-        role: m.role,
-        content: m.content
-      }))
+    const payload = {
+      messages: updated.map(m => ({ role: m.role, content: m.content })).slice(-20)
     };
 
     try {
-      let response: Response;
+      let res: Response;
       try {
-        response = await fetch(API_URL, {
+        res = await fetch(BACKEND_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(apiPayload)
+          body: JSON.stringify(payload)
         });
       } catch {
-        response = await fetch(FALLBACK_DIRECT_API_URL, {
+        // Fallback through local proxy if direct fetch is blocked
+        res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(apiPayload)
+          body: JSON.stringify(payload)
         });
       }
 
-      if (!response.ok) {
-        response = await fetch(FALLBACK_DIRECT_API_URL, {
+      if (!res.ok) {
+        res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(apiPayload)
+          body: JSON.stringify(payload)
         });
       }
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}`);
       }
 
-      const data = await response.json();
-      const replyContent = data.message || data.reply || data.content;
+      const data = await res.json();
+      const reply = data.message || data.reply || data.content;
 
-      if (!replyContent || typeof replyContent !== 'string') {
-        throw new Error('Invalid response structure from Darling AI backend');
+      if (!reply) {
+        throw new Error('No message in response');
       }
 
-      const botMsg: ChatMessage = {
+      setMessages(prev => [...prev, {
         id: `bot-${Date.now()}`,
         role: 'assistant',
-        content: replyContent,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-
-      setMessages(prev => [...prev, botMsg]);
-    } catch (err) {
-      console.error('Darling AI API error:', err);
-      setErrorStatus('Chatbot is momentarily unreachable. Please try again.');
-      
-      const fallbackBotMsg: ChatMessage = {
+        content: reply
+      }]);
+    } catch (err: any) {
+      console.error('Chat error:', err);
+      setErrorStatus('Connection issue. Retrying in a moment...');
+      setMessages(prev => [...prev, {
         id: `bot-err-${Date.now()}`,
         role: 'assistant',
-        content: "I'm having a slight trouble reaching the cloud server right now. Please try again in a moment, or feel free to email hello@brandique.in directly!",
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, fallbackBotMsg]);
+        content: "Sorry, I'm having trouble connecting to the cloud right now. Please try sending again or reach out at hello@brandique.in."
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -271,14 +230,13 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     }
   };
 
-  // Strictly DO NOT render while intro video is active/playing
   if (!introFinished) {
     return null;
   }
 
   return (
     <>
-      {/* Floating Chat Window Modal - Fluid Responsive Layout on all screen sizes */}
+      {/* Floating Chat Window Modal - 100% Reliable Native Embed matching BrandiQue Chatbot design */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -287,14 +245,13 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10, transition: { duration: 0.16 } }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed z-[99999] bottom-[72px] sm:bottom-[86px] right-3 sm:right-6 w-[280px] min-[360px]:w-[295px] min-[400px]:w-[310px] sm:w-[390px] md:w-[410px] lg:w-[420px] h-[375px] min-[360px]:h-[390px] min-[400px]:h-[405px] sm:h-[540px] max-h-[calc(100vh-90px)] sm:max-h-[calc(100vh-110px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.18)] overflow-hidden flex flex-col font-sans"
+            className="fixed z-[99999] bottom-[72px] sm:bottom-[86px] right-3 sm:right-6 w-[285px] min-[360px]:w-[300px] min-[400px]:w-[315px] sm:w-[390px] md:w-[410px] lg:w-[420px] h-[380px] min-[360px]:h-[395px] min-[400px]:h-[415px] sm:h-[540px] max-h-[calc(100vh-88px)] sm:max-h-[calc(100vh-105px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.22)] overflow-hidden flex flex-col font-sans"
             role="dialog"
             aria-modal="true"
             aria-label="Darling AI Support"
           >
-            {/* Header bar - clean and professional */}
+            {/* Header bar - clean BrandiQue styling */}
             <div className="relative px-3.5 py-2.5 sm:px-4 sm:py-3 bg-[#0F121C] border-b border-white/10 flex items-center justify-between shrink-0 select-none">
-              {/* Brand info */}
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
                 <div>
@@ -303,7 +260,6 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                 </div>
               </div>
 
-              {/* Action buttons */}
               <div className="flex items-center gap-1">
                 {/* Clear Chat Button */}
                 <button
@@ -342,8 +298,8 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                     className={`flex items-start gap-2 ${isAssistant ? 'justify-start' : 'justify-end'}`}
                   >
                     {isAssistant && (
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-neon-purple/15 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-neon-purple">
-                        <MessageSquare size={12} />
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-gradient-to-tr from-neon-purple to-neon-blue flex items-center justify-center shrink-0 mt-0.5 text-white font-bold text-[10px] sm:text-xs">
+                        B
                       </div>
                     )}
                     <div
@@ -359,11 +315,11 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                 );
               })}
 
-              {/* Loading Indicator */}
+              {/* Typing / Loading indicator */}
               {isLoading && (
                 <div className="flex items-start gap-2 justify-start">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-neon-purple/15 border border-white/10 flex items-center justify-center shrink-0 mt-0.5 text-neon-purple">
-                    <MessageSquare size={12} />
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-gradient-to-tr from-neon-purple to-neon-blue flex items-center justify-center shrink-0 mt-0.5 text-white font-bold text-[10px] sm:text-xs">
+                    B
                   </div>
                   <div className="bg-[#121622] border border-white/10 rounded-xl rounded-tl-none px-3 py-2 flex items-center gap-1.5 shadow-sm">
                     <span className="w-1.5 h-1.5 bg-neon-purple rounded-full animate-bounce [animation-delay:-0.3s]" />
@@ -374,7 +330,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                 </div>
               )}
 
-              {/* Optional Error Notice */}
+              {/* Error notice */}
               {errorStatus && (
                 <div className="flex items-center gap-2 p-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
                   <AlertCircle size={13} className="shrink-0 text-rose-400" />
@@ -392,9 +348,9 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
               <div ref={messagesEndRef} className="h-0.5" />
             </div>
 
-            {/* Quick Suggestions Chips */}
+            {/* Quick Suggestions Chips - Clean WITHOUT any scrollbars */}
             {messages.length <= 2 && (
-              <div className="px-3 py-1.5 bg-[#0C0F17] border-t border-white/5 flex items-center gap-1.5 overflow-x-auto scrollbar-none shrink-0">
+              <div className="px-3 py-1.5 bg-[#0C0F17] border-t border-white/5 flex items-center gap-1.5 overflow-x-auto no-scrollbar scrollbar-none shrink-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 {SUGGESTIONS.map((sugg, i) => (
                   <button
                     key={i}
@@ -408,7 +364,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
               </div>
             )}
 
-            {/* Chat Input & Composer */}
+            {/* Chat Input & Composer (Vertically centered) */}
             <div className="p-2.5 sm:p-3 bg-[#0A0D14] border-t border-white/10 shrink-0">
               <form
                 onSubmit={(e) => {
@@ -493,7 +449,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                   key="chat-icon"
                   initial={{ rotate: 90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
+                  exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.15 }}
                   className="relative flex items-center justify-center text-cyan-400 group-hover:text-white transition-colors"
                 >
