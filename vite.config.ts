@@ -11,6 +11,9 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
+    headers: {
+      'Content-Security-Policy': "frame-src 'self' https://brandique-chatbot.vercel.app https://www.brandique.in https://brandique.in https://aistudio.google.com https://*.aistudio.google.com https://*.run.app;"
+    },
     proxy: {
       '/api/chat': {
         target: 'https://brandique-chatbot.vercel.app',
