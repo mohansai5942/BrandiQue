@@ -77,6 +77,36 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       font-size: 14px;
       word-break: break-word;
     }
+    .bubble .chat-line {
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+    .bubble .chat-line:last-child {
+      margin-bottom: 0;
+    }
+    .bubble .chat-spacer {
+      height: 6px;
+    }
+    .bubble ul.chat-list, .bubble ol.chat-list {
+      margin: 5px 0 6px 0;
+      padding-left: 20px;
+    }
+    .bubble ul.chat-list:last-child, .bubble ol.chat-list:last-child {
+      margin-bottom: 0;
+    }
+    .bubble ul.chat-list li, .bubble ol.chat-list li {
+      margin-bottom: 3.5px;
+      line-height: 1.45;
+    }
+    .bubble ul.chat-list li:last-child, .bubble ol.chat-list li:last-child {
+      margin-bottom: 0;
+    }
+    .bubble ol.ol-list {
+      list-style-type: decimal;
+    }
+    .bubble ul.ul-list {
+      list-style-type: disc;
+    }
     .message-row.user .bubble {
       border: none;
       border-radius: 16px 16px 4px 16px;
@@ -264,6 +294,30 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       font-size: 11.6px;
       line-height: 1.45;
       border-radius: 13px 13px 13px 4px;
+    }
+    body.is-mobile .bubble .chat-line {
+      margin-bottom: 3px;
+      line-height: 1.45;
+    }
+    body.is-mobile .bubble .chat-line:last-child {
+      margin-bottom: 0;
+    }
+    body.is-mobile .bubble .chat-spacer {
+      height: 4px;
+    }
+    body.is-mobile .bubble ul.chat-list, body.is-mobile .bubble ol.chat-list {
+      padding-left: 17px;
+      margin: 3px 0 5px 0;
+    }
+    body.is-mobile .bubble ul.chat-list:last-child, body.is-mobile .bubble ol.chat-list:last-child {
+      margin-bottom: 0;
+    }
+    body.is-mobile .bubble ul.chat-list li, body.is-mobile .bubble ol.chat-list li {
+      margin-bottom: 2.5px;
+      line-height: 1.4;
+    }
+    body.is-mobile .bubble ul.chat-list li:last-child, body.is-mobile .bubble ol.chat-list li:last-child {
+      margin-bottom: 0;
     }
     body.is-mobile .message-row.user .bubble {
       border-radius: 13px 13px 4px 13px;
@@ -497,12 +551,59 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
     }
 
     function formatMessage(value) {
+      if (!value) return "";
+      
+      // Normalize inline numbered list items (e.g. "1. First 2. Second") if they lack newlines
+      let str = String(value).replace(/([^\n\r])\s+([0-9]+[\.\)])\s+([A-Za-z0-9\*])/g, "$1\n$2 $3");
+      
+      // Escape HTML to prevent XSS
       const div = document.createElement("div");
-      div.textContent = value;
-      const escaped = div.innerHTML;
-      return escaped
-        .replace(/\\*\\*([^\\*\\n]+)\\*\\*/g, "<strong>$1</strong>")
-        .replace(/(^|\\n)\\s*[•*]\\s+/g, "$1");
+      div.textContent = str;
+      let escaped = div.innerHTML;
+
+      // Handle markdown bold: **text**
+      escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+
+      // Split into lines for structured rendering
+      const lines = escaped.split(/\r?\n/);
+      let html = [];
+      let inOl = false;
+      let inUl = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        if (!line) {
+          if (inOl) { html.push("</ol>"); inOl = false; }
+          if (inUl) { html.push("</ul>"); inUl = false; }
+          html.push('<div class="chat-spacer"></div>');
+          continue;
+        }
+
+        // Check for numbered list item: "1. ", "1) ", "10. "
+        const olMatch = line.match(/^(\d+)[\.\)]\s+(.+)$/);
+        // Check for bullet list item: "- ", "* ", "• "
+        const ulMatch = line.match(/^[-*•]\s+(.+)$/);
+
+        if (olMatch) {
+          if (inUl) { html.push("</ul>"); inUl = false; }
+          if (!inOl) { html.push('<ol class="chat-list ol-list">'); inOl = true; }
+          html.push('<li>' + olMatch[2] + '</li>');
+        } else if (ulMatch) {
+          if (inOl) { html.push("</ol>"); inOl = false; }
+          if (!inUl) { html.push('<ul class="chat-list ul-list">'); inUl = true; }
+          html.push('<li>' + ulMatch[1] + '</li>');
+        } else {
+          if (inOl) { html.push("</ol>"); inOl = false; }
+          if (inUl) { html.push("</ul>"); inUl = false; }
+          html.push('<div class="chat-line">' + line + '</div>');
+        }
+      }
+
+      if (inOl) html.push("</ol>");
+      if (inUl) html.push("</ul>");
+
+      return html.join("");
     }
 
     function addMessage(role, content, options) {
