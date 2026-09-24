@@ -276,6 +276,16 @@
         -webkit-text-fill-color: transparent;
       }
 
+      .no-scrollbar::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
+      }
+
       .preserve-3d { transform-style: preserve-3d; }
       .perspective-1000 { perspective: 1000px; }
       .perspective-2000 { perspective: 2000px; }
