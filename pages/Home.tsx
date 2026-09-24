@@ -406,7 +406,7 @@ const Home: React.FC = () => {
          </section>
 
          {/* --- INFO BLOCK B: STRATEGIC ENGINEERING VS GENERIC DESIGN --- */}
-         <section className="py-24 bg-white dark:bg-[#05070A]">
+         <section id="services" className="py-24 bg-white dark:bg-[#05070A]">
             <div className="max-w-[1500px] mx-auto px-6">
                <ScrollReveal>
                   <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
@@ -466,7 +466,7 @@ const Home: React.FC = () => {
 {/* Ads significantly removed */}
 
          {/* --- CURATED PROJECTS PREVIEW --- */}
-         <section className="py-24 bg-white dark:bg-[#05070A] border-t border-gray-200 dark:border-white/5">
+         <section id="projects" className="py-24 bg-white dark:bg-[#05070A] border-t border-gray-200 dark:border-white/5">
             <div className="max-w-[1500px] mx-auto px-6">
                <ScrollReveal>
                   <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -742,7 +742,7 @@ const Home: React.FC = () => {
          <DealsSection />
 
          {/* 10. FAQ SHORTFORM */}
-         <section className="py-24 bg-gray-50 dark:bg-[#0A0C11]/50 border-t border-gray-200 dark:border-white/5">
+         <section id="faq" className="py-24 bg-gray-50 dark:bg-[#0A0C11]/50 border-t border-gray-200 dark:border-white/5">
             <div className="max-w-[1500px] mx-auto px-6">
                <h2 className="text-3xl font-bold mb-12 text-center">Frequently Asked <span className="text-neon-blue">Questions.</span></h2>
                <div className="grid md:grid-cols-2 gap-6">
@@ -823,7 +823,7 @@ const Home: React.FC = () => {
          </section>
 
          {/* 11. FINAL CTA (PAGE ENDING) */}
-         <section className="py-32 relative overflow-hidden text-center bg-white dark:bg-[#05070A] border-t border-gray-100 dark:border-white/5">
+         <section id="contact" className="py-32 relative overflow-hidden text-center bg-white dark:bg-[#05070A] border-t border-gray-100 dark:border-white/5">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-neon-purple/10 rounded-full blur-[120px] pointer-events-none"></div>
             <ScrollReveal>
                <div className="max-w-[1500px] mx-auto px-6 space-y-10 relative z-10">

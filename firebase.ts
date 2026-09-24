@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { initializeFirestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import config from './firebase-applet-config.json';
 
@@ -14,15 +14,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with auto-detect long polling for optimal connection resilience
-export const db = initializeFirestore(
-  app,
-  {
-    experimentalAutoDetectLongPolling: true,
-    ignoreUndefinedProperties: true,
-  },
-  config.firestoreDatabaseId || undefined
-);
+// Standard Firebase SDK initialization for AI Studio custom firestoreDatabaseId
+export const db = config.firestoreDatabaseId
+  ? getFirestore(app, config.firestoreDatabaseId)
+  : getFirestore(app);
 
 export const auth = getAuth(app);
 

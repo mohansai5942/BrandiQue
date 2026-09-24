@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const VideoIntro: React.FC = () => {
+interface VideoIntroProps {
+  onIntroComplete?: () => void;
+}
+
+const VideoIntro: React.FC<VideoIntroProps> = ({ onIntroComplete }) => {
   const [showIntro, setShowIntro] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -21,10 +25,12 @@ const VideoIntro: React.FC = () => {
 
   const handleVideoEnd = () => {
     setShowIntro(false);
+    onIntroComplete?.();
   };
 
   const handleSkip = () => {
     setShowIntro(false);
+    onIntroComplete?.();
   };
 
   // Prevent scrolling while intro is playing and signal intro status for chatbot
@@ -48,6 +54,7 @@ const VideoIntro: React.FC = () => {
       document.documentElement.style.overflow = '';
       window.removeEventListener('touchmove', preventScroll);
       window.removeEventListener('wheel', preventScroll);
+      onIntroComplete?.();
     }
     return () => {
       document.body.style.overflow = '';
@@ -55,7 +62,7 @@ const VideoIntro: React.FC = () => {
       window.removeEventListener('touchmove', preventScroll);
       window.removeEventListener('wheel', preventScroll);
     };
-  }, [showIntro]);
+  }, [showIntro, onIntroComplete]);
 
   return (
     <AnimatePresence>
@@ -63,7 +70,7 @@ const VideoIntro: React.FC = () => {
         <motion.div 
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.8 } }}
-          className="fixed inset-0 z-[9999] bg-black flex items-center justify-center items-stretch"
+          className="fixed inset-0 z-[999999] bg-black flex items-center justify-center items-stretch"
         >
           <video
             className="w-full h-full object-cover"

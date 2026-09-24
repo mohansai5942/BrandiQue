@@ -19,7 +19,7 @@ const FloatingPromotions: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-4 items-end pointer-events-none w-full sm:w-auto px-6 sm:px-0 left-0 sm:left-auto bottom-20 sm:bottom-6">
+    <div className="fixed bottom-24 right-4 sm:bottom-24 sm:right-6 z-[9990] flex flex-col gap-4 items-end pointer-events-none w-full sm:w-auto px-4 sm:px-0 left-0 sm:left-auto">
       <AnimatePresence>
         {showDeals && (
           <motion.div

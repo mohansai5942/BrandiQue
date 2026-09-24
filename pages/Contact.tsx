@@ -126,7 +126,7 @@ const Contact: React.FC = () => {
       <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
         
         {/* Left Column: Contact Info */}
-        <div className="lg:col-span-5 relative z-10 flex flex-col justify-center h-full">
+        <div id="contact-info" className="lg:col-span-5 relative z-10 flex flex-col justify-center h-full">
            <ScrollReveal>
                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-md mb-6 shadow-sm dark:shadow-neon/10 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors cursor-default">
                    <div className="w-2 h-2 rounded-full bg-neon-blue animate-pulse"></div>
@@ -240,7 +240,7 @@ const Contact: React.FC = () => {
                             </button>
                         </div>
                     ) : (
-                        <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
+                        <form id="contact-form" onSubmit={handleSubmit} className="space-y-8 relative z-10">
                             
                             {/* 1. Service Selection */}
                             <div className="space-y-3">
