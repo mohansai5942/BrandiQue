@@ -77,7 +77,7 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       background: rgba(255, 255, 255, 0.05);
       color: #f1f5f9;
       line-height: 1.5;
-      font-size: 13.5px;
+      font-size: 12.8px;
       word-break: break-word;
     }
     .message-row.user .bubble {
@@ -85,7 +85,7 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       border-radius: 14px 14px 4px 14px;
       background: linear-gradient(135deg, #7c3aed, #2563eb);
       color: #ffffff;
-      font-size: 13.5px;
+      font-size: 12.8px;
       line-height: 1.5;
       box-shadow: 0 4px 14px rgba(124, 58, 237, 0.28);
     }
@@ -824,7 +824,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 12, transition: { duration: 0.16 } }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed z-[99999] bottom-[68px] sm:bottom-[86px] right-3 sm:right-6 w-[calc(100vw-24px)] max-w-[325px] min-[380px]:max-w-[345px] sm:max-w-none sm:w-[365px] md:w-[380px] h-[430px] min-[380px]:h-[460px] sm:h-[520px] md:h-[540px] max-h-[70vh] sm:max-h-[calc(100vh-100px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.22)] overflow-hidden flex flex-col font-sans"
+            className="fixed z-[99999] bottom-[68px] sm:bottom-[86px] right-3 sm:right-6 w-[calc(100vw-24px)] max-w-[325px] min-[380px]:max-w-[345px] sm:max-w-none sm:w-[385px] md:w-[400px] h-[430px] min-[380px]:h-[460px] sm:h-[545px] md:h-[565px] max-h-[70vh] sm:max-h-[calc(100vh-100px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.22)] overflow-hidden flex flex-col font-sans"
             role="dialog"
             aria-modal="true"
             aria-label="Darling AI Assistant"
