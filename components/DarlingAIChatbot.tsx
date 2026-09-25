@@ -43,12 +43,12 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       flex: 1 1 auto;
       min-height: 0;
       overflow-y: auto;
-      padding: 14px 16px 8px;
+      padding: 12px 14px 6px;
       scrollbar-width: thin;
       scrollbar-color: rgba(255,255,255,0.18) transparent;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
     .messages-area::-webkit-scrollbar {
       width: 5px;
@@ -59,88 +59,80 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
     }
     .message-row {
       display: flex;
-      gap: 8px;
+      flex-direction: column;
       animation: msgFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .message-row.user {
-      justify-content: flex-end;
+      align-items: flex-end;
+    }
+    .message-row.assistant {
+      align-items: flex-start;
     }
     /* Desktop chat text sizes */
     .bubble {
-      max-width: min(85%, 440px);
-      padding: 9px 13px;
+      max-width: min(88%, 460px);
+      padding: 8px 13px;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px 16px 16px 4px;
+      border-radius: 14px 14px 14px 4px;
       background: rgba(255, 255, 255, 0.05);
       color: #f1f5f9;
       line-height: 1.5;
-      font-size: 14px;
+      font-size: 13.5px;
       word-break: break-word;
-    }
-    .bubble .chat-line {
-      margin-bottom: 4px;
-      line-height: 1.5;
-    }
-    .bubble .chat-line:last-child {
-      margin-bottom: 0;
-    }
-    .bubble .chat-spacer {
-      height: 6px;
-    }
-    .bubble ul.chat-list, .bubble ol.chat-list {
-      margin: 5px 0 6px 0;
-      padding-left: 20px;
-    }
-    .bubble ul.chat-list:last-child, .bubble ol.chat-list:last-child {
-      margin-bottom: 0;
-    }
-    .bubble ul.chat-list li, .bubble ol.chat-list li {
-      margin-bottom: 3.5px;
-      line-height: 1.45;
-    }
-    .bubble ul.chat-list li:last-child, .bubble ol.chat-list li:last-child {
-      margin-bottom: 0;
-    }
-    .bubble ol.ol-list {
-      list-style-type: decimal;
-    }
-    .bubble ul.ul-list {
-      list-style-type: disc;
     }
     .message-row.user .bubble {
       border: none;
-      border-radius: 16px 16px 4px 16px;
+      border-radius: 14px 14px 4px 14px;
       background: linear-gradient(135deg, #7c3aed, #2563eb);
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13.5px;
       line-height: 1.5;
       box-shadow: 0 4px 14px rgba(124, 58, 237, 0.28);
     }
+    .message-time {
+      font-size: 10.5px;
+      color: #94a3b8;
+      opacity: 0.65;
+      margin-top: 3px;
+      line-height: 1;
+      user-select: none;
+      letter-spacing: 0.01em;
+      display: block;
+    }
+    .message-row.user .message-time {
+      text-align: right;
+      margin-right: 2px;
+    }
+    .message-row.assistant .message-time {
+      text-align: left;
+      margin-left: 2px;
+    }
     .welcome-row {
       width: 100%;
+      align-items: stretch !important;
     }
     .welcome-row .bubble.welcome-card {
       max-width: 100% !important;
       width: 100%;
-      padding: 13px 15px;
-      border-radius: 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
       background: linear-gradient(140deg, rgba(124, 58, 237, 0.14) 0%, rgba(37, 99, 235, 0.08) 55%, rgba(15, 23, 42, 0.5) 100%);
       border: 1px solid rgba(168, 85, 247, 0.28);
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
     }
     .welcome-card h2.welcome-title {
       font-family: 'Manrope', sans-serif;
-      font-size: 15.5px;
+      font-size: 15px;
       font-weight: 700;
       color: #ffffff;
-      margin: 0 0 7px 0;
+      margin: 0 0 6px 0;
       letter-spacing: -0.015em;
       line-height: 1.35;
     }
     .welcome-card p.welcome-desc {
-      font-size: 12.8px;
+      font-size: 12.5px;
       color: #cbd5e1;
-      line-height: 1.55;
+      line-height: 1.5;
       margin: 0;
     }
     .welcome-brand {
@@ -155,7 +147,7 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid rgba(255, 255, 255, 0.11);
       color: #f1f5f9;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 500;
       white-space: nowrap;
     }
@@ -163,8 +155,8 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       display: flex;
       flex-wrap: nowrap;
       overflow-x: hidden;
-      gap: 4px;
-      padding: 2px 10px 8px;
+      gap: 5px;
+      padding: 2px 12px 6px;
       flex-shrink: 0;
       width: 100%;
       box-sizing: border-box;
@@ -174,9 +166,9 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
     .suggestions button {
       flex: 0 0 auto;
       width: auto;
-      padding: 4px 7px;
+      padding: 4px 8px;
       border-radius: 999px;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 500;
       color: #cbd5e1;
       background: rgba(255, 255, 255, 0.04);
@@ -200,10 +192,10 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       display: flex;
       gap: 8px;
       align-items: center;
-      margin: 4px 14px 14px;
-      padding: 5px 6px 5px 14px;
+      margin: 4px 12px 12px;
+      padding: 4px 6px 4px 12px;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 16px;
+      border-radius: 15px;
       background: #0f131e;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       flex-shrink: 0;
@@ -221,8 +213,8 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       outline: 0;
       background: transparent;
       color: #ffffff;
-      line-height: 1.4;
-      font-size: 14px;
+      line-height: 1.45;
+      font-size: 13.5px;
       font-family: inherit;
       padding: 5px 0;
     }
@@ -231,25 +223,33 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       font-size: 13px;
     }
     #sendBtn {
-      flex: 0 0 36px;
-      width: 36px;
-      height: 36px;
-      min-width: 36px;
-      min-height: 36px;
+      flex: 0 0 34px;
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      min-height: 34px;
       display: grid;
       place-items: center;
       border: 0;
-      border-radius: 11px;
+      border-radius: 10px;
       background: linear-gradient(135deg, #7c3aed, #2563eb, #06b6d4);
       color: #ffffff;
-      font-size: 15px;
-      font-weight: 700;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
       box-shadow: 0 2px 10px rgba(124, 58, 237, 0.35);
+      padding: 0;
+    }
+    #sendBtn svg {
+      display: block;
+      margin-left: 2px;
+      margin-top: 1px;
     }
     #sendBtn:hover:not(:disabled) {
       transform: scale(1.05);
+      box-shadow: 0 3px 12px rgba(6, 182, 212, 0.45);
+    }
+    #sendBtn:active:not(:disabled) {
+      transform: scale(0.95);
     }
     #sendBtn:disabled {
       opacity: 0.4;
@@ -287,42 +287,22 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
     /* Mobile view styles (applied ONLY when is-mobile class is present) */
     body.is-mobile .messages-area {
       padding: 8px 10px 4px;
-      gap: 7px;
+      gap: 6px;
     }
     body.is-mobile .bubble {
       padding: 7px 11px;
-      font-size: 11.6px;
-      line-height: 1.45;
+      font-size: 12.2px;
+      line-height: 1.48;
       border-radius: 13px 13px 13px 4px;
-    }
-    body.is-mobile .bubble .chat-line {
-      margin-bottom: 3px;
-      line-height: 1.45;
-    }
-    body.is-mobile .bubble .chat-line:last-child {
-      margin-bottom: 0;
-    }
-    body.is-mobile .bubble .chat-spacer {
-      height: 4px;
-    }
-    body.is-mobile .bubble ul.chat-list, body.is-mobile .bubble ol.chat-list {
-      padding-left: 17px;
-      margin: 3px 0 5px 0;
-    }
-    body.is-mobile .bubble ul.chat-list:last-child, body.is-mobile .bubble ol.chat-list:last-child {
-      margin-bottom: 0;
-    }
-    body.is-mobile .bubble ul.chat-list li, body.is-mobile .bubble ol.chat-list li {
-      margin-bottom: 2.5px;
-      line-height: 1.4;
-    }
-    body.is-mobile .bubble ul.chat-list li:last-child, body.is-mobile .bubble ol.chat-list li:last-child {
-      margin-bottom: 0;
     }
     body.is-mobile .message-row.user .bubble {
       border-radius: 13px 13px 4px 13px;
-      font-size: 11.6px;
-      line-height: 1.45;
+      font-size: 12.2px;
+      line-height: 1.48;
+    }
+    body.is-mobile .message-time {
+      font-size: 9.5px;
+      margin-top: 2px;
     }
     body.is-mobile .welcome-row .bubble.welcome-card {
       padding: 9px 11px;
@@ -343,7 +323,7 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
     }
     body.is-mobile .suggestions {
       padding: 0 6px 6px;
-      gap: 2.5px;
+      gap: 3px;
       flex-wrap: nowrap;
       overflow-x: hidden;
       justify-content: center;
@@ -351,8 +331,8 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
     body.is-mobile .suggestions button {
       flex: 0 0 auto;
       width: auto;
-      padding: 3px 4.5px;
-      font-size: 8px;
+      padding: 3px 5px;
+      font-size: 8.5px;
       letter-spacing: -0.025em;
     }
     body.is-mobile .composer-form {
@@ -361,24 +341,29 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       border-radius: 13px;
     }
     body.is-mobile #input {
-      font-size: 11.6px;
+      font-size: 12px;
       padding: 3px 0;
     }
     body.is-mobile #input::placeholder {
       font-size: 11px;
     }
     body.is-mobile #sendBtn {
-      flex: 0 0 32px;
-      width: 32px;
-      height: 32px;
-      min-width: 32px;
-      min-height: 32px;
-      font-size: 14px;
+      flex: 0 0 30px;
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
       border-radius: 9px;
+    }
+    body.is-mobile #sendBtn svg {
+      width: 13px;
+      height: 13px;
+      margin-left: 1.5px;
+      margin-top: 0.5px;
     }
   </style>
 </head>
-<body class="embed-mode \${initialIsMobile ? 'is-mobile' : 'is-desktop'}">
+<body class="embed-mode ${initialIsMobile ? 'is-mobile' : 'is-desktop'}">
   <div class="embed-shell">
     <div id="messages" class="messages-area"></div>
     <div id="suggestions" class="suggestions">
@@ -391,7 +376,10 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
     <form id="chatForm" class="composer-form">
       <textarea id="input" rows="1" placeholder="Message BrandiQue…" autocomplete="off"></textarea>
       <button id="sendBtn" type="submit" aria-label="Send message">
-        <span>↑</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
       </button>
     </form>
   </div>
@@ -550,65 +538,40 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    function formatMessage(value) {
-      if (!value) return "";
-      
-      // Normalize inline numbered list items (e.g. "1. First 2. Second") if they lack newlines
-      let str = String(value).replace(/([^\n\r])\s+([0-9]+[\.\)])\s+([A-Za-z0-9\*])/g, "$1\n$2 $3");
-      
-      // Escape HTML to prevent XSS
-      const div = document.createElement("div");
-      div.textContent = str;
-      let escaped = div.innerHTML;
-
-      // Handle markdown bold: **text**
-      escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-
-      // Split into lines for structured rendering
-      const lines = escaped.split(/\r?\n/);
-      let html = [];
-      let inOl = false;
-      let inUl = false;
-
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-
-        if (!line) {
-          if (inOl) { html.push("</ol>"); inOl = false; }
-          if (inUl) { html.push("</ul>"); inUl = false; }
-          html.push('<div class="chat-spacer"></div>');
-          continue;
-        }
-
-        // Check for numbered list item: "1. ", "1) ", "10. "
-        const olMatch = line.match(/^(\d+)[\.\)]\s+(.+)$/);
-        // Check for bullet list item: "- ", "* ", "• "
-        const ulMatch = line.match(/^[-*•]\s+(.+)$/);
-
-        if (olMatch) {
-          if (inUl) { html.push("</ul>"); inUl = false; }
-          if (!inOl) { html.push('<ol class="chat-list ol-list">'); inOl = true; }
-          html.push('<li>' + olMatch[2] + '</li>');
-        } else if (ulMatch) {
-          if (inOl) { html.push("</ol>"); inOl = false; }
-          if (!inUl) { html.push('<ul class="chat-list ul-list">'); inUl = true; }
-          html.push('<li>' + ulMatch[1] + '</li>');
-        } else {
-          if (inOl) { html.push("</ol>"); inOl = false; }
-          if (inUl) { html.push("</ul>"); inUl = false; }
-          html.push('<div class="chat-line">' + line + '</div>');
-        }
+    function formatTime(dateVal) {
+      let d;
+      if (dateVal instanceof Date) {
+        d = dateVal;
+      } else if (typeof dateVal === 'string' || typeof dateVal === 'number') {
+        d = new Date(dateVal);
+      } else {
+        d = new Date();
       }
+      if (isNaN(d.getTime())) d = new Date();
 
-      if (inOl) html.push("</ol>");
-      if (inUl) html.push("</ul>");
+      let hours = d.getHours();
+      const minutes = d.getMinutes();
+      const ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+      return hours + ':' + minutesStr + ' ' + ampm;
+    }
 
-      return html.join("");
+    function formatMessage(value) {
+      const div = document.createElement("div");
+      div.textContent = value;
+      const escaped = div.innerHTML;
+      return escaped
+        .replace(/\\*\\*([^\\*\\n]+)\\*\\*/g, "<strong>$1</strong>")
+        .replace(/(^|\\n)\\s*[•*]\\s+/g, "$1");
     }
 
     function addMessage(role, content, options) {
       options = options || {};
       const row = document.createElement("div");
+      const timeStr = options.time || formatTime(options.timestamp);
+
       if (role === "assistant" && options.welcome) {
         row.className = "message-row assistant welcome-row";
         row.id = "welcomeMessage";
@@ -621,7 +584,9 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
           '</div>';
       } else {
         row.className = "message-row " + role;
-        row.innerHTML = '<div class="bubble">' + formatMessage(content) + '</div>';
+        row.innerHTML =
+          '<div class="bubble">' + formatMessage(content) + '</div>' +
+          '<span class="message-time">' + timeStr + '</span>';
       }
       messagesEl.appendChild(row);
       scrollBottom();
@@ -661,9 +626,10 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       // 1. Extract memory facts from user message
       extractMemory(trimmed);
 
-      // 2. Add message to UI and history
-      addMessage("user", trimmed);
-      history.push({ role: "user", content: trimmed });
+      // 2. Add message to UI and history with timestamp
+      const userTime = formatTime(new Date());
+      addMessage("user", trimmed, { time: userTime });
+      history.push({ role: "user", content: trimmed, time: userTime });
       saveHistory();
 
       input.value = "";
@@ -697,12 +663,14 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
         typing.remove();
         if (!response.ok) throw new Error(data && data.error ? data.error : "Unable to get a response.");
 
-        history.push({ role: "assistant", content: data.message });
+        const aiTime = formatTime(new Date());
+        history.push({ role: "assistant", content: data.message, time: aiTime });
         saveHistory();
-        addMessage("assistant", data.message);
+        addMessage("assistant", data.message, { time: aiTime });
       } catch (error) {
         typing.remove();
-        addMessage("assistant", (error && error.message) || "Something went wrong. Please try again.");
+        const errTime = formatTime(new Date());
+        addMessage("assistant", (error && error.message) || "Something went wrong. Please try again.", { time: errTime });
       } finally {
         setLoading(false);
         input.focus();
@@ -743,7 +711,7 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       }
       if (suggestions) suggestions.style.display = "none";
       for (let i = 0; i < history.length; i++) {
-        addMessage(history[i].role, history[i].content);
+        addMessage(history[i].role, history[i].content, { time: history[i].time || formatTime() });
       }
     }
 
@@ -856,7 +824,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 12, transition: { duration: 0.16 } }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed z-[99999] bottom-[68px] sm:bottom-[86px] right-3 sm:right-6 w-[calc(100vw-24px)] max-w-[320px] min-[380px]:max-w-[340px] sm:max-w-none sm:w-[380px] md:w-[395px] h-[400px] min-[360px]:h-[420px] min-[400px]:h-[440px] sm:h-[550px] md:h-[575px] max-h-[68vh] sm:max-h-[calc(100vh-100px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.22)] overflow-hidden flex flex-col font-sans"
+            className="fixed z-[99999] bottom-[68px] sm:bottom-[86px] right-3 sm:right-6 w-[calc(100vw-24px)] max-w-[325px] min-[380px]:max-w-[345px] sm:max-w-none sm:w-[365px] md:w-[380px] h-[430px] min-[380px]:h-[460px] sm:h-[520px] md:h-[540px] max-h-[70vh] sm:max-h-[calc(100vh-100px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.22)] overflow-hidden flex flex-col font-sans"
             role="dialog"
             aria-modal="true"
             aria-label="Darling AI Assistant"
