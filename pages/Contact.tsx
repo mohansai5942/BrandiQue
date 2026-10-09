@@ -12,15 +12,15 @@ const Contact: React.FC = () => {
   const { settings, getRawPhone } = useSiteSettings();
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [formData, setFormData] = useState({ name: '', email: '', budget: '', message: '' });
-  const [selectedService, setSelectedService] = useState('Full-Stack Development');
+  const [selectedService, setSelectedService] = useState('Web Development');
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const services = [
-    { id: 'Full-Stack Development', icon: Code },
-    { id: 'WordPress Development', icon: LayoutTemplate },
-    { id: 'Branding & Identity', icon: PenTool },
-    { id: 'Digital Marketing', icon: Megaphone },
-    { id: 'AI Automation & Agents', icon: Bot },
+    { id: 'Web Development', icon: Code },
+    { id: 'AI Agents & Automations', icon: Bot },
+    { id: 'Graphic Design', icon: PenTool },
+    { id: 'Brand Identity', icon: LayoutTemplate },
+    { id: 'Content & Digital Marketing', icon: Megaphone },
   ];
 
   const budgets = [
