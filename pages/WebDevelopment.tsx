@@ -8,7 +8,7 @@ import ScrollReveal from '../components/ScrollReveal';
 const FAQ_ITEMS = [
   { q: "Standard Delivery Time entha?", a: "Standard projects 7-14 days lo complete chestam. Complex e-commerce sites ki 3-4 weeks padutundi." },
   { q: "Hosting and Domain include ayyi untunda?", a: "Memu configuration help chestam. Mana plans lo technical setup guidance free ga untundi." },
-  { q: "Technical SEO support untunda?", a: "Kachitanga. Memu build chese prati site Core Web Vitals ki optimized ga, SEO-friendly architecture tho untundi." },
+  { q: "Technical SEO support untunda?", a: "Every build includes technical SEO foundations and agreed page checks. Search rankings and Core Web Vitals depend on hosting, content, third-party scripts and real-world usage, so specific scores or rankings are not guaranteed." },
   { q: "Maintenance services provide chestara?", a: "Avunu, memu monthly maintenance mariyu post-launch support plans kuda offer chestunnam." }
 ];
 
