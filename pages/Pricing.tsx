@@ -17,7 +17,7 @@ const Pricing: React.FC = () => (
             Clear pricing.<br /><span className="text-yellow-500">No guesswork.</span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">
-            Explore starting packages for websites, branding, content and automation. Pick a practical starting point; we will confirm your requirements, scope and timeline before any work begins.
+            Choose a starting package for Web Development, AI Agents & Automations, or Graphic Design. Each price explains the starting scope; we confirm your requirements, timeline and any third-party costs before work begins.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
             <a href="#packages" className="inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-6 py-3.5 font-bold text-black hover:bg-yellow-300 transition-colors">
