@@ -19,6 +19,7 @@ import WordPress from './pages/services/WordPress';
 import Branding from './pages/services/Branding';
 import DigitalMarketing from './pages/services/DigitalMarketing';
 import AIAutomation from './pages/services/AIAutomation';
+import GraphicDesign from './pages/services/GraphicDesign';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import CookiePolicy from './pages/CookiePolicy';
@@ -84,6 +85,7 @@ const App: React.FC = () => {
             <Route path="/services/branding" element={<Branding />} />
             <Route path="/services/digital-marketing" element={<DigitalMarketing />} />
             <Route path="/services/ai-automation" element={<AIAutomation />} />
+            <Route path="/services/graphic-design" element={<GraphicDesign />} />
 
             {/* Admin & Auth */}
             <Route path="/login" element={<Login />} />
