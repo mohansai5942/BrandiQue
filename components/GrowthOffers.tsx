@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bot, Check, Code2, Repeat, Sparkles } from 'lucide-react';
+import { ArrowRight, Bot, Check, Code2, Palette, Repeat, Sparkles } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const packages = [
@@ -39,6 +39,18 @@ const packages = [
     note: 'API, messaging, hosting and AI usage charges are excluded and approved before work starts.',
     href: '/services/ai-automation',
     cta: 'Explore automation',
+  },
+  {
+    name: 'Graphic Design Starter',
+    price: '₹4,500',
+    suffix: 'one-time · starter pack',
+    description: 'A focused batch of on-brand visuals for businesses that need polished creative assets without a full retainer.',
+    icon: Palette,
+    featured: false,
+    items: ['Up to 5 agreed static design assets', 'Sizes for the agreed platforms', 'Consistent use of supplied brand direction', 'Final PNG/JPG exports', 'One consolidated revision round'],
+    note: 'Copywriting, editable source files, stock assets and additional revisions are quoted separately where needed.',
+    href: '/services/graphic-design',
+    cta: 'Explore graphic design',
   },
   {
     name: 'Brand Identity Starter',
@@ -99,9 +111,9 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true }) => (
         </ScrollReveal>
       )}
 
-      <div className="grid lg:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6 items-stretch">
         {packages.map((pkg, index) => (
-          <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`}>
+          <ScrollReveal key={pkg.name} delay={`delay-${(index % 3) * 100}`}>
             <article className={`relative h-full rounded-[28px] p-6 md:p-8 border flex flex-col transition-all duration-300 hover:-translate-y-1 ${pkg.featured ? 'border-yellow-400/60 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] text-gray-900 dark:text-white'}`}>
               {pkg.featured && <span className="absolute top-4 right-4 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black tracking-wider text-black uppercase">Workflow starter</span>}
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${pkg.featured ? 'bg-yellow-400 text-black' : 'bg-yellow-400/10 text-yellow-600 dark:text-yellow-300'}`}>
