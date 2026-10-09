@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BadgeCheck, CircleHelp, MessageCircle, ShieldCheck } from 'lucide-react';
+import { ArrowRight, BadgeCheck, HelpCircle, MessageCircle, ShieldCheck } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import GrowthOffers from '../components/GrowthOffers';
 
@@ -51,7 +51,7 @@ const Pricing: React.FC = () => (
         </ScrollReveal>
         <ScrollReveal delay="delay-100">
           <div className="h-full rounded-3xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0D1017] p-6 md:p-8">
-            <div className="w-11 h-11 rounded-xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300 flex items-center justify-center"><CircleHelp size={22} /></div>
+            <div className="w-11 h-11 rounded-xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300 flex items-center justify-center"><HelpCircle size={22} /></div>
             <h2 className="mt-5 text-xl font-bold">Need something custom?</h2>
             <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">E-commerce, advanced integrations, extra pages, custom dashboards and larger marketing campaigns are quoted after requirements are understood.</p>
             <Link to="/contact" className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-yellow-600 dark:text-yellow-300 hover:gap-3 transition-all">Talk through your project <ArrowRight size={16} /></Link>
