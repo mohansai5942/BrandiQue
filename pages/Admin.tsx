@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload, MapPin, Save, Instagram, LayoutGrid, Lock, Shield, Download } from 'lucide-react';
+import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload, MapPin, Save, Instagram, LayoutGrid, Lock, Shield, Download, FileUp } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSiteSettings, WebsiteItem } from '../context/SiteSettingsContext';
 import { Message, Project } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
 import { AdminN8nProjects } from '../components/AdminN8nProjects';
-import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc, setDoc, onSnapshot, writeBatch, Timestamp } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 
 const SERVICE_CATEGORIES = [
@@ -599,6 +599,7 @@ const Admin: React.FC = () => {
   const [serviceFormSearch, setServiceFormSearch] = useState('');
   const [isExportingData, setIsExportingData] = useState(false);
   const [exportDataMessage, setExportDataMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isImportingData, setIsImportingData] = useState(false);
 
   // Websites Management State
   const [newWebName, setNewWebName] = useState('');
@@ -1555,6 +1556,94 @@ const Admin: React.FC = () => {
     }
   };
 
+  // Restore a JSON export created by handleExportAllData into this Firebase project's Firestore.
+  // Document IDs are preserved; existing documents with the same IDs are overwritten.
+  const handleImportAllData = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file || isImportingData) return;
+
+    const confirmed = window.confirm(
+      'Import this BrandiQue backup into the Firebase project currently connected to this website? Existing documents with matching IDs will be overwritten. Download a backup first and confirm the Firebase project is the NEW database.'
+    );
+    if (!confirmed) return;
+
+    setIsImportingData(true);
+    setExportDataMessage(null);
+
+    try {
+      if (file.size > 50 * 1024 * 1024) {
+        throw new Error('File is larger than 50 MB. Use a managed/server-side import for large backups.');
+      }
+
+      const parsed = JSON.parse(await file.text());
+      if (
+        parsed?.format !== 'brandique-firestore-export' ||
+        parsed?.formatVersion !== 1 ||
+        !parsed?.collections ||
+        typeof parsed.collections !== 'object'
+      ) {
+        throw new Error('Invalid backup file. Please select a JSON file downloaded using BrandiQue Export All Data.');
+      }
+
+      const allowedCollections = new Set([
+        'messages', 'projects', 'prompts', 'settings', 'websites', 'n8n_projects', 'n8n_project_forms',
+      ]);
+      const entries = Object.entries(parsed.collections).filter(([name, group]: [string, any]) =>
+        allowedCollections.has(name) && Array.isArray(group?.documents)
+      ) as [string, { documents: { id: string; data: unknown }[] }][];
+      if (entries.length === 0) throw new Error('No supported collections were found in this backup.');
+
+      const decodeValue = (value: any): any => {
+        if (Array.isArray(value)) return value.map(decodeValue);
+        if (value && typeof value === 'object') {
+          if (value.type === 'firestore/timestamp/1.0' && Number.isFinite(value.seconds)) {
+            return new Timestamp(value.seconds, value.nanoseconds || 0);
+          }
+          const output: Record<string, any> = {};
+          for (const [key, child] of Object.entries(value)) output[key] = decodeValue(child);
+          return output;
+        }
+        return value;
+      };
+
+      const writes: { collectionName: string; id: string; data: unknown }[] = [];
+      for (const [collectionName, group] of entries) {
+        for (const item of group.documents) {
+          if (!item || typeof item.id !== 'string' || !item.id.trim() || !item.data || typeof item.data !== 'object' || Array.isArray(item.data)) {
+            throw new Error(`Invalid document entry found in collection "${collectionName}". Nothing has been imported yet.`);
+          }
+          writes.push({ collectionName, id: item.id, data: decodeValue(item.data) });
+        }
+      }
+      if (writes.length === 0) throw new Error('The selected backup contains no documents.');
+
+      let completed = 0;
+      for (let start = 0; start < writes.length; start += 400) {
+        const batch = writeBatch(db);
+        const chunk = writes.slice(start, start + 400);
+        for (const item of chunk) {
+          batch.set(doc(db, item.collectionName, item.id), item.data as Record<string, unknown>);
+        }
+        await batch.commit();
+        completed += chunk.length;
+      }
+
+      setExportDataMessage({
+        type: 'success',
+        text: `Import complete: ${completed} documents restored across ${entries.length} collections. Existing matching document IDs were overwritten; unrelated documents were left unchanged.`,
+      });
+    } catch (error) {
+      console.error('BrandiQue data import failed:', error);
+      setExportDataMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Import failed. Check Firestore rules, network, and the selected backup file.',
+      });
+    } finally {
+      setIsImportingData(false);
+    }
+  };
+
   // Format bytes beautifully
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -1739,6 +1828,24 @@ const Admin: React.FC = () => {
           >
             {isExportingData ? <RefreshCw size={16} className="animate-spin" /> : <Download size={16} />}
             <span>{isExportingData ? 'Exporting…' : 'Export All Data'}</span>
+          </button>
+          <input
+            id="brandique-data-import-file"
+            type="file"
+            accept=".json,application/json"
+            className="hidden"
+            disabled={isImportingData}
+            onChange={handleImportAllData}
+          />
+          <button
+            type="button"
+            onClick={() => document.getElementById('brandique-data-import-file')?.click()}
+            disabled={isImportingData}
+            className="shrink-0 p-2.5 md:p-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 border border-blue-400/30 transition-all flex items-center gap-2 font-bold text-xs md:text-sm shadow-lg shadow-blue-500/20 disabled:opacity-60 disabled:cursor-wait"
+            title="Import a BrandiQue JSON backup into the currently connected Firestore database"
+          >
+            {isImportingData ? <RefreshCw size={16} className="animate-spin" /> : <FileUp size={16} />}
+            <span>{isImportingData ? 'Importing…' : 'Import Data'}</span>
           </button>
           <button 
             onClick={logout}
