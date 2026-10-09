@@ -328,14 +328,14 @@ const AI_CHATBOTS_PKG = {
   id: "ai-chatbots",
   title: "AI Chatbots",
   icon: Bot,
-  desc: "We develop intelligent AI chatbots that handle customer interactions with speed and accuracy. These bots can respond instantly to queries, assist users, capture leads, and provide support across platforms like websites and messaging apps. Our chatbots are designed to improve user experience, ensure consistent communication, and support your business 24/7.",
+  desc: "We develop AI chatbots for common customer questions, lead capture and guided support across websites and messaging platforms. Their responses and availability depend on the chosen model, knowledge sources, hosting and third-party integrations.",
   price: { 
      basic: "15,000 to 30,000", 
      advanced: "30,000 to 70,000",
      enterprise: "70,000 to 1,50,000+",
      maintenance: ""
   },
-  features: ["WhatsApp bots (sales & customer support)", "Web chatbots (website visitor interaction)", "Telegram bots (group & channel automation)", "AI-powered auto-replies", "Lead capture & qualification system", "Multi-step conversation flows", "Integration with APIs & databases", "24/7 automated customer interaction", "Hosting & API setup included"],
+  features: ["WhatsApp bots (sales & customer support)", "Web chatbots (website visitor interaction)", "Telegram bots (group & channel automation)", "AI-powered auto-replies", "Lead capture & qualification system", "Multi-step conversation flows", "Integration with APIs & databases", "Automated responses outside business hours, subject to availability", "Hosting and API setup scoped per project"],
   deliverables: ["Fully functional chatbot (WhatsApp / Web / Telegram)", "Conversation flow setup", "AI response configuration", "Lead capture & integration setup", "API & database connections", "Hosting setup & live deployment", "Tested bot (user interaction)", "Admin access / control panel", "Usage guidance + initial support"],
   process: ["Requirement Discussion: Use case & audience", "Flow Design: Plan conversation structure", "Bot Development: WhatsApp / Web / Telegram", "AI Setup: Configure smart responses", "Integration: Connect APIs / CRM", "Testing: Check responses & UX", "Deployment & Training"],
   requirements: ["Use case (sales, support, lead gen)", "Platform preference", "Common questions / FAQs", "API / CRM access", "Branding elements", "Contact / lead details to capture"],
@@ -429,13 +429,13 @@ await agent.deploy();`;
                         <TextReveal text="Automate your business operations with powerful AI agents and intelligent workflows." className="text-base md:text-lg lg:text-xl text-neon-blue font-medium" delay={300} />
                      </div>
                      <p className="text-gray-600 dark:text-gray-400 text-sm md:text-sm lg:text-lg leading-relaxed mb-6 md:mb-8 font-light">
-                        Transform how your business operates with custom-built AI agents. From WhatsApp chatbots that close sales to complex n8n workflows that sync your data, we build systems that save you thousands of manual hours.
+                        Transform how your business operates with custom-built AI agents. From WhatsApp chatbots to n8n workflows that sync data, we build systems to reduce repetitive manual steps and make handoffs more consistent.
                      </p>
                      <ul className="space-y-2 md:space-y-3 mb-8 md:mb-10">
                         {[
                           "AI-powered WhatsApp, Telegram & Web Bots",
                           "Automated workflows using n8n & Make",
-                          "Smart auto-replies for 24/7 engagement",
+                          "Automated replies beyond office hours, subject to availability",
                           "Google Sheets & API data sync",
                           "Lead generation & appointment agents"
                         ].map((feat, i) => (
@@ -740,7 +740,7 @@ await agent.deploy();`;
                   <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Powerful AI Capabilities</h3>
                   <div className="space-y-4">
                      {[
-                        { title: "24/7 Automated Responses", desc: "Instant engagement for every customer, any time." },
+                        { title: "Automated responses", desc: "Handle routine questions beyond office hours when connected services are available." },
                         { title: "Complete AI Replies", desc: "Smart, context-aware responses using advanced LLMs." },
                         { title: "Fully Customized Workflows", desc: "Designed around your specific business logic." },
                         { title: "Responsible system design", desc: "Access controls, data retention and integration security are scoped to the tools and sensitivity of your workflow." }
