@@ -381,7 +381,7 @@ const FullStack: React.FC = () => {
                      <ul className="space-y-4 md:space-y-6">
                         {[
                            { title: "Total Control", text: "Custom code gives you full control over design and functionality.", icon: Server },
-                           { title: "Peak Performance", text: "Performance is faster than template-based websites (WordPress/Wix).", icon: Zap },
+                           { title: "Performance-conscious", text: "The implementation, assets and architecture are chosen to suit the project’s real requirements.", icon: Zap },
                            { title: "Unique Identity", text: "Animations and UI/UX are fully personalized to your brand.", icon: Sparkles },
                            { title: "Future Proof", text: "Better SEO, cleaner code, long-term scalability.", icon: TrendingUp }
                         ].map((item, i) => (
