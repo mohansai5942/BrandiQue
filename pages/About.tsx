@@ -227,7 +227,7 @@ const About: React.FC = () => {
       <div className="grid md:grid-cols-3 gap-8 mb-32 px-4 lg:px-8 max-w-[1500px] mx-auto">
          {[
             { title: "What I Believe In", icon: Shield, theme: "purple", list: ["Custom solutions, zero templates", "Performance & UX above all", "Clean, scalable architecture", "Global standard compliance"] },
-            { title: "Our Commitment", icon: LayoutTemplate, theme: "blue", list: ["Full-Stack Development (React/Next.js)", "High-Performance WordPress", "Premium Branding & Identity", "Conversion-Focused Marketing"] },
+            { title: "Our Commitment", icon: LayoutTemplate, theme: "blue", list: ["Conversion-focused web development", "Practical AI agents and workflow automation", "Professional graphic design and creative assets", "Supporting brand identity and content services"] },
             { title: "Our Mission", icon: Rocket, theme: "green", desc: "To empower modern businesses with digital tools that drive measurable growth. We democratize enterprise-grade technology for every ambitious entrepreneur." }
          ].map((pillar, i) => (
             <ScrollReveal key={i} delay={`delay-${(i+1)*100}`} className="h-full">
