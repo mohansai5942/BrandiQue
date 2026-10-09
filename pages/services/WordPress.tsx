@@ -294,7 +294,7 @@ const WordPress: React.FC = () => {
                       process: ["Requirement discussion (niche, style)", "Content & project collection", "Layout planning (project showcase)", "Setup & Theme UI tuning", "Development with galleries & plugins", "Review & revisions", "Performance testing", "Deployment & handover"],
                       requirements: ["List of projects / works", "Project images / videos", "Project descriptions", "Personal / brand information", "Social links & contact details", "Design references (optional)"],
                       tech: ["WordPress CMS", "Elementor Pro / Block Editor", "Gallery & Portfolio Plugins", "Image optimization tools", "Caching plugins"],
-                      promises: ["Visually appealing & modern design", "High-quality project showcase", "Smooth animations & fast performance", "Fully responsive on all screens", "Revisions for design perfection", "On-time delivery commitment", "Complete control & easy updates"]
+                      promises: ["Visually appealing & modern design", "High-quality project showcase", "Smooth animations & fast performance", "Fully responsive on all screens", "Agreed revision rounds", "On-time delivery commitment", "Complete control & easy updates"]
                     },
                     {
                       id: "business",
