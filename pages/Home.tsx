@@ -239,7 +239,7 @@ const Home: React.FC = () => {
                         <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
                            Explore Services <ArrowRight size={18} />
                         </Link>
-                        <Link to="/web-development" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
+                        <Link to="/pricing" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
                            View Pricing
                         </Link>
                      </div>
@@ -268,7 +268,7 @@ const Home: React.FC = () => {
                            <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
                               Explore Services <ArrowRight size={18} />
                            </Link>
-                           <Link to="/web-development" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
+                           <Link to="/pricing" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
                               View Pricing
                            </Link>
                         </div>
@@ -608,7 +608,7 @@ const Home: React.FC = () => {
                   <ScrollReveal>
                      <h2 className="text-4xl md:text-6xl font-bold mb-8">Performance <br />First <span className="text-neon-purple">Engineering.</span></h2>
                      <div className="space-y-8 text-gray-600 dark:text-gray-400 text-lg font-light">
-                        <p>In today's digital market, speed is currency. A one-second delay can cost you 7% in conversions. At BrandiQue, we don't just "design" — we engineer for sub-second performance.</p>
+                        <p>Speed affects how easy a site feels to use. We pay attention to image weight, page structure and unnecessary scripts, then validate the production build before handover.</p>
                         <div className="grid grid-cols-2 gap-8 pt-4">
                            <div className="space-y-2">
                               <div className="flex items-center gap-2 font-bold text-black dark:text-white uppercase tracking-wider text-xs"><ZapIcon size={16} className="text-neon-blue" /> Lightning Speed</div>
@@ -677,10 +677,10 @@ const Home: React.FC = () => {
                      <div className="order-1 lg:order-2 space-y-6">
                         <h2 className="text-3xl md:text-5xl font-bold">Scaling for the <span className="text-neon-purple text-gradient">Future.</span></h2>
                         <p className="text-gray-600 dark:text-gray-400 text-lg font-light leading-relaxed">
-                           A website that works for 100 visitors might crash with 10,000. Our engineering focus is on "elastic scalability." By leveraging cloud-native deployment patterns and distributed edge computing, we ensure that your digital infrastructure expands dynamically based on demand. This is critical for businesses planning rapid expansion or launching seasonal campaigns.
+                           We choose the implementation and hosting approach around the project’s expected traffic, integrations and budget. When a business needs to scale, we plan capacity, monitoring and additional infrastructure as explicit work—not as an unverified promise.
                         </p>
                         <p className="text-gray-600 dark:text-gray-400 text-lg font-light leading-relaxed">
-                           Security is the silent pillar of our development process. Every input is sanitized, every API route is protected, and every deployment is scanned for vulnerabilities. In an age of increasing data breaches, BrandiQue provides the peace of mind that your business and customer data are shielded behind multiple layers of enterprise-grade protection.
+                           Security requirements depend on the stack and the data a project handles. We discuss access controls, form validation, dependency updates and hosting responsibilities, and clearly identify any security work that needs specialist review.
                         </p>
                         <div className="pt-4 flex gap-4">
                            <Check size={20} className="text-green-500" /> <span className="text-sm font-bold uppercase tracking-wider opacity-60">Privacy-aware implementation</span>
@@ -749,7 +749,7 @@ const Home: React.FC = () => {
                   {[
                      { q: "Standard Delivery Time?", a: "Standard builds take 7-14 days, complex apps 3-4 weeks." },
                      { q: "Is Technical SEO Included?", a: "Yes, optimized structure is baked into every build from day one." },
-                     { q: "Mobile Responsiveness?", a: "100%. We build mobile-first to ensure perfect cross-device views." },
+                     { q: "Mobile Responsiveness?", a: "We design mobile-first and check layouts across common screen sizes. Exact browser and device coverage is agreed within the project scope." },
                      { q: "Do you offer maintenance?", a: "Yes, we act as long-term technical partners for our clients." }
                   ].map((faq, i) => (
                      <ScrollReveal key={i} className="p-6 bg-white dark:bg-[#0F1320] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm">
@@ -779,7 +779,7 @@ const Home: React.FC = () => {
                            We are committed to ethical development practices. This means we don't just build what's easy; we build what's right for your long-term success. We prioritize accessibility (A11y) to ensure the web is open to everyone, we use sustainable coding patterns to reduce digital carbon footprints, and we maintain radical transparency in our pricing and timelines.
                         </p>
                         <p>
-                           When you choose BrandiQue, you aren't just hiring a vendor; you are gaining a strategic partner. We immerse ourselves in your industry, understand your competitors, and build a platform that doesn't just "look good" on a portfolio—it actually solves business problems. Whether you are a solo creator or a rising startup, we give you the enterprise-grade tools you need to compete on a global scale.
+                           BrandiQue works with you to understand your offer, audience and next business goal, then builds a practical digital solution around that context. Whether you are a solo creator or a growing team, the aim is a clearer online presence, smoother operations and more consistent brand communication.
                         </p>
                      </div>
 
