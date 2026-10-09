@@ -80,7 +80,7 @@ const WordPress: React.FC = () => {
                                  {/* Top Bar */}
                                  <div className="flex items-center justify-between mb-3 md:mb-4 border-b border-white/5 pb-2">
                                     <div className="flex items-center gap-2">
-                                       <h4 className="text-[8px] md:text-[10px] font-bold text-white">Edit Page</h4>
+                                       <h4 className="text-[8px] md:text-[10px] font-bold text-white">Page editor</h4>
                                        <span className="px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 text-[6px] md:text-[8px]">Draft</span>
                                     </div>
                                     <div className="px-2 py-1 rounded bg-blue-500 text-white text-[6px] md:text-[8px] font-bold">Update</div>
@@ -431,7 +431,7 @@ const WordPress: React.FC = () => {
                      <ul className="space-y-4 md:space-y-6">
                         {[
                            { title: "Market Leader", text: "WordPress powers over 40% of the internet.", icon: Globe },
-                           { title: "Zero Coding", text: "Easy editing — no coding required for content updates.", icon: Edit3 },
+                           { title: "Easy content editing", text: "Update common page content in WordPress; custom features may still require development.", icon: Edit3 },
                            { title: "Limitless", text: "Thousands of plugins expand functionality instantly.", icon: Grid },
                            { title: "Growth Ready", text: "SEO-friendly structure and highly scalable architecture.", icon: TrendingUp }
                         ].map((item, i) => (
