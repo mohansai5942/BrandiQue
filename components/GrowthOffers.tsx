@@ -78,22 +78,26 @@ const packages = [
   },
 ];
 
-const GrowthOffers: React.FC = () => (
+interface GrowthOffersProps { showHeading?: boolean; }
+
+const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true }) => (
   <section className="relative py-20 md:py-28 px-4 md:px-6 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
     <div className="max-w-[1320px] mx-auto">
-      <ScrollReveal>
-        <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-          <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase text-yellow-600 dark:text-yellow-300">
-            <Sparkles size={14} /> Clear scope. Clear pricing.
-          </span>
-          <h2 className="mt-5 text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Practical digital systems.<br /><span className="text-yellow-500">Built around business goals.</span>
-          </h2>
-          <p className="mt-5 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed">
-            Start with the one thing your business needs now—then add capabilities as the business grows. Every project begins with an agreed scope, timeline and deliverables.
-          </p>
-        </div>
-      </ScrollReveal>
+      {showHeading && (
+        <ScrollReveal>
+          <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase text-yellow-600 dark:text-yellow-300">
+              <Sparkles size={14} /> Clear scope. Clear pricing.
+            </span>
+            <h2 className="mt-5 text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Practical digital systems.<br /><span className="text-yellow-500">Built around business goals.</span>
+            </h2>
+            <p className="mt-5 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed">
+              Start with the one thing your business needs now—then add capabilities as the business grows. Every project begins with an agreed scope, timeline and deliverables.
+            </p>
+          </div>
+        </ScrollReveal>
+      )}
 
       <div className="grid lg:grid-cols-3 gap-5 lg:gap-6 items-stretch">
         {packages.map((pkg, index) => (
