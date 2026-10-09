@@ -17,6 +17,18 @@ const packages = [
     cta: 'Explore website packages',
   },
   {
+    name: 'Business Website',
+    price: '₹15,000',
+    suffix: 'one-time · up to 5 pages',
+    description: 'A fuller business website for teams that need clear service pages, stronger credibility and a structured enquiry path.',
+    icon: Code2,
+    featured: false,
+    items: ['Up to 5 agreed pages', 'Responsive service and about sections', 'Enquiry form and contact calls to action', 'Basic on-page SEO essentials', 'Handover and one consolidated revision round'],
+    note: 'Domain, hosting, paid themes/plugins and third-party licences are billed separately where needed.',
+    href: '/web-development',
+    cta: 'Compare website packages',
+  },
+  {
     name: 'Enquiry Automation',
     price: '₹12,000',
     suffix: 'one-time · scoped setup',
@@ -27,6 +39,30 @@ const packages = [
     note: 'API, messaging, hosting and AI usage charges are excluded and approved before work starts.',
     href: '/services/ai-automation',
     cta: 'Explore automation',
+  },
+  {
+    name: 'Brand Identity Starter',
+    price: '₹8,000',
+    suffix: 'one-time · defined identity scope',
+    description: 'Create a consistent visual starting point so your business looks recognisable across digital touchpoints.',
+    icon: Sparkles,
+    featured: false,
+    items: ['Primary logo direction and one variation', 'Practical colour palette and typography pairing', 'Mini brand usage guide', 'Digital-ready exports for agreed use cases', 'One consolidated refinement round'],
+    note: 'Naming, extensive research, packaging systems and editable source files can require a separate quote.',
+    href: '/services/branding',
+    cta: 'Explore brand identity',
+  },
+  {
+    name: 'Content Creative Retainer',
+    price: '₹5,000',
+    suffix: 'per month · starter plan',
+    description: 'Maintain a consistent social presence with a small, planned batch of brand-aligned static content.',
+    icon: Sparkles,
+    featured: false,
+    items: ['8 static social creatives per month', 'A simple monthly content outline', 'Basic caption prompts for each creative', 'One consolidated revision round per batch', 'Consistent use of your brand assets'],
+    note: 'Video editing, daily publishing, community management, influencer fees and ad spend are excluded.',
+    href: '/services/digital-marketing',
+    cta: 'Explore content services',
   },
   {
     name: 'Website Care',
@@ -63,7 +99,7 @@ const GrowthOffers: React.FC = () => (
         {packages.map((pkg, index) => (
           <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`}>
             <article className={`relative h-full rounded-[28px] p-6 md:p-8 border flex flex-col transition-all duration-300 hover:-translate-y-1 ${pkg.featured ? 'border-yellow-400/60 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] text-gray-900 dark:text-white'}`}>
-              {pkg.featured && <span className="absolute top-4 right-4 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black tracking-wider text-black uppercase">Popular starting point</span>}
+              {pkg.featured && <span className="absolute top-4 right-4 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black tracking-wider text-black uppercase">Workflow starter</span>}
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${pkg.featured ? 'bg-yellow-400 text-black' : 'bg-yellow-400/10 text-yellow-600 dark:text-yellow-300'}`}>
                 <pkg.icon size={24} />
               </div>
