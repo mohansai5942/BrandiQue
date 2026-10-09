@@ -567,10 +567,10 @@ const Home: React.FC = () => {
                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest">
                         <Activity size={14} /> Revenue-Driven Development
                      </div>
-                     <h2 className="text-3xl md:text-6xl font-bold leading-tight">Performance is not a <span className="text-neon-blue">feature.</span> It's the <span className="text-green-400">Foundation.</span></h2>
+                     <h2 className="text-3xl md:text-6xl font-bold leading-tight">A better experience starts with the <span className="text-green-400">fundamentals.</span></h2>
                      <div className="grid md:grid-cols-2 gap-12 text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
                         <p>
-                           Statistics prove that for every second your website takes to load beyond 3 seconds, your conversion rate drops by over 20%. At BrandiQue, we treat performance as a core business metric. We don't just optimize images; we architect entire data-fetching strategies using Incremental Static Regeneration (ISR) and Server-Side Rendering (SSR) to ensure your users never see a loading spinner.
+                           We treat performance as part of the user experience. The right approach depends on the platform: we review image sizes, page structure, scripts and hosting constraints, then test the built site and address practical bottlenecks within scope.
                         </p>
                         <p>
                            Our SEO foundations include meaningful page structure, descriptive metadata, accessible markup and relevant structured data where appropriate. Search visibility and Core Web Vitals depend on content, hosting, third-party scripts, competition and real-world usage, so we focus on measurable checks rather than promising rankings.
