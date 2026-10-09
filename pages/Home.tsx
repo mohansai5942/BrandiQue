@@ -16,7 +16,6 @@ import ViewOptimizer from '../components/ViewOptimizer';
 import DealsSection from '../components/DealsSection';
 import { INITIAL_N8N_PROJECTS } from './N8nProjectsData';
 import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
-import GrowthOffers from '../components/GrowthOffers';
 
 const STATS = [
    { label: "Delivery Approach", value: "End-to-End", icon: Rocket, color: "text-neon-purple" },
@@ -741,9 +740,6 @@ const Home: React.FC = () => {
          </section>
 
          <DealsSection />
-
-         {/* Clear, scope-led offers for new and recurring clients */}
-         <GrowthOffers />
 
          {/* 10. FAQ SHORTFORM */}
          <section id="faq" className="py-24 bg-gray-50 dark:bg-[#0A0C11]/50 border-t border-gray-200 dark:border-white/5">
