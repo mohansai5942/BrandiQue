@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload, MapPin, Save, Instagram, LayoutGrid, Lock, Shield } from 'lucide-react';
+import { Trash2, Settings, Search, X, Check, BarChart3, LogOut, MessageSquare, Mail, DollarSign, RefreshCw, Clock, Key, Phone, Edit3, Eye, EyeOff, Plus, Database, HardDrive, RotateCcw, FolderPlus, Video, Link2, Tag, ChevronRight, Code, LayoutTemplate, PenTool, Megaphone, Bot, Sparkles, Layers, User, Image as ImageIcon, Globe, ExternalLink, Play, Upload, MapPin, Save, Instagram, LayoutGrid, Lock, Shield, Download } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSiteSettings, WebsiteItem } from '../context/SiteSettingsContext';
 import { Message, Project } from '../types';
@@ -597,6 +597,8 @@ const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'projects' | 'n8n-projects' | 'services' | 'leads' | 'recycle' | 'storage' | 'site-settings' | 'our-websites'>('projects');
   const [selectedServiceTab, setSelectedServiceTab] = useState<string>('Full-Stack Development');
   const [serviceFormSearch, setServiceFormSearch] = useState('');
+  const [isExportingData, setIsExportingData] = useState(false);
+  const [exportDataMessage, setExportDataMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Websites Management State
   const [newWebName, setNewWebName] = useState('');
@@ -1481,6 +1483,78 @@ const Admin: React.FC = () => {
     return size + 80;
   };
 
+  // Export known website Firestore collections into one downloadable JSON backup.
+  // This is read-only and does not change or delete any database records.
+  const handleExportAllData = async () => {
+    if (isExportingData) return;
+    setIsExportingData(true);
+    setExportDataMessage(null);
+
+    const collectionNames = ['messages', 'projects', 'prompts', 'settings', 'websites', 'n8n_projects', 'n8n_project_forms'];
+
+    try {
+      const exportedAt = new Date().toISOString();
+      const exportedCollections: Record<string, { documents: { id: string; data: unknown }[]; count: number }> = {};
+      const failedCollections: string[] = [];
+
+      for (const collectionName of collectionNames) {
+        try {
+          const snapshot = await getDocs(collection(db, collectionName));
+          exportedCollections[collectionName] = {
+            count: snapshot.size,
+            documents: snapshot.docs.map((documentSnapshot) => ({
+              id: documentSnapshot.id,
+              data: documentSnapshot.data(),
+            })),
+          };
+        } catch (error) {
+          failedCollections.push(collectionName);
+          console.error(`Could not export Firestore collection "${collectionName}":`, error);
+        }
+      }
+
+      const totalDocuments = Object.values(exportedCollections).reduce((total, group) => total + group.count, 0);
+      if (totalDocuments === 0 && failedCollections.length > 0) {
+        throw new Error('No collections could be exported. Check Firestore permissions and try again.');
+      }
+
+      const backup = {
+        format: 'brandique-firestore-export',
+        formatVersion: 1,
+        exportedAt,
+        sourceProjectId: auth.app.options.projectId || 'unknown',
+        totalDocuments,
+        collections: exportedCollections,
+        exportNotes: [
+          'Document IDs and field values are included.',
+          'Known top-level website collections are included, including n8n collections.',
+          'This browser export cannot enumerate arbitrary Firestore collections or include nested subcollections automatically.',
+          'Firebase Authentication users, Storage file bytes, security rules, indexes, and project settings are not included.',
+          'Use Firebase Admin SDK or managed Firestore export for a complete native backup including nested subcollections.',
+        ],
+      };
+
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `brandique-firestore-backup-${exportedAt.slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+
+      setExportDataMessage(failedCollections.length > 0
+        ? { type: 'error', text: `Partial export: ${totalDocuments} documents downloaded. Failed collections: ${failedCollections.join(', ')}.` }
+        : { type: 'success', text: `Export complete: ${totalDocuments} documents from ${Object.keys(exportedCollections).length} known collections downloaded.` });
+    } catch (error) {
+      console.error('BrandiQue data export failed:', error);
+      setExportDataMessage({ type: 'error', text: error instanceof Error ? error.message : 'Export failed. Check Firestore permissions and try again.' });
+    } finally {
+      setIsExportingData(false);
+    }
+  };
+
   // Format bytes beautifully
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -1656,6 +1730,16 @@ const Admin: React.FC = () => {
             <Shield size={16} className="text-cyan-400" />
             <span>Admin Credentials</span>
           </button>
+          <button
+            type="button"
+            onClick={handleExportAllData}
+            disabled={isExportingData}
+            className="shrink-0 p-2.5 md:p-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:from-emerald-600 hover:to-teal-700 border border-emerald-400/30 transition-all flex items-center gap-2 font-bold text-xs md:text-sm shadow-lg shadow-emerald-500/20 disabled:opacity-60 disabled:cursor-wait"
+            title="Download a JSON backup of the website's known Firestore collections"
+          >
+            {isExportingData ? <RefreshCw size={16} className="animate-spin" /> : <Download size={16} />}
+            <span>{isExportingData ? 'Exporting…' : 'Export All Data'}</span>
+          </button>
           <button 
             onClick={logout}
             className="shrink-0 p-2.5 md:p-3 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:border-red-500/50 transition-all group flex items-center gap-2 font-bold text-xs md:text-sm shadow-sm"
@@ -1666,6 +1750,12 @@ const Admin: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {exportDataMessage && (
+        <div role="status" className={`mb-5 rounded-xl border px-4 py-3 text-xs font-semibold ${exportDataMessage.type === 'success' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300'}`}>
+          {exportDataMessage.text}
+        </div>
+      )}
 
       {/* Navigation Tabs - Single line horizontal scroll on mobile */}
       <div className="flex items-center gap-2 md:gap-3 mb-8 bg-gray-100/50 dark:bg-[#0A0C11]/30 p-2 rounded-2xl border border-gray-200 dark:border-white/5 max-w-full overflow-x-auto whitespace-nowrap flex-nowrap scrollbar-none opacity-0 animate-fade-up">
