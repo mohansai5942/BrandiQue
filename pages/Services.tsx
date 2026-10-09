@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Code, LayoutTemplate, PenTool, Megaphone, Check, Sparkles, Bot } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
+import GrowthOffers from '../components/GrowthOffers';
 
 const Services: React.FC = () => {
   const SERVICES_LIST = [
@@ -85,6 +86,9 @@ const Services: React.FC = () => {
             </ScrollReveal>
          ))}
       </div>
+
+      {/* Scope-led offers and transparent starting prices */}
+      <GrowthOffers />
 
       {/* 3. CTA ENDING */}
       <div className="mt-32 text-center py-24 bg-gray-100 dark:bg-[#0A0C11] rounded-[48px] border border-gray-200 dark:border-white/10">

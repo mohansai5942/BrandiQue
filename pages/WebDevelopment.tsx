@@ -8,7 +8,7 @@ import ScrollReveal from '../components/ScrollReveal';
 const FAQ_ITEMS = [
   { q: "Standard Delivery Time entha?", a: "Standard projects 7-14 days lo complete chestam. Complex e-commerce sites ki 3-4 weeks padutundi." },
   { q: "Hosting and Domain include ayyi untunda?", a: "Memu configuration help chestam. Mana plans lo technical setup guidance free ga untundi." },
-  { q: "Technical SEO support untunda?", a: "Kachitanga. Memu build chese prati site Core Web Vitals ki optimized ga, SEO-friendly architecture tho untundi." },
+  { q: "Technical SEO support untunda?", a: "Every build includes technical SEO foundations and agreed page checks. Search rankings and Core Web Vitals depend on hosting, content, third-party scripts and real-world usage, so specific scores or rankings are not guaranteed." },
   { q: "Maintenance services provide chestara?", a: "Avunu, memu monthly maintenance mariyu post-launch support plans kuda offer chestunnam." }
 ];
 
@@ -21,51 +21,17 @@ const WebDevelopment = () => {
       {/* 1. HERO SECTION */}
       <section className="text-center mb-24 lg:mb-32">
         <ScrollReveal>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-8 animate-pulse">
-               <Zap size={14} /> Limited Time: 50% Solutions Discount
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-600 dark:text-yellow-300 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-8">
+               <Zap size={14} /> Transparent Scope & Pricing
             </div>
             <h1 className="text-4xl md:text-7xl lg:text-8xl font-bold mb-8 tracking-tight leading-[1.1]">
               Web Design <br/> <span className="text-neon-purple text-gradient">Starter Kits.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed font-light">
-              High-performance, custom-coded websites built for business growth. Get premium solutions quality at the most competitive market prices.
+              Thoughtful design, reliable implementation and clearly scoped deliverables. Choose a starting package and we will confirm the final scope before work begins.
             </p>
         </ScrollReveal>
       </section>
-
-<div className="my-10">
-  <ins
-    className="adsbygoogle"
-    style={{ display: "block" }}
-    data-ad-format="fluid"
-    data-ad-layout-key="-ef+6k-30-ac+ty"
-    data-ad-client="ca-pub-9587188804206049"
-    data-ad-slot="2366860495"
-  ></ins>
-</div>
-
-{/* ===== In-Article Ad ===== */}
-<div className="my-10 flex justify-center">
-  <ins
-    className="adsbygoogle"
-    style={{ display: "block", textAlign: "center" }}
-    data-ad-layout="in-article"
-    data-ad-format="fluid"
-    data-ad-client="ca-pub-9587188804206049"
-    data-ad-slot="9328856681"
-  />
-</div>
-
-{/* ===== Auto-relaxed Ad ===== */}
-<div className="my-10 flex justify-center">
-  <ins
-    className="adsbygoogle"
-    style={{ display: "block" }}
-    data-ad-format="autorelaxed"
-    data-ad-client="ca-pub-9587188804206049"
-    data-ad-slot="2426738115"
-  />
-</div>
 
       {/* 2. PRICING PACKAGES */}
       <section id="pricing" className="mb-32">
@@ -93,8 +59,8 @@ const WebDevelopment = () => {
                   title: "Portfolio Website",
                   icon: Palette,
                   desc: "Showcase your work effectively with project galleries, case studies, and smooth animations.",
-                  customPrice: "₹10,000",
-                  wpPrice: "₹10,000"
+                  customPrice: "₹11,000",
+                  wpPrice: "₹11,000"
                },
                {
                   id: "business",
@@ -213,13 +179,12 @@ const WebDevelopment = () => {
                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   </div>
-                  <p className="text-blue-400 mb-2">// BrandiQue Core Vitals</p>
-                  <p className="text-white mb-2">const webVitals = {'{'}</p>
-                  <p className="pl-6">LCP: <span className="text-green-400">"0.8s"</span>,</p>
-                  <p className="pl-6">FID: <span className="text-green-400">"15ms"</span>,</p>
-                  <p className="pl-6">CLS: <span className="text-green-400">"0.01"</span>,</p>
-                  <p className="pl-6">Accessibility: <span className="text-yellow-400">100</span>,</p>
-                  <p className="pl-6">BestPractices: <span className="text-yellow-400">100</span></p>
+                  <p className="text-blue-400 mb-2">// BrandiQue Quality Checklist</p>
+                  <p className="text-white mb-2">const launchChecks = {'{'}</p>
+                  <p className="pl-6">Performance: <span className="text-green-400">"Measured before launch"</span>,</p>
+                  <p className="pl-6">Accessibility: <span className="text-green-400">"Reviewed"</span>,</p>
+                  <p className="pl-6">SEO: <span className="text-yellow-400">"Technical foundations"</span>,</p>
+                  <p className="pl-6">Forms: <span className="text-yellow-400">"Submission tested"</span></p>
                   <p className="text-white">{'}'};</p>
                   <div className="mt-8 pt-8 border-t border-white/5">
                      <p className="text-gray-600 italic">"Engineering excellence is our default."</p>
