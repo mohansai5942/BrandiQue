@@ -340,7 +340,7 @@ const AI_CHATBOTS_PKG = {
   process: ["Requirement Discussion: Use case & audience", "Flow Design: Plan conversation structure", "Bot Development: WhatsApp / Web / Telegram", "AI Setup: Configure smart responses", "Integration: Connect APIs / CRM", "Testing: Check responses & UX", "Deployment & Training"],
   requirements: ["Use case (sales, support, lead gen)", "Platform preference", "Common questions / FAQs", "API / CRM access", "Branding elements", "Contact / lead details to capture"],
   tech: ["WhatsApp API (Cloud API)", "Telegram Bot API", "Web chatbot frameworks", "OpenAI / LLMs", "Dialogflow / custom NLP", "Node.js / Python", "Cloud hosting", "Database (storing chats/leads)"],
-  promises: ["100% custom-built chatbot", "Fast and accurate AI responses", "Smooth conversation flow & UX", "Multi-platform reliability", "Secure data handling", "Thorough testing before launch", "Post-launch support & guidance"]
+  promises: ["Chatbot configured for agreed use cases", "Knowledge and response boundaries defined", "Clear fallback and human handoff paths", "Platform integrations scoped upfront", "Data handling reviewed for the selected tools", "Tested against agreed sample conversations", "Handover and operating guidance"]
 };
 
 const AIAutomation: React.FC = () => {
@@ -719,7 +719,7 @@ await agent.deploy();`;
                   </div>
                   <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
                      {[
-                        { title: "Customer Support", desc: "Reduce support costs by 80% with 24/7 AI help." },
+                        { title: "Customer Support", desc: "Handle repetitive questions consistently, with clear fallback and human handoff paths for edge cases." },
                         { title: "Lead Generation", desc: "Capture and qualify leads while you sleep." },
                         { title: "Appointment Booking", desc: "Automate scheduling without a personal assistant." },
                         { title: "FAQ Auto-Replies", desc: "Handle repetitive questions instantly via AI." },
@@ -743,7 +743,7 @@ await agent.deploy();`;
                         { title: "24/7 Automated Responses", desc: "Instant engagement for every customer, any time." },
                         { title: "Complete AI Replies", desc: "Smart, context-aware responses using advanced LLMs." },
                         { title: "Fully Customized Workflows", desc: "Designed around your specific business logic." },
-                        { title: "Scalable & Secure System", desc: "Enterprise-grade security for your business data." }
+                        { title: "Responsible system design", desc: "Access controls, data retention and integration security are scoped to the tools and sensitivity of your workflow." }
                      ].map((item, i) => (
                         <div key={i} className="flex gap-4 p-4 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-100 dark:border-white/5 shadow-sm">
                            <div className="w-10 h-10 rounded-full bg-neon-blue/20 flex items-center justify-center text-neon-blue shrink-0">
