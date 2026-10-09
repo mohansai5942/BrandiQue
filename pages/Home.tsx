@@ -573,7 +573,7 @@ const Home: React.FC = () => {
                            Statistics prove that for every second your website takes to load beyond 3 seconds, your conversion rate drops by over 20%. At BrandiQue, we treat performance as a core business metric. We don't just optimize images; we architect entire data-fetching strategies using Incremental Static Regeneration (ISR) and Server-Side Rendering (SSR) to ensure your users never see a loading spinner.
                         </p>
                         <p>
-                           Our SEO strategy is equally rigorous. Most Solutions Providers stop at meta titles and descriptions. We go deeper, implementing JSON-LD Schema markup, ensuring perfect Core Web Vital scores (LCP, FID, CLS), and building accessible DOM structures. When Google sees a technically perfect website that serves users instantly, your organic visibility skyrockets, providing a sustainable ROI that far outweighs paid advertising costs in the long run.
+                           Our SEO foundations include meaningful page structure, descriptive metadata, accessible markup and relevant structured data where appropriate. Search visibility and Core Web Vitals depend on content, hosting, third-party scripts, competition and real-world usage, so we focus on measurable checks rather than promising rankings.
                         </p>
                      </div>
                      <div className="pt-6">
@@ -587,15 +587,13 @@ const Home: React.FC = () => {
          {/* 5. SERVICES HUB (SHORTFORM) */}
          <section id="services-hub" className="py-24 max-w-[1500px] mx-auto px-6">
             <div className="text-center mb-16 space-y-4">
-               <h2 className="text-3xl md:text-5xl font-bold">Our Core <span className="text-neon-blue">Capabilities.</span></h2>
-               <p className="text-gray-500 max-w-xl mx-auto text-lg font-light">Everything you need to brand, build, and scale your digital presence.</p>
+               <h2 className="text-3xl md:text-5xl font-bold">Our Core <span className="text-neon-blue">Services.</span></h2>
+               <p className="text-gray-500 max-w-xl mx-auto text-lg font-light">Web development, AI agents and automations, and graphic design—three core services that support a clearer customer journey.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-               <SpotlightCard to="/services/full-stack" title="Full-Stack" description="Custom-coded React sites built for speed." icon={<Code size={32} />} delay="delay-0" />
-               <SpotlightCard to="/services/wordpress" title="WordPress" description="Easy-to-manage, professional CMS builds." icon={<LayoutTemplate size={32} />} delay="delay-100" />
-               <SpotlightCard to="/services/branding" title="Branding" description="Logos and 3D mockups that define you." icon={<PenTool size={32} />} delay="delay-200" />
-               <SpotlightCard to="/services/digital-marketing" title="Marketing" description="Viral social creatives for high reach." icon={<Megaphone size={32} />} delay="delay-300" />
-               <SpotlightCard to="/services/ai-automation" title="AI Automation" description="Intelligent bots and n8n workflows." icon={<Bot size={32} />} delay="delay-400" />
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+               <SpotlightCard to="/web-development" title="Web Development" description="Responsive custom and WordPress websites designed around your customer journey." icon={<Code size={32} />} delay="delay-0" />
+               <SpotlightCard to="/services/ai-automation" title="AI Agents & Automations" description="Chatbots and n8n workflows that reduce repetitive manual steps." icon={<Bot size={32} />} delay="delay-100" />
+               <SpotlightCard to="/services/graphic-design" title="Graphic Design" description="Brand-aligned social creatives, ad assets, thumbnails and campaign visuals." icon={<Palette size={32} />} delay="delay-200" />
             </div>
          </section>
 
