@@ -139,7 +139,7 @@ const Contact: React.FC = () => {
                </h1>
                
                <p className="text-gray-600 dark:text-gray-400 mb-10 text-base md:text-lg leading-relaxed max-w-md font-light">
-                 Whether you need a custom website, branding, or just want to say hi — we're ready to build something great together.
+                 Tell us what you want to build or improve. Choose a service, share a few project details and we’ll use that context to recommend a sensible next step.
                </p>
            </ScrollReveal>
 
@@ -230,7 +230,7 @@ const Contact: React.FC = () => {
                             </div>
                             <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Request Sent Successfully!</h3>
                             <p className="text-gray-600 dark:text-gray-400 max-w-sm mx-auto mb-10 text-sm leading-relaxed">
-                                Your request has been sent successfully. Our team will review your project details and get back to you within 24 hours.
+                                Your request has been recorded. We’ll review the details and follow up using the contact information you provided.
                             </p>
                             <button 
                                 onClick={() => setFormStatus('idle')}
@@ -244,8 +244,8 @@ const Contact: React.FC = () => {
                             
                             {/* 1. Service Selection */}
                             <div className="space-y-3">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">I'm interested in...</label>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">What do you need help with?</label>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                     {services.map((s) => (
                                         <button
                                             key={s.id}
@@ -292,13 +292,13 @@ const Contact: React.FC = () => {
 
                             {/* 3. Budget Selection */}
                             <div className="space-y-2 group">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1 group-focus-within:text-black dark:group-focus-within:text-white transition-colors">Approximate Budget</label>
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1 group-focus-within:text-black dark:group-focus-within:text-white transition-colors">Approximate Budget (optional)</label>
                                 <select 
                                     value={formData.budget}
                                     onChange={(e) => setFormData({...formData, budget: e.target.value})}
                                     className="w-full bg-gray-50 dark:bg-[#151A25]/50 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple focus:bg-white dark:focus:bg-[#151A25] transition-all appearance-none cursor-pointer"
                                 >
-                                    <option value="" disabled className="text-gray-400">Select a range</option>
+                                    <option value="" className="text-gray-400">I’m not sure yet</option>
                                     {budgets.map(b => (
                                         <option key={b} value={b} className="bg-white dark:bg-[#0A0C11]">{b}</option>
                                     ))}
@@ -339,7 +339,7 @@ const Contact: React.FC = () => {
                             
                             <div className="flex items-center justify-center gap-2 text-[10px] text-gray-500">
                                 <Sparkles size={10} className="text-neon-purple" />
-                                <span>Typically replies in under 2 hours</span>
+                                <span>Share only what you know so far. Budget can be decided later.</span>
                             </div>
 
                         </form>
