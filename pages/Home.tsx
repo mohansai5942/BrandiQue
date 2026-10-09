@@ -339,7 +339,7 @@ const Home: React.FC = () => {
                         </div>
                         <div>
                            <div className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">System Status</div>
-                           <div className="text-xs font-black text-green-500">100% OPERATIONAL</div>
+                           <div className="text-xs font-black text-green-500">READY TO BUILD</div>
                         </div>
                      </div>
 
@@ -702,7 +702,7 @@ const Home: React.FC = () => {
                </div>
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   {[
-                     { title: "Personal Website", price: "9,000", tag: "Portfolio" },
+                     { title: "Personal Website", price: "9,000", tag: "Personal" },
                      { title: "Business Website", price: "15,000", tag: "Growth" },
                      { title: "E-Commerce", price: "25,000", tag: "Online Store" }
                   ].map((plan, i) => (
