@@ -376,7 +376,7 @@ const Home: React.FC = () => {
                   <div className="grid lg:grid-cols-2 gap-16 items-center">
                      <div className="space-y-6">
                         <div className="w-12 h-12 rounded-2xl bg-neon-purple/10 flex items-center justify-center text-neon-purple"><History size={24} /></div>
-                        <h2 className="text-3xl md:text-5xl font-bold">The Evolution of <span className="text-neon-purple">Digital Dominance.</span></h2>
+                        <h2 className="text-3xl md:text-5xl font-bold">A digital presence built to <span className="text-neon-purple">convert.</span></h2>
                         <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
                            In the early days of the internet, a simple "online brochure" was enough for a business to establish a presence. Today, the landscape has shifted dramatically. Your website is no longer just a destination; it is the central nervous system of your entire brand's digital identity. At BrandiQue, we recognize that to thrive in this hyper-competitive era, businesses must transcend traditional design.
                         </p>
@@ -386,7 +386,7 @@ const Home: React.FC = () => {
                      </div>
                      <div className="bg-gray-100 dark:bg-[#0A0C11] p-8 md:p-12 rounded-[40px] border border-gray-200 dark:border-white/10 relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-8 opacity-5 text-neon-purple"><Workflow size={120} /></div>
-                        <h3 className="text-2xl font-bold mb-6 flex items-center gap-3"><Award className="text-neon-purple" /> Industry-Leading Standards</h3>
+                        <h3 className="text-2xl font-bold mb-6 flex items-center gap-3"><Award className="text-neon-purple" /> Built on the Right Foundations</h3>
                         <ul className="space-y-6">
                            {[
                               { t: "Semantic HTML5", d: "Ensuring search engines and assistive technologies perfectly understand your content hierarchy." },
@@ -410,7 +410,7 @@ const Home: React.FC = () => {
             <div className="max-w-[1500px] mx-auto px-6">
                <ScrollReveal>
                   <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                     <h2 className="text-3xl md:text-5xl font-bold">Strategic <span className="text-neon-blue">Engineering</span> vs Generic Design</h2>
+                     <h2 className="text-3xl md:text-5xl font-bold">Design that works as hard as your business</h2>
                      <p className="text-gray-500 text-lg font-light">Why the underlying architecture of your website determines your business success.</p>
                   </div>
                   <div className="grid md:grid-cols-3 gap-8">
@@ -640,7 +640,7 @@ const Home: React.FC = () => {
             <ScrollReveal>
                <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
                   <div className="max-w-2xl">
-                     <h2 className="text-4xl md:text-5xl font-bold mb-4">Niche <span className="text-neon-blue">Solutions.</span></h2>
+                     <h2 className="text-4xl md:text-5xl font-bold mb-4">Solutions for your <span className="text-neon-blue">next stage.</span></h2>
                      <p className="text-gray-500 text-lg font-light">We provide tailored digital solutions for diverse industry requirements.</p>
                   </div>
                   <div className="h-[2px] flex-grow bg-gray-200 dark:bg-white/5 mb-4 hidden md:block"></div>
@@ -675,7 +675,7 @@ const Home: React.FC = () => {
                         <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-neon-purple/5 blur-[100px] rounded-full"></div>
                      </div>
                      <div className="order-1 lg:order-2 space-y-6">
-                        <h2 className="text-3xl md:text-5xl font-bold">Scaling for the <span className="text-neon-purple text-gradient">Future.</span></h2>
+                        <h2 className="text-3xl md:text-5xl font-bold">Built to grow with your <span className="text-neon-purple text-gradient">business.</span></h2>
                         <p className="text-gray-600 dark:text-gray-400 text-lg font-light leading-relaxed">
                            We choose the implementation and hosting approach around the project’s expected traffic, integrations and budget. When a business needs to scale, we plan capacity, monitoring and additional infrastructure as explicit work—not as an unverified promise.
                         </p>
@@ -691,35 +691,26 @@ const Home: React.FC = () => {
             </div>
          </section>
 
-         {/* 8. WEB DEV PRICING TEASER (SHORTFORM) */}
-         <section className="py-24 bg-black text-white relative overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-neon-purple/10 rounded-full blur-[120px] pointer-events-none"></div>
-            <div className="max-w-[1500px] mx-auto px-6 relative z-10">
-               <div className="text-center mb-16 space-y-4">
-                  <h2 className="text-3xl md:text-5xl font-bold">Starter <span className="text-neon-purple text-gradient">Kits.</span></h2>
-                  <p className="text-gray-400 max-w-xl mx-auto font-light">Professional presence at fractional market prices.</p>
-               </div>
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {[
-                     { title: "Personal Website", price: "9,000", tag: "Personal" },
-                     { title: "Business Website", price: "15,000", tag: "Growth" },
-                     { title: "E-Commerce", price: "25,000", tag: "Online Store" }
-                  ].map((plan, i) => (
-                     <div key={i} className="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-white/30 transition-all text-center group">
-                        <span className="text-[10px] font-bold uppercase text-neon-purple mb-4 block tracking-widest">{plan.tag}</span>
-                        <h3 className="text-2xl font-bold mb-6">{plan.title}</h3>
-                        <div className="text-4xl font-black mb-8">₹{plan.price}</div>
-                        <Link to="/web-development" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest group-hover:text-neon-purple transition-colors">View Features <ArrowRight size={14} /></Link>
-                     </div>
-                  ))}
-               </div>
+         {/* 8. PRICING TEASER */}
+         <section className="relative overflow-hidden bg-[#080A0F] py-20 text-white md:py-24">
+            <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-yellow-400/10 blur-[120px]" />
+            <div className="relative mx-auto max-w-5xl px-6 text-center">
+               <ScrollReveal>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/25 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-300">Clear scope. Clear pricing.</span>
+                  <h2 className="mt-6 text-3xl font-bold tracking-tight md:text-5xl">Choose a practical <span className="text-yellow-400">starting point.</span></h2>
+                  <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Compare website packages, AI workflow setups, graphic design and ongoing support in one place. Every project is confirmed against your actual requirements before work begins.</p>
+                  <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                     <Link to="/pricing" className="inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-7 py-4 font-bold text-black transition-colors hover:bg-yellow-300">Explore all pricing <ArrowRight size={18} /></Link>
+                     <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-bold text-white transition-colors hover:border-yellow-400/50 hover:text-yellow-300">Get a custom quote</Link>
+                  </div>
+               </ScrollReveal>
             </div>
          </section>
 
          {/* 9. PROCESS METHODOLOGY */}
          <section className="py-24 max-w-[1500px] mx-auto px-6 text-center">
             <ScrollReveal>
-               <h2 className="text-3xl md:text-5xl font-bold mb-16">The BrandiQue <span className="text-neon-purple">Methodology.</span></h2>
+               <h2 className="text-3xl md:text-5xl font-bold mb-16">A clear process from <span className="text-neon-purple">brief to launch.</span></h2>
                <div className="grid md:grid-cols-5 gap-8">
                   {[
                      { step: "01", title: "Strategy", icon: Target },
@@ -767,7 +758,7 @@ const Home: React.FC = () => {
                <ScrollReveal>
                   <div className="max-w-4xl mx-auto space-y-16">
                      <div className="text-center space-y-4">
-                        <h2 className="text-3xl md:text-5xl font-bold">Bridging <span className="text-neon-purple">Creativity</span> and <span className="text-neon-blue">Code</span></h2>
+                        <h2 className="text-3xl md:text-5xl font-bold">Strategy, <span className="text-neon-purple">design</span> and <span className="text-neon-blue">technology.</span></h2>
                         <p className="text-gray-500 text-lg font-light">A final deep dive into our technical philosophy and commitment to excellence.</p>
                      </div>
 
@@ -827,7 +818,7 @@ const Home: React.FC = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-neon-purple/10 rounded-full blur-[120px] pointer-events-none"></div>
             <ScrollReveal>
                <div className="max-w-[1500px] mx-auto px-6 space-y-10 relative z-10">
-                  <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tighter">Ready to build your <br /><span className="text-neon-blue text-gradient">Digital Empire?</span></h2>
+                  <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tighter">Ready to build your <br /><span className="text-neon-blue text-gradient">next digital advantage?</span></h2>
                   <p className="text-gray-500 text-lg md:text-xl font-light max-w-2xl mx-auto">Join the elite businesses that have elevated their authority with BrandiQue. Let's create your success story today.</p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
                      <Link to="/contact" className="px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
