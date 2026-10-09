@@ -12,15 +12,15 @@ const Contact: React.FC = () => {
   const { settings, getRawPhone } = useSiteSettings();
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [formData, setFormData] = useState({ name: '', email: '', budget: '', message: '' });
-  const [selectedService, setSelectedService] = useState('Full-Stack Development');
+  const [selectedService, setSelectedService] = useState('Web Development');
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const services = [
-    { id: 'Full-Stack Development', icon: Code },
-    { id: 'WordPress Development', icon: LayoutTemplate },
-    { id: 'Branding & Identity', icon: PenTool },
-    { id: 'Digital Marketing', icon: Megaphone },
-    { id: 'AI Automation & Agents', icon: Bot },
+    { id: 'Web Development', icon: Code },
+    { id: 'AI Agents & Automations', icon: Bot },
+    { id: 'Graphic Design', icon: PenTool },
+    { id: 'Brand Identity', icon: LayoutTemplate },
+    { id: 'Content & Digital Marketing', icon: Megaphone },
   ];
 
   const budgets = [
@@ -206,7 +206,7 @@ const Contact: React.FC = () => {
                    <div className="w-1 h-1 rounded-full bg-gray-300 dark:bg-white/10"></div>
                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 group">
                        <Clock size={16} className="text-neon-purple group-hover:rotate-12 transition-transform" />
-                       <span>24/7 Response</span>
+                       <span>Replies during working hours</span>
                    </div>
                </div>
            </ScrollReveal>

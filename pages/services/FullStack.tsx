@@ -250,7 +250,7 @@ const FullStack: React.FC = () => {
                       process: ["Requirement discussion (niche, style)", "Content & project collection", "Layout planning (project showcase)", "Creative UI/UX design", "Development with animations", "Review & revisions", "Performance testing", "Deployment & handover"],
                       requirements: ["List of projects / works", "Project images / videos", "Project descriptions", "Personal / brand information", "Social links & contact details", "Design references (optional)"],
                       tech: ["HTML, CSS, JavaScript", "React / Next.js", "Tailwind CSS / Framer Motion", "Image optimization tools", "Git & GitHub"],
-                      promises: ["Visually appealing & modern design", "High-quality project showcase", "Smooth animations & fast performance", "Fully responsive on all screens", "Revisions for design perfection", "On-time delivery commitment", "Complete control & easy updates"]
+                      promises: ["Visually appealing & modern design", "High-quality project showcase", "Smooth animations & fast performance", "Fully responsive on all screens", "Agreed revision rounds", "On-time delivery commitment", "Complete control & easy updates"]
                     },
                     {
                       id: "business",
@@ -381,7 +381,7 @@ const FullStack: React.FC = () => {
                      <ul className="space-y-4 md:space-y-6">
                         {[
                            { title: "Total Control", text: "Custom code gives you full control over design and functionality.", icon: Server },
-                           { title: "Peak Performance", text: "Performance is faster than template-based websites (WordPress/Wix).", icon: Zap },
+                           { title: "Performance-conscious", text: "The implementation, assets and architecture are chosen to suit the project’s real requirements.", icon: Zap },
                            { title: "Unique Identity", text: "Animations and UI/UX are fully personalized to your brand.", icon: Sparkles },
                            { title: "Future Proof", text: "Better SEO, cleaner code, long-term scalability.", icon: TrendingUp }
                         ].map((item, i) => (
