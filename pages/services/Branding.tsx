@@ -30,7 +30,7 @@ const IDENTITY_PACKAGE = {
   process: ["Requirement Gathering", "Visual Research", "Logo Design & Concepts", "Design Refinement", "Identity System Creation", "Final Delivery"],
   requirements: ["Brand name (final or shortlisted)", "Logo preferences (if any idea or style)", "Preferred colors (if any)", "Business niche / category", "Tagline (if available)", "Usage needs (website, print, social media, etc.)", "Any reference logos or design inspiration", "Text/content to include in logo (if needed)"],
   tech: ["Adobe Illustrator (logo design & vector work)", "Adobe Photoshop (image editing & mockups)", "Figma (UI-style brand system & previews)", "Adobe InDesign (brand guidelines document)", "Color tools (Coolors / Adobe Color)", "Font libraries (Google Fonts, Adobe Fonts)", "Mockup tools (Placeit / Smartmockups)"],
-  promises: ["100% custom-designed identity (no templates)", "Unique and professional logo system", "Consistent visual identity across all elements", "High-quality, scalable design files", "Proper brand guideline documentation", "Multiple formats for digital & print use", "Revisions for design refinement", "Final delivery ready for real-world use"]
+  promises: ["Custom-designed identity shaped around your brief", "Unique and professional logo system", "Consistent visual identity across all elements", "High-quality, scalable design files", "Proper brand guideline documentation", "Multiple formats for digital & print use", "Revisions for design refinement", "Final delivery ready for real-world use"]
 };
 
 const Branding: React.FC = () => {

@@ -13,11 +13,13 @@ import Contact from './pages/Contact';
 import WebDevelopment from './pages/WebDevelopment';
 import Projects from './pages/Projects';
 import Services from './pages/Services';
+import Pricing from './pages/Pricing';
 import FullStack from './pages/services/FullStack';
 import WordPress from './pages/services/WordPress';
 import Branding from './pages/services/Branding';
 import DigitalMarketing from './pages/services/DigitalMarketing';
 import AIAutomation from './pages/services/AIAutomation';
+import GraphicDesign from './pages/services/GraphicDesign';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import CookiePolicy from './pages/CookiePolicy';
@@ -77,11 +79,13 @@ const App: React.FC = () => {
             
             {/* Service Routes */}
             <Route path="/services" element={<Services />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/services/full-stack" element={<FullStack />} />
             <Route path="/services/wordpress" element={<WordPress />} />
             <Route path="/services/branding" element={<Branding />} />
             <Route path="/services/digital-marketing" element={<DigitalMarketing />} />
             <Route path="/services/ai-automation" element={<AIAutomation />} />
+            <Route path="/services/graphic-design" element={<GraphicDesign />} />
 
             {/* Admin & Auth */}
             <Route path="/login" element={<Login />} />

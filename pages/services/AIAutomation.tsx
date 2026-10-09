@@ -316,7 +316,7 @@ const AI_AUTOMATION_PKG = {
      enterprise: "80,000 to 1,80,000+",
      maintenance: "5,000 to 15,000 / month (optional)"
   },
-  features: ["n8n workflow automation (multi-step pipelines)", "Task automation (notifications, operations, triggers)", "Data integration (APIs, Google Sheets, CRM sync)", "Lead management & auto-sync systems", "Webhooks & event-based automation", "Conditional logic & smart workflows", "Error handling & retry systems", "Scheduled automation (time-based)", "Hosting & API integration setup included"],
+  features: ["n8n workflow automation (multi-step pipelines)", "Task automation (notifications, operations, triggers)", "Data integration (APIs, Google Sheets, CRM sync)", "Lead management & auto-sync systems", "Webhooks & event-based automation", "Conditional logic & smart workflows", "Error handling & retry systems", "Scheduled automation (time-based)", "Hosting and API integration setup scoped per project"],
   deliverables: ["Fully configured n8n workflows (pipelines)", "Automation system setup (tasks, triggers, flows)", "API & data integration setup", "Webhooks & event-based automation configuration", "Hosting setup & deployment", "Tested & optimized automation system", "Documentation (basic workflow explanation)", "Access to workflows + admin control", "Initial support after delivery"],
   process: ["Requirement Analysis: Understand tasks & logic", "Workflow Planning: Design structure in n8n", "Integration Setup: Connect APIs & tools", "Development: Build flows & conditions", "Testing: Check for accuracy & errors", "Deployment: Setup hosting & go live", "Optimization & Handover"],
   requirements: ["Business workflow details", "Tools/platforms used (CRM, Sheets, etc.)", "API access / credentials", "Sample data (for testing)", "Expected output/results from automation"],
@@ -328,19 +328,19 @@ const AI_CHATBOTS_PKG = {
   id: "ai-chatbots",
   title: "AI Chatbots",
   icon: Bot,
-  desc: "We develop intelligent AI chatbots that handle customer interactions with speed and accuracy. These bots can respond instantly to queries, assist users, capture leads, and provide support across platforms like websites and messaging apps. Our chatbots are designed to improve user experience, ensure consistent communication, and support your business 24/7.",
+  desc: "We develop AI chatbots for common customer questions, lead capture and guided support across websites and messaging platforms. Their responses and availability depend on the chosen model, knowledge sources, hosting and third-party integrations.",
   price: { 
      basic: "15,000 to 30,000", 
      advanced: "30,000 to 70,000",
      enterprise: "70,000 to 1,50,000+",
      maintenance: ""
   },
-  features: ["WhatsApp bots (sales & customer support)", "Web chatbots (website visitor interaction)", "Telegram bots (group & channel automation)", "AI-powered auto-replies", "Lead capture & qualification system", "Multi-step conversation flows", "Integration with APIs & databases", "24/7 automated customer interaction", "Hosting & API setup included"],
+  features: ["WhatsApp bots (sales & customer support)", "Web chatbots (website visitor interaction)", "Telegram bots (group & channel automation)", "AI-powered auto-replies", "Lead capture & qualification system", "Multi-step conversation flows", "Integration with APIs & databases", "Automated responses outside business hours, subject to availability", "Hosting and API setup scoped per project"],
   deliverables: ["Fully functional chatbot (WhatsApp / Web / Telegram)", "Conversation flow setup", "AI response configuration", "Lead capture & integration setup", "API & database connections", "Hosting setup & live deployment", "Tested bot (user interaction)", "Admin access / control panel", "Usage guidance + initial support"],
   process: ["Requirement Discussion: Use case & audience", "Flow Design: Plan conversation structure", "Bot Development: WhatsApp / Web / Telegram", "AI Setup: Configure smart responses", "Integration: Connect APIs / CRM", "Testing: Check responses & UX", "Deployment & Training"],
   requirements: ["Use case (sales, support, lead gen)", "Platform preference", "Common questions / FAQs", "API / CRM access", "Branding elements", "Contact / lead details to capture"],
   tech: ["WhatsApp API (Cloud API)", "Telegram Bot API", "Web chatbot frameworks", "OpenAI / LLMs", "Dialogflow / custom NLP", "Node.js / Python", "Cloud hosting", "Database (storing chats/leads)"],
-  promises: ["100% custom-built chatbot", "Fast and accurate AI responses", "Smooth conversation flow & UX", "Multi-platform reliability", "Secure data handling", "Thorough testing before launch", "Post-launch support & guidance"]
+  promises: ["Chatbot configured for agreed use cases", "Knowledge and response boundaries defined", "Clear fallback and human handoff paths", "Platform integrations scoped upfront", "Data handling reviewed for the selected tools", "Tested against agreed sample conversations", "Handover and operating guidance"]
 };
 
 const AIAutomation: React.FC = () => {
@@ -429,13 +429,13 @@ await agent.deploy();`;
                         <TextReveal text="Automate your business operations with powerful AI agents and intelligent workflows." className="text-base md:text-lg lg:text-xl text-neon-blue font-medium" delay={300} />
                      </div>
                      <p className="text-gray-600 dark:text-gray-400 text-sm md:text-sm lg:text-lg leading-relaxed mb-6 md:mb-8 font-light">
-                        Transform how your business operates with custom-built AI agents. From WhatsApp chatbots that close sales to complex n8n workflows that sync your data, we build systems that save you thousands of manual hours.
+                        Transform how your business operates with custom-built AI agents. From WhatsApp chatbots to n8n workflows that sync data, we build systems to reduce repetitive manual steps and make handoffs more consistent.
                      </p>
                      <ul className="space-y-2 md:space-y-3 mb-8 md:mb-10">
                         {[
                           "AI-powered WhatsApp, Telegram & Web Bots",
                           "Automated workflows using n8n & Make",
-                          "Smart auto-replies for 24/7 engagement",
+                          "Automated replies beyond office hours, subject to availability",
                           "Google Sheets & API data sync",
                           "Lead generation & appointment agents"
                         ].map((feat, i) => (
@@ -719,7 +719,7 @@ await agent.deploy();`;
                   </div>
                   <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
                      {[
-                        { title: "Customer Support", desc: "Reduce support costs by 80% with 24/7 AI help." },
+                        { title: "Customer Support", desc: "Handle repetitive questions consistently, with clear fallback and human handoff paths for edge cases." },
                         { title: "Lead Generation", desc: "Capture and qualify leads while you sleep." },
                         { title: "Appointment Booking", desc: "Automate scheduling without a personal assistant." },
                         { title: "FAQ Auto-Replies", desc: "Handle repetitive questions instantly via AI." },
@@ -740,10 +740,10 @@ await agent.deploy();`;
                   <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Powerful AI Capabilities</h3>
                   <div className="space-y-4">
                      {[
-                        { title: "24/7 Automated Responses", desc: "Instant engagement for every customer, any time." },
+                        { title: "Automated responses", desc: "Handle routine questions beyond office hours when connected services are available." },
                         { title: "Complete AI Replies", desc: "Smart, context-aware responses using advanced LLMs." },
                         { title: "Fully Customized Workflows", desc: "Designed around your specific business logic." },
-                        { title: "Scalable & Secure System", desc: "Enterprise-grade security for your business data." }
+                        { title: "Responsible system design", desc: "Access controls, data retention and integration security are scoped to the tools and sensitivity of your workflow." }
                      ].map((item, i) => (
                         <div key={i} className="flex gap-4 p-4 rounded-xl bg-white dark:bg-[#0F1320] border border-gray-100 dark:border-white/5 shadow-sm">
                            <div className="w-10 h-10 rounded-full bg-neon-blue/20 flex items-center justify-center text-neon-blue shrink-0">

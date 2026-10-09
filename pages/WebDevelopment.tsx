@@ -157,8 +157,8 @@ const WebDevelopment = () => {
                </p>
                <div className="space-y-8">
                   {[
-                    { title: "Technical SEO & Schema", desc: "Structured data and semantic HTML architecture included for maximum search engine reach.", icon: Target },
-                    { title: "Lightning Load Speeds", desc: "We optimize every image, script, and asset for sub-second performance.", icon: Zap },
+                    { title: "Technical SEO foundations", desc: "Semantic markup and agreed structured data where relevant; search visibility depends on content, competition and implementation.", icon: Target },
+                    { title: "Performance-conscious builds", desc: "We review image sizes, scripts and page structure, then validate the production build before handover.", icon: Zap },
                     { title: "Enterprise Security", desc: "Clean code protocols ensure your site is protected against standard vulnerabilities.", icon: ShieldCheck }
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-6">

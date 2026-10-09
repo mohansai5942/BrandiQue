@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bot, Check, Code2, Repeat, Sparkles } from 'lucide-react';
+import { ArrowRight, Bot, Check, Code2, Palette, Repeat, Sparkles } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const packages = [
@@ -41,6 +41,18 @@ const packages = [
     cta: 'Explore automation',
   },
   {
+    name: 'Graphic Design Starter',
+    price: '₹4,500',
+    suffix: 'one-time · starter pack',
+    description: 'A focused batch of on-brand visuals for businesses that need polished creative assets without a full retainer.',
+    icon: Palette,
+    featured: false,
+    items: ['Up to 5 agreed static design assets', 'Sizes for the agreed platforms', 'Consistent use of supplied brand direction', 'Final PNG/JPG exports', 'One consolidated revision round'],
+    note: 'Copywriting, editable source files, stock assets and additional revisions are quoted separately where needed.',
+    href: '/services/graphic-design',
+    cta: 'Explore graphic design',
+  },
+  {
     name: 'Brand Identity Starter',
     price: '₹8,000',
     suffix: 'one-time · defined identity scope',
@@ -78,26 +90,30 @@ const packages = [
   },
 ];
 
-const GrowthOffers: React.FC = () => (
+interface GrowthOffersProps { showHeading?: boolean; }
+
+const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true }) => (
   <section className="relative py-20 md:py-28 px-4 md:px-6 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
     <div className="max-w-[1320px] mx-auto">
-      <ScrollReveal>
-        <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-          <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase text-yellow-600 dark:text-yellow-300">
-            <Sparkles size={14} /> Clear scope. Clear pricing.
-          </span>
-          <h2 className="mt-5 text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Practical digital systems.<br /><span className="text-yellow-500">Built around business goals.</span>
-          </h2>
-          <p className="mt-5 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed">
-            Start with the one thing your business needs now—then add capabilities as the business grows. Every project begins with an agreed scope, timeline and deliverables.
-          </p>
-        </div>
-      </ScrollReveal>
+      {showHeading && (
+        <ScrollReveal>
+          <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase text-yellow-600 dark:text-yellow-300">
+              <Sparkles size={14} /> Clear scope. Clear pricing.
+            </span>
+            <h2 className="mt-5 text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Practical digital systems.<br /><span className="text-yellow-500">Built around business goals.</span>
+            </h2>
+            <p className="mt-5 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed">
+              Start with the one thing your business needs now—then add capabilities as the business grows. Every project begins with an agreed scope, timeline and deliverables.
+            </p>
+          </div>
+        </ScrollReveal>
+      )}
 
-      <div className="grid lg:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6 items-stretch">
         {packages.map((pkg, index) => (
-          <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`}>
+          <ScrollReveal key={pkg.name} delay={`delay-${(index % 3) * 100}`} className={index === packages.length - 1 && packages.length % 3 === 1 ? 'xl:col-start-2' : undefined}>
             <article className={`relative h-full rounded-[28px] p-6 md:p-8 border flex flex-col transition-all duration-300 hover:-translate-y-1 ${pkg.featured ? 'border-yellow-400/60 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] text-gray-900 dark:text-white'}`}>
               {pkg.featured && <span className="absolute top-4 right-4 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black tracking-wider text-black uppercase">Workflow starter</span>}
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${pkg.featured ? 'bg-yellow-400 text-black' : 'bg-yellow-400/10 text-yellow-600 dark:text-yellow-300'}`}>
