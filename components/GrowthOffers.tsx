@@ -5,13 +5,13 @@ import ScrollReveal from './ScrollReveal';
 
 const packages = [
   {
-    name: 'Website Launch',
+    name: 'Website Starter',
     price: '₹9,000',
     suffix: 'one-time · starting at',
-    description: 'A polished, mobile-first website that makes it easier for the right customers to understand your business and enquire.',
+    description: 'A polished, mobile-first starter site that explains your offer clearly and gives visitors a straightforward way to enquire.',
     icon: Code2,
     featured: false,
-    items: ['Up to 5 agreed pages', 'Responsive layout and clear calls to action', 'Contact or enquiry form setup', 'Basic on-page SEO essentials', 'One consolidated revision round'],
+    items: ['Up to 3 agreed pages', 'Responsive layout and clear calls to action', 'Contact or enquiry form setup', 'Basic on-page SEO essentials', 'One consolidated revision round'],
     note: 'Domain, hosting, paid themes/plugins and third-party licences are billed separately where needed.',
     href: '/web-development',
     cta: 'Explore website packages',
