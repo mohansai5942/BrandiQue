@@ -123,11 +123,9 @@ const Navbar: React.FC = () => {
     { label: 'Home', path: '/', icon: Home },
     { label: 'Services', path: '/services', icon: Layers, hasDropdown: true },
     { label: 'Pricing', path: '/pricing', icon: Tag },
-    { label: 'Web Development', path: '/web-development', icon: Code, badgeStyle: 'cyan' },
-    { label: 'Projects', path: '/projects', icon: Briefcase, badgeStyle: 'cyan' },
-    { label: 'Websites', path: '#websites', icon: Globe, hasWebsitesDropdown: true, badgeStyle: 'violet' },
+    { label: 'Projects', path: '/projects', icon: Briefcase },
     { label: 'About', path: '/about', icon: Info },
-    { label: 'Contact', path: '/contact', icon: Mail },
+    { label: 'Contact', path: '/contact', icon: Mail, badgeStyle: 'amber' },
   ];
 
   const getBadgeStyles = (style?: 'cyan' | 'amber' | 'violet') => {
