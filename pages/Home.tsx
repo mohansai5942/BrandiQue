@@ -23,7 +23,7 @@ const STATS = [
    { label: "Client Support", value: "Ongoing", icon: Clock, color: "text-green-400" },
 ];
 
-const ROTATING_WORDS = ["Growth Systems", "Smart Websites", "AI Automation", "Digital Brands"];
+const ROTATING_WORDS = ["Web Development", "AI Agents & Automations", "Graphic Design", "Growth Systems"];
 
 const SELECTED_PREVIEW_PROJECTS = [
    {
@@ -225,22 +225,22 @@ const Home: React.FC = () => {
                      </div>
 
                      <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-[22px]">
-                        We Architect <br />
+                        We Build <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-gradient-x bg-[length:200%_auto]">
                            {ROTATING_WORDS[currentWordIndex]}.
                         </span>
                      </h1>
 
                      <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
-                        <TextReveal text="Websites, automation and brand systems designed around clearer customer journeys and practical business goals." delay={300} />
+                        <TextReveal text="Conversion-focused websites, useful AI agents and automations, and premium graphic design—scoped around your business goals." delay={300} />
                      </div>
 
                      <div className="flex flex-wrap gap-4 mt-8">
                         <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
-                           Start Project <ArrowRight size={18} />
+                           Explore Services <ArrowRight size={18} />
                         </Link>
                         <Link to="/web-development" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
-                           Web Pricing
+                           View Pricing
                         </Link>
                      </div>
                   </div>
@@ -254,22 +254,22 @@ const Home: React.FC = () => {
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-4">
-                           We Architect <br />
+                           We Build <br />
                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-gradient-x bg-[length:200%_auto]">
                               {ROTATING_WORDS[currentWordIndex]}.
                            </span>
                         </h1>
 
                         <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
-                           <TextReveal text="Websites, automation and brand systems designed around clearer customer journeys and practical business goals." delay={300} />
+                           <TextReveal text="Conversion-focused websites, useful AI agents and automations, and premium graphic design—scoped around your business goals." delay={300} />
                         </div>
 
                         <div className="flex flex-wrap gap-4 mt-8">
                            <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
-                              Start Project <ArrowRight size={18} />
+                              Explore Services <ArrowRight size={18} />
                            </Link>
                            <Link to="/web-development" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
-                              Web Pricing
+                              View Pricing
                            </Link>
                         </div>
                      </ScrollReveal>
@@ -390,7 +390,7 @@ const Home: React.FC = () => {
                         <ul className="space-y-6">
                            {[
                               { t: "Semantic HTML5", d: "Ensuring search engines and assistive technologies perfectly understand your content hierarchy." },
-                              { t: "Zero-Latency Interactivity", d: "Optimizing JavaScript bundles to ensure every click feels instantaneous and fluid." },
+                              { t: "Responsive Interactions", d: "We keep navigation and interface feedback clear, smooth and practical across screen sizes." },
                               { t: "Visual Authority", d: "Crafting bespoke design systems that communicate luxury, trust, and professional depth." }
                            ].map((item, i) => (
                               <li key={i} className="space-y-1">
@@ -664,12 +664,12 @@ const Home: React.FC = () => {
                      <div className="order-2 lg:order-1 relative">
                         <div className="grid grid-cols-2 gap-4">
                            <div className="bg-[#0F1320] p-6 rounded-2xl border border-white/5 shadow-xl">
-                              <h4 className="text-neon-purple font-bold text-3xl mb-2">99.9%</h4>
-                              <p className="text-xs text-gray-500 uppercase tracking-widest">Uptime Promise</p>
+                              <h4 className="text-neon-purple font-bold text-3xl mb-2">Clear</h4>
+                              <p className="text-xs text-gray-500 uppercase tracking-widest">Agreed project scope</p>
                            </div>
                            <div className="bg-[#0F1320] p-6 rounded-2xl border border-white/5 shadow-xl mt-8">
-                              <h4 className="text-neon-blue font-bold text-3xl mb-2">256-bit</h4>
-                              <p className="text-xs text-gray-500 uppercase tracking-widest">SSL Security</p>
+                              <h4 className="text-neon-blue font-bold text-3xl mb-2">SEO-ready</h4>
+                              <p className="text-xs text-gray-500 uppercase tracking-widest">Technical foundations</p>
                            </div>
                         </div>
                         <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-neon-purple/5 blur-[100px] rounded-full"></div>
@@ -683,7 +683,7 @@ const Home: React.FC = () => {
                            Security is the silent pillar of our development process. Every input is sanitized, every API route is protected, and every deployment is scanned for vulnerabilities. In an age of increasing data breaches, BrandiQue provides the peace of mind that your business and customer data are shielded behind multiple layers of enterprise-grade protection.
                         </p>
                         <div className="pt-4 flex gap-4">
-                           <Check size={20} className="text-green-500" /> <span className="text-sm font-bold uppercase tracking-wider opacity-60">GDPR Compliant Architecture</span>
+                           <Check size={20} className="text-green-500" /> <span className="text-sm font-bold uppercase tracking-wider opacity-60">Privacy-aware implementation</span>
                         </div>
                      </div>
                   </div>
@@ -788,14 +788,14 @@ const Home: React.FC = () => {
                            <HeartHandshake className="text-neon-purple shrink-0" size={32} />
                            <div>
                               <h4 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">Radical Transparency</h4>
-                              <p className="text-sm text-gray-500 font-light leading-relaxed">We provide real-time project tracking and clear communication throughout the lifecycle of your project.</p>
+                              <p className="text-sm text-gray-500 font-light leading-relaxed">We agree on communication, milestones and review points up front so you know what is being built and what feedback is needed.</p>
                            </div>
                         </div>
                         <div className="flex items-start gap-4 p-8 rounded-3xl bg-neon-blue/5 border border-neon-blue/10">
                            <Sparkles className="text-neon-blue shrink-0" size={32} />
                            <div>
                               <h4 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">Uncompromising Quality</h4>
-                              <p className="text-sm text-gray-500 font-light leading-relaxed">Every line of code undergoes rigorous peer review and testing before it ever reaches a production environment.</p>
+                              <p className="text-sm text-gray-500 font-light leading-relaxed">We validate agreed user journeys and key pages before handover, and document any items that remain outside the project scope.</p>
                            </div>
                         </div>
                      </div>
