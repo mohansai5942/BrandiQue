@@ -145,7 +145,7 @@ const About: React.FC = () => {
                   <Target className="text-neon-purple" /> Visionary Excellence
                 </h3>
                 <div className="space-y-6 text-gray-600 dark:text-gray-400 text-sm md:text-base lg:text-lg leading-relaxed font-light">
-                  <p>BrandiQue was established with a singular focus: to elevate the standard of the web for small and medium-sized enterprises. We believe that your digital footprint should be as unique as your fingerprints. While many agencies rely on bloated, generic templates that slow down your site and confuse your users, we architect custom solutions that prioritize sub-second load times and intuitive user journeys.</p>
+                  <p>BrandiQue was established with a singular focus: to elevate the standard of the web for small and medium-sized enterprises. We believe that your digital footprint should be as unique as your fingerprints. We choose a practical implementation for your goals, with attention to clear user journeys, maintainable structure and performance-conscious delivery.</p>
                   <p>Our vision is to act as your long-term technical partner. We don't just hand over a set of files and disappear; we stay with you, providing the insights and technical support needed to ensure your digital assets continue to perform as your business scales. Every line of code we write is a building block for your future success.</p>
                 </div>
               </div>
@@ -167,7 +167,7 @@ const About: React.FC = () => {
               <h3 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8">A Commitment from Leadership</h3>
               <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-xl leading-relaxed font-light max-w-3xl">
                 <p>"Digital transformation can often feel like a daunting hurdle for many business owners. Our mission at BrandiQue is to strip away that complexity and replace it with clarity. We personally oversee the technical architecture and operational execution of every project we take on, ensuring that it meets our uncompromising standards for speed, accessibility, and client success."</p>
-                <p>"We aren't here to build just another website. We are here to build your most effective business tool—a platform that works 24/7 to capture leads, represent your values, and grow your brand. Let's create something extraordinary together."</p>
+                <p>"We aren't here to build just another website. We want to create a useful business tool that presents your offer clearly and helps people enquire beyond office hours when hosting and form integrations are configured for it. Let's build the right next step together."</p>
               </div>
 
               {/* Leadership Profiles */}
@@ -228,7 +228,7 @@ const About: React.FC = () => {
          {[
             { title: "What I Believe In", icon: Shield, theme: "purple", list: ["Custom solutions, zero templates", "Performance & UX above all", "Clean, scalable architecture", "Global standard compliance"] },
             { title: "Our Commitment", icon: LayoutTemplate, theme: "blue", list: ["Conversion-focused web development", "Practical AI agents and workflow automation", "Professional graphic design and creative assets", "Supporting brand identity and content services"] },
-            { title: "Our Mission", icon: Rocket, theme: "green", desc: "To empower modern businesses with digital tools that drive measurable growth. We democratize enterprise-grade technology for every ambitious entrepreneur." }
+            { title: "Our Mission", icon: Rocket, theme: "green", desc: "To help ambitious businesses use practical digital tools, clear design and thoughtful automation to serve customers better and build steadily." }
          ].map((pillar, i) => (
             <ScrollReveal key={i} delay={`delay-${(i+1)*100}`} className="h-full">
                <TiltCard className="h-full bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 rounded-[40px] p-10 shadow-2xl overflow-hidden flex flex-col">
