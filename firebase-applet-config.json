@@ -1,9 +1,9 @@
 {
-  apiKey: "AIzaSyDXCfEn4XEA03CBJD59WukT45Z8UlsuYEQ",
-  authDomain: "brandique-web-solutions.firebaseapp.com",
-  projectId: "brandique-web-solutions",
-  storageBucket: "brandique-web-solutions.firebasestorage.app",
-  messagingSenderId: "392875307100",
-  appId: "1:392875307100:web:aef3ff9e70023d9b363699",
-  measurementId: "G-62JQEMRVF2"
+  "apiKey": "AIzaSyDXCfEn4XEA03CBJD59WukT45Z8UlsuYEQ",
+  "authDomain": "brandique-web-solutions.firebaseapp.com",
+  "projectId": "brandique-web-solutions",
+  "storageBucket": "brandique-web-solutions.firebasestorage.app",
+  "messagingSenderId": "392875307100",
+  "appId": "1:392875307100:web:aef3ff9e70023d9b363699",
+  "measurementId": "G-62JQEMRVF2"
 }
