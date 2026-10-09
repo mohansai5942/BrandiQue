@@ -19,12 +19,12 @@ import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
 import GrowthOffers from '../components/GrowthOffers';
 
 const STATS = [
-   { label: "Projects Completed", value: "100+", icon: Rocket, color: "text-neon-purple" },
-   { label: "Client Satisfaction", value: "99%", icon: Trophy, color: "text-neon-blue" },
-   { label: "Fast Delivery", value: "7-14 Days", icon: Clock, color: "text-green-400" },
+   { label: "Delivery Approach", value: "End-to-End", icon: Rocket, color: "text-neon-purple" },
+   { label: "Project Scope", value: "Clearly Defined", icon: Trophy, color: "text-neon-blue" },
+   { label: "Client Support", value: "Ongoing", icon: Clock, color: "text-green-400" },
 ];
 
-const ROTATING_WORDS = ["Digital Empires", "Intelligent Brands", "High-End Websites", "Future Tech"];
+const ROTATING_WORDS = ["Growth Systems", "Smart Websites", "AI Automation", "Digital Brands"];
 
 const SELECTED_PREVIEW_PROJECTS = [
    {
@@ -233,7 +233,7 @@ const Home: React.FC = () => {
                      </h1>
 
                      <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
-                        <TextReveal text="Merging precision code with avant-garde design to build digital platforms that command authority." delay={300} />
+                        <TextReveal text="Websites, automation and brand systems designed around clearer customer journeys and practical business goals." delay={300} />
                      </div>
 
                      <div className="flex flex-wrap gap-4 mt-8">
@@ -262,7 +262,7 @@ const Home: React.FC = () => {
                         </h1>
 
                         <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
-                           <TextReveal text="Merging precision code with avant-garde design to build digital platforms that command authority." delay={300} />
+                           <TextReveal text="Websites, automation and brand systems designed around clearer customer journeys and practical business goals." delay={300} />
                         </div>
 
                         <div className="flex flex-wrap gap-4 mt-8">
@@ -382,7 +382,7 @@ const Home: React.FC = () => {
                            In the early days of the internet, a simple "online brochure" was enough for a business to establish a presence. Today, the landscape has shifted dramatically. Your website is no longer just a destination; it is the central nervous system of your entire brand's digital identity. At BrandiQue, we recognize that to thrive in this hyper-competitive era, businesses must transcend traditional design.
                         </p>
                         <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                           Modern web engineering requires a synthesis of lightning-fast performance, semantic architecture, and immersive storytelling. We've seen the rise and fall of template-based solutions that offer quick fixes but leave brands with slow, generic platforms that fail to rank or convert. Our philosophy is rooted in building "Digital Empires"—platforms that are architected to withstand the test of time, algorithm updates, and shifting user behaviors.
+                           Modern web engineering requires a synthesis of lightning-fast performance, semantic architecture, and immersive storytelling. We've seen the rise and fall of template-based solutions that offer quick fixes but leave brands with slow, generic platforms that fail to rank or convert. Our philosophy is rooted in building "Business Growth Systems"—platforms that are architected to withstand the test of time, algorithm updates, and shifting user behaviors.
                         </p>
                      </div>
                      <div className="bg-gray-100 dark:bg-[#0A0C11] p-8 md:p-12 rounded-[40px] border border-gray-200 dark:border-white/10 relative overflow-hidden">
@@ -702,9 +702,9 @@ const Home: React.FC = () => {
                </div>
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   {[
-                     { title: "Personal", price: "9,000", tag: "Portfolio" },
-                     { title: "Business", price: "10,999", tag: "Solutions" },
-                     { title: "E-Commerce", price: "28,999", tag: "Online Store" }
+                     { title: "Personal Website", price: "9,000", tag: "Portfolio" },
+                     { title: "Business Website", price: "15,000", tag: "Growth" },
+                     { title: "E-Commerce", price: "25,000", tag: "Online Store" }
                   ].map((plan, i) => (
                      <div key={i} className="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-white/30 transition-all text-center group">
                         <span className="text-[10px] font-bold uppercase text-neon-purple mb-4 block tracking-widest">{plan.tag}</span>
