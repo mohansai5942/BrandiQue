@@ -206,7 +206,7 @@ const Contact: React.FC = () => {
                    <div className="w-1 h-1 rounded-full bg-gray-300 dark:bg-white/10"></div>
                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 group">
                        <Clock size={16} className="text-neon-purple group-hover:rotate-12 transition-transform" />
-                       <span>24/7 Response</span>
+                       <span>Replies during working hours</span>
                    </div>
                </div>
            </ScrollReveal>
