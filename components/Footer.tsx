@@ -68,10 +68,12 @@ const Footer: React.FC = () => {
             <h4 className="text-gray-900 dark:text-white font-bold mb-3 md:mb-4 lg:mb-6 text-sm md:text-sm lg:text-lg">Services</h4>
             <ul className="space-y-2 md:space-y-2 lg:space-y-3">
               {[
-                { label: 'Full-Stack Dev', to: '/services/full-stack' },
-                { label: 'WordPress Dev', to: '/services/wordpress' },
-                { label: 'Branding', to: '/services/branding' },
-                { label: 'Digital Marketing', to: '/services/digital-marketing' },
+                { label: 'Web Development', to: '/web-development' },
+                { label: 'AI Agents & Automation', to: '/services/ai-automation' },
+                { label: 'Graphic Design', to: '/services/graphic-design' },
+                { label: 'WordPress & CMS', to: '/services/wordpress' },
+                { label: 'Brand Identity', to: '/services/branding' },
+                { label: 'Content & Marketing', to: '/services/digital-marketing' },
               ].map((link, i) => (
                 <li key={i}>
                   <Link to={link.to} className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white text-[10px] md:text-xs lg:text-sm transition-all duration-200 flex items-center gap-1 group">
@@ -90,7 +92,8 @@ const Footer: React.FC = () => {
               {[
                 { label: 'About Us', to: '/about' },
                 { label: 'All Services', to: '/services' },
-                { label: 'Web Packages', to: '/web-development' },
+                { label: 'Pricing & Packages', to: '/pricing' },
+                { label: 'Web Development', to: '/web-development' },
                 { label: 'Contact', to: '/contact' },
               ].map((link, i) => (
                 <li key={i}>
