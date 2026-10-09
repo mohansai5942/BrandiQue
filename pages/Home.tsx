@@ -221,7 +221,7 @@ const Home: React.FC = () => {
                   <div className="block lg:hidden mt-[48px]">
                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-purple/10 border border-neon-purple/20 text-neon-purple text-[10px] font-bold uppercase tracking-widest">
                         <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
-                        Engineered for Excellence
+                        Web · AI · Design, working together
                      </div>
 
                      <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-[22px]">
@@ -232,12 +232,12 @@ const Home: React.FC = () => {
                      </h1>
 
                      <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
-                        <TextReveal text="Conversion-focused websites, useful AI agents and automations, and premium graphic design—scoped around your business goals." delay={300} />
+                        <TextReveal text="We build websites that turn visitors into enquiries, AI automations that reduce repetitive work, and design that makes your brand easier to trust." delay={300} />
                      </div>
 
                      <div className="flex flex-wrap gap-4 mt-8">
                         <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
-                           Explore Services <ArrowRight size={18} />
+                           Explore Our Services <ArrowRight size={18} />
                         </Link>
                         <Link to="/pricing" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
                            View Pricing
@@ -250,7 +250,7 @@ const Home: React.FC = () => {
                      <ScrollReveal>
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-purple/10 border border-neon-purple/20 text-neon-purple text-[10px] font-bold uppercase tracking-widest">
                            <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
-                           Engineered for Excellence
+                           Web · AI · Design, working together
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-4">
@@ -261,12 +261,12 @@ const Home: React.FC = () => {
                         </h1>
 
                         <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
-                           <TextReveal text="Conversion-focused websites, useful AI agents and automations, and premium graphic design—scoped around your business goals." delay={300} />
+                           <TextReveal text="We build websites that turn visitors into enquiries, AI automations that reduce repetitive work, and design that makes your brand easier to trust." delay={300} />
                         </div>
 
                         <div className="flex flex-wrap gap-4 mt-8">
                            <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
-                              Explore Services <ArrowRight size={18} />
+                              Explore Our Services <ArrowRight size={18} />
                            </Link>
                            <Link to="/pricing" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
                               View Pricing
