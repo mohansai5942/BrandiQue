@@ -389,7 +389,7 @@ const Home: React.FC = () => {
                         <h3 className="text-2xl font-bold mb-6 flex items-center gap-3"><Award className="text-neon-purple" /> Built on the Right Foundations</h3>
                         <ul className="space-y-6">
                            {[
-                              { t: "Semantic HTML5", d: "Ensuring search engines and assistive technologies perfectly understand your content hierarchy." },
+                              { t: "Semantic HTML5", d: "Helping search engines and assistive technologies interpret your content hierarchy." },
                               { t: "Responsive Interactions", d: "We keep navigation and interface feedback clear, smooth and practical across screen sizes." },
                               { t: "Visual Authority", d: "Crafting bespoke design systems that communicate luxury, trust, and professional depth." }
                            ].map((item, i) => (
