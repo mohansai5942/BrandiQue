@@ -14,6 +14,7 @@ import WebDevelopment from './pages/WebDevelopment';
 import Projects from './pages/Projects';
 import Services from './pages/Services';
 import Pricing from './pages/Pricing';
+import Solutions from './pages/Solutions';
 import FullStack from './pages/services/FullStack';
 import WordPress from './pages/services/WordPress';
 import Branding from './pages/services/Branding';
@@ -89,6 +90,7 @@ const App: React.FC = () => {
             {/* Service Routes */}
             <Route path="/services" element={<Services />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/solutions" element={<Solutions />} />
             <Route path="/services/full-stack" element={<FullStack />} />
             <Route path="/services/wordpress" element={<WordPress />} />
             <Route path="/services/branding" element={<Branding />} />

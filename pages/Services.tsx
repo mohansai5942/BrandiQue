@@ -132,10 +132,13 @@ const Services: React.FC = () => (
           <div className="relative grid gap-7 md:grid-cols-[1fr_auto] md:items-center">
             <div>
               <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-yellow-700 dark:text-yellow-300"><Workflow size={15} /> A practical first step</span>
-              <h2 className="mt-4 text-2xl md:text-4xl font-bold tracking-tight">Start with a clear scope. Build from there.</h2>
-              <p className="mt-4 max-w-2xl text-sm md:text-base leading-relaxed text-gray-600 dark:text-gray-400">Tell us what you want to improve, what tools you already use and what a successful result would look like. We will recommend a realistic scope before work starts.</p>
+              <h2 className="mt-4 text-2xl md:text-4xl font-bold tracking-tight">Want all three working together?</h2>
+              <p className="mt-4 max-w-2xl text-sm md:text-base leading-relaxed text-gray-600 dark:text-gray-400">Our industry solutions combine a website, WhatsApp AI assistant, automations and design into one package for coaching centres, clinics, local businesses and new brands, with one setup price and one monthly plan.</p>
             </div>
-            <Link to="/contact" className="relative inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-6 py-3.5 font-bold text-black transition-colors hover:bg-yellow-300">Plan a project <ArrowRight size={17} /></Link>
+            <div className="relative flex flex-col gap-3">
+              <Link to="/solutions" className="inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-6 py-3.5 font-bold text-black transition-colors hover:bg-yellow-300">See industry solutions <ArrowRight size={17} /></Link>
+              <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 dark:border-white/15 px-6 py-3.5 font-semibold transition-colors hover:border-yellow-400/60">Plan a custom project</Link>
+            </div>
           </div>
         </div>
       </ScrollReveal>

@@ -13,7 +13,10 @@ import ScrollReveal from '../components/ScrollReveal';
 import TextReveal from '../components/TextReveal';
 import SpotlightCard from '../components/SpotlightCard';
 import ViewOptimizer from '../components/ViewOptimizer';
-import DealsSection from '../components/DealsSection';
+import IndustrySolutions from '../components/IndustrySolutions';
+import GrowthPlans from '../components/GrowthPlans';
+import { PILLARS } from '../data/offers';
+import { useInquiry } from '../context/InquiryContext';
 import { INITIAL_N8N_PROJECTS } from './N8nProjectsData';
 import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
 
@@ -142,6 +145,7 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
 
 const Home: React.FC = () => {
    const { getRawPhone, projects, n8nProjects } = useSiteSettings();
+   const { openInquiry } = useInquiry();
    const activeProjects = projects.filter(p => !p.isDeleted);
    const mainPreviewProjects = activeProjects.length > 0 ? activeProjects.slice(0, 4) : SELECTED_PREVIEW_PROJECTS;
 
@@ -160,14 +164,14 @@ const Home: React.FC = () => {
 
    const fullCodeSnippet = `class BrandiQue {
   constructor() {
-    this.mission = "Building Empires";
+    this.mission = "Growing Businesses";
     this.stack = ["React", "AI", "Cloud"];
   }
 
   async launch(project) {
     console.log("Optimizing...");
     await this.engineer(project);
-    return "SUCCESS_200";
+    return "MORE_CUSTOMERS";
   }
 }`;
 
@@ -221,7 +225,7 @@ const Home: React.FC = () => {
                   <div className="block lg:hidden mt-[48px]">
                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-purple/10 border border-neon-purple/20 text-neon-purple text-[10px] font-bold uppercase tracking-widest">
                         <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
-                        Web · AI · Design, working together
+                        Websites · AI Agents · Design
                      </div>
 
                      <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-[22px]">
@@ -232,15 +236,15 @@ const Home: React.FC = () => {
                      </h1>
 
                      <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
-                        <TextReveal text="We build websites that turn visitors into enquiries, AI automations that reduce repetitive work, and design that makes your brand easier to trust." delay={300} />
+                        <TextReveal text="BrandiQue builds the growth system small businesses need: websites that win enquiries, AI agents that reply and follow up 24/7, and design that earns trust." delay={300} />
                      </div>
 
                      <div className="flex flex-wrap gap-4 mt-8">
-                        <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
-                           Explore Our Services <ArrowRight size={18} />
-                        </Link>
+                        <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
+                           Get a Free Growth Audit <ArrowRight size={18} />
+                        </button>
                         <Link to="/pricing" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
-                           View Pricing
+                           See Pricing
                         </Link>
                      </div>
                   </div>
@@ -250,7 +254,7 @@ const Home: React.FC = () => {
                      <ScrollReveal>
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-purple/10 border border-neon-purple/20 text-neon-purple text-[10px] font-bold uppercase tracking-widest">
                            <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
-                           Web · AI · Design, working together
+                           Websites · AI Agents · Design
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-4">
@@ -261,15 +265,15 @@ const Home: React.FC = () => {
                         </h1>
 
                         <div className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-lg leading-relaxed font-light border-l-2 border-neon-purple/30 pl-6 mt-6">
-                           <TextReveal text="We build websites that turn visitors into enquiries, AI automations that reduce repetitive work, and design that makes your brand easier to trust." delay={300} />
+                           <TextReveal text="BrandiQue builds the growth system small businesses need: websites that win enquiries, AI agents that reply and follow up 24/7, and design that earns trust." delay={300} />
                         </div>
 
                         <div className="flex flex-wrap gap-4 mt-8">
-                           <Link to="/services" className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
-                              Explore Our Services <ArrowRight size={18} />
-                           </Link>
+                           <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="px-6 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neon-purple/20 text-sm md:text-base">
+                           Get a Free Growth Audit <ArrowRight size={18} />
+                        </button>
                            <Link to="/pricing" className="px-6 py-3.5 border border-gray-300 dark:border-white/10 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-sm md:text-base">
-                              View Pricing
+                              See Pricing
                            </Link>
                         </div>
                      </ScrollReveal>
@@ -304,13 +308,13 @@ const Home: React.FC = () => {
                         <div className="pl-6 whitespace-pre text-gray-300 overflow-hidden">
                            <span className="text-blue-400">class</span> <span className="text-yellow-400">BrandiQue</span> {'{'}<br />
                            {'  '}<span className="text-purple-400">constructor</span>() {'{'}<br />
-                           {'    '}<span className="text-blue-400">this</span>.<span className="text-pink-400">mission</span> = <span className="text-green-400">"Building Empires"</span>;<br />
+                           {'    '}<span className="text-blue-400">this</span>.<span className="text-pink-400">mission</span> = <span className="text-green-400">"Growing Businesses"</span>;<br />
                            {'    '}<span className="text-blue-400">this</span>.<span className="text-pink-400">stack</span> = [<span className="text-orange-400">"React"</span>, <span className="text-orange-400">"AI"</span>, <span className="text-orange-400">"Cloud"</span>];<br />
                            {'  '}{'}'}<br /><br />
                            {'  '}<span className="text-blue-400">async</span> <span className="text-yellow-400">launch</span>(project) {'{'}<br />
                            {'    '}console.<span className="text-purple-400">log</span>(<span className="text-green-400">"Optimizing..."</span>);<br />
                            {'    '}<span className="text-blue-400">await</span> <span className="text-blue-400">this</span>.<span className="text-purple-400">engineer</span>(project);<br />
-                           {'    '}<span className="text-pink-400">return</span> <span className="text-green-400">"SUCCESS_200"</span>;<br />
+                           {'    '}<span className="text-pink-400">return</span> <span className="text-green-400">"MORE_CUSTOMERS"</span>;<br />
                            {'  '}{'}'}<br />
                            {'}'}
                            <span className="inline-block w-2 h-4 bg-neon-purple animate-pulse ml-1 align-middle"></span>
@@ -359,111 +363,110 @@ const Home: React.FC = () => {
 
 {/* Ads significantly removed */}
 
-         {/* 2. TRUST MARQUEE */}
-         <section className="py-12 border-y border-gray-200 dark:border-white/5 bg-white dark:bg-[#05070A]">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <p className="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 mb-10">Trusted technologies & global standards</p>
-               <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-                  <Globe2 size={40} /> <Cpu size={40} /> <Layers size={40} /> <Zap size={40} /> <Database size={40} /> <Shield size={40} />
-               </div>
-            </div>
-         </section>
-
-         {/* --- INFO BLOCK A: THE EVOLUTION OF DIGITAL DOMINANCE --- */}
-         <section className="py-24 bg-white dark:bg-[#05070A] border-b border-gray-100 dark:border-white/5">
-            <div className="max-w-[1500px] mx-auto px-6">
+         {/* 2. THE PROBLEM WE SOLVE */}
+         <section className="py-20 md:py-24 border-y border-gray-200 dark:border-white/5 bg-white dark:bg-[#05070A]">
+            <div className="max-w-6xl mx-auto px-4 md:px-6">
                <ScrollReveal>
-                  <div className="grid lg:grid-cols-2 gap-16 items-center">
-                     <div className="space-y-6">
-                        <div className="w-12 h-12 rounded-2xl bg-neon-purple/10 flex items-center justify-center text-neon-purple"><History size={24} /></div>
-                        <h2 className="text-3xl md:text-5xl font-bold">A digital presence built to <span className="text-neon-purple">convert.</span></h2>
-                        <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                           In the early days of the internet, a simple "online brochure" was enough for a business to establish a presence. Today, the landscape has shifted dramatically. Your website is no longer just a destination; it is the central nervous system of your entire brand's digital identity. At BrandiQue, we recognize that to thrive in this hyper-competitive era, businesses must transcend traditional design.
-                        </p>
-                        <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                           Modern web engineering requires a synthesis of lightning-fast performance, semantic architecture, and immersive storytelling. We've seen the rise and fall of template-based solutions that offer quick fixes but leave brands with slow, generic platforms that fail to rank or convert. Our philosophy is rooted in building "Business Growth Systems"—platforms that are architected to withstand the test of time, algorithm updates, and shifting user behaviors.
-                        </p>
-                     </div>
-                     <div className="bg-gray-100 dark:bg-[#0A0C11] p-8 md:p-12 rounded-[40px] border border-gray-200 dark:border-white/10 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-8 opacity-5 text-neon-purple"><Workflow size={120} /></div>
-                        <h3 className="text-2xl font-bold mb-6 flex items-center gap-3"><Award className="text-neon-purple" /> Built on the Right Foundations</h3>
-                        <ul className="space-y-6">
-                           {[
-                              { t: "Semantic HTML5", d: "Helping search engines and assistive technologies interpret your content hierarchy." },
-                              { t: "Responsive Interactions", d: "We keep navigation and interface feedback clear, smooth and practical across screen sizes." },
-                              { t: "Visual Authority", d: "Crafting bespoke design systems that communicate luxury, trust, and professional depth." }
-                           ].map((item, i) => (
-                              <li key={i} className="space-y-1">
-                                 <h4 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-xs">{item.t}</h4>
-                                 <p className="text-sm text-gray-500 font-light">{item.d}</p>
-                              </li>
-                           ))}
-                        </ul>
-                     </div>
+                  <div className="max-w-3xl mx-auto text-center">
+                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">Why businesses lose customers online</p>
+                     <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">Most customers don't say no. <span className="text-yellow-500">They just never hear back.</span></h2>
+                     <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">A slow reply, no follow-up or an outdated look is enough to send a ready-to-buy customer to a competitor. BrandiQue fixes all three with one connected system.</p>
                   </div>
                </ScrollReveal>
-            </div>
-         </section>
-
-         {/* --- INFO BLOCK B: STRATEGIC ENGINEERING VS GENERIC DESIGN --- */}
-         <section id="services" className="py-24 bg-white dark:bg-[#05070A]">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <ScrollReveal>
-                  <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                     <h2 className="text-3xl md:text-5xl font-bold">Design that works as hard as your business</h2>
-                     <p className="text-gray-500 text-lg font-light">Why the underlying architecture of your website determines your business success.</p>
-                  </div>
-                  <div className="grid md:grid-cols-3 gap-8">
-                     {[
-                        {
-                           title: "Custom Code Benefits",
-                           icon: FileCode,
-                           content: "While platforms like WordPress are excellent for some, custom-coded React and Next.js applications offer unparalleled control. We strip away the bloat of third-party plugins, ensuring your code is clean, lightweight, and focused solely on your specific business logic. This leads to higher security ratings and significantly lower maintenance overhead."
-                        },
-                        {
-                           title: "User Psychology & UI",
-                           icon: Eye,
-                           content: "Design is not just about aesthetics; it's about guiding the user's intent. We utilize visual hierarchy, color theory, and micro-interactions to create a 'flow' that naturally leads visitors toward your desired Call to Action. Every pixel is placed with strategic purpose to minimize bounce rates and maximize time-on-site."
-                        },
-                        {
-                           title: "Future-Proofing Brands",
-                           icon: Lightbulb,
-                           content: "Technology moves fast. A website built today must be ready for the innovations of tomorrow. By using modular architecture and headless CMS systems, we ensure that your content and presentation layers are decoupled. This allows you to redesign your UI in the future without rebuilding your entire data foundation."
-                        }
-                     ].map((block, i) => (
-                        <div key={i} className="p-10 rounded-[32px] bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 space-y-6 group hover:border-neon-blue/30 transition-colors">
-                           <div className="w-14 h-14 rounded-2xl bg-white dark:bg-black flex items-center justify-center text-neon-blue shadow-lg group-hover:scale-110 transition-transform"><block.icon size={28} /></div>
-                           <h3 className="text-2xl font-bold">{block.title}</h3>
-                           <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed font-light">{block.content}</p>
-                        </div>
-                     ))}
-                  </div>
-               </ScrollReveal>
-            </div>
-         </section>
-
-         {/* 4. QUICK STATS GRID */}
-         <ViewOptimizer>
-            <section className="py-16 px-4 max-w-[1500px] mx-auto w-full">
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {STATS.map((stat, i) => (
-                     <ScrollReveal key={i} delay={`delay-${i * 50}`}>
-                        <div className="bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 p-8 rounded-3xl flex items-center gap-6 hover:shadow-2xl transition-all group">
-                           <div className={`w-16 h-16 rounded-2xl bg-gray-50 dark:bg-white/5 flex items-center justify-center ${stat.color} border border-gray-100 dark:border-white/5 shadow-inner group-hover:scale-110 transition-transform`}>
-                              <stat.icon size={32} />
-                           </div>
-                           <div>
-                              <h3 className="text-4xl font-bold text-gray-900 dark:text-white">{stat.value}</h3>
-                              <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
-                           </div>
+               <div className="mt-12 grid gap-5 md:grid-cols-3">
+                  {[
+                     { icon: Eye, problem: 'They don\'t trust what they see', fix: 'Graphic design and branding that make your business look established on every post, ad and profile.' },
+                     { icon: Globe, problem: 'They can\'t find or understand you', fix: 'A fast website that explains your offer in seconds and puts WhatsApp, call and enquiry buttons everywhere.' },
+                     { icon: Bot, problem: 'Nobody replies or follows up', fix: 'AI agents that answer 24/7, capture every lead and follow up automatically until the customer decides.' },
+                  ].map((item, i) => (
+                     <ScrollReveal key={item.problem} delay={`delay-${i * 100}`}>
+                        <div className="h-full rounded-[28px] border border-gray-200 bg-gray-50 p-6 md:p-8 dark:border-white/10 dark:bg-[#0D1017]">
+                           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300"><item.icon size={24} /></div>
+                           <h3 className="mt-6 text-xl font-bold">{item.problem}</h3>
+                           <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.fix}</p>
                         </div>
                      </ScrollReveal>
                   ))}
                </div>
-            </section>
-         </ViewOptimizer>
+            </div>
+         </section>
 
-{/* Ads significantly removed */}
+         {/* 3. THREE CORE SERVICES */}
+         <section id="services" className="py-20 md:py-28 bg-gray-50 dark:bg-[#05070A]">
+            <div className="max-w-6xl mx-auto px-4 md:px-6">
+               <ScrollReveal>
+                  <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">What we do</p>
+                     <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">Three services. <span className="text-yellow-500">One growth team.</span></h2>
+                     <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">Use one service on its own, or combine all three so your design, website and automations work together.</p>
+                  </div>
+               </ScrollReveal>
+               <div className="grid gap-5 lg:gap-6 md:grid-cols-3">
+                  {PILLARS.map((pillar, i) => {
+                     const PillarIcon = pillar.id === 'web' ? Code : pillar.id === 'ai' ? Bot : Palette;
+                     return (
+                        <ScrollReveal key={pillar.id} delay={`delay-${i * 100}`}>
+                           <article className="group flex h-full flex-col rounded-[28px] border border-gray-200 bg-white p-6 md:p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 hover:shadow-xl dark:border-white/10 dark:bg-[#0D1017]">
+                              <div className="flex items-center justify-between">
+                                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-400 text-black"><PillarIcon size={24} /></div>
+                                 <span className="text-xs font-bold tracking-[0.2em] text-gray-400">{pillar.number}</span>
+                              </div>
+                              <p className="mt-7 text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-700 dark:text-yellow-300">{pillar.outcome}</p>
+                              <h3 className="mt-2 text-2xl font-bold tracking-tight">{pillar.title}</h3>
+                              <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{pillar.description}</p>
+                              <ul className="mt-6 flex-1 space-y-3">
+                                 {pillar.points.map(point => (
+                                    <li key={point} className="flex items-start gap-2.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300"><Check size={16} className="mt-0.5 shrink-0 text-yellow-500" />{point}</li>
+                                 ))}
+                              </ul>
+                              <div className="mt-7 flex items-end justify-between border-t border-gray-200 pt-5 dark:border-white/10">
+                                 <div>
+                                    <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-gray-500">Starting at</div>
+                                    <div className="text-2xl font-black tracking-tight">{pillar.startingAt}</div>
+                                 </div>
+                                 <Link to={pillar.href} className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400">Explore <ArrowRight size={14} /></Link>
+                              </div>
+                           </article>
+                        </ScrollReveal>
+                     );
+                  })}
+               </div>
+               <ScrollReveal>
+                  <div className="mt-10 flex flex-col items-center justify-center gap-3 text-center sm:flex-row">
+                     <span className="text-sm text-gray-500 dark:text-gray-400">Also available: WordPress & CMS, brand identity and content marketing.</span>
+                     <Link to="/services" className="inline-flex items-center gap-1.5 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-2.5 transition-all">All services <ArrowRight size={14} /></Link>
+                  </div>
+               </ScrollReveal>
+            </div>
+         </section>
+
+         {/* 4. HOW THE SYSTEM WORKS */}
+         <section className="py-20 md:py-24 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
+            <div className="max-w-6xl mx-auto px-4 md:px-6">
+               <ScrollReveal>
+                  <h2 className="text-center text-3xl md:text-5xl font-bold tracking-tight">From first look to <span className="text-yellow-500">paying customer.</span></h2>
+               </ScrollReveal>
+               <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  {[
+                     { step: '01', icon: Palette, title: 'Attract', text: 'On-brand posts and ads make people stop scrolling and trust you.' },
+                     { step: '02', icon: Globe, title: 'Convert', text: 'Your website turns that interest into a WhatsApp message, call or form.' },
+                     { step: '03', icon: Bot, title: 'Automate', text: 'AI replies instantly, logs the lead and follows up without you.' },
+                     { step: '04', icon: BarChart3, title: 'Grow', text: 'A monthly report shows what worked, and we improve it every month.' },
+                  ].map((item, i) => (
+                     <ScrollReveal key={item.step} delay={`delay-${i * 100}`}>
+                        <div className="relative h-full rounded-2xl border border-gray-200 bg-gray-50 p-6 dark:border-white/10 dark:bg-[#0D1017]">
+                           <div className="flex items-center justify-between">
+                              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300"><item.icon size={21} /></span>
+                              <span className="text-xs font-black tracking-[0.2em] text-gray-400">{item.step}</span>
+                           </div>
+                           <h3 className="mt-5 text-lg font-bold">{item.title}</h3>
+                           <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.text}</p>
+                        </div>
+                     </ScrollReveal>
+                  ))}
+               </div>
+            </div>
+         </section>
 
          {/* --- CURATED PROJECTS PREVIEW --- */}
          <section id="projects" className="py-24 bg-white dark:bg-[#05070A] border-t border-gray-200 dark:border-white/5">
@@ -559,254 +562,86 @@ const Home: React.FC = () => {
             </div>
          </section>
 
-         {/* --- INFO BLOCK C: MAXIMIZING ROI THROUGH PERFORMANCE --- */}
-         <section className="py-24 bg-white dark:bg-[#0A0C11]/50 border-y border-gray-200 dark:border-white/5">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <ScrollReveal>
-                  <div className="space-y-12">
-                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest">
-                        <Activity size={14} /> Revenue-Driven Development
+         {/* 5. INDUSTRY SOLUTIONS */}
+         <IndustrySolutions compact />
+
+         {/* 6. MONTHLY GROWTH PLANS */}
+         <GrowthPlans />
+
+         {/* 7. PROCESS */}
+         <section className="py-20 md:py-24 max-w-6xl mx-auto px-4 md:px-6 text-center">
+            <ScrollReveal>
+               <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Live in weeks, <span className="text-yellow-500">not months.</span></h2>
+               <p className="mx-auto mt-5 max-w-2xl text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">A simple, fixed process so you always know what happens next and what it costs.</p>
+               <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-left">
+                  {[
+                     { step: '01', title: 'Free growth audit', text: 'We review your website, WhatsApp and social presence and share 3 practical fixes.', icon: Search },
+                     { step: '02', title: 'Fixed proposal', text: 'You get the scope, timeline and price in writing before anything starts.', icon: Target },
+                     { step: '03', title: 'Build & launch', text: 'Most projects go live in 1 to 4 weeks, tested on mobile and desktop.', icon: Rocket },
+                     { step: '04', title: 'Grow every month', text: 'Optional monthly plan for updates, creatives, AI tuning and reports.', icon: BarChart3 },
+                  ].map((item) => (
+                     <div key={item.step} className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-[#0F1320]">
+                        <div className="flex items-center gap-3">
+                           <span className="flex h-11 w-11 items-center justify-center rounded-full bg-yellow-400 text-sm font-black text-black">{item.step}</span>
+                           <item.icon size={20} className="text-yellow-600 dark:text-yellow-300" />
+                        </div>
+                        <h3 className="mt-5 font-bold">{item.title}</h3>
+                        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.text}</p>
                      </div>
-                     <h2 className="text-3xl md:text-6xl font-bold leading-tight">A better experience starts with the <span className="text-green-400">fundamentals.</span></h2>
-                     <div className="grid md:grid-cols-2 gap-12 text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                        <p>
-                           We treat performance as part of the user experience. The right approach depends on the platform: we review image sizes, page structure, scripts and hosting constraints, then test the built site and address practical bottlenecks within scope.
-                        </p>
-                        <p>
-                           Our SEO foundations include meaningful page structure, descriptive metadata, accessible markup and relevant structured data where appropriate. Search visibility and Core Web Vitals depend on content, hosting, third-party scripts, competition and real-world usage, so we focus on measurable checks rather than promising rankings.
-                        </p>
-                     </div>
-                     <div className="pt-6">
-                        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-gray-300 dark:via-white/10 to-transparent"></div>
-                     </div>
-                  </div>
-               </ScrollReveal>
-            </div>
+                  ))}
+               </div>
+            </ScrollReveal>
          </section>
 
-         {/* 5. SERVICES HUB (SHORTFORM) */}
-         <section id="services-hub" className="py-24 max-w-[1500px] mx-auto px-6">
-            <div className="text-center mb-16 space-y-4">
-               <h2 className="text-3xl md:text-5xl font-bold">Our Core <span className="text-neon-blue">Services.</span></h2>
-               <p className="text-gray-500 max-w-xl mx-auto text-lg font-light">Web development, AI agents and automations, and graphic design—three core services that support a clearer customer journey.</p>
-            </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-               <SpotlightCard to="/web-development" title="Web Development" description="Responsive custom and WordPress websites designed around your customer journey." icon={<Code size={32} />} delay="delay-0" />
-               <SpotlightCard to="/services/ai-automation" title="AI Agents & Automations" description="Chatbots and n8n workflows that reduce repetitive manual steps." icon={<Bot size={32} />} delay="delay-100" />
-               <SpotlightCard to="/services/graphic-design" title="Graphic Design" description="Brand-aligned social creatives, ad assets, thumbnails and campaign visuals." icon={<Palette size={32} />} delay="delay-200" />
-            </div>
-         </section>
-
-{/* Ads significantly removed */}
-
-         {/* 6. WHY CHOOSE US (TEXT HEAVY) */}
-         <section className="py-24 bg-gray-100 dark:bg-[#0A0C11]/50 border-y border-gray-200 dark:border-white/5">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <div className="grid lg:grid-cols-2 gap-16 items-center">
+         {/* 8. WHY BRANDIQUE */}
+         <section className="py-20 md:py-28 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
+            <div className="max-w-6xl mx-auto px-4 md:px-6">
+               <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
                   <ScrollReveal>
-                     <h2 className="text-4xl md:text-6xl font-bold mb-8">Performance <br />First <span className="text-neon-purple">Engineering.</span></h2>
-                     <div className="space-y-8 text-gray-600 dark:text-gray-400 text-lg font-light">
-                        <p>Speed affects how easy a site feels to use. We pay attention to image weight, page structure and unnecessary scripts, then validate the production build before handover.</p>
-                        <div className="grid grid-cols-2 gap-8 pt-4">
-                           <div className="space-y-2">
-                              <div className="flex items-center gap-2 font-bold text-black dark:text-white uppercase tracking-wider text-xs"><ZapIcon size={16} className="text-neon-blue" /> Lightning Speed</div>
-                              <p className="text-sm">Optimized assets and server-side rendering.</p>
-                           </div>
-                           <div className="space-y-2">
-                              <div className="flex items-center gap-2 font-bold text-black dark:text-white uppercase tracking-wider text-xs"><Search size={16} className="text-neon-purple" /> SEO Foundation</div>
-                              <p className="text-sm">Technical SEO baked into the core of every build.</p>
-                           </div>
-                        </div>
-                     </div>
+                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">Why BrandiQue</p>
+                     <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">Not just a website. <span className="text-yellow-500">A system that keeps working.</span></h2>
+                     <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">BrandiQue is a founder-led studio from Visakhapatnam combining AI engineering, web development and design. You work directly with the people building your system, not a chain of account managers.</p>
+                     <Link to="/about" className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-3 transition-all">Meet the founder <ArrowRight size={16} /></Link>
                   </ScrollReveal>
-                  <div className="grid grid-cols-2 gap-4">
-                     <div className="h-64 bg-neon-purple/5 rounded-2xl border border-neon-purple/10 flex flex-col items-center justify-center p-6 text-center animate-float">
-                        <Monitor size={48} className="text-neon-purple mb-4" />
-                        <span className="font-bold text-xs uppercase">Desktop Optimized</span>
-                     </div>
-                     <div className="h-64 bg-neon-blue/5 rounded-2xl border border-neon-blue/10 flex flex-col items-center justify-center p-6 text-center animate-float" style={{ animationDelay: '1s' }}>
-                        <Smartphone size={48} className="text-neon-blue mb-4" />
-                        <span className="font-bold text-xs uppercase">Mobile Responsive</span>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </section>
-
-         {/* 7. INDUSTRY SPECIALIZATION */}
-         <section className="py-24 max-w-[1500px] mx-auto px-6">
-            <ScrollReveal>
-               <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
-                  <div className="max-w-2xl">
-                     <h2 className="text-4xl md:text-5xl font-bold mb-4">Solutions for your <span className="text-neon-blue">next stage.</span></h2>
-                     <p className="text-gray-500 text-lg font-light">We provide tailored digital solutions for diverse industry requirements.</p>
-                  </div>
-                  <div className="h-[2px] flex-grow bg-gray-200 dark:bg-white/5 mb-4 hidden md:block"></div>
-               </div>
-               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  {["Real Estate", "E-Commerce", "Portfolio", "Personal", "Healthcare", "Tech Startups", "Solutions Provider", "Creator"].map((item, i) => (
-                     <div key={i} className="p-6 rounded-2xl border border-gray-200 dark:border-white/5 hover:border-neon-purple transition-all bg-white dark:bg-[#0F1320] flex items-center gap-4 group">
-                        <div className="w-2 h-2 rounded-full bg-neon-purple group-hover:scale-150 transition-transform"></div>
-                        <span className="font-bold text-sm md:text-base uppercase tracking-wider">{item}</span>
-                     </div>
-                  ))}
-               </div>
-            </ScrollReveal>
-         </section>
-
-         {/* --- INFO BLOCK D: SCALING FOR THE FUTURE --- */}
-         <section className="py-24 bg-white dark:bg-[#05070A]">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <ScrollReveal>
-                  <div className="grid lg:grid-cols-2 gap-20 items-center">
-                     <div className="order-2 lg:order-1 relative">
-                        <div className="grid grid-cols-2 gap-4">
-                           <div className="bg-[#0F1320] p-6 rounded-2xl border border-white/5 shadow-xl">
-                              <h4 className="text-neon-purple font-bold text-3xl mb-2">Clear</h4>
-                              <p className="text-xs text-gray-500 uppercase tracking-widest">Agreed project scope</p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                     {[
+                        { icon: Layers, title: 'One team for everything', text: 'Design, website and AI built together, so nothing breaks between three vendors.' },
+                        { icon: ShieldCheck, title: 'Fixed written quotes', text: 'Clear deliverables and prices before work starts. No hidden extras.' },
+                        { icon: HeartHandshake, title: 'You own it all', text: 'Your website, designs and workflows belong to you after final payment.' },
+                        { icon: Workflow, title: 'Real automation skills', text: 'Working n8n and AI agent builds for WhatsApp, Telegram, quotations and more.' },
+                     ].map((item, i) => (
+                        <ScrollReveal key={item.title} delay={`delay-${(i % 2) * 100}`}>
+                           <div className="h-full rounded-2xl border border-gray-200 bg-gray-50 p-6 dark:border-white/10 dark:bg-[#0D1017]">
+                              <item.icon size={22} className="text-yellow-600 dark:text-yellow-300" />
+                              <h3 className="mt-4 font-bold">{item.title}</h3>
+                              <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.text}</p>
                            </div>
-                           <div className="bg-[#0F1320] p-6 rounded-2xl border border-white/5 shadow-xl mt-8">
-                              <h4 className="text-neon-blue font-bold text-3xl mb-2">SEO-ready</h4>
-                              <p className="text-xs text-gray-500 uppercase tracking-widest">Technical foundations</p>
-                           </div>
-                        </div>
-                        <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-neon-purple/5 blur-[100px] rounded-full"></div>
-                     </div>
-                     <div className="order-1 lg:order-2 space-y-6">
-                        <h2 className="text-3xl md:text-5xl font-bold">Built to grow with your <span className="text-neon-purple text-gradient">business.</span></h2>
-                        <p className="text-gray-600 dark:text-gray-400 text-lg font-light leading-relaxed">
-                           We choose the implementation and hosting approach around the project’s expected traffic, integrations and budget. When a business needs to scale, we plan capacity, monitoring and additional infrastructure as explicit work—not as an unverified promise.
-                        </p>
-                        <p className="text-gray-600 dark:text-gray-400 text-lg font-light leading-relaxed">
-                           Security requirements depend on the stack and the data a project handles. We discuss access controls, form validation, dependency updates and hosting responsibilities, and clearly identify any security work that needs specialist review.
-                        </p>
-                        <div className="pt-4 flex gap-4">
-                           <Check size={20} className="text-green-500" /> <span className="text-sm font-bold uppercase tracking-wider opacity-60">Privacy-aware implementation</span>
-                        </div>
-                     </div>
+                        </ScrollReveal>
+                     ))}
                   </div>
-               </ScrollReveal>
-            </div>
-         </section>
-
-         {/* 8. PRICING TEASER */}
-         <section className="relative overflow-hidden bg-[#080A0F] py-20 text-white md:py-24">
-            <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-yellow-400/10 blur-[120px]" />
-            <div className="relative mx-auto max-w-5xl px-6 text-center">
-               <ScrollReveal>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/25 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-300">Clear scope. Clear pricing.</span>
-                  <h2 className="mt-6 text-3xl font-bold tracking-tight md:text-5xl">Choose a practical <span className="text-yellow-400">starting point.</span></h2>
-                  <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Compare website packages, AI workflow setups, graphic design and ongoing support in one place. Every project is confirmed against your actual requirements before work begins.</p>
-                  <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                     <Link to="/pricing" className="inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-7 py-4 font-bold text-black transition-colors hover:bg-yellow-300">Explore all pricing <ArrowRight size={18} /></Link>
-                     <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-bold text-white transition-colors hover:border-yellow-400/50 hover:text-yellow-300">Get a custom quote</Link>
-                  </div>
-               </ScrollReveal>
-            </div>
-         </section>
-
-         {/* 9. PROCESS METHODOLOGY */}
-         <section className="py-24 max-w-[1500px] mx-auto px-6 text-center">
-            <ScrollReveal>
-               <h2 className="text-3xl md:text-5xl font-bold mb-16">A clear process from <span className="text-neon-purple">brief to launch.</span></h2>
-               <div className="grid md:grid-cols-5 gap-8">
-                  {[
-                     { step: "01", title: "Strategy", icon: Target },
-                     { step: "02", title: "UI Design", icon: Palette },
-                     { step: "03", title: "Engineering", icon: Code },
-                     { step: "04", title: "Optimization", icon: ZapIcon },
-                     { step: "05", title: "Launch", icon: Rocket }
-                  ].map((item, i) => (
-                     <div key={i} className="space-y-6 group">
-                        <div className="w-20 h-20 mx-auto rounded-full bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/10 flex items-center justify-center text-2xl font-black text-neon-purple shadow-xl group-hover:scale-110 group-hover:bg-neon-purple group-hover:text-white transition-all">
-                           {item.step}
-                        </div>
-                        <h4 className="font-bold text-sm uppercase tracking-widest">{item.title}</h4>
-                     </div>
-                  ))}
                </div>
-            </ScrollReveal>
+            </div>
          </section>
 
-         <DealsSection />
-
-         {/* 10. FAQ SHORTFORM */}
-         <section id="faq" className="py-24 bg-gray-50 dark:bg-[#0A0C11]/50 border-t border-gray-200 dark:border-white/5">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <h2 className="text-3xl font-bold mb-12 text-center">Frequently Asked <span className="text-neon-blue">Questions.</span></h2>
-               <div className="grid md:grid-cols-2 gap-6">
+         {/* 9. FAQ */}
+         <section id="faq" className="py-20 md:py-24 bg-gray-50 dark:bg-[#0A0C11]/50">
+            <div className="max-w-5xl mx-auto px-4 md:px-6">
+               <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center tracking-tight">Frequently asked <span className="text-yellow-500">questions.</span></h2>
+               <div className="grid md:grid-cols-2 gap-5">
                   {[
-                     { q: "Standard Delivery Time?", a: "Standard builds take 7-14 days, complex apps 3-4 weeks." },
-                     { q: "Is Technical SEO Included?", a: "Yes, optimized structure is baked into every build from day one." },
-                     { q: "Mobile Responsiveness?", a: "We design mobile-first and check layouts across common screen sizes. Exact browser and device coverage is agreed within the project scope." },
-                     { q: "Do you offer maintenance?", a: "Yes, we act as long-term technical partners for our clients." }
-                  ].map((faq, i) => (
-                     <ScrollReveal key={i} className="p-6 bg-white dark:bg-[#0F1320] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm">
-                        <h4 className="font-bold mb-3 flex items-center gap-2"><HelpCircle size={16} className="text-neon-purple" /> {faq.q}</h4>
-                        <p className="text-sm text-gray-500 font-light leading-relaxed">{faq.a}</p>
+                     { q: 'What does the free growth audit include?', a: 'We look at your website (or lack of one), Google and social presence and how fast enquiries get answered, then send 3 practical fixes. There is no obligation to buy.' },
+                     { q: 'Do I need all three services?', a: 'No. Many clients start with one, like a website or a WhatsApp chatbot, and add the rest when they are ready.' },
+                     { q: 'Can the AI assistant reply in Telugu or Hindi?', a: 'Yes, AI assistants can be set up to understand and reply in the languages your customers use, and to hand over to a person when needed.' },
+                     { q: 'Do you work with businesses outside Visakhapatnam?', a: 'Yes. We work remotely with businesses across India and abroad over WhatsApp, calls and video meetings.' },
+                  ].map((faq) => (
+                     <ScrollReveal key={faq.q} className="p-6 bg-white dark:bg-[#0F1320] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm">
+                        <h3 className="font-bold mb-3 flex items-start gap-2"><HelpCircle size={16} className="mt-1 shrink-0 text-yellow-500" /> {faq.q}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{faq.a}</p>
                      </ScrollReveal>
                   ))}
                </div>
-            </div>
-         </section>
-
-         {/* --- INFO BLOCK E: THE BRANDIQUE VISION --- */}
-         <section className="py-24 md:py-32 bg-white dark:bg-[#05070A] overflow-hidden">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <ScrollReveal>
-                  <div className="max-w-4xl mx-auto space-y-16">
-                     <div className="text-center space-y-4">
-                        <h2 className="text-3xl md:text-5xl font-bold">Strategy, <span className="text-neon-purple">design</span> and <span className="text-neon-blue">technology.</span></h2>
-                        <p className="text-gray-500 text-lg font-light">A final deep dive into our technical philosophy and commitment to excellence.</p>
-                     </div>
-
-                     <div className="space-y-12 text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                        <p>
-                           The digital world is often divided into two camps: the designers who value art above all, and the developers who value logic. At BrandiQue, we believe this is a false dichotomy. Great digital work lives at the intersection. It requires the soul of an artist and the precision of a mathematician. Our team is trained to see websites as living, breathing entities that must balance beauty with brutal technical efficiency.
-                        </p>
-                        <p>
-                           We are committed to ethical development practices. This means we don't just build what's easy; we build what's right for your long-term success. We prioritize accessibility (A11y) to ensure the web is open to everyone, we use sustainable coding patterns to reduce digital carbon footprints, and we maintain radical transparency in our pricing and timelines.
-                        </p>
-                        <p>
-                           BrandiQue works with you to understand your offer, audience and next business goal, then builds a practical digital solution around that context. Whether you are a solo creator or a growing team, the aim is a clearer online presence, smoother operations and more consistent brand communication.
-                        </p>
-                     </div>
-
-                     <div className="grid md:grid-cols-2 gap-8 pt-8">
-                        <div className="flex items-start gap-4 p-8 rounded-3xl bg-neon-purple/5 border border-neon-purple/10">
-                           <HeartHandshake className="text-neon-purple shrink-0" size={32} />
-                           <div>
-                              <h4 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">Radical Transparency</h4>
-                              <p className="text-sm text-gray-500 font-light leading-relaxed">We agree on communication, milestones and review points up front so you know what is being built and what feedback is needed.</p>
-                           </div>
-                        </div>
-                        <div className="flex items-start gap-4 p-8 rounded-3xl bg-neon-blue/5 border border-neon-blue/10">
-                           <Sparkles className="text-neon-blue shrink-0" size={32} />
-                           <div>
-                              <h4 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">Uncompromising Quality</h4>
-                              <p className="text-sm text-gray-500 font-light leading-relaxed">We validate agreed user journeys and key pages before handover, and document any items that remain outside the project scope.</p>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </ScrollReveal>
-            </div>
-         </section>
-
-         {/* 3. ABOUT US SHORTFORM - Relocated right under Bridging Creativity and Code */}
-         <section className="py-24 md:py-32 bg-white dark:bg-[#0A0C11]/30 border-t border-gray-200 dark:border-white/5">
-            <div className="max-w-[1500px] mx-auto px-6">
-               <div className="max-w-4xl mx-auto text-center space-y-12">
-                  <ScrollReveal>
-                     <h2 className="text-3xl md:text-6xl font-bold mb-8 tracking-tight">Architecting the <span className="text-neon-purple">Modern Web.</span></h2>
-                     <div className="grid md:grid-cols-2 gap-12 text-left text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                        <p>BrandiQue is a premier digital studio helping businesses navigate the modern web. We specialize in building high-performance websites that serve as powerful engines for business growth and authority.</p>
-                        <p>By leveraging frameworks like React and Next.js, we ensure every platform we deliver is lightning-fast, mobile-responsive, and infinitely scalable for the long term.</p>
-                     </div>
-                     <div className="flex justify-center pt-10">
-                        <Link to="/about" className="text-sm font-bold text-neon-purple uppercase tracking-widest border-b-2 border-neon-purple/20 pb-1 hover:border-neon-purple transition-all">Learn Our Story</Link>
-                     </div>
-                  </ScrollReveal>
+               <div className="mt-8 text-center">
+                  <Link to="/pricing#pricing-faq" className="inline-flex items-center gap-2 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-3 transition-all">Pricing and payment questions <ArrowRight size={15} /></Link>
                </div>
             </div>
          </section>
@@ -816,14 +651,14 @@ const Home: React.FC = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-neon-purple/10 rounded-full blur-[120px] pointer-events-none"></div>
             <ScrollReveal>
                <div className="max-w-[1500px] mx-auto px-6 space-y-10 relative z-10">
-                  <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tighter">Ready to build your <br /><span className="text-neon-blue text-gradient">next digital advantage?</span></h2>
-                  <p className="text-gray-500 text-lg md:text-xl font-light max-w-2xl mx-auto">Join the elite businesses that have elevated their authority with BrandiQue. Let's create your success story today.</p>
+                  <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tighter">Ready to get more <br /><span className="text-neon-blue text-gradient">customers on autopilot?</span></h2>
+                  <p className="text-gray-500 text-lg md:text-xl font-light max-w-2xl mx-auto">Start with a free growth audit. We'll show you exactly where you're losing enquiries and what to fix first.</p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
-                     <Link to="/contact" className="px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
-                        Request Consultation <ArrowRight size={20} />
-                     </Link>
+                     <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
+                        Get My Free Audit <ArrowRight size={20} />
+                     </button>
                      <a href={`tel:${getRawPhone()}`} className="px-10 py-5 border border-gray-300 dark:border-white/10 rounded-full font-bold text-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
-                        Call an Expert
+                        Call Us
                      </a>
                   </div>
                   <div className="pt-20 opacity-30">

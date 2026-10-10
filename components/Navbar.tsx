@@ -271,7 +271,10 @@ const Navbar: React.FC = () => {
                         ))}
                       </div>
                       <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/5 text-center transition-colors duration-500">
-                        <Link to="/services" className="text-xs font-bold text-gray-500 hover:text-black dark:hover:text-white uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">View Overview Page <ArrowRight size={12} /></Link>
+                        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+                          <Link to="/solutions" className="text-xs font-bold text-yellow-600 dark:text-yellow-300 hover:text-black dark:hover:text-white uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"><Sparkles size={12} /> Industry Solutions</Link>
+                          <Link to="/services" className="text-xs font-bold text-gray-500 hover:text-black dark:hover:text-white uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">View Overview Page <ArrowRight size={12} /></Link>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -427,6 +430,7 @@ const Navbar: React.FC = () => {
                         <div className="flex-1"><span className="text-sm font-bold text-gray-900 dark:text-white block">{service.title}</span><span className="text-[10px] text-gray-500 dark:text-gray-400 line-clamp-1">{service.desc}</span></div>
                       </Link>
                     ))}
+                    <Link to="/solutions" onClick={() => setIsOpen(false)} className="mt-2 py-3 flex items-center justify-center gap-2 text-xs font-bold text-yellow-600 dark:text-yellow-300 bg-yellow-400/5 rounded-xl border border-yellow-400/25 hover:bg-yellow-400/10 transition-colors"><Sparkles size={14} /> Industry Solutions</Link>
                     <Link to="/services" onClick={() => setIsOpen(false)} className="mt-2 py-3 flex items-center justify-center gap-2 text-xs font-bold text-neon-purple bg-neon-purple/5 rounded-xl border border-neon-purple/20 hover:bg-neon-purple/10 transition-colors">View All Services <ArrowRight size={14} /></Link>
                   </div>
                 </div>

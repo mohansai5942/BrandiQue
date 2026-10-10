@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
             </Link>
             
             <p className="text-gray-500 dark:text-gray-400 text-xs md:text-xs lg:text-sm leading-relaxed max-sm font-light">
-              We design, develop, and grow digital brands with web development, branding, digital marketing, and AI-powered solutions.
+              We help businesses win and keep more customers with web development, AI agents & automations, and graphic design.
             </p>
 
             <div className="flex gap-3 md:gap-3 lg:gap-4 pt-2">
@@ -93,6 +93,7 @@ const Footer: React.FC = () => {
                 { label: 'About Us', to: '/about' },
                 { label: 'All Services', to: '/services' },
                 { label: 'Pricing & Packages', to: '/pricing' },
+                { label: 'Industry Solutions', to: '/solutions' },
                 { label: 'Web Development', to: '/web-development' },
                 { label: 'Contact', to: '/contact' },
               ].map((link, i) => (

@@ -1,7 +1,9 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { initializeFirestore, getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import config from './firebase-applet-config.json';
+import rawConfig from './firebase-applet-config.json';
+
+const config: typeof rawConfig & { firestoreDatabaseId?: string } = rawConfig;
 
 const firebaseConfig = {
   apiKey: config.apiKey,

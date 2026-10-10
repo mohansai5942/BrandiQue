@@ -165,6 +165,62 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const renderServiceSpecificFields = () => {
     const sNameLower = serviceName.toLowerCase();
 
+    if (sNameLower.includes('growth audit') || sNameLower.includes('growth plan')) {
+      return (
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Type of Business</label>
+            <div className="grid grid-cols-2 gap-2">
+              {['Coaching / School', 'Clinic / Healthcare', 'Shop / Restaurant', 'Services / Other'].map((type) => (
+                <button
+                  type="button"
+                  key={type}
+                  onClick={() => handleCustomAnswerChange('Business Type', type)}
+                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
+                    customAnswers['Business Type'] === type
+                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
+                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Biggest Goal Right Now</label>
+            <div className="grid grid-cols-2 gap-2">
+              {['More enquiries', 'Faster replies on WhatsApp', 'Less manual work', 'Better brand look'].map((goal) => (
+                <button
+                  type="button"
+                  key={goal}
+                  onClick={() => handleCustomAnswerChange('Main Goal', goal)}
+                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
+                    customAnswers['Main Goal'] === goal
+                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
+                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
+                  }`}
+                >
+                  {goal}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Website or Instagram Link (optional)</label>
+            <input
+              type="text"
+              maxLength={200}
+              placeholder="e.g., yourbusiness.com or @yourbusiness"
+              value={customAnswers['Current Link'] || ''}
+              onChange={(e) => handleCustomAnswerChange('Current Link', e.target.value)}
+              className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
+            />
+          </div>
+        </div>
+      );
+    }
+
     if (sNameLower.includes('wordpress')) {
       return (
         <div className="space-y-4">
