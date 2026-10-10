@@ -23,9 +23,6 @@ import GraphicDesign from './pages/services/GraphicDesign';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import CookiePolicy from './pages/CookiePolicy';
-import Login from './pages/Login';
-import Admin from './pages/Admin';
-import ProtectedRoute from './components/ProtectedRoute';
 import FloatingPromotions from './components/FloatingPromotions';
 import DarlingAIChatbot from './components/DarlingAIChatbot';
 
@@ -52,6 +49,18 @@ const ScrollToTop = () => {
 
   return null;
 }
+
+const AdminDashboardRedirect: React.FC = () => {
+  useEffect(() => {
+    window.location.replace('https://data.brandique.in');
+  }, []);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-navy-900 text-gray-700 dark:text-gray-200">
+      <p>Opening BrandiQue Admin Dashboard…</p>
+    </div>
+  );
+};
 
 const App: React.FC = () => {
   return (
@@ -87,13 +96,9 @@ const App: React.FC = () => {
             <Route path="/services/ai-automation" element={<AIAutomation />} />
             <Route path="/services/graphic-design" element={<GraphicDesign />} />
 
-            {/* Admin & Auth */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/admin" element={
-              <ProtectedRoute>
-                <Admin />
-              </ProtectedRoute>
-            } />
+            {/* Legacy admin URLs now permanently redirect to the dedicated data dashboard. */}
+            <Route path="/login" element={<AdminDashboardRedirect />} />
+            <Route path="/admin" element={<AdminDashboardRedirect />} />
 
             {/* Legal Pages */}
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
