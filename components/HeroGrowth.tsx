@@ -55,7 +55,7 @@ const HeroGrowth: React.FC = () => {
           <div className="mt-5 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
             <span className="font-medium">We build</span>
             <span className="relative inline-flex h-8 min-w-[220px] items-center overflow-hidden rounded-full border border-gray-200 bg-white px-3.5 font-bold text-gray-900 dark:border-white/10 dark:bg-white/5 dark:text-white">
-              <span key={wordIndex} className="animate-fade-up whitespace-nowrap">{ROTATING[wordIndex]}</span>
+              <span key={wordIndex} className="animate-fade-in whitespace-nowrap leading-none">{ROTATING[wordIndex]}</span>
             </span>
           </div>
 
@@ -110,13 +110,15 @@ const HeroGrowth: React.FC = () => {
             </div>
           </div>
 
-          <div className="absolute -left-4 top-24 hidden sm:flex items-center gap-3 rounded-2xl border border-gray-200 bg-white/95 px-4 py-3 shadow-xl backdrop-blur animate-float dark:border-white/10 dark:bg-[#0F1320]/95">
+          <div className="relative mt-5 grid grid-cols-2 gap-3">
+          <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white/95 px-4 py-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-[#0F1320]/95">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-500/15 text-green-600 dark:text-green-400"><MessageCircle size={18} /></span>
             <div><div className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Reply time</div><div className="text-sm font-black text-gray-900 dark:text-white">Under 10 seconds</div></div>
           </div>
-          <div className="absolute -right-3 -bottom-6 hidden sm:flex items-center gap-3 rounded-2xl border border-gray-200 bg-white/95 px-4 py-3 shadow-xl backdrop-blur animate-float-fast dark:border-white/10 dark:bg-[#0F1320]/95">
+          <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white/95 px-4 py-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-[#0F1320]/95">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-yellow-400/15 text-yellow-600 dark:text-yellow-300"><Sparkles size={18} /></span>
-            <div><div className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Working hours</div><div className="text-sm font-black text-gray-900 dark:text-white">24 × 7, even at 9:42 PM</div></div>
+            <div><div className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Working hours</div><div className="text-sm font-black text-gray-900 dark:text-white">24 × 7, all year</div></div>
+          </div>
           </div>
         </div>
       </div>
