@@ -1,39 +1,48 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Global safety net: default deny
+    // Default deny: collections must be explicitly allowed below.
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Messages collection: Allow any visitor to submit forms, and allow reading/updating/deleting across all devices
-    match /messages/{messageId} {
-      allow read, create, update, delete: if true;
-    }
-
-    // Projects collection: Allow reading and managing projects across all devices
+    // Public website content: visitors can read, but only signed-in users can manage it.
     match /projects/{projectId} {
-      allow read, create, update, delete: if true;
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
     }
 
-    // Settings collection: Allow reading and updating site contact settings across all devices
     match /settings/{settingId} {
-      allow read, create, update, delete: if true;
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
     }
 
-    // Websites collection: Allow reading and managing custom website links across all devices
     match /websites/{websiteId} {
-      allow read, create, update, delete: if true;
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
     }
 
-    // n8n Projects collection: Allow reading and managing n8n workflows across all devices
     match /n8n_projects/{projectId} {
-      allow read, create, update, delete: if true;
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
     }
 
-    // n8n Project Forms & Client Inquiries collection: Allow visitors to submit and manage across all devices
+    // Contact/service forms must remain submittable by public visitors.
+    // Reading and managing submissions requires authentication.
+    match /messages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
     match /n8n_project_forms/{formId} {
-      allow read, create, update, delete: if true;
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // Prompt records may be displayed publicly; writes require authentication.
+    match /prompts/{promptId} {
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
     }
   }
 }
