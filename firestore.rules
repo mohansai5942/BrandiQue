@@ -39,10 +39,9 @@ service cloud.firestore {
       allow read, update, delete: if request.auth != null;
     }
 
-    // Prompt records may be displayed publicly; writes require authentication.
+    // Prompt records are managed through the authenticated dashboard.
     match /prompts/{promptId} {
-      allow read: if true;
-      allow create, update, delete: if request.auth != null;
+      allow read, create, update, delete: if request.auth != null;
     }
   }
 }
