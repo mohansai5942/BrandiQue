@@ -288,7 +288,7 @@ const WorkflowVisual = () => {
           className="flex items-center gap-2.5 px-4 py-2 bg-white/10 dark:bg-black/50 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-full shadow-2xl"
         >
           <Zap size={14} className="text-neon-blue" />
-          <span className="text-[10px] md:text-xs font-bold text-gray-900 dark:text-white/90 uppercase tracking-widest">Efficiency +94%</span>
+          <span className="text-[10px] md:text-xs font-bold text-gray-900 dark:text-white/90 uppercase tracking-widest">Workflow Running</span>
         </motion.div>
       </div>
 
@@ -311,10 +311,10 @@ const AI_AUTOMATION_PKG = {
   icon: Workflow,
   desc: "We design and implement smart automation systems that streamline your business processes and reduce manual work. By connecting different tools, APIs, and workflows, we create efficient systems that handle repetitive tasks, manage data flow, and improve overall productivity. Our solutions are customized to fit your operations, helping you save time, minimize errors, and scale smoothly.",
   price: { 
-     basic: "20,000 to 40,000 (one-time)", 
+     basic: "12,000 to 40,000 (one-time)", 
      advanced: "40,000 to 80,000",
      enterprise: "80,000 to 1,80,000+",
-     maintenance: "5,000 to 15,000 / month (optional)"
+     maintenance: "1,999 to 14,999 / month (optional growth plan)"
   },
   features: ["n8n workflow automation (multi-step pipelines)", "Task automation (notifications, operations, triggers)", "Data integration (APIs, Google Sheets, CRM sync)", "Lead management & auto-sync systems", "Webhooks & event-based automation", "Conditional logic & smart workflows", "Error handling & retry systems", "Scheduled automation (time-based)", "Hosting and API integration setup scoped per project"],
   deliverables: ["Fully configured n8n workflows (pipelines)", "Automation system setup (tasks, triggers, flows)", "API & data integration setup", "Webhooks & event-based automation configuration", "Hosting setup & deployment", "Tested & optimized automation system", "Documentation (basic workflow explanation)", "Access to workflows + admin control", "Initial support after delivery"],
@@ -555,7 +555,7 @@ await agent.deploy();`;
                                  <div className="relative z-10 flex-grow">
                                     <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h4>
                                     <p className="text-blue-100 text-sm mb-8 leading-relaxed">
-                                       Flexible plans tailored to your technical needs. We deliver robust automated capabilities.
+                                       Starting ranges by complexity. You receive a fixed written quote after a short requirements call.
                                     </p>
                                     
                                     <div className="space-y-4">
@@ -765,7 +765,7 @@ await agent.deploy();`;
                         {[
                            { title: "Custom Solutions", desc: "Every system is built specifically for your needs, not a template.", icon: Sparkles },
                            { title: "Affordable Pricing", desc: "Get high-end automation at startup-friendly price points.", icon: Zap },
-                           { title: "Fast Delivery", desc: "From concept to live automation system in record time.", icon: Rocket },
+                           { title: "Fast Delivery", desc: "Most single workflows and chatbots go live in 1 to 2 weeks.", icon: Rocket },
                            { title: "Real Business Logic", desc: "We focus on solving actual business problems beyond basic bots.", icon: TrendingUp }
                         ].map((item, i) => (
                            <div key={i} className="flex gap-4 items-start">

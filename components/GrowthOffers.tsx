@@ -19,9 +19,9 @@ const INQUIRY_SERVICE: Record<PillarId, string> = {
   design: 'Graphic Design',
 };
 
-interface GrowthOffersProps { showHeading?: boolean; }
+interface GrowthOffersProps { showHeading?: boolean; pillars?: PillarId[]; }
 
-const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true }) => {
+const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars }) => {
   const { openInquiry } = useInquiry();
   return (
     <section className="relative py-20 md:py-28 px-4 md:px-6 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
@@ -40,7 +40,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true }) => {
         )}
 
         <div className="space-y-16 md:space-y-20">
-          {PILLARS.map(pillar => {
+          {PILLARS.filter(pillar => !pillars || pillars.includes(pillar.id)).map(pillar => {
             const Icon = PILLAR_ICONS[pillar.id];
             const items = PACKAGES.filter(pkg => pkg.pillar === pillar.id);
             return (

@@ -15,7 +15,7 @@ for (const url of urls) {
  assert(!titles.has(title),`${pathname}: duplicate title`); titles.add(title);
  const desc=document.querySelectorAll('meta[name="description"]'); assert.equal(desc.length,1);
  assert(!descriptions.has(desc[0].content),`${pathname}: duplicate description`);descriptions.add(desc[0].content);
- assert.equal(document.querySelectorAll('h1').length,pathname==='/' ? 2 : 1,`${pathname}: original responsive H1 structure`);
+ assert.equal(document.querySelectorAll('h1').length,1,`${pathname}: exactly one H1`);
  assert.equal(document.querySelectorAll('link[rel="canonical"]').length,1);
  assert.equal(document.querySelector('link[rel="canonical"]').href,url);
  assert.equal(document.querySelectorAll('meta[name="robots"]').length,1);

@@ -5,7 +5,8 @@ import ScrollReveal from '../components/ScrollReveal';
 import GrowthOffers from '../components/GrowthOffers';
 import GrowthPlans from '../components/GrowthPlans';
 import IndustrySolutions from '../components/IndustrySolutions';
-import { PRICING_FAQ } from '../data/offers';
+import { PRICING_FAQ, whatsappLink } from '../data/offers';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import { useInquiry } from '../context/InquiryContext';
 
 const JUMP_LINKS = [
@@ -24,6 +25,7 @@ const HOW_IT_WORKS = [
 
 const Pricing: React.FC = () => {
   const { openInquiry } = useInquiry();
+  const { settings } = useSiteSettings();
   return (
     <div className="min-h-screen pt-32 md:pt-40 bg-gray-50 dark:bg-[#05070A] text-gray-900 dark:text-white transition-colors duration-300">
       <section className="relative px-4 md:px-6 pb-12 md:pb-16 overflow-hidden">
@@ -43,9 +45,9 @@ const Pricing: React.FC = () => {
               <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-6 py-3.5 font-bold text-black hover:bg-yellow-300 transition-colors">
                 Get a free growth audit <ArrowRight size={17} />
               </button>
-              <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 dark:border-white/15 px-6 py-3.5 font-semibold hover:border-yellow-400/60 transition-colors">
-                Request a custom quote
-              </Link>
+              <a href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I have a question about your pricing.')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 dark:border-white/15 px-6 py-3.5 font-semibold hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 transition-colors">
+                <MessageCircle size={17} /> Ask on WhatsApp
+              </a>
             </div>
             <nav aria-label="Pricing sections" className="mt-10 flex flex-wrap justify-center gap-2">
               {JUMP_LINKS.map(link => (

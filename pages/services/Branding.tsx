@@ -158,7 +158,7 @@ const Branding: React.FC = () => {
                            <div className="absolute inset-0 bg-pink-500 [clip-path:polygon(50%_10%,90%_90%,10%_90%)] opacity-0 animate-fade-in delay-1000 mix-blend-overlay"></div>
                         </div>
                         <div className="text-gray-500 text-[8px] md:text-[9px] lg:text-[10px] font-bold uppercase tracking-[0.3em]">Brand Guide</div>
-                        <div className="text-white font-serif text-lg md:text-xl lg:text-2xl mt-1">2025</div>
+                        <div className="text-white font-serif text-lg md:text-xl lg:text-2xl mt-1">Identity</div>
                      </div>
 
                      {/* 2. Floating Business Card - Smaller on tablet */}
@@ -311,7 +311,7 @@ const Branding: React.FC = () => {
                            <div className="relative z-10 flex-grow">
                               <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h4>
                               <p className="text-pink-100 text-sm mb-8 leading-relaxed">
-                                 Flexible plans tailored to your growth ambitions. We deliver measurable results.
+                                 Starting ranges by scope. You receive a fixed written quote with clear deliverables before work begins.
                               </p>
                               
                               <div className="space-y-4">

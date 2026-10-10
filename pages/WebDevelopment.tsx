@@ -6,10 +6,10 @@ import ScrollReveal from '../components/ScrollReveal';
 ;
 
 const FAQ_ITEMS = [
-  { q: "Standard Delivery Time entha?", a: "Standard projects 7-14 days lo complete chestam. Complex e-commerce sites ki 3-4 weeks padutundi." },
-  { q: "Hosting and Domain include ayyi untunda?", a: "Memu configuration help chestam. Mana plans lo technical setup guidance free ga untundi." },
-  { q: "Technical SEO support untunda?", a: "Every build includes technical SEO foundations and agreed page checks. Search rankings and Core Web Vitals depend on hosting, content, third-party scripts and real-world usage, so specific scores or rankings are not guaranteed." },
-  { q: "Maintenance services provide chestara?", a: "Avunu, memu monthly maintenance mariyu post-launch support plans kuda offer chestunnam." }
+  { q: "How long does a website take?", a: "Most starter and business websites go live in 1 to 2 weeks after we receive your content. E-commerce stores usually take 3 to 4 weeks." },
+  { q: "Are domain and hosting included?", a: "Domain and hosting are paid directly by you, so you always own them. We recommend the right option for your budget and handle the complete setup at no extra charge." },
+  { q: "Is technical SEO included?", a: "Every build includes technical SEO foundations and agreed page checks. Search rankings and Core Web Vitals depend on hosting, content, third-party scripts and real-world usage, so specific scores or rankings are not guaranteed." },
+  { q: "Do you offer maintenance after launch?", a: "Yes. Post-launch fixes are included, and our monthly plans start at ₹1,999 for updates, checks and support." }
 ];
 
 const WebDevelopment = () => {
@@ -153,13 +153,13 @@ const WebDevelopment = () => {
             <ScrollReveal>
                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-8">What makes our <br/><span className="text-neon-blue">Engineering</span> different?</h2>
                <p className="text-gray-500 text-lg mb-12 font-light leading-relaxed">
-                  Unlike Solutions Providers that sell generic WordPress templates, BrandiQue focuses on strategic digital engineering. Every "Starter Kit" is built with a long-term vision.
+                  Many low-cost websites are rushed templates that look generic and never bring enquiries. Every BrandiQue starter kit is planned around your customer journey, built cleanly and handed over ready to grow.
                </p>
                <div className="space-y-8">
                   {[
                     { title: "Technical SEO foundations", desc: "Semantic markup and agreed structured data where relevant; search visibility depends on content, competition and implementation.", icon: Target },
                     { title: "Performance-conscious builds", desc: "We review image sizes, scripts and page structure, then validate the production build before handover.", icon: Zap },
-                    { title: "Enterprise Security", desc: "Clean code protocols ensure your site is protected against standard vulnerabilities.", icon: ShieldCheck }
+                    { title: "Security Basics", desc: "HTTPS, validated forms and up-to-date dependencies protect your site against common issues.", icon: ShieldCheck }
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-6">
                        <div className="w-12 h-12 rounded-xl bg-neon-blue/10 flex items-center justify-center text-neon-blue shrink-0"><item.icon size={24} /></div>
@@ -205,7 +205,7 @@ const WebDevelopment = () => {
               { step: "01", title: "Onboarding", desc: "Understanding your brand vision and requirements.", icon: MessageCircle },
               { step: "02", title: "Architecture", desc: "Designing the UI/UX and site structure.", icon: Palette },
               { step: "03", title: "Development", desc: "Engineering the code with modern frameworks.", icon: Code },
-              { step: "04", title: "Deployment", desc: "Optimizing speed and going live globally.", icon: Rocket }
+              { step: "04", title: "Deployment", desc: "Optimizing speed, testing forms and going live.", icon: Rocket }
             ].map((item, i) => (
               <ScrollReveal key={i} delay={`delay-${i*100}`}>
                  <div className="p-8 bg-white dark:bg-[#0F1320] border border-gray-100 dark:border-white/5 rounded-3xl text-center group hover:bg-neon-purple hover:border-neon-purple transition-all duration-500">

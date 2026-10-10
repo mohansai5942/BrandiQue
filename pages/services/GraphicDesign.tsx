@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, Palette, PenTool, Layers, Image, Megaphone, MonitorPlay, Sparkles } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal';
+import GrowthOffers from '../../components/GrowthOffers';
 
 const DESIGN_SERVICES = [
   { icon: Palette, title: 'Social media creatives', description: 'Feed posts, story designs, carousels and campaign sets that stay consistent with your brand.' },
@@ -33,7 +34,7 @@ const GraphicDesign: React.FC = () => (
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-400 px-6 py-3.5 font-bold text-black transition-colors hover:bg-amber-300">Discuss a design brief <ArrowRight size={17} /></Link>
-            <Link to="/pricing" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 px-6 py-3.5 font-semibold transition-colors hover:border-amber-400/60 dark:border-white/15">View starting prices</Link>
+            <a href="#design-pricing" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 px-6 py-3.5 font-semibold transition-colors hover:border-amber-400/60 dark:border-white/15">View starting prices</a>
           </div>
           <div className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs text-gray-500 dark:text-gray-400 md:text-sm">
             <span className="inline-flex items-center gap-2"><Check size={15} className="text-amber-500" /> Agreed deliverables</span>
@@ -93,6 +94,8 @@ const GraphicDesign: React.FC = () => (
         </div>
       </ScrollReveal>
     </section>
+
+    <div id="design-pricing" className="mt-10"><GrowthOffers showHeading={false} pillars={['design']} /></div>
 
     <section className="mx-auto max-w-6xl px-4 pt-6 md:px-6 md:pt-10">
       <ScrollReveal>

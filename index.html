@@ -120,8 +120,13 @@
               'spin-slow': 'spin 12s linear infinite',
               'border-beam': 'borderBeam 8s linear infinite',
               'marquee': 'marquee 30s linear infinite',
+              'marquee-half': 'marqueeHalf 40s linear infinite',
             },
             keyframes: {
+              marqueeHalf: {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' },
+              },
               marquee: {
                 '0%': { transform: 'translateX(0%)' },
                 '100%': { transform: 'translateX(-100%)' },

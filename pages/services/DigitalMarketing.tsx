@@ -82,7 +82,7 @@ const DigitalMarketing: React.FC = () => {
                                   ))}
                               </div>
                               <div className="mt-1.5 lg:mt-2 text-right">
-                                  <span className="text-green-500 dark:text-green-400 text-[8px] md:text-[10px] lg:text-xs font-bold">+124%</span>
+                                  <span className="text-green-500 dark:text-green-400 text-[8px] md:text-[10px] lg:text-xs font-bold">Insights</span>
                               </div>
                           </div>
 
@@ -293,7 +293,7 @@ const DigitalMarketing: React.FC = () => {
                   <div className="relative z-10 flex-grow">
                      <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Tiers</h4>
                      <p className="text-green-100 text-sm mb-8 leading-relaxed">
-                        Flexible plans tailored to your growth ambitions. From brand awareness to customer acquisition, we deliver measurable results.
+                        Monthly management ranges by scope. Ad spend is paid directly by you and is not included. You receive a fixed written quote before work begins.
                      </p>
                      
                      <div className="space-y-4">

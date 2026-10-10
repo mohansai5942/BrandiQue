@@ -314,7 +314,7 @@ const WordPress: React.FC = () => {
                       title: "E-Commerce Website",
                       icon: ShoppingCart,
                       desc: "We develop e-commerce websites that enable you to sell online. Our service includes product management, secure payment integration, shopping cart system, order tracking, and a user-friendly interface for a smooth buying experience.",
-                      price: { sub: "25,000 to 50,000", custom: "1,50,000 to 5,00,000" },
+                      price: { sub: "25,000 to 50,000", custom: "50,000 to 1,50,000+" },
                       features: ["Product listing & categories", "Shopping cart & checkout system", "Secure payment gateway integration", "User account & order tracking", "Admin panel (manage products & orders)", "Discount coupons & offers", "Inventory management", "Mobile-friendly & fast performance"],
                       deliverables: ["Fully functional online store", "Product & category setup", "Payment gateway integration", "Cart & checkout system", "User account & order tracking", "Admin dashboard access", "Mobile responsive & optimized", "Domain + hosting setup", "3–4 revisions + initial support", "Complete handover with training"],
                       process: ["Requirement discussion (products, features)", "Store structure planning", "WooCommerce Setup & Configuration", "Development (cart, checkout, payment)", "Product & content setup", "Testing (orders, payments, user flow)", "Deployment (live store setup)", "Handover + training (admin usage)"],

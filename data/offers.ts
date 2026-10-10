@@ -211,3 +211,9 @@ export const PRICING_FAQ = [
   { q: 'Who owns the website and automations?', a: 'You do. After final payment you own your website, content, designs and workflows, and we hand over the access.' },
   { q: 'How long does a project take?', a: 'Most starter websites and single automations launch in 1 to 2 weeks. Larger websites, stores and industry solutions usually take 2 to 4 weeks after we receive your content.' },
 ];
+
+// Builds a WhatsApp click-to-chat link with a prefilled message.
+export function whatsappLink(base: string, message: string): string {
+  const url = base && base.startsWith('http') ? base : 'https://wa.me/917093320572';
+  return `${url}${url.includes('?') ? '&' : '?'}text=${encodeURIComponent(message)}`;
+}
