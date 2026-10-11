@@ -24,11 +24,11 @@ interface GrowthOffersProps { showHeading?: boolean; pillars?: PillarId[]; bare?
 const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars, bare = false }) => {
   const { openInquiry } = useInquiry();
   return (
-    <section className={`relative px-5 md:px-8 desk:px-12 2xl:px-16 bg-white dark:bg-[#080A0F] ${bare ? 'pt-12 pb-20 md:pb-28' : 'py-20 md:py-28 border-y border-gray-200 dark:border-white/5'}`}>
+    <section className={`relative px-5 md:px-8 desk:px-12 2xl:px-16 bg-white dark:bg-[#080A0F] ${bare ? 'pt-12 pb-12 md:pb-28' : 'py-12 md:py-28 border-y border-gray-200 dark:border-white/5'}`}>
       <div className="max-w-[100rem] mx-auto">
         {showHeading && (
           <ScrollReveal>
-            <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <div className="max-w-3xl mx-auto text-center mb-8 md:mb-16">
               <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase text-yellow-600 dark:text-yellow-300">
                 <Sparkles size={14} /> Clear scope. Clear pricing.
               </span>
@@ -57,13 +57,13 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                     {!bare && <Link to={pillar.href} className="inline-flex items-center gap-2 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-3 transition-all">Explore {pillar.title} <ArrowRight size={16} /></Link>}
                   </div>
                 </ScrollReveal>
-                <div className="grid md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+                <div className="flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-5 lg:gap-6 items-stretch">
                   {items.map((pkg, index) => (
-                    <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`}>
-                      <article className={`relative h-full rounded-[28px] p-6 md:p-8 border flex flex-col transition-all duration-300 hover:-translate-y-1 ${pkg.featured ? 'border-yellow-400/60 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] text-gray-900 dark:text-white'}`}>
+                    <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`} className="w-[84%] shrink-0 snap-start md:w-auto">
+                      <article className={`relative h-full rounded-[28px] p-4 md:p-8 border flex flex-col transition-all duration-300 hover:-translate-y-1 ${pkg.featured ? 'border-yellow-400/60 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] text-gray-900 dark:text-white'}`}>
                         {pkg.featured && <span className="absolute top-4 right-4 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black tracking-wider text-black uppercase">Recommended</span>}
                         <h4 className="text-xl md:text-2xl font-bold pr-24">{pkg.name}</h4>
-                        <p className={`mt-3 text-sm leading-relaxed min-h-[72px] ${pkg.featured ? 'text-white/65' : 'text-gray-600 dark:text-gray-400'}`}>{pkg.description}</p>
+                        <p className={`mt-3 text-sm leading-relaxed md:min-h-[72px] ${pkg.featured ? 'text-white/65' : 'text-gray-600 dark:text-gray-400'}`}>{pkg.description}</p>
                         <div className={`mt-6 border-y py-5 ${pkg.featured ? 'border-white/10' : 'border-gray-200 dark:border-white/10'}`}>
                           <div className="text-3xl md:text-4xl font-black tracking-tight">{pkg.price}</div>
                           <div className={`mt-1 text-xs ${pkg.featured ? 'text-white/55' : 'text-gray-500 dark:text-gray-400'}`}>{pkg.suffix}</div>
@@ -84,7 +84,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
           })}
         </div>
 
-        <p className="mt-12 text-center text-xs text-gray-500 dark:text-gray-500">
+        <p className="mt-8 md:mt-12 text-center text-xs text-gray-500 dark:text-gray-500">
           Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. External services, taxes and third-party costs are quoted separately.
         </p>
       </div>

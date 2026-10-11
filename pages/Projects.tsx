@@ -308,7 +308,7 @@ export default function Projects() {
           />
           
           {/* Hover Overlay */}
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6">
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 md:gap-6">
              <div className="flex flex-col items-center gap-2">
                 <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white flex items-center justify-center text-black hover:scale-110 transition-transform">
                    <ExternalLink size={16} className="sm:hidden" />
@@ -347,7 +347,7 @@ export default function Projects() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="bg-gray-50 dark:bg-[#05070A] text-gray-900 dark:text-white min-h-screen pb-20 transition-colors duration-300"
+      className="bg-gray-50 dark:bg-[#05070A] text-gray-900 dark:text-white min-h-screen pb-12 md:pb-20 transition-colors duration-300"
     >
       <PageHero
         eyebrow="Our work"
@@ -362,7 +362,7 @@ export default function Projects() {
       />
       <div className="mx-auto w-full max-w-[100rem] px-5 md:px-8 desk:px-12 2xl:px-16 pt-4">
         {/* Category Filter Pills / Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-12 sm:mb-16 scrollbar-none max-w-full justify-start md:justify-center">
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 sm:mb-16 scrollbar-none max-w-full justify-start md:justify-center">
           {[
             { id: 'all', label: 'ALL', count: activeProjects.length + activeN8nProjects.length },
             { id: 'main', label: 'MAIN PROJECTS', count: mainProjects.length },
@@ -408,7 +408,7 @@ export default function Projects() {
 
         {/* Section: Main Projects */}
         {(activeCategory === 'all' || activeCategory === 'main') && (
-          <div className="mb-20 md:mb-36">
+          <div className="mb-12 md:mb-36">
             <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // MAIN PROJECTS
@@ -459,7 +459,7 @@ export default function Projects() {
 
         {/* Section: Portfolio Projects */}
         {(activeCategory === 'all' || activeCategory === 'portfolio') && (
-          <div className="mb-20 md:mb-36">
+          <div className="mb-12 md:mb-36">
             <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // PORTFOLIO PROJECTS
@@ -510,7 +510,7 @@ export default function Projects() {
 
         {/* Section: N8N Projects & 24/7 Automation Workflows */}
         {(activeCategory === 'all' || activeCategory === 'n8n') && (
-          <div className="mb-20 md:mb-36">
+          <div className="mb-12 md:mb-36">
             <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between flex-wrap gap-2">
               <h2 className="text-[10px] sm:text-sm md:text-2xl font-bold tracking-[0.1em] sm:tracking-[0.2em] md:tracking-[0.3em] uppercase text-orange-500 dark:text-orange-400 flex items-center gap-1.5 sm:gap-2">
                 <Bot className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 shrink-0" />
@@ -647,7 +647,7 @@ export default function Projects() {
 
         {/* Section: Figma Projects */}
         {(activeCategory === 'all' || activeCategory === 'figma') && (
-          <div className="mb-20 md:mb-36">
+          <div className="mb-12 md:mb-36">
             <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // FIGMA PROJECTS
@@ -698,7 +698,7 @@ export default function Projects() {
 
         {/* Section: Client & Personal Projects */}
         {(activeCategory === 'all' || activeCategory === 'client') && (
-          <div className="mb-20 md:mb-36">
+          <div className="mb-12 md:mb-36">
             <div className="border-b border-gray-200 dark:border-white/10 pb-4 md:pb-6 mb-8 md:mb-14 flex items-center justify-between">
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // CLIENT & PERSONAL PROJECTS
@@ -783,7 +783,7 @@ export default function Projects() {
 
 
         {/* Process Section */}
-        <div className="mt-12 md:mt-60 border-t border-gray-200 dark:border-white/5 pt-10 md:pt-40">
+        <div className="mt-8 md:mt-60 border-t border-gray-200 dark:border-white/5 pt-10 md:pt-40">
            <div className="max-w-4xl mx-auto">
               <div>
                  <h2 className="text-3xl md:text-5xl desk:text-6xl font-bold tracking-tighter leading-[1.1] mb-8 md:mb-12 uppercase text-gray-900 dark:text-white">The <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue">Methodology</span> Behind The Build.</h2>
@@ -807,9 +807,9 @@ export default function Projects() {
         </div>
 
         {/* Call to Action */}
-        <div className="relative my-12 overflow-hidden rounded-[32px] bg-[#0B0D12] p-8 text-white md:my-20 md:p-14">
+        <div className="relative my-12 overflow-hidden rounded-[32px] bg-[#0B0D12] p-5 text-white md:my-20 md:p-14">
           <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-yellow-400/20 blur-3xl" />
-          <div className="relative grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+          <div className="relative grid gap-5 md:gap-8 md:grid-cols-[1fr_auto] md:items-center">
             <div>
               <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Want results like these for your business?</h2>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Tell us what you need: a website, an AI agent or design work. We reply within one working day with a clear plan and a fixed quote.</p>
@@ -912,7 +912,7 @@ export default function Projects() {
       {/* CLIENT INQUIRY FORM POPUP MODAL */}
       {isClientFormOpen && selectedN8nProject && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div className="bg-[#13151b] border border-orange-500/30 rounded-3xl w-full max-w-lg p-6 md:p-8 shadow-2xl relative overflow-hidden">
+          <div className="bg-[#13151b] border border-orange-500/30 rounded-3xl w-full max-w-lg p-4 md:p-8 shadow-2xl relative overflow-hidden">
             {/* Background glow */}
             <div className="absolute -top-12 -right-12 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
 

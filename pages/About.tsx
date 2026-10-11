@@ -54,7 +54,7 @@ const About: React.FC = () => {
   useEffect(() => { setMounted(true); }, []);
 
   return (
-    <div className="min-h-screen pb-20 w-full relative overflow-hidden bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
+    <div className="min-h-screen pb-12 md:pb-20 w-full relative overflow-hidden bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
       <PageHero
         eyebrow="About BrandiQue"
         eyebrowIcon={Sparkles}
@@ -65,7 +65,7 @@ const About: React.FC = () => {
       <div className="mx-auto w-full max-w-[100rem] px-5 md:px-8 desk:px-12 2xl:px-16 pt-6">
       
       {/* 1. HERO SECTION - MOHAN */}
-      <section id="founder" className="flex flex-col desk:flex-row items-center justify-between gap-8 md:gap-12 desk:gap-20 mb-8 sm:mb-12 md:mb-16 desk:mb-20 px-4 desk:px-12 relative z-10">
+      <section id="founder" className="flex flex-col desk:flex-row items-center justify-between gap-5 md:gap-12 desk:gap-20 mb-8 sm:mb-12 md:mb-16 desk:mb-20 px-4 desk:px-12 relative z-10">
          <div className="text-center desk:text-left max-w-2xl order-2 desk:order-1 w-full">
             <ScrollReveal>
                 <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-neon-purple/10 dark:bg-neon-purple/20 border border-neon-purple/30 dark:border-neon-purple/40 backdrop-blur-md mb-6 shadow-sm mx-auto desk:mx-0">
@@ -99,7 +99,7 @@ const About: React.FC = () => {
       </section>
 
       {/* 2. PRAVEEN SECTION (BELOW MOHAN, ABOVE DIGITAL PHILOSOPHY) */}
-      <section className="flex flex-col desk:flex-row items-center justify-between gap-8 md:gap-12 desk:gap-20 mb-12 sm:mb-16 desk:mb-20 px-4 desk:px-12 relative z-10">
+      <section className="flex flex-col desk:flex-row items-center justify-between gap-5 md:gap-12 desk:gap-20 mb-8 sm:mb-16 desk:mb-20 px-4 desk:px-12 relative z-10">
          <div className="relative shrink-0 order-1 group">
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/30 to-cyan-500/30 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
             <div className="w-64 h-64 md:w-80 md:h-80 desk:w-[420px] desk:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
@@ -131,7 +131,7 @@ const About: React.FC = () => {
          </div>
       </section>
 
-      <section className="max-w-[1100px] mx-auto px-6 py-8 mb-16" aria-labelledby="company-story">
+      <section className="max-w-[1100px] mx-auto px-6 py-8 mb-10 md:mb-16" aria-labelledby="company-story">
         <h2 id="company-story" className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">About BrandiQue Web Solutions</h2>
         <div className="space-y-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
           <p>Founded by Kutikuppala Mohan Rao, BrandiQue Web Solutions brings together web development, design and automation. Based in Visakhapatnam (Vizag), Andhra Pradesh, our work helps businesses turn their requirements into usable digital products.</p>
@@ -141,14 +141,14 @@ const About: React.FC = () => {
       </section>
 
       {/* 2. EXTENDED AGENCY NARRATIVE */}
-      <section className="w-full bg-white dark:bg-[#0A0C11]/30 border-y border-gray-200 dark:border-white/5 mb-32 py-24 md:py-32">
+      <section className="w-full bg-white dark:bg-[#0A0C11]/30 border-y border-gray-200 dark:border-white/5 mb-32 py-14 md:py-32">
         <div className="max-w-[1500px] mx-auto px-6 space-y-20">
           <ScrollReveal>
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16 space-y-4">
               <h2 className="text-3xl md:text-5xl desk:text-6xl font-bold text-gray-900 dark:text-white">Our Digital Philosophy</h2>
               <p className="text-gray-500 dark:text-gray-400 text-base md:text-lg font-light leading-relaxed">Discover the principles that drive BrandiQue to deliver extraordinary results for every client, every time.</p>
             </div>
-            <div className="grid md:grid-cols-2 gap-12 desk:gap-20 text-left">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-12 desk:gap-20 text-left">
               <div className="space-y-8">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                   <Target className="text-neon-purple" /> Visionary Excellence
@@ -171,8 +171,8 @@ const About: React.FC = () => {
           </ScrollReveal>
 
           <ScrollReveal delay="delay-200">
-            <div className="bg-gray-100 dark:bg-white/5 p-8 md:p-14 rounded-[48px] border border-gray-200 dark:border-white/10 text-left relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-10 opacity-5 dark:opacity-10 text-neon-purple"><Sparkles size={120} /></div>
+            <div className="bg-gray-100 dark:bg-white/5 p-5 md:p-14 rounded-[48px] border border-gray-200 dark:border-white/10 text-left relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-6 md:p-10 opacity-5 dark:opacity-10 text-neon-purple"><Sparkles size={120} /></div>
               <h3 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8">A Commitment from Leadership</h3>
               <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-xl leading-relaxed font-light max-w-3xl">
                 <p>"Digital transformation can often feel like a daunting hurdle for many business owners. Our mission at BrandiQue is to strip away that complexity and replace it with clarity. We personally oversee the technical architecture and operational execution of every project we take on, ensuring that it meets our uncompromising standards for speed, accessibility, and client success."</p>
@@ -180,15 +180,15 @@ const About: React.FC = () => {
               </div>
 
               {/* Leadership Profiles */}
-              <div className="pt-12 border-t border-gray-200 dark:border-white/10 mt-12">
+              <div className="pt-12 border-t border-gray-200 dark:border-white/10 mt-8 md:mt-12">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="w-2.5 h-2.5 rounded-full bg-neon-purple animate-ping"></div>
                   <h4 className="text-sm uppercase font-bold text-neon-purple tracking-widest">Executive Leadership</h4>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 max-w-5xl">
                   {/* Mohan - Founder */}
-                  <div className="relative group p-6 md:p-8 rounded-3xl bg-white dark:bg-[#0A0C11]/80 border border-gray-200 dark:border-white/10 hover:border-neon-purple/60 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                  <div className="relative group p-4 md:p-8 rounded-3xl bg-white dark:bg-[#0A0C11]/80 border border-gray-200 dark:border-white/10 hover:border-neon-purple/60 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-3 md:gap-6">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-neon-purple/10 rounded-full blur-2xl pointer-events-none group-hover:bg-neon-purple/20 transition-all"></div>
                     
                     <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-neon-purple/50 shadow-neon/30 shrink-0 relative group-hover:scale-105 transition-transform duration-300">
@@ -207,7 +207,7 @@ const About: React.FC = () => {
                   </div>
 
                   {/* Praveen - CEO */}
-                  <div className="relative group p-6 md:p-8 rounded-3xl bg-white dark:bg-[#0A0C11]/80 border border-gray-200 dark:border-white/10 hover:border-blue-500/60 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                  <div className="relative group p-4 md:p-8 rounded-3xl bg-white dark:bg-[#0A0C11]/80 border border-gray-200 dark:border-white/10 hover:border-blue-500/60 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-3 md:gap-6">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/20 transition-all"></div>
                     
                     <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-blue-500/50 shadow-blue-500/30 shrink-0 relative group-hover:scale-105 transition-transform duration-300">
@@ -233,14 +233,14 @@ const About: React.FC = () => {
 
       {/* 3. CORE PILLARS */}
       <ViewOptimizer>
-      <div className="grid md:grid-cols-3 gap-8 mb-32 px-4 desk:px-8 max-w-[1500px] mx-auto">
+      <div className="grid md:grid-cols-3 gap-5 md:gap-8 mb-32 px-4 desk:px-8 max-w-[1500px] mx-auto">
          {[
             { title: "What I Believe In", icon: Shield, theme: "purple", list: ["Custom solutions, zero templates", "Performance & UX above all", "Clean, scalable architecture", "Global standard compliance"] },
             { title: "Our Commitment", icon: LayoutTemplate, theme: "blue", list: ["Conversion-focused web development", "Practical AI agents and workflow automation", "Professional graphic design and creative assets", "Supporting brand identity and content services"] },
             { title: "Our Mission", icon: Rocket, theme: "green", desc: "To help ambitious businesses use practical digital tools, clear design and thoughtful automation to serve customers better and build steadily." }
          ].map((pillar, i) => (
             <ScrollReveal key={i} delay={`delay-${(i+1)*100}`} className="h-full">
-               <TiltCard className="h-full bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 rounded-[40px] p-10 shadow-2xl overflow-hidden flex flex-col">
+               <TiltCard className="h-full bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 rounded-[40px] p-6 md:p-10 shadow-2xl overflow-hidden flex flex-col">
                   <div className={`w-16 h-16 rounded-2xl bg-neon-${pillar.theme}/10 flex items-center justify-center text-neon-${pillar.theme} mb-8 border border-neon-${pillar.theme}/20 shadow-lg`}>
                      <pillar.icon size={32} />
                   </div>

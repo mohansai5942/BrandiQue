@@ -38,13 +38,13 @@ const HeroGrowth: React.FC = () => {
   const waHref = whatsappLink(settings.whatsapp, 'Hi BrandiQue, I would like a free growth audit for my business.');
 
   return (
-    <section className="relative w-full overflow-hidden bg-gray-50 pb-16 pt-28 dark:bg-[#05070A] md:pb-24 md:pt-36 desk:pt-40">
+    <section className="relative w-full overflow-hidden bg-gray-50 pb-10 pt-[6.75rem] dark:bg-[#05070A] md:pb-24 md:pt-36 desk:pt-40">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000_60%,transparent_100%)]" />
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[1000px] -translate-x-1/2 rounded-full bg-yellow-400/10 blur-[140px]" />
       <div className="pointer-events-none absolute right-0 top-40 h-[380px] w-[380px] rounded-full bg-violet-500/10 blur-[120px]" />
       <div className="pointer-events-none absolute left-0 top-80 h-[320px] w-[320px] rounded-full bg-cyan-400/10 blur-[120px]" />
 
-      <div className="relative z-10 mx-auto grid max-w-[100rem] items-center gap-12 px-5 md:px-8 desk:px-12 2xl:px-16 desk:grid-cols-[1.05fr_0.95fr] desk:gap-14">
+      <div className="relative z-10 mx-auto grid max-w-[100rem] items-center gap-3 md:gap-12 px-5 md:px-8 desk:px-12 2xl:px-16 desk:grid-cols-[1.05fr_0.95fr] desk:gap-14">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300 md:text-[11px]">
             <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" /><span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" /></span>
@@ -61,11 +61,11 @@ const HeroGrowth: React.FC = () => {
             BrandiQue is one team for <strong className="font-semibold text-gray-900 dark:text-white">websites</strong>, <strong className="font-semibold text-gray-900 dark:text-white">AI agents</strong> and <strong className="font-semibold text-gray-900 dark:text-white">graphic design</strong>. We build the site that wins the enquiry, the AI that replies and follows up, and the design that makes customers trust you, so you grow without hiring three agencies.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="group inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-7 py-4 text-base font-bold text-black shadow-[0_12px_40px_rgba(234,179,8,0.35)] transition-all hover:-translate-y-0.5 hover:bg-yellow-300">
+          <div className="mt-6 md:mt-8 flex flex-row flex-wrap items-center gap-2.5 md:gap-3">
+            <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="group inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-black shadow-[0_12px_40px_rgba(234,179,8,0.35)] transition-all hover:-translate-y-0.5 hover:bg-yellow-300">
               Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <Link to="/services" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-7 py-4 text-base font-bold text-gray-900 transition-colors hover:border-yellow-400 dark:border-white/15 dark:bg-white/5 dark:text-white">
+            <Link to="/services" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-gray-900 transition-colors hover:border-yellow-400 dark:border-white/15 dark:bg-white/5 dark:text-white">
               Explore services
             </Link>
           </div>

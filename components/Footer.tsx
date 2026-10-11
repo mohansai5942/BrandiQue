@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
       <div className="max-w-[100rem] mx-auto px-6 relative z-10">
         
         {/* Grid Layout: 2 cols Brand + 3 cols Links */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-10 mb-8 md:mb-10 lg:mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-8 lg:gap-10 mb-8 md:mb-10 lg:mb-16">
           
           {/* Brand Column (Spans 2 columns on lg screens) */}
           <ScrollReveal className="col-span-2 lg:col-span-2 space-y-4 md:space-y-4 lg:space-y-6 pr-4 md:pr-4 lg:pr-8" delay="delay-100">
@@ -55,8 +55,7 @@ const Footer: React.FC = () => {
 
             <div className="flex gap-3 md:gap-3 lg:gap-4 pt-2">
               {SOCIAL_LINKS.map((item, i) => (
-                <a key={i} href={item.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-8 md:h-8 lg:w-10 lg:h-10 rounded-full bg-gray-100 dark:bg-[#151A25] border border-gray-200 dark:border-white/5 flex items-center justify-center text-gray-500 dark:text-gray-400 
-                                            transition-all duration-300 hover:border-neon-purple hover:text-white hover:bg-neon-purple hover:scale-[1.15] hover:rotate-12 hover:shadow-[0_0_20px_rgba(234,179,8,0.5)]">
+                <a key={i} href={item.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-8 md:h-8 lg:w-10 lg:h-10 rounded-full bg-gray-100 dark:bg-[#151A25] border border-gray-200 dark:border-white/5 flex items-center justify-center text-gray-500 dark:text-gray-400 transition-all duration-300 hover:border-neon-purple hover:text-white hover:bg-neon-purple hover:scale-[1.15] hover:rotate-12 hover:shadow-[0_0_20px_rgba(234,179,8,0.5)]">
                   <item.icon size={14} className="md:w-[14px] md:h-[14px] lg:w-[18px] lg:h-[18px]" />
                 </a>
               ))}
@@ -134,7 +133,7 @@ const Footer: React.FC = () => {
           <p className="text-gray-500 dark:text-gray-500 text-[10px] md:text-xs lg:text-sm text-center md:text-left">
             &copy; {currentYear} BrandiQue Web Solutions. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 md:gap-6">
              <span className="text-gray-500 dark:text-gray-500 text-[10px] md:text-xs lg:text-sm">Created by <Link to="/about" className="text-black dark:text-white font-bold hover:text-neon-purple transition-colors cursor-pointer">Mohan</Link></span>
           </div>
         </ScrollReveal>

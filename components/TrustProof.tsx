@@ -21,7 +21,7 @@ const TrustProof: React.FC = () => {
   return (
     <section aria-label="Why businesses trust BrandiQue" className="relative border-y border-gray-200 bg-white py-12 md:py-14 dark:border-white/5 dark:bg-[#080A0F]">
       <div className="mx-auto max-w-[100rem] px-5 md:px-8 desk:px-12 2xl:px-16">
-        <dl className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-0 md:divide-x md:divide-gray-200 md:dark:divide-white/10">
+        <dl className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-0 md:divide-x md:divide-gray-200 md:dark:divide-white/10">
           {stats.map(stat => (
             <div key={stat.label} className="md:px-8 first:md:pl-0">
               <dt className="sr-only">{stat.label}</dt>

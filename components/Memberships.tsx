@@ -12,12 +12,12 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true, initialTr
   const plans = MEMBERSHIPS.filter(m => m.track === track);
 
   return (
-    <section id="growth-plans" className="scroll-mt-24 relative overflow-hidden bg-[#06080C] px-4 py-20 text-white md:px-6 md:py-28">
+    <section id="growth-plans" className="scroll-mt-24 relative overflow-hidden bg-[#06080C] px-4 py-12 text-white md:px-6 md:py-28">
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-yellow-400/10 blur-[120px]" />
       <div className="relative mx-auto max-w-[100rem]">
         {showHeading && (
           <ScrollReveal>
-            <div className="mx-auto mb-10 max-w-3xl text-center md:mb-12">
+            <div className="mx-auto mb-7 max-w-3xl text-center md:mb-12">
               <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/25 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-300"><Repeat size={14} /> Monthly memberships</span>
               <h2 className="mt-6 text-3xl font-bold tracking-tight md:text-5xl">Launch once. <span className="text-yellow-400">Keep growing every month.</span></h2>
               <p className="mt-5 text-base leading-relaxed text-white/65 md:text-lg">Pick a membership for one service, or bundle all three and save. One accountable team keeps your website, AI and design improving every month.</p>
@@ -26,7 +26,7 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true, initialTr
         )}
 
         {!lockTrack && (
-          <div role="tablist" aria-label="Membership type" className="mx-auto mb-10 grid max-w-2xl grid-cols-4 gap-1 rounded-2xl border border-white/10 bg-white/5 p-1.5">
+          <div role="tablist" aria-label="Membership type" className="mx-auto mb-7 md:mb-10 grid max-w-2xl grid-cols-4 gap-1 rounded-2xl border border-white/10 bg-white/5 p-1.5">
             {MEMBERSHIP_TRACKS.map(t => (
               <button key={t.id} role="tab" type="button" aria-selected={track === t.id} onClick={() => setTrack(t.id)} className={`rounded-xl px-2 py-2.5 text-xs font-bold transition-all md:text-sm ${track === t.id ? 'bg-yellow-400 text-black shadow-lg' : 'text-white/70 hover:text-white'}`}>
                 <span className="md:hidden">{t.short}</span><span className="hidden md:inline">{t.id === 'bundle' ? 'Bundles' : t.label}</span>
@@ -35,9 +35,9 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true, initialTr
           </div>
         )}
 
-        <div className="mx-auto grid max-w-4xl items-stretch gap-5 md:grid-cols-2">
+        <div className="mx-auto max-w-4xl items-stretch flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:gap-5 md:grid-cols-2">
           {plans.map(plan => (
-            <article key={plan.name} className={`relative flex h-full flex-col rounded-[28px] border p-6 transition-all duration-300 hover:-translate-y-1 md:p-8 ${plan.featured ? 'border-yellow-400/70 bg-gradient-to-b from-[#1A1A0F] to-[#0D1017] shadow-[0_18px_70px_rgba(234,179,8,0.14)]' : 'border-white/10 bg-[#0D1017]'}`}>
+            <article key={plan.name} className={`w-[84%] shrink-0 snap-start md:w-auto relative flex h-full flex-col rounded-[28px] border p-4 transition-all duration-300 hover:-translate-y-1 md:p-8 ${plan.featured ? 'border-yellow-400/70 bg-gradient-to-b from-[#1A1A0F] to-[#0D1017] shadow-[0_18px_70px_rgba(234,179,8,0.14)]' : 'border-white/10 bg-[#0D1017]'}`}>
               {plan.featured && <span className="absolute right-5 top-5 inline-flex items-center gap-1 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black uppercase tracking-wider text-black"><Sparkles size={10} /> Most popular</span>}
               <h3 className="text-2xl font-bold">{plan.name}</h3>
               <p className="mt-3 pr-6 text-sm leading-relaxed text-white/60">{plan.bestFor}</p>

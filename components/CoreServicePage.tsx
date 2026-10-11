@@ -54,30 +54,30 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* Outcomes */}
       <section aria-label="What you can expect" className="border-y border-gray-200 bg-white py-10 dark:border-white/5 dark:bg-[#080A0F]">
-        <dl className="mx-auto grid max-w-[100rem] grid-cols-1 gap-6 px-5 sm:grid-cols-3 md:px-6">
+        <dl className="mx-auto grid max-w-[100rem] grid-cols-3 gap-3 md:gap-6 px-5 md:px-8 desk:px-12">
           {c.outcomes.map(o => (
-            <div key={o.label} className="text-center sm:text-left">
+            <div key={o.label} className="text-center md:text-left">
               <dt className="sr-only">{o.label}</dt>
-              <dd className="text-3xl font-black tracking-tight md:text-4xl">{o.stat}</dd>
-              <dd className="mt-1 text-sm text-gray-500 dark:text-gray-400">{o.label}</dd>
+              <dd className="text-lg font-black tracking-tight sm:text-2xl md:text-4xl">{o.stat}</dd>
+              <dd className="mt-1 text-[11px] leading-snug md:text-sm text-gray-500 dark:text-gray-400">{o.label}</dd>
             </div>
           ))}
         </dl>
       </section>
 
       {/* What we build */}
-      <section className="px-5 py-20 md:px-6 md:py-28">
+      <section className="px-5 py-12 md:px-8 desk:px-12 md:py-28">
         <div className="mx-auto max-w-[100rem]">
           <ScrollReveal><SectionHeading eyebrow="What we deliver" title={c.buildsTitle} /></ScrollReveal>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 desk:grid-cols-3">
+          <div className="mt-8 md:mt-12 grid grid-cols-2 gap-3 md:gap-4 desk:grid-cols-3">
             {c.builds.map((b, i) => {
               const Icon = ICONS[b.icon] || Sparkles;
               return (
                 <ScrollReveal key={b.title} delay={`delay-${(i % 3) * 100}`}>
-                  <div className="group h-full rounded-3xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 hover:shadow-xl dark:border-white/10 dark:bg-[#0D1017]">
-                    <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${tone}`}><Icon size={22} /></span>
-                    <h3 className="mt-5 text-lg font-bold">{b.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{b.text}</p>
+                  <div className="group h-full rounded-2xl md:rounded-3xl border border-gray-200 bg-white p-3.5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 hover:shadow-xl dark:border-white/10 dark:bg-[#0D1017]">
+                    <span className={`flex h-9 w-9 md:h-12 md:w-12 items-center justify-center rounded-xl md:rounded-2xl ${tone}`}><Icon size={18} /></span>
+                    <h3 className="mt-3 md:mt-5 text-sm md:text-lg font-bold leading-snug">{b.title}</h3>
+                    <p className="mt-1.5 md:mt-2 text-xs md:text-sm leading-relaxed text-gray-600 dark:text-gray-400">{b.text}</p>
                   </div>
                 </ScrollReveal>
               );
@@ -85,10 +85,10 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
           </div>
 
           {c.options && (
-            <div className="mt-14 grid gap-5 md:grid-cols-2">
+            <div className="mt-8 md:mt-14 grid gap-3 md:gap-5 md:grid-cols-2">
               {c.options.map(o => (
                 <ScrollReveal key={o.title}>
-                  <div className="flex h-full flex-col rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-7 dark:border-white/10 dark:from-[#0D1017] dark:to-[#0A0C11]">
+                  <div className="flex h-full flex-col rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-5 md:p-7 dark:border-white/10 dark:from-[#0D1017] dark:to-[#0A0C11]">
                     <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400">Best for: {o.bestFor}</p>
                     <h3 className="mt-3 text-xl font-bold">{o.title}</h3>
                     <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{o.text}</p>
@@ -102,7 +102,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       </section>
 
       {/* One-time packages */}
-      <section id="pricing" className="scroll-mt-24 border-t border-gray-200 bg-white pt-20 dark:border-white/5 dark:bg-[#080A0F] md:pt-28">
+      <section id="pricing" className="scroll-mt-24 border-t border-gray-200 bg-white pt-12 dark:border-white/5 dark:bg-[#080A0F] md:pt-28">
         <div className="px-5 md:px-8 desk:px-12 2xl:px-16"><ScrollReveal><SectionHeading eyebrow="One-time packages" title={<>Clear starting prices. <span className="text-yellow-500">Fixed written quote.</span></>} text="Pick a starting point. After a short call you get the exact scope, timeline and price in writing, and nothing starts until you approve." /></ScrollReveal></div>
         <GrowthOffers showHeading={false} pillars={[id]} bare />
       </section>
@@ -111,13 +111,13 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       <Memberships initialTrack={id} />
 
       {/* Use cases */}
-      <section className="px-5 py-20 md:px-6 md:py-28">
+      <section className="px-5 py-12 md:px-8 desk:px-12 md:py-28">
         <div className="mx-auto max-w-[100rem]">
           <ScrollReveal><SectionHeading eyebrow="Who it's for" title="Built for businesses like yours" /></ScrollReveal>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2">
+          <div className="mt-8 md:mt-12 grid grid-cols-2 gap-3 md:gap-4">
             {c.useCases.map((u, i) => (
               <ScrollReveal key={u.who} delay={`delay-${(i % 2) * 100}`}>
-                <div className="flex h-full gap-4 rounded-3xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-[#0D1017]">
+                <div className="flex h-full gap-4 rounded-3xl border border-gray-200 bg-white p-4 md:p-6 dark:border-white/10 dark:bg-[#0D1017]">
                   <span className="text-3xl font-black text-yellow-500/80">0{i + 1}</span>
                   <div><h3 className="font-bold">{u.who}</h3><p className="mt-1.5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{u.what}</p></div>
                 </div>
@@ -128,19 +128,19 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       </section>
 
       {/* Process + tools */}
-      <section className="border-y border-gray-200 bg-white px-5 py-20 dark:border-white/5 dark:bg-[#080A0F] md:px-6 md:py-28">
+      <section className="border-y border-gray-200 bg-white px-5 py-12 dark:border-white/5 dark:bg-[#080A0F] md:px-6 md:py-28">
         <div className="mx-auto max-w-[100rem]">
           <ScrollReveal><SectionHeading eyebrow="How we work" title={<>From first call to launch, <span className="text-yellow-500">no surprises.</span></>} /></ScrollReveal>
-          <ol className="mt-12 grid gap-4 md:grid-cols-4">
+          <ol className="mt-8 md:mt-12 grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-4">
             {c.process.map((p, i) => (
-              <li key={p.title} className="relative rounded-3xl border border-gray-200 bg-gray-50 p-6 dark:border-white/10 dark:bg-[#0D1017]">
+              <li key={p.title} className="relative rounded-3xl border border-gray-200 bg-gray-50 p-4 md:p-6 dark:border-white/10 dark:bg-[#0D1017]">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-400 text-sm font-black text-black">{i + 1}</span>
                 <h3 className="mt-4 font-bold">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{p.text}</p>
               </li>
             ))}
           </ol>
-          <div className="mt-12 text-center">
+          <div className="mt-8 md:mt-12 text-center">
             <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400">Tools we use</p>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
               {c.tools.map(t => <span key={t} className="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-xs font-semibold text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-gray-300">{t}</span>)}
@@ -152,7 +152,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       <FounderPromise />
 
       {/* FAQ */}
-      <section className="px-5 py-20 md:px-6 md:py-28">
+      <section className="px-5 py-12 md:px-8 desk:px-12 md:py-28">
         <div className="mx-auto max-w-3xl">
           <ScrollReveal><SectionHeading eyebrow="FAQ" title="Questions, answered" /></ScrollReveal>
           <div className="mt-10 space-y-3">
@@ -167,10 +167,10 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       </section>
 
       {/* CTA */}
-      <section className="px-5 pb-20 md:px-6 md:pb-28">
-        <div className="relative mx-auto max-w-[100rem] overflow-hidden rounded-[32px] bg-[#0B0D12] p-8 text-white md:p-14">
+      <section className="px-5 pb-12 md:px-6 md:pb-28">
+        <div className="relative mx-auto max-w-[100rem] overflow-hidden rounded-[32px] bg-[#0B0D12] p-5 text-white md:p-14">
           <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-yellow-400/20 blur-3xl" />
-          <div className="relative grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+          <div className="relative grid gap-3 md:gap-8 md:grid-cols-[1fr_auto] md:items-center">
             <div>
               <h2 className="text-3xl font-bold tracking-tight md:text-5xl">{c.ctaTitle}</h2>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">{c.ctaText}</p>

@@ -112,7 +112,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-28 md:pt-36 desk:pt-40 pb-20 px-5 md:px-8 desk:px-12 2xl:px-16 max-w-[100rem] mx-auto w-full relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen pt-[6.75rem] md:pt-36 desk:pt-40 pb-12 md:pb-20 px-5 md:px-8 desk:px-12 2xl:px-16 max-w-[100rem] mx-auto w-full relative overflow-hidden transition-colors duration-300">
       
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none -z-10 bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
@@ -121,7 +121,7 @@ const Contact: React.FC = () => {
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
       </div>
 
-      <div className="grid desk:grid-cols-12 gap-12 desk:gap-20 items-start">
+      <div className="grid desk:grid-cols-12 gap-6 md:gap-12 desk:gap-20 items-start">
         
         {/* Left Column: Contact Info */}
         <div id="contact-info" className="desk:col-span-5 relative z-10 flex flex-col justify-center h-full">
@@ -135,12 +135,12 @@ const Contact: React.FC = () => {
                  Let&rsquo;s grow your <span className="bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent">business together.</span>
                </h1>
                
-               <p className="text-gray-600 dark:text-gray-400 mb-10 text-base md:text-lg leading-relaxed max-w-md font-light">
+               <p className="text-gray-600 dark:text-gray-400 mb-7 md:mb-10 text-base md:text-lg leading-relaxed max-w-md font-light">
                  Need a website, an AI agent or design work? Share a few details and we’ll reply with a clear recommendation and a fixed written quote. No obligation.
                </p>
            </ScrollReveal>
 
-           <ScrollReveal delay="delay-100" className="space-y-4 mb-10">
+           <ScrollReveal delay="delay-100" className="space-y-4 mb-7 md:mb-10">
               {/* Contact Cards */}
               <div className="group relative bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 hover:border-neon-purple/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:-translate-y-1">
                  <div className="flex items-center justify-between">
@@ -195,7 +195,7 @@ const Contact: React.FC = () => {
            </ScrollReveal>
 
            <ScrollReveal delay="delay-200">
-               <div className="flex items-center gap-6 pt-6 border-t border-gray-200 dark:border-white/5">
+               <div className="flex items-center gap-3 md:gap-6 pt-6 border-t border-gray-200 dark:border-white/5">
                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 group">
                        <Globe size={16} className="text-blue-500 dark:text-blue-400 group-hover:rotate-180 transition-transform duration-700" />
                        <span>Global Reach</span>
@@ -212,13 +212,13 @@ const Contact: React.FC = () => {
         {/* Right Column: FORM UI */}
         <div className="desk:col-span-7 relative">
            <ScrollReveal delay="delay-200" className="h-full">
-               <div className="relative bg-white dark:bg-[#0A0C11] border border-gray-200 dark:border-white/10 rounded-3xl p-6 md:p-8 desk:p-10 shadow-2xl overflow-hidden group hover:border-gray-300 dark:hover:border-white/20 transition-colors">
+               <div className="relative bg-white dark:bg-[#0A0C11] border border-gray-200 dark:border-white/10 rounded-3xl p-4 md:p-8 desk:p-10 shadow-2xl overflow-hidden group hover:border-gray-300 dark:hover:border-white/20 transition-colors">
                     {/* Ambient Glows */}
                     <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-neon-purple/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-neon-purple/10 transition-colors"></div>
                     <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-blue-500/5 rounded-full blur-[60px] pointer-events-none group-hover:bg-blue-500/10 transition-colors"></div>
 
                     {formStatus === 'success' ? (
-                        <div className="flex flex-col items-center justify-center text-center py-20 min-h-[500px]">
+                        <div className="flex flex-col items-center justify-center text-center py-12 md:py-20 min-h-[500px]">
                             <div className="relative mb-8">
                                 <div className="absolute inset-0 bg-green-500 blur-3xl opacity-20 animate-pulse"></div>
                                 <div className="relative w-24 h-24 bg-white dark:bg-[#0A0C11] border border-green-500/30 rounded-full flex items-center justify-center text-green-500 shadow-2xl">
@@ -226,12 +226,12 @@ const Contact: React.FC = () => {
                                 </div>
                             </div>
                             <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Request Sent Successfully!</h3>
-                            <p className="text-gray-600 dark:text-gray-400 max-w-sm mx-auto mb-10 text-sm leading-relaxed">
+                            <p className="text-gray-600 dark:text-gray-400 max-w-sm mx-auto mb-7 md:mb-10 text-sm leading-relaxed">
                                 Your request has been recorded. We’ll review the details and follow up using the contact information you provided.
                             </p>
                             <button 
                                 onClick={() => setFormStatus('idle')}
-                                className="px-8 py-3 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm transition-all hover:scale-105 flex items-center gap-2"
+                                className="px-5 md:px-8 py-3 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm transition-all hover:scale-105 flex items-center gap-2"
                             >
                                 Send Another Request <ArrowRight size={16} />
                             </button>
@@ -262,7 +262,7 @@ const Contact: React.FC = () => {
                             </div>
 
                             {/* 2. Personal Info */}
-                            <div className="grid md:grid-cols-2 gap-6">
+                            <div className="grid md:grid-cols-2 gap-3 md:gap-6">
                                 <div className="space-y-2 group">
                                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1 group-focus-within:text-black dark:group-focus-within:text-white transition-colors">Your Name</label>
                                     <input 
