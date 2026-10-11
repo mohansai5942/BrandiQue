@@ -99,7 +99,7 @@ interface DarlingAIChatbotProps {
 
 // Every size inside the widget is in em, and the widget's font size follows the site's
 // root scale on desktop, so browser zoom does not enlarge it (same behaviour as the site).
-const SCALE = 'text-[11.5px] lg:text-[12px] desk:text-[0.84rem]';
+const SCALE = 'text-[11.5px] lg:text-[12px] desk:text-[0.8rem]';
 
 export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinished = true }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -241,7 +241,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             role="dialog"
             aria-modal="false"
             aria-label="Darling, BrandiQue AI assistant"
-            className={`${SCALE} fixed z-[99999] right-[1.05em] bottom-[5.6em] desk:right-[1.8em] desk:bottom-[6.6em] w-[min(84vw,27em)] desk:w-[27em] h-[min(37em,calc(100dvh-7.5em))] desk:h-[min(40em,calc(100vh-9em))] flex flex-col overflow-hidden rounded-[1.5em] border border-white/10 bg-[#0B0B0D]/95 text-gray-300 shadow-[0_2em_5em_-1.4em_rgba(0,0,0,0.9),0_0_0_1px_rgba(250,204,21,0.08)] backdrop-blur-2xl font-sans`}
+            className={`${SCALE} fixed z-[99999] right-[1.05em] bottom-[5.6em] desk:right-[1.8rem] desk:bottom-[5.6rem] w-[min(84vw,27em)] desk:w-[26.8rem] h-[min(37em,calc(100dvh-7.5em))] desk:h-[min(40.4rem,calc(100vh-9rem))] flex flex-col overflow-hidden rounded-[1.5em] border border-white/10 bg-[#0B0B0D]/95 text-gray-300 shadow-[0_2em_5em_-1.4em_rgba(0,0,0,0.9),0_0_0_1px_rgba(250,204,21,0.08)] backdrop-blur-2xl font-sans`}
           >
             <div className="pointer-events-none absolute -top-[7em] -right-[5em] h-[16em] w-[16em] rounded-full bg-yellow-400/15 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-[8em] -left-[6em] h-[16em] w-[16em] rounded-full bg-amber-500/10 blur-3xl" />
@@ -423,7 +423,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
       </AnimatePresence>
 
       {/* Launcher */}
-      <div className={`${SCALE} fixed z-[99998] bottom-[1.1em] right-[1.05em] desk:bottom-[1.6em] desk:right-[1.8em]`}>
+      <div className={`${SCALE} fixed z-[99998] bottom-[1.1em] right-[1.05em] desk:bottom-[1.6rem] desk:right-[1.8rem]`}>
         <motion.button
           type="button"
           onClick={() => setIsOpen((o) => !o)}
