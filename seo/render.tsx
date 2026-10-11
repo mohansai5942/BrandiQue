@@ -1,7 +1,6 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
-import { AuthProvider } from '../context/AuthContext';
 import { InquiryProvider } from '../context/InquiryContext';
 import { SiteSettingsProvider } from '../context/SiteSettingsContext';
 import Navbar from '../components/Navbar';
@@ -23,5 +22,5 @@ import NotFound from '../pages/NotFound';
 const components: Record<string, React.ComponentType> = {'/': Home,'/about': About,'/contact': Contact,'/web-development': WebDevelopment,'/projects': Projects,'/services': Services,'/pricing': Pricing,'/solutions': Solutions,'/services/graphic-design': GraphicDesign,'/services/ai-automation': AIAutomation,'/privacy-policy': PrivacyPolicy,'/terms-and-conditions': TermsAndConditions,'/cookie-policy': CookiePolicy,'/404': NotFound};
 export function render(path: string) {
  const Page=components[path] || NotFound;
- return renderToString(<StaticRouter location={path}><AuthProvider><SiteSettingsProvider><InquiryProvider><div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white"><Navbar /><main id="main-content" className="flex-grow"><Page /></main><Footer /></div></InquiryProvider></SiteSettingsProvider></AuthProvider></StaticRouter>);
+ return renderToString(<StaticRouter location={path}><SiteSettingsProvider><InquiryProvider><div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white"><Navbar /><main id="main-content" className="flex-grow"><Page /></main><Footer /></div></InquiryProvider></SiteSettingsProvider></StaticRouter>);
 }

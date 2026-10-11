@@ -3,58 +3,11 @@ import { motion } from 'motion/react';
 import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw, Bot, Layers, Eye, Copy, Check, X, Phone, Mail, Send, CheckCircle2, FileText, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageHero, { btnPrimary, btnSecondary } from '../components/ui/PageHero';
-import { collection, getDocs, addDoc, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
-import { db, auth } from '../firebase';
+import { cleanText, isValidEmail, isValidPhone, LIMITS } from '../utils/security';
 import { Project, N8nProject } from '../types';
 import { INITIAL_PROJECTS } from './ProjectsData';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
-
-enum OperationType {
-  CREATE = 'create',
-  UPDATE = 'update',
-  DELETE = 'delete',
-  LIST = 'list',
-  GET = 'get',
-  WRITE = 'write',
-}
-
-interface FirestoreErrorInfo {
-  error: string;
-  operationType: OperationType;
-  path: string | null;
-  authInfo: {
-    userId?: string | null;
-    email?: string | null;
-    emailVerified?: boolean | null;
-    isAnonymous?: boolean | null;
-    tenantId?: string | null;
-    providerInfo?: {
-      providerId?: string | null;
-      email?: string | null;
-    }[];
-  }
-}
-
-function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid || null,
-      email: auth.currentUser?.email || null,
-      emailVerified: auth.currentUser?.emailVerified || null,
-      isAnonymous: auth.currentUser?.isAnonymous || null,
-      tenantId: auth.currentUser?.tenantId || null,
-      providerInfo: auth.currentUser?.providerData?.map(provider => ({
-        providerId: provider.providerId,
-        email: provider.email,
-      })) || []
-    },
-    operationType,
-    path
-  };
-  console.warn('Firestore Error (Gracefully handled with mock fallback): ', JSON.stringify(errInfo));
-}
 
 interface ProjectMediaProps {
   image: string;
@@ -95,8 +48,8 @@ function ProjectMedia({ image, video, images = [], videos = [], title, fitMode =
   useEffect(() => {
     if (showVideo && videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch((err) => {
-        console.log("Auto-play prevented (expected in certain browser policies):", err);
+      videoRef.current.play().catch(() => {
+        /* autoplay can be blocked by the browser; the image stays visible */
       });
     }
   }, [showVideo]);
@@ -194,35 +147,6 @@ const cardVariants = {
 };
 
 export default function Projects() {
-  const getCachedProjects = (): Project[] => {
-    const cached = typeof localStorage !== 'undefined' ? localStorage.getItem('brandique_projects') : null;
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const map = new Map<string, Project>();
-          parsed.forEach((p: Project) => {
-            if (p && p.title) {
-              const key = p.title.trim().toLowerCase();
-              if (!map.has(key)) map.set(key, p);
-            }
-          });
-          return Array.from(map.values());
-        }
-      } catch (e) {
-        // Fallback
-      }
-    }
-    const initMap = new Map<string, Project>();
-    INITIAL_PROJECTS.forEach((p) => {
-      if (p && p.title) {
-        const key = p.title.trim().toLowerCase();
-        if (!initMap.has(key)) initMap.set(key, p);
-      }
-    });
-    return Array.from(initMap.values());
-  };
-
   const { projects, n8nProjects, loadingProjects: loading, addN8nFormSubmission } = useSiteSettings();
 
   const [selectedN8nProject, setSelectedN8nProject] = useState<N8nProject | null>(null);
@@ -239,45 +163,64 @@ export default function Projects() {
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
+  const [clientWebsite, setClientWebsite] = useState(''); // honeypot: real visitors never see or fill this
+
   const handleClientFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (formSubmitting) return;
     setFormError(null);
 
-    if (!clientEmail.trim() || !clientEmail.includes('@')) {
+    const name = cleanText(clientName, LIMITS.name);
+    const email = cleanText(clientEmail, LIMITS.email);
+    const phone = cleanText(clientPhone, LIMITS.phone);
+    const message = cleanText(clientMessage, LIMITS.message, { multiline: true });
+
+    if (!isValidEmail(email)) {
       setFormError('Please enter a valid email address.');
       return;
     }
-    if (!clientPhone.trim() || clientPhone.replace(/[^\d]/g, '').length < 7) {
-      setFormError('Please enter a valid phone number.');
+    if (!isValidPhone(phone)) {
+      setFormError('Please enter a valid phone number (7 to 15 digits).');
       return;
     }
 
     if (!selectedN8nProject) return;
+
+    const resetForm = () => {
+      setFormSuccess(false);
+      setIsClientFormOpen(false);
+      setClientName('');
+      setClientEmail('');
+      setClientPhone('');
+      setClientMessage('');
+      setClientWebsite('');
+    };
+
+    // Bots fill the hidden field: pretend success without storing anything.
+    if (clientWebsite) {
+      setFormSuccess(true);
+      setTimeout(resetForm, 2500);
+      return;
+    }
 
     setFormSubmitting(true);
     try {
       await addN8nFormSubmission({
         projectId: selectedN8nProject.id,
         projectTitle: selectedN8nProject.title,
-        name: clientName.trim() || 'Interested Client',
-        email: clientEmail.trim(),
-        phone: clientPhone.trim(),
-        message: clientMessage.trim()
+        name: name || 'Interested Client',
+        email,
+        phone,
+        message
       });
 
       setFormSubmitting(false);
       setFormSuccess(true);
-      setTimeout(() => {
-        setFormSuccess(false);
-        setIsClientFormOpen(false);
-        setClientName('');
-        setClientEmail('');
-        setClientPhone('');
-        setClientMessage('');
-      }, 2500);
+      setTimeout(resetForm, 2500);
     } catch (err) {
+      console.error('Workflow request could not be saved:', err);
       setFormSubmitting(false);
-      setFormError('Failed to submit inquiry. Please try again.');
+      setFormError('Sorry, your request could not be sent. Please check your connection and try again, or message us on WhatsApp.');
     }
   };
 
@@ -291,7 +234,7 @@ export default function Projects() {
   const renderProjectCard = (project: any, i: number, type: string) => (
     <motion.a
       key={`${type}-${project.id || i}-${i}`}
-      href={project.link}
+      href={project.link || undefined}
       target="_blank"
       rel="noopener noreferrer"
       variants={cardVariants}
@@ -726,7 +669,7 @@ export default function Projects() {
                    {(activeCategory === 'all' ? clientProjects.slice(0, 5) : clientProjects).map((project, i) => (
                      <motion.a
                        key={`client-${project.id || i}`}
-                       href={project.link}
+                       href={project.link || undefined}
                        target="_blank"
                        rel="noopener noreferrer"
                        variants={cardVariants}
@@ -948,7 +891,13 @@ export default function Projects() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleClientFormSubmit} className="space-y-4">
+              <form onSubmit={handleClientFormSubmit} className="space-y-4" noValidate>
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
+                  <label>
+                    Website
+                    <input type="text" name="website" tabIndex={-1} autoComplete="off" value={clientWebsite} onChange={e => setClientWebsite(e.target.value)} />
+                  </label>
+                </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5">
                     Your Full Name
@@ -956,6 +905,8 @@ export default function Projects() {
                   <input
                     type="text"
                     value={clientName}
+                    maxLength={LIMITS.name}
+                    autoComplete="name"
                     onChange={e => setClientName(e.target.value)}
                     placeholder="e.g. Rahul Sharma"
                     className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1c24] border border-gray-200 dark:border-white/10 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
@@ -969,6 +920,8 @@ export default function Projects() {
                   <input
                     type="email"
                     value={clientEmail}
+                    maxLength={LIMITS.email}
+                    autoComplete="email"
                     onChange={e => setClientEmail(e.target.value)}
                     placeholder="e.g. rahul@company.com"
                     className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1c24] border border-orange-500/30 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
@@ -983,6 +936,9 @@ export default function Projects() {
                   <input
                     type="tel"
                     value={clientPhone}
+                    maxLength={LIMITS.phone}
+                    autoComplete="tel"
+                    inputMode="tel"
                     onChange={e => setClientPhone(e.target.value)}
                     placeholder="e.g. +91 98765 43210"
                     className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1c24] border border-emerald-500/30 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
@@ -997,6 +953,7 @@ export default function Projects() {
                   <textarea
                     rows={3}
                     value={clientMessage}
+                    maxLength={LIMITS.message}
                     onChange={e => setClientMessage(e.target.value)}
                     placeholder="Tell us about your workflow automation goals or custom integration needs..."
                     className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1c24] border border-gray-200 dark:border-white/10 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 resize-none"
@@ -1004,7 +961,7 @@ export default function Projects() {
                 </div>
 
                 {formError && (
-                  <p className="text-xs text-red-400 font-semibold bg-red-950/50 p-2.5 rounded-xl border border-red-800/50">
+                  <p role="alert" className="text-xs text-red-400 font-semibold bg-red-950/50 p-2.5 rounded-xl border border-red-800/50">
                     {formError}
                   </p>
                 )}

@@ -92,8 +92,8 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
    useEffect(() => {
       if (showVideo && videoRef.current) {
          videoRef.current.currentTime = 0;
-         videoRef.current.play().catch((err) => {
-            console.log("Auto-play prevented (expected in certain browser policies):", err);
+         videoRef.current.play().catch(() => {
+            /* autoplay can be blocked by the browser; the image stays visible */
          });
       }
    }, [showVideo]);

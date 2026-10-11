@@ -445,7 +445,7 @@ function N8nWorkflowViewerInner({
         onWorkflowJsonChange(updatedJson);
       }
     } catch (err) {
-      console.warn("Failed to sync dragged node position to JSON:", err);
+      /* invalid workflow JSON: keep the visual position only */
     }
   }, [onWorkflowJsonChange, workflowJson]);
 

@@ -1,47 +1,108 @@
 rules_version = '2';
+
+// BrandiQue Firestore security rules.
+//
+// Who talks to this database:
+//   * The public website (brandique.in) uses the browser SDK without signing in. It only
+//     READS published content (settings, websites, projects, n8n_projects) and CREATES
+//     form submissions (messages, n8n_project_forms).
+//   * The BrandiQue Data Console (data.brandique.in) manages everything through its server
+//     API with the Firebase Admin SDK, which is not subject to these rules.
+//
+// Because the Admin SDK bypasses rules, no browser client ever needs write access to
+// content or read access to submissions. "Signed in" is NOT treated as "admin": any visitor
+// can create a Firebase Auth account with the public web API key, so request.auth != null
+// must never grant access to private data.
+//
+// Publish: Firebase console -> Firestore Database -> Rules -> paste this file -> Publish.
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default deny: collections must be explicitly allowed below.
-    match /{document=**} {
-      allow read, write: if false;
+
+    // ---------- helpers ----------
+    function data() {
+      return request.resource.data;
     }
 
-    // Public website content: visitors can read, but only signed-in users can manage it.
-    match /projects/{projectId} {
-      allow read: if true;
-      allow create, update, delete: if request.auth != null;
+    function isString(field, minLen, maxLen) {
+      return data()[field] is string
+        && data()[field].size() >= minLen
+        && data()[field].size() <= maxLen;
     }
 
+    function optionalString(field, maxLen) {
+      return !(field in data()) || (data()[field] is string && data()[field].size() <= maxLen);
+    }
+
+    function validEmail() {
+      return isString('email', 3, 254)
+        && data().email.matches('^[^@\\s<>]+@[^@\\s<>]+\\.[^@\\s<>]+$');
+    }
+
+    function validCreatedAt() {
+      // ISO timestamp written by the browser, e.g. 2026-10-11T17:20:00.000Z
+      return isString('createdAt', 10, 40);
+    }
+
+    // ---------- published website content: public read, no client writes ----------
     match /settings/{settingId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null;
+      allow write: if false;
     }
 
     match /websites/{websiteId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if false;
     }
 
     match /n8n_projects/{projectId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null;
+      allow write: if false;
     }
 
-    // Contact/service forms must remain submittable by public visitors.
-    // Reading and managing submissions requires authentication.
+    // ---------- form submissions: public create only, validated; never readable ----------
+
+    // Contact page form (source "contact") and the service / free growth audit
+    // inquiry modal (source "service").
     match /messages/{messageId} {
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
+      allow create: if data().keys().hasAll(['source', 'name', 'email', 'message', 'createdAt'])
+        && data().keys().hasOnly(['source', 'service', 'name', 'email', 'phone', 'budget', 'message', 'serviceDetails', 'createdAt'])
+        && data().source in ['contact', 'service']
+        && isString('name', 1, 100)
+        && validEmail()
+        && isString('message', 1, 20000)
+        && optionalString('service', 200)
+        && optionalString('phone', 20)
+        && optionalString('budget', 50)
+        && (!('serviceDetails' in data()) || (data().serviceDetails is map && data().serviceDetails.size() <= 25))
+        && validCreatedAt();
+      allow read, update, delete: if false;
     }
 
+    // "Request custom setup" form on n8n workflow projects (Projects page).
     match /n8n_project_forms/{formId} {
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
+      allow create: if data().keys().hasAll(['projectId', 'projectTitle', 'name', 'email', 'phone', 'createdAt'])
+        && data().keys().hasOnly(['projectId', 'projectTitle', 'name', 'email', 'phone', 'message', 'isDeleted', 'createdAt'])
+        && isString('projectId', 1, 200)
+        && isString('projectTitle', 0, 200)
+        && isString('name', 1, 100)
+        && validEmail()
+        && isString('phone', 7, 20)
+        && optionalString('message', 4000)
+        && (!('isDeleted' in data()) || data().isDeleted == false)
+        && validCreatedAt();
+      allow read, update, delete: if false;
     }
 
-    // Prompt records are managed through the authenticated dashboard.
-    match /prompts/{promptId} {
-      allow read, create, update, delete: if request.auth != null;
+    // ---------- everything else (prompts, push subscriptions, config, ...) ----------
+    // Server-only via the Data Console's Admin SDK.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

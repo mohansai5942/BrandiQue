@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, LayoutTemplate, Code, PenTool, Megaphone, Bot } from 'lucide-react';
+import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, AlertCircle, LayoutTemplate, Code, PenTool, Megaphone, Bot } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import { collection, addDoc } from 'firebase/firestore';
 import { notifyAdmin } from '../notifyAdmin';
 import { db } from '../firebase';
 import { useSiteSettings } from '../context/SiteSettingsContext';
+import { cleanText, isValidEmail, LIMITS, SUBMIT_TIMEOUT_MS, telHref, withTimeout } from '../utils/security';
 
 // --- CONFIGURATION ---
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgvgdpng";
@@ -15,6 +16,8 @@ const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '', budget: '', message: '' });
   const [selectedService, setSelectedService] = useState('Web Development');
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState(''); // hidden from people; bots fill it
 
   const services = [
     { id: 'Web Development', icon: Code },
@@ -28,87 +31,80 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormStatus('submitting');
-    
-    try {
-      const createdAtISO = new Date().toISOString();
-      let createdDocId = 'msg-' + Date.now();
+    if (formStatus === 'submitting') return;
+    setFormError(null);
 
-      // Save submission to Firebase Firestore
-      try {
-        const docRef = await addDoc(collection(db, 'messages'), {
-          source: 'contact',
-          service: selectedService,
-          name: formData.name,
-          email: formData.email,
-          budget: formData.budget,
-          message: formData.message,
-          createdAt: createdAtISO
-        });
-        if (docRef && docRef.id) {
-          createdDocId = docRef.id;
-          notifyAdmin('messages', docRef.id);
-        }
-      } catch (fbError) {
-        console.error("Firebase save error:", fbError);
-      }
+    const name = cleanText(formData.name, LIMITS.name);
+    const email = cleanText(formData.email, LIMITS.email);
+    const message = cleanText(formData.message, LIMITS.message, { multiline: true });
+    const budget = budgets.includes(formData.budget) ? formData.budget : '';
+    const service = services.some((s) => s.id === selectedService) ? selectedService : 'Web Development';
 
-      // Save to localStorage so Admin panel has instant access
-      const newMsg = {
-        id: createdDocId,
-        source: 'contact' as const,
-        service: selectedService,
-        name: formData.name,
-        email: formData.email,
-        budget: formData.budget,
-        message: formData.message,
-        createdAt: createdAtISO
-      };
-      try {
-        const existingRaw = localStorage.getItem('brandique_messages');
-        const existing = existingRaw ? JSON.parse(existingRaw) : [];
-        const updated = Array.isArray(existing) ? [newMsg, ...existing] : [newMsg];
-        localStorage.setItem('brandique_messages', JSON.stringify(updated));
-      } catch (lsError) {
-        console.error("localStorage save error:", lsError);
-      }
+    if (!name) {
+      setFormError('Please enter your name.');
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setFormError('Please enter a valid email address.');
+      return;
+    }
+    if (message.length < 5) {
+      setFormError('Please add a few details about your project.');
+      return;
+    }
 
-      // Also send to Formspree
-      try {
-        await fetch(FORMSPREE_ENDPOINT, {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            service: selectedService,
-            name: formData.name,
-            email: formData.email,
-            budget: formData.budget,
-            message: formData.message
-          })
-        });
-      } catch (formspreeErr) {
-        console.warn("Formspree notification skipped or failed:", formspreeErr);
-      }
-
+    const finish = () => {
       setFormStatus('success');
       setFormData({ name: '', email: '', budget: '', message: '' });
       setSelectedService('Web Development');
-      
-      // Auto reset after 8s
+      setHoneypot('');
       setTimeout(() => setFormStatus('idle'), 8000);
+    };
 
-    } catch (error) {
-      console.error("Form error:", error);
-      alert("Network error. Please check your connection and try again.");
+    // Bots fill the hidden field: show success without sending anything.
+    if (honeypot) {
+      finish();
+      return;
+    }
+
+    setFormStatus('submitting');
+    const payload = { service, name, email, budget, message };
+
+    // Both deliveries run in parallel; the request counts as sent if either one succeeds.
+    // 1) Firestore (shown in the BrandiQue Data Console, with a push alert to the admin).
+    const firestoreTask = withTimeout(addDoc(collection(db, 'messages'), {
+      source: 'contact',
+      ...payload,
+      createdAt: new Date().toISOString()
+    }), SUBMIT_TIMEOUT_MS).then((docRef) => {
+      if (docRef && docRef.id) notifyAdmin('messages', docRef.id);
+      return true;
+    });
+    // 2) Email copy via Formspree.
+    const formspreeTask = withTimeout(fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }), SUBMIT_TIMEOUT_MS).then((res) => res.ok);
+
+    const [firestoreResult, formspreeResult] = await Promise.allSettled([firestoreTask, formspreeTask]);
+    if (firestoreResult.status === 'rejected') console.error('Contact form could not be saved to Firestore:', firestoreResult.reason);
+    if (formspreeResult.status === 'rejected') console.error('Contact form email delivery failed:', formspreeResult.reason);
+    const saved = (firestoreResult.status === 'fulfilled' && firestoreResult.value) || (formspreeResult.status === 'fulfilled' && formspreeResult.value);
+
+    if (saved) {
+      finish();
+    } else {
       setFormStatus('idle');
+      setFormError('Sorry, your request could not be sent. Please check your connection and try again, or email or WhatsApp us directly.');
     }
   };
 
   const copyToClipboard = (text: string, field: string) => {
-      navigator.clipboard.writeText(text);
+      navigator.clipboard?.writeText(text).catch(() => undefined);
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
   };
@@ -155,7 +151,7 @@ const Contact: React.FC = () => {
                             <a href={`mailto:${settings.email}`} className="text-gray-900 dark:text-white font-medium hover:text-neon-purple transition-colors break-all">{settings.email}</a>
                         </div>
                     </div>
-                    <button onClick={() => copyToClipboard(settings.email, 'email')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
+                    <button type="button" aria-label="Copy email address" onClick={() => copyToClipboard(settings.email, 'email')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
                         {copiedField === 'email' ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
                     </button>
                  </div>
@@ -169,10 +165,10 @@ const Contact: React.FC = () => {
                         </div>
                         <div>
                             <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Call Us</p>
-                            <a href={`tel:${getRawPhone()}`} className="text-gray-900 dark:text-white font-medium hover:text-blue-500 dark:hover:text-blue-400 transition-colors">{settings.phone}</a>
+                            <a href={telHref(getRawPhone())} className="text-gray-900 dark:text-white font-medium hover:text-blue-500 dark:hover:text-blue-400 transition-colors">{settings.phone}</a>
                         </div>
                     </div>
-                    <button onClick={() => copyToClipboard(settings.phone, 'phone')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
+                    <button type="button" aria-label="Copy phone number" onClick={() => copyToClipboard(settings.phone, 'phone')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
                         {copiedField === 'phone' ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
                     </button>
                  </div>
@@ -189,7 +185,7 @@ const Contact: React.FC = () => {
                             <p className="text-gray-900 dark:text-white font-medium">{settings.location}</p>
                         </div>
                     </div>
-                    <a href={`https://maps.google.com/?q=${encodeURIComponent(settings.location)}`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
+                    <a href={`https://maps.google.com/?q=${encodeURIComponent(settings.location)}`} target="_blank" rel="noopener noreferrer" aria-label="Open location in Google Maps" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0">
                         <ExternalLink size={18} />
                     </a>
                  </div>
@@ -239,7 +235,13 @@ const Contact: React.FC = () => {
                             </button>
                         </div>
                     ) : (
-                        <form id="contact-form" onSubmit={handleSubmit} className="space-y-8 relative z-10">
+                        <form id="contact-form" onSubmit={handleSubmit} className="space-y-8 relative z-10" noValidate>
+                            <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
+                                <label>
+                                    Company website
+                                    <input type="text" name="company_website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                                </label>
+                            </div>
                             
                             {/* 1. Service Selection */}
                             <div className="space-y-3">
@@ -271,6 +273,8 @@ const Contact: React.FC = () => {
                                         type="text" 
                                         required
                                         value={formData.name}
+                                        maxLength={LIMITS.name}
+                                        autoComplete="name"
                                         onChange={(e) => setFormData({...formData, name: e.target.value})}
                                         className="w-full bg-gray-50 dark:bg-[#151A25]/50 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple focus:bg-white dark:focus:bg-[#151A25] transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
                                         placeholder="John Doe"
@@ -282,6 +286,8 @@ const Contact: React.FC = () => {
                                         type="email" 
                                         required
                                         value={formData.email}
+                                        maxLength={LIMITS.email}
+                                        autoComplete="email"
                                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                                         className="w-full bg-gray-50 dark:bg-[#151A25]/50 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple focus:bg-white dark:focus:bg-[#151A25] transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
                                         placeholder="john@example.com"
@@ -311,11 +317,19 @@ const Contact: React.FC = () => {
                                     rows={4}
                                     required
                                     value={formData.message}
+                                    maxLength={LIMITS.message}
                                     onChange={(e) => setFormData({...formData, message: e.target.value})}
                                     className="w-full bg-gray-50 dark:bg-[#151A25]/50 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple focus:bg-white dark:focus:bg-[#151A25] transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none"
                                     placeholder="Tell us about your project goals, timeline, and requirements..."
                                 />
                             </div>
+
+                            {formError && (
+                                <div role="alert" className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 dark:text-red-400">
+                                    <AlertCircle size={18} className="mt-0.5 shrink-0" />
+                                    <span>{formError}</span>
+                                </div>
+                            )}
 
                             {/* Submit Button */}
                             <button 

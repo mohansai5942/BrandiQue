@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import { safeInternalPath } from '../utils/security';
 import { X, ArrowUp, ArrowUpRight, Trash2, Sparkles, Bot, MessageCircle, Check } from 'lucide-react';
 
 const API_ENDPOINT = 'https://brandique-chatbot.vercel.app/api/chat';
@@ -19,6 +20,7 @@ const loadProfile = (): Profile => {
   }
 };
 const WHATSAPP = 'https://wa.me/917093320572';
+const MAX_INPUT = 1000;
 
 interface ChatLink { path: string; label: string }
 interface ChatMessage { role: 'user' | 'assistant'; content: string; links?: ChatLink[] }
@@ -155,7 +157,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
 
   const send = useCallback(
     async (text: string) => {
-      const trimmed = text.trim();
+      const trimmed = text.trim().slice(0, MAX_INPUT);
       if (!trimmed || loading) return;
       const next: ChatMessage[] = [...messages, { role: 'user', content: trimmed }];
       setMessages(next);
@@ -175,18 +177,21 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
         const data = await res.json();
         if (!res.ok || typeof data?.message !== 'string') throw new Error('bad response');
         const links: ChatLink[] = Array.isArray(data.links)
-          ? data.links.filter((l: ChatLink) => l && typeof l.path === 'string' && l.path.startsWith('/') && l.label)
+          ? data.links
+              .filter((l: ChatLink) => l && safeInternalPath(l.path) && typeof l.label === 'string' && l.label.trim())
+              .slice(0, 4)
+              .map((l: ChatLink) => ({ path: safeInternalPath(l.path) as string, label: l.label.trim().slice(0, 60) }))
           : [];
         if (data.profile && typeof data.profile === 'object') {
           setProfile((p) => {
             const merged = { ...p };
             for (const k of ['name', 'business', 'city', 'phone', 'email'] as const) {
-              if (typeof data.profile[k] === 'string' && data.profile[k].trim()) merged[k] = data.profile[k].trim();
+              if (typeof data.profile[k] === 'string' && data.profile[k].trim()) merged[k] = data.profile[k].trim().slice(0, 120);
             }
             return merged;
           });
         }
-        setMessages((m) => [...m, { role: 'assistant', content: data.message, links }]);
+        setMessages((m) => [...m, { role: 'assistant', content: data.message.slice(0, 6000), links }]);
       } catch {
         setMessages((m) => [
           ...m,
@@ -200,7 +205,9 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
   );
 
   const goTo = (path: string) => {
-    navigate(path);
+    const safe = safeInternalPath(path);
+    if (!safe) return;
+    navigate(safe);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (window.innerWidth < 768) setIsOpen(false);
   };
@@ -386,6 +393,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                 <textarea
                   ref={inputRef}
                   rows={1}
+                  maxLength={MAX_INPUT}
                   value={input}
                   onChange={(e) => {
                     setInput(e.target.value);

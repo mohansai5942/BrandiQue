@@ -1,3 +1,4 @@
+import { safeExternalUrl } from '../utils/security';
 // Single source of truth for BrandiQue offers and prices.
 // Home, Pricing and Solutions all read from here so prices never drift apart.
 
@@ -214,7 +215,7 @@ export const PRICING_FAQ = [
 
 // Builds a WhatsApp click-to-chat link with a prefilled message.
 export function whatsappLink(base: string, message: string): string {
-  const url = base && base.startsWith('http') ? base : 'https://wa.me/917093320572';
+  const url = safeExternalUrl(base, 'https://wa.me/917093320572');
   return `${url}${url.includes('?') ? '&' : '?'}text=${encodeURIComponent(message)}`;
 }
 

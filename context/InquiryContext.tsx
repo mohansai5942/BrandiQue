@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
-import { X, Check, ArrowRight, ArrowLeft, Loader2, Phone, Mail, User, ShieldCheck, HelpCircle } from 'lucide-react';
+import { X, Check, ArrowRight, ArrowLeft, Loader2, Phone, Mail, User, ShieldCheck, HelpCircle, AlertCircle } from 'lucide-react';
 import { collection, addDoc } from 'firebase/firestore';
 import { notifyAdmin } from '../notifyAdmin';
 import { db } from '../firebase';
+import { cleanText, isValidEmail, isValidPhone, LIMITS, SUBMIT_TIMEOUT_MS, withTimeout } from '../utils/security';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface InquiryContextType {
@@ -30,6 +31,8 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState(''); // hidden from people; bots fill it
 
   // Common fields
   const [name, setName] = useState('');
@@ -48,6 +51,8 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setStep(1);
     setIsSuccess(false);
     setIsSubmitting(false);
+    setSubmitError(null);
+    setHoneypot('');
     // Reset fields
     setName('');
     setEmail('');
@@ -82,82 +87,88 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setCustomAnswers(prev => ({ ...prev, [question]: value }));
   };
 
+  const validateContactStep = (): string | null => {
+    if (!cleanText(name, LIMITS.name)) return 'Please enter your full name.';
+    if (!isValidEmail(cleanText(email, LIMITS.email))) return 'Please enter a valid email address.';
+    if (!isValidPhone(cleanText(phone, LIMITS.phone))) return 'Please enter a valid phone number (7 to 15 digits).';
+    return null;
+  };
+
+  const goNext = () => {
+    if (step === 1) {
+      const problem = validateContactStep();
+      if (problem) {
+        setSubmitError(problem);
+        return;
+      }
+    }
+    setSubmitError(null);
+    setStep(step + 1);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setSubmitError(null);
+
+    const problem = validateContactStep();
+    if (problem) {
+      setSubmitError(problem);
+      setStep(1);
+      return;
+    }
+
+    // Bots fill the hidden field: show success without storing anything.
+    if (honeypot) {
+      setIsSuccess(true);
+      setStep(4);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
+      const cleanName = cleanText(name, LIMITS.name);
+      const cleanEmail = cleanText(email, LIMITS.email).toLowerCase();
+      const cleanPhone = cleanText(phone, LIMITS.phone);
+      const cleanTimeline = cleanText(timeline, 50);
+
       // Build clean service title
-      const fullServiceTitle = packageName ? `${serviceName} (${packageName})` : serviceName;
+      const fullServiceTitle = cleanText(packageName ? `${serviceName} (${packageName})` : serviceName, LIMITS.short);
 
       // Map answers to a readable message block
-      let formattedMsg = additionalMessage.trim();
-      const detailsList: string[] = [];
-      Object.entries(customAnswers).forEach(([q, a]) => {
-        detailsList.push(`${q}: ${a}`);
+      const formattedMsg = cleanText(additionalMessage, LIMITS.message, { multiline: true });
+      const answers: Record<string, string> = {};
+      Object.entries(customAnswers).slice(0, 20).forEach(([q, a]) => {
+        const key = cleanText(q, 100);
+        const value = cleanText(a, 500);
+        if (key && value) answers[key] = value;
       });
-      
-      const promptDetails = detailsList.join('\n');
-      const finalMessage = `Phone: ${phone}\nTimeline: ${timeline}\nService Specifics:\n${promptDetails || 'None provided'}\n\nAdditional Details:\n${formattedMsg || 'None'}`;
+      const promptDetails = Object.entries(answers).map(([q, a]) => `${q}: ${a}`).join('\n');
+      const finalMessage = `Phone: ${cleanPhone}\nTimeline: ${cleanTimeline}\nService Specifics:\n${promptDetails || 'None provided'}\n\nAdditional Details:\n${formattedMsg || 'None'}`;
 
-      const createdAtISO = new Date().toISOString();
-      let createdDocId = 'msg-' + Date.now();
-
-      try {
-        const docRef = await addDoc(collection(db, 'messages'), {
-          source: 'service',
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
-          phone: phone.trim(),
-          service: fullServiceTitle,
-          budget: budget,
-          message: finalMessage,
-          serviceDetails: {
-            ...customAnswers,
-            timeline,
-            phone
-          },
-          createdAt: createdAtISO
-        });
-        if (docRef && docRef.id) {
-          createdDocId = docRef.id;
-          notifyAdmin('messages', docRef.id);
-        }
-      } catch (fbErr) {
-        console.error("Firestore error in InquiryContext:", fbErr);
-      }
-
-      const newMsg = {
-        id: createdDocId,
-        source: 'service' as const,
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        phone: phone.trim(),
+      const docRef = await withTimeout(addDoc(collection(db, 'messages'), {
+        source: 'service',
+        name: cleanName,
+        email: cleanEmail,
+        phone: cleanPhone,
         service: fullServiceTitle,
-        budget: budget,
+        budget: cleanText(budget, 50),
         message: finalMessage,
         serviceDetails: {
-          ...customAnswers,
-          timeline,
-          phone
+          ...answers,
+          timeline: cleanTimeline,
+          phone: cleanPhone
         },
-        createdAt: createdAtISO
-      };
-
-      try {
-        const existingRaw = localStorage.getItem('brandique_messages');
-        const existing = existingRaw ? JSON.parse(existingRaw) : [];
-        const updated = Array.isArray(existing) ? [newMsg, ...existing] : [newMsg];
-        localStorage.setItem('brandique_messages', JSON.stringify(updated));
-      } catch (lsError) {
-        console.error("localStorage save error in InquiryContext:", lsError);
-      }
+        createdAt: new Date().toISOString()
+      }), SUBMIT_TIMEOUT_MS);
+      if (docRef && docRef.id) notifyAdmin('messages', docRef.id);
 
       setIsSuccess(true);
       setStep(4);
     } catch (error) {
-      console.error('Error submitting service inquiry to Firestore: ', error);
-      alert('Something went wrong. Please check your internet connection and try again.');
+      console.error('Service inquiry could not be saved:', error);
+      setSubmitError('Sorry, your request could not be sent. Please check your connection and try again, or message us on WhatsApp.');
     } finally {
       setIsSubmitting(false);
     }
@@ -296,6 +307,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
               type="text"
               placeholder="e.g., Build a fast rental dashboard"
               value={customAnswers['Primary Goal'] || ''}
+              maxLength={500}
               onChange={(e) => handleCustomAnswerChange('Primary Goal', e.target.value)}
               className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
             />
@@ -332,6 +344,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
               type="text"
               placeholder="e.g., Minimalist, modern, playful, professional"
               value={customAnswers['Brand Style'] || ''}
+              maxLength={500}
               onChange={(e) => handleCustomAnswerChange('Brand Style', e.target.value)}
               className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
             />
@@ -368,6 +381,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
               type="text"
               placeholder="e.g., Young adults, local homeowners, developers"
               value={customAnswers['Target Niche'] || ''}
+              maxLength={500}
               onChange={(e) => handleCustomAnswerChange('Target Niche', e.target.value)}
               className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
             />
@@ -404,6 +418,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
               type="text"
               placeholder="e.g., WhatsApp, Discord, Google Sheets, CRM"
               value={customAnswers['AI Integrations'] || ''}
+              maxLength={500}
               onChange={(e) => handleCustomAnswerChange('AI Integrations', e.target.value)}
               className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
             />
@@ -421,6 +436,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
             type="text"
             placeholder="e.g., Web redesign, mobile prototype"
             value={customAnswers['Project Classification'] || ''}
+            maxLength={500}
             onChange={(e) => handleCustomAnswerChange('Project Classification', e.target.value)}
             className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
           />
@@ -485,6 +501,12 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                     <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4">
                       Let's start with your contact information:
                     </h4>
+                    <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
+                      <label>
+                        Company website
+                        <input type="text" name="company_website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                      </label>
+                    </div>
                     <div>
                       <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">Full Name</label>
                       <div className="relative">
@@ -493,6 +515,8 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                           type="text"
                           required
                           placeholder="Your full name"
+                          maxLength={LIMITS.name}
+                          autoComplete="name"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
@@ -507,6 +531,8 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                           type="email"
                           required
                           placeholder="name@company.com"
+                          maxLength={LIMITS.email}
+                          autoComplete="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
@@ -521,6 +547,9 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                           type="tel"
                           required
                           placeholder="e.g., +91 98765 43210"
+                          maxLength={LIMITS.phone}
+                          autoComplete="tel"
+                          inputMode="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
@@ -589,6 +618,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                       <textarea
                         rows={3}
                         placeholder="Tell us any special features or details you'd like to include..."
+                        maxLength={LIMITS.message}
                         value={additionalMessage}
                         onChange={(e) => setAdditionalMessage(e.target.value)}
                         className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all resize-none"
@@ -618,6 +648,13 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 )}
               </div>
 
+              {submitError && step <= 3 && (
+                <div role="alert" className="mx-6 mb-4 flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs font-semibold text-red-600 dark:text-red-400">
+                  <AlertCircle size={16} className="mt-0.5 shrink-0" />
+                  <span>{submitError}</span>
+                </div>
+              )}
+
               {/* Footer Actions (Only steps 1-3) */}
               {step <= 3 && (
                 <div className="p-5 border-t border-gray-200 dark:border-white/5 bg-gray-50/50 dark:bg-[#0A0C11]/50 flex justify-between items-center">
@@ -625,7 +662,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                     {step > 1 ? (
                       <button
                         type="button"
-                        onClick={() => setStep(step - 1)}
+                        onClick={() => { setSubmitError(null); setStep(step - 1); }}
                         className="px-4 py-2.5 rounded-xl bg-white dark:bg-[#05070A] border border-gray-200 dark:border-white/10 text-xs font-bold text-gray-700 dark:text-gray-300 hover:border-gray-300 hover:text-black dark:hover:text-white transition-all flex items-center gap-1.5"
                       >
                         <ArrowLeft size={14} /> Back
@@ -642,7 +679,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                       <button
                         type="button"
                         disabled={step === 1 && (!name || !email || !phone)}
-                        onClick={() => setStep(step + 1)}
+                        onClick={goNext}
                         className={`px-5 py-2.5 rounded-xl bg-blue-500 text-white font-bold text-xs hover:bg-black transition-all flex items-center gap-1.5 shadow-lg shadow-blue-500/10 ${
                           step === 1 && (!name || !email || !phone) ? 'opacity-50 cursor-not-allowed' : ''
                         }`}

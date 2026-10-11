@@ -1,7 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import { AuthProvider } from './context/AuthContext';
 import { InquiryProvider } from './context/InquiryContext';
 import { SiteSettingsProvider } from './context/SiteSettingsContext';
 
@@ -13,12 +12,10 @@ if (!rootElement) {
 const root = createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <SiteSettingsProvider>
-        <InquiryProvider>
-          <App />
-        </InquiryProvider>
-      </SiteSettingsProvider>
-    </AuthProvider>
+    <SiteSettingsProvider>
+      <InquiryProvider>
+        <App />
+      </InquiryProvider>
+    </SiteSettingsProvider>
   </React.StrictMode>
 );

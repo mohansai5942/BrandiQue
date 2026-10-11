@@ -1,6 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { initializeFirestore, getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 import rawConfig from './firebase-applet-config.json';
 
 const config: typeof rawConfig & { firestoreDatabaseId?: string } = rawConfig;
@@ -35,6 +34,5 @@ export const db = (() => {
   }
 })();
 
-export const auth = getAuth(app);
 
 
