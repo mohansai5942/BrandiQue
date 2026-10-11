@@ -413,7 +413,7 @@ export default function Projects() {
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // MAIN PROJECTS
               </h2>
-              {activeCategory === 'all' && mainProjects.length > 4 && (
+              {activeCategory === 'all' && mainProjects.length > 3 && (
                 <button
                   onClick={() => {
                     setActiveCategory('main');
@@ -431,12 +431,12 @@ export default function Projects() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-6 md:gap-16"
+                  className="grid grid-cols-2 desk:grid-cols-3 gap-3 sm:gap-6 desk:gap-8 [&>*:last-child:nth-child(odd)]:col-span-2 desk:[&>*:last-child:nth-child(odd)]:col-span-1"
                 >
-                   {(activeCategory === 'all' ? mainProjects.slice(0, 4) : mainProjects).map((project, i) => renderProjectCard(project, i, 'main'))}
+                   {(activeCategory === 'all' ? mainProjects.slice(0, 3) : mainProjects).map((project, i) => renderProjectCard(project, i, 'main'))}
                 </motion.div>
 
-                {activeCategory === 'all' && mainProjects.length > 4 && (
+                {activeCategory === 'all' && mainProjects.length > 3 && (
                   <div className="mt-8 md:mt-12 text-center">
                     <button
                       onClick={() => {
@@ -464,7 +464,7 @@ export default function Projects() {
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // PORTFOLIO PROJECTS
               </h2>
-              {activeCategory === 'all' && portfolioProjects.length > 4 && (
+              {activeCategory === 'all' && portfolioProjects.length > 3 && (
                 <button
                   onClick={() => {
                     setActiveCategory('portfolio');
@@ -482,12 +482,12 @@ export default function Projects() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-6 md:gap-16"
+                  className="grid grid-cols-2 desk:grid-cols-3 gap-3 sm:gap-6 desk:gap-8 [&>*:last-child:nth-child(odd)]:col-span-2 desk:[&>*:last-child:nth-child(odd)]:col-span-1"
                 >
-                   {(activeCategory === 'all' ? portfolioProjects.slice(0, 4) : portfolioProjects).map((project, i) => renderProjectCard(project, i, 'portfolio'))}
+                   {(activeCategory === 'all' ? portfolioProjects.slice(0, 3) : portfolioProjects).map((project, i) => renderProjectCard(project, i, 'portfolio'))}
                 </motion.div>
 
-                {activeCategory === 'all' && portfolioProjects.length > 4 && (
+                {activeCategory === 'all' && portfolioProjects.length > 3 && (
                   <div className="mt-8 md:mt-12 text-center">
                     <button
                       onClick={() => {
@@ -652,7 +652,7 @@ export default function Projects() {
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // FIGMA PROJECTS
               </h2>
-              {activeCategory === 'all' && figmaProjects.length > 4 && (
+              {activeCategory === 'all' && figmaProjects.length > 3 && (
                 <button
                   onClick={() => {
                     setActiveCategory('figma');
@@ -670,12 +670,12 @@ export default function Projects() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 md:gap-12"
+                  className="grid grid-cols-2 desk:grid-cols-3 gap-3 sm:gap-6 desk:gap-8 [&>*:last-child:nth-child(odd)]:col-span-2 desk:[&>*:last-child:nth-child(odd)]:col-span-1"
                 >
-                    {(activeCategory === 'all' ? figmaProjects.slice(0, 4) : figmaProjects).map((project, i) => renderProjectCard(project, i, 'figma'))}
+                    {(activeCategory === 'all' ? figmaProjects.slice(0, 3) : figmaProjects).map((project, i) => renderProjectCard(project, i, 'figma'))}
                 </motion.div>
 
-                {activeCategory === 'all' && figmaProjects.length > 4 && (
+                {activeCategory === 'all' && figmaProjects.length > 3 && (
                   <div className="mt-8 md:mt-12 text-center">
                     <button
                       onClick={() => {
@@ -703,7 +703,7 @@ export default function Projects() {
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // CLIENT & PERSONAL PROJECTS
               </h2>
-              {activeCategory === 'all' && clientProjects.length > 4 && (
+              {activeCategory === 'all' && clientProjects.length > 3 && (
                 <button
                   onClick={() => {
                     setActiveCategory('client');
@@ -721,9 +721,9 @@ export default function Projects() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-2 desk:grid-cols-4 gap-3 sm:gap-6 md:gap-10"
+                  className="grid grid-cols-2 desk:grid-cols-3 gap-3 sm:gap-6 desk:gap-8 [&>*:last-child:nth-child(odd)]:col-span-2 desk:[&>*:last-child:nth-child(odd)]:col-span-1"
                 >
-                   {(activeCategory === 'all' ? clientProjects.slice(0, 4) : clientProjects).map((project, i) => (
+                   {(activeCategory === 'all' ? clientProjects.slice(0, 3) : clientProjects).map((project, i) => (
                      <motion.a
                        key={`client-${project.id || i}`}
                        href={project.link}
@@ -760,7 +760,7 @@ export default function Projects() {
                    ))}
                 </motion.div>
 
-                {activeCategory === 'all' && clientProjects.length > 4 && (
+                {activeCategory === 'all' && clientProjects.length > 3 && (
                   <div className="mt-8 md:mt-12 text-center">
                     <button
                       onClick={() => {

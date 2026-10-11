@@ -276,7 +276,7 @@ const Home: React.FC = () => {
                      <p className="text-gray-500 text-lg font-light">Websites, AI workflows and designs we have built. Explore them before you trust us with yours.</p>
                   </div>
 
-                  <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 md:gap-12">
+                  <div className="grid grid-cols-2 desk:grid-cols-3 gap-3 md:gap-6 desk:gap-8">
                      {featuredProjectsList.map((project: any, idx) => {
                         const isWorkflow = Boolean(project.workflowJson);
                         const linkUrl = isWorkflow ? '/projects' : (project.link || '/projects');
