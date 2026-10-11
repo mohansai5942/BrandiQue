@@ -19,10 +19,16 @@ try {
  // prerendered HTML at the hashed build file the client bundle uses, so hydration matches.
  const assetUrls=Object.entries(manifest).filter(([k,c])=>!/\.(tsx?|jsx?|css|html)$/.test(k)&&c.file&&k.startsWith('assets/')).map(([k,c])=>[`/${k}`,`/${c.file}`]);
  const fixAssets=html=>assetUrls.reduce((h,[from,to])=>h.split(`"${from}"`).join(`"${to}"`),html);
+ // Performance/CLS: the above-the-fold Inter weights are preloaded so they arrive with the CSS instead of after
+ // layout; otherwise the hero text re-wraps when they swap in and the hero card jumps (layout shift).
+ const {readdir}=await import('node:fs/promises');
+ const assetFiles=await readdir('dist/assets');
+ const PRELOAD_FONTS=(process.env.PRELOAD_FONTS||'inter-latin-400-normal,inter-latin-500-normal,inter-latin-600-normal,inter-latin-700-normal').split(',').filter(Boolean);
+ const fontLinks=PRELOAD_FONTS.map(n=>{const f=assetFiles.find(a=>a.startsWith(n+'-')&&a.endsWith('.woff2'));if(!f)throw new Error(`prerender: font ${n} not found in dist/assets`);return `<link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/${f}">`;}).join('\n    ');
  for (const path of Object.keys(pages)) if(!pageSource[path]) throw new Error(`prerender: add ${path} to pageSource`);
  for (const path of [...Object.keys(pages),'/404','/login','/admin']) {
   const links=preloadLinks(path);
-  const html=template.replace('<!--seo-head-->',headHTML(path)).replace('<!--app-html-->', path === '/admin' || path === '/login' ? '' : fixAssets(render(path))).replace('</head>', links ? `  ${links}\n  </head>` : '</head>');
+  const html=template.replace('<!--seo-head-->',headHTML(path)).replace('<!--app-html-->', path === '/admin' || path === '/login' ? '' : fixAssets(render(path))).replace('</head>', `  ${[fontLinks,links].filter(Boolean).join('\n    ')}\n  </head>`);
   const filename=path==='/' ? 'dist/index.html' : path==='/404' ? 'dist/404.html' : `dist${path}/index.html`;
   await mkdir(filename.slice(0,filename.lastIndexOf('/')),{recursive:true});
   await writeFile(filename,html);

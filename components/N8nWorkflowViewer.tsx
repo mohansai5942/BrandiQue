@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { 
   ReactFlow, 
   ReactFlowProvider,
@@ -616,15 +616,19 @@ function N8nWorkflowViewerInner({
 }
 
 
+// Theme as an external store: prerendered HTML is built with the dark theme (the default), so while React
+// hydrates that HTML it uses the server value and then switches to the visitor's real theme; client-only
+// mounts read the real theme straight away (no flash).
+const subscribeTheme = (onChange: () => void) => {
+  const obs = new MutationObserver(onChange);
+  obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  return () => obs.disconnect();
+};
+const getThemeSnapshot = () => document.documentElement.classList.contains('dark');
+const getServerThemeSnapshot = () => true;
+
 function useIsDark() {
-  const [dark, setDark] = useState(() => typeof document === 'undefined' || document.documentElement.classList.contains('dark'));
-  useEffect(() => {
-    const el = document.documentElement;
-    const obs = new MutationObserver(() => setDark(el.classList.contains('dark')));
-    obs.observe(el, { attributes: true, attributeFilter: ['class'] });
-    return () => obs.disconnect();
-  }, []);
-  return dark;
+  return useSyncExternalStore(subscribeTheme, getThemeSnapshot, getServerThemeSnapshot);
 }
 
 export function N8nWorkflowViewer(props: N8nWorkflowViewerProps) {
