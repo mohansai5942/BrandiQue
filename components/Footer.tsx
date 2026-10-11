@@ -9,10 +9,10 @@ const Footer: React.FC = () => {
   const { settings, getRawPhone } = useSiteSettings();
 
   const SOCIAL_LINKS = [
-    { icon: Instagram, href: settings.instagram || "https://www.instagram.com/brandiquewebsolutions/" },
-    { icon: Twitter, href: "https://x.com/Mohan_Creator" }, // Twitter (X)
-    { icon: AtSign, href: "https://www.threads.com/@mohan_creator/" }, // Threads
-    { icon: Mail, href: `mailto:${settings.email}` }
+    { icon: Instagram, label: "BrandiQue on Instagram", href: settings.instagram || "https://www.instagram.com/brandiquewebsolutions/" },
+    { icon: Twitter, label: "Mohan on X (Twitter)", href: "https://x.com/Mohan_Creator" }, // Twitter (X)
+    { icon: AtSign, label: "Mohan on Threads", href: "https://www.threads.com/@mohan_creator/" }, // Threads
+    { icon: Mail, label: "Email BrandiQue", href: `mailto:${settings.email}` }
   ];
 
   return (
@@ -55,7 +55,7 @@ const Footer: React.FC = () => {
 
             <div className="flex gap-3 md:gap-3 lg:gap-4 pt-2">
               {SOCIAL_LINKS.map((item, i) => (
-                <a key={i} href={item.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-8 md:h-8 lg:w-10 lg:h-10 rounded-full bg-gray-100 dark:bg-[#151A25] border border-gray-200 dark:border-white/5 flex items-center justify-center text-gray-500 dark:text-gray-400 transition-all duration-300 hover:border-neon-purple hover:text-white hover:bg-neon-purple hover:scale-[1.15] hover:rotate-12 hover:shadow-[0_0_20px_rgba(234,179,8,0.5)]">
+                <a key={i} href={item.href} aria-label={item.label} target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-8 md:h-8 lg:w-10 lg:h-10 rounded-full bg-gray-100 dark:bg-[#151A25] border border-gray-200 dark:border-white/5 flex items-center justify-center text-gray-500 dark:text-gray-400 transition-all duration-300 hover:border-neon-purple hover:text-white hover:bg-neon-purple hover:scale-[1.15] hover:rotate-12 hover:shadow-[0_0_20px_rgba(234,179,8,0.5)]">
                   <item.icon size={14} className="md:w-[14px] md:h-[14px] lg:w-[18px] lg:h-[18px]" />
                 </a>
               ))}
