@@ -1,24 +1,34 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ArrowUp, ArrowUpRight, RotateCcw, Sparkles, MessageCircle } from 'lucide-react';
+import { X, ArrowUp, ArrowUpRight, Trash2, Sparkles, MessageCircle, Check } from 'lucide-react';
 
 const API_ENDPOINT = 'https://brandique-chatbot.vercel.app/api/chat';
 const STORAGE_KEY = 'brandique_darling_chat_v4';
+const PROFILE_KEY = 'brandique_darling_profile'; // personal details: kept in this browser permanently
+
+type Profile = Partial<Record<'name' | 'business' | 'city' | 'phone' | 'email', string>>;
+
+const loadProfile = (): Profile => {
+  if (typeof window === 'undefined') return {};
+  try {
+    const p = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
+    return p && typeof p === 'object' && !Array.isArray(p) ? p : {};
+  } catch {
+    return {};
+  }
+};
 const WHATSAPP = 'https://wa.me/917093320572';
 
 interface ChatLink { path: string; label: string }
 interface ChatMessage { role: 'user' | 'assistant'; content: string; links?: ChatLink[] }
 
-const WELCOME: ChatMessage = {
+const welcomeFor = (name?: string): ChatMessage => ({
   role: 'assistant',
-  content:
-    "- Hi, I'm **Darling**, BrandiQue's AI assistant 🙂\n- Ask me about **websites**, **AI agents & automations** or **graphic design**.\n- I can share prices, timelines and take you to the right page.",
-  links: [
-    { path: '/services', label: 'All services' },
-    { path: '/pricing', label: 'Pricing & plans' },
-  ],
-};
+  content: name
+    ? `Welcome back, **${name}** 🙂 How can I help you today?`
+    : "Hi, I'm **Darling**, BrandiQue's AI assistant 🙂 Ask me anything about **websites**, **AI agents & automations** or **graphic design**.",
+});
 
 const QUICK_PROMPTS = [
   { label: 'Website pricing', prompt: 'How much does a website cost?' },
@@ -87,11 +97,17 @@ interface DarlingAIChatbotProps {
   isIntroFinished?: boolean;
 }
 
+// Every size inside the widget is in em, and the widget's font size follows the site's
+// root scale on desktop, so browser zoom does not enlarge it (same behaviour as the site).
+const SCALE = 'text-[11.5px] lg:text-[12.5px] desk:text-[0.94rem]';
+
 export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinished = true }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>(loadHistory);
+  const [profile, setProfile] = useState<Profile>(loadProfile);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [cleared, setCleared] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
@@ -99,11 +115,20 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-40)));
+      if (messages.length) localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-40)));
+      else localStorage.removeItem(STORAGE_KEY);
     } catch {
       /* storage unavailable */
     }
   }, [messages]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    } catch {
+      /* storage unavailable */
+    }
+  }, [profile]);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -114,7 +139,9 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setIsOpen(false);
     window.addEventListener('keydown', onKey);
-    const t = setTimeout(() => inputRef.current?.focus(), 250);
+    const t = setTimeout(() => {
+      if (window.innerWidth >= 768) inputRef.current?.focus();
+    }, 250);
     return () => {
       window.removeEventListener('keydown', onKey);
       clearTimeout(t);
@@ -136,6 +163,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             messages: next.slice(-16).map(({ role, content }) => ({ role, content })),
+            profile,
             page: pathname,
           }),
         });
@@ -144,34 +172,51 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
         const links: ChatLink[] = Array.isArray(data.links)
           ? data.links.filter((l: ChatLink) => l && typeof l.path === 'string' && l.path.startsWith('/') && l.label)
           : [];
+        if (data.profile && typeof data.profile === 'object') {
+          setProfile((p) => {
+            const merged = { ...p };
+            for (const k of ['name', 'business', 'city', 'phone', 'email'] as const) {
+              if (typeof data.profile[k] === 'string' && data.profile[k].trim()) merged[k] = data.profile[k].trim();
+            }
+            return merged;
+          });
+        }
         setMessages((m) => [...m, { role: 'assistant', content: data.message, links }]);
       } catch {
         setMessages((m) => [
           ...m,
-          {
-            role: 'assistant',
-            content: "- I couldn't connect just now.\n- Please try again, or message us on **WhatsApp** for a quick reply.",
-            links: [{ path: '/contact', label: 'Contact us' }],
-          },
+          { role: 'assistant', content: "Sorry, I couldn't connect just now. Please try again, or message us on **WhatsApp** for a quick reply." },
         ]);
       } finally {
         setLoading(false);
       }
     },
-    [loading, messages, pathname],
+    [loading, messages, pathname, profile],
   );
 
   const goTo = (path: string) => {
     navigate(path);
-    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (typeof window !== 'undefined' && window.innerWidth < 640) setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.innerWidth < 768) setIsOpen(false);
   };
 
-  const resetChat = () => setMessages([]);
+  // Deletes the conversation from this browser. Personal details the visitor shared stay saved.
+  const deleteChat = () => {
+    setMessages([]);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('brandique_darling_chat_history');
+      localStorage.removeItem('brandique_chat_history_v2');
+    } catch {
+      /* storage unavailable */
+    }
+    setCleared(true);
+    setTimeout(() => setCleared(false), 1800);
+  };
 
   if (!isIntroFinished) return null;
 
-  const shown = messages.length ? messages : [WELCOME];
+  const shown = messages.length ? messages : [welcomeFor(profile.name)];
 
   return (
     <>
@@ -186,74 +231,73 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             role="dialog"
             aria-modal="false"
             aria-label="Darling, BrandiQue AI assistant"
-            className="fixed z-[99999] inset-x-2 bottom-[72px] sm:inset-x-auto sm:right-6 sm:bottom-[92px] sm:w-[400px] h-[min(560px,calc(100dvh-92px))] sm:h-[min(620px,calc(100vh-120px))] flex flex-col overflow-hidden rounded-[22px] border border-white/10 bg-[#0B0B0D]/95 text-[13.5px] text-gray-300 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9),0_0_0_1px_rgba(250,204,21,0.08)] backdrop-blur-2xl font-sans"
+            className={`${SCALE} fixed z-[99999] right-[1.05em] bottom-[5.6em] desk:right-[1.8em] desk:bottom-[6.6em] w-[min(84vw,27em)] desk:w-[28.5em] h-[min(37em,calc(100dvh-7.5em))] desk:h-[min(43em,calc(100vh-9em))] flex flex-col overflow-hidden rounded-[1.5em] border border-white/10 bg-[#0B0B0D]/95 text-gray-300 shadow-[0_2em_5em_-1.4em_rgba(0,0,0,0.9),0_0_0_1px_rgba(250,204,21,0.08)] backdrop-blur-2xl font-sans`}
           >
-            <div className="pointer-events-none absolute -top-24 -right-16 h-56 w-56 rounded-full bg-yellow-400/15 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-28 -left-20 h-56 w-56 rounded-full bg-amber-500/10 blur-3xl" />
+            <div className="pointer-events-none absolute -top-[7em] -right-[5em] h-[16em] w-[16em] rounded-full bg-yellow-400/15 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-[8em] -left-[6em] h-[16em] w-[16em] rounded-full bg-amber-500/10 blur-3xl" />
 
             {/* Header */}
-            <div className="relative flex items-center justify-between gap-3 border-b border-white/[0.07] px-4 py-3">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-yellow-300 to-amber-500 text-black shadow-[0_6px_20px_-6px_rgba(250,204,21,0.7)]">
-                  <Sparkles size={17} strokeWidth={2.4} />
-                  <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#0B0B0D] bg-emerald-400" />
+            <div className="relative flex items-center justify-between gap-[0.8em] border-b border-white/[0.07] px-[1.1em] py-[0.8em]">
+              <div className="flex min-w-0 items-center gap-[0.75em]">
+                <div className="relative grid h-[2.6em] w-[2.6em] shrink-0 place-items-center rounded-[0.8em] bg-gradient-to-br from-yellow-300 to-amber-500 text-black shadow-[0_0.4em_1.4em_-0.4em_rgba(250,204,21,0.7)]">
+                  <Sparkles className="h-[1.2em] w-[1.2em]" strokeWidth={2.4} />
+                  <span className="absolute -bottom-[0.1em] -right-[0.1em] h-[0.85em] w-[0.85em] rounded-full border-[0.15em] border-[#0B0B0D] bg-emerald-400" />
                 </div>
                 <div className="min-w-0">
-                  <div className="font-bold text-[14.5px] leading-tight text-white">Darling</div>
-                  <div className="text-[11px] leading-tight text-gray-400 truncate">BrandiQue AI assistant · replies instantly</div>
+                  <div className="text-[1.08em] font-bold leading-tight text-white">Darling</div>
+                  <div className="truncate text-[0.8em] leading-tight text-gray-400">BrandiQue AI assistant · online</div>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-[0.25em]">
                 <button
                   type="button"
-                  onClick={resetChat}
-                  title="New chat"
-                  aria-label="Start a new chat"
-                  className="grid h-8 w-8 place-items-center rounded-lg text-gray-400 transition hover:bg-white/[0.06] hover:text-white"
+                  onClick={deleteChat}
+                  title="Delete chat from this browser"
+                  aria-label="Delete chat history from this browser"
+                  className={`flex h-[2.3em] items-center gap-[0.35em] rounded-[0.65em] px-[0.6em] transition ${
+                    cleared ? 'bg-emerald-500/15 text-emerald-400' : 'text-gray-400 hover:bg-rose-500/10 hover:text-rose-400'
+                  }`}
                 >
-                  <RotateCcw size={15} />
+                  {cleared ? <Check className="h-[1.1em] w-[1.1em]" /> : <Trash2 className="h-[1.1em] w-[1.1em]" />}
+                  <span className="text-[0.85em] font-semibold">{cleared ? 'Deleted' : 'Delete'}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
                   title="Close"
                   aria-label="Close chat"
-                  className="grid h-8 w-8 place-items-center rounded-lg text-gray-400 transition hover:bg-white/[0.06] hover:text-white"
+                  className="grid h-[2.3em] w-[2.3em] place-items-center rounded-[0.65em] text-gray-400 transition hover:bg-white/[0.06] hover:text-white"
                 >
-                  <X size={17} />
+                  <X className="h-[1.25em] w-[1.25em]" />
                 </button>
               </div>
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="relative flex-1 space-y-3 overflow-y-auto overscroll-contain px-3.5 py-4 [scrollbar-width:thin]">
+            <div ref={scrollRef} className="relative flex-1 space-y-[0.8em] overflow-y-auto overscroll-contain px-[1em] py-[1.1em] [scrollbar-width:thin]">
               {shown.map((m, i) =>
                 m.role === 'user' ? (
                   <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="flex justify-end">
-                    <div className="max-w-[82%] whitespace-pre-wrap break-words rounded-2xl rounded-br-md bg-yellow-400 px-3.5 py-2 font-medium text-black">
+                    <div className="max-w-[82%] whitespace-pre-wrap break-words rounded-[1.1em] rounded-br-[0.35em] bg-yellow-400 px-[0.95em] py-[0.55em] font-medium leading-snug text-black">
                       {m.content}
                     </div>
                   </motion.div>
                 ) : (
-                  <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-start gap-2">
-                    <div className="max-w-[92%] break-words rounded-2xl rounded-bl-md border border-white/[0.07] bg-white/[0.04] px-3.5 py-2.5 leading-relaxed">
+                  <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-start gap-[0.5em]">
+                    <div className="max-w-[92%] break-words rounded-[1.1em] rounded-bl-[0.35em] border border-white/[0.07] bg-white/[0.04] px-[0.95em] py-[0.7em] leading-relaxed">
                       <MessageBody content={m.content} />
                     </div>
                     {!!m.links?.length && (
-                      <div className="flex max-w-[92%] flex-wrap gap-1.5">
+                      <div className="flex max-w-[92%] flex-wrap gap-[0.4em]">
                         {m.links.map((l) => (
                           <button
                             key={l.path + l.label}
                             type="button"
                             onClick={() => goTo(l.path)}
-                            className={`group inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition ${
-                              pathname.replace(/\/+$/, '') === l.path.replace(/\/+$/, '')
-                                ? 'border-yellow-400/60 bg-yellow-400/15 text-yellow-200'
-                                : 'border-yellow-400/25 bg-yellow-400/[0.06] text-yellow-300 hover:border-yellow-400/60 hover:bg-yellow-400/15'
-                            }`}
+                            className="group inline-flex items-center gap-[0.3em] rounded-full border border-yellow-400/25 bg-yellow-400/[0.06] px-[0.85em] py-[0.4em] text-[0.88em] font-semibold text-yellow-300 transition hover:border-yellow-400/60 hover:bg-yellow-400/15"
                           >
                             {l.label}
-                            <ArrowUpRight size={13} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            <ArrowUpRight className="h-[1.05em] w-[1.05em] transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
                           </button>
                         ))}
                       </div>
@@ -263,11 +307,11 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
               )}
 
               {loading && (
-                <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-white/[0.07] bg-white/[0.04] px-3.5 py-3 w-fit">
+                <div className="flex w-fit items-center gap-[0.4em] rounded-[1.1em] rounded-bl-[0.35em] border border-white/[0.07] bg-white/[0.04] px-[0.95em] py-[0.85em]">
                   {[0, 1, 2].map((d) => (
                     <motion.span
                       key={d}
-                      className="h-1.5 w-1.5 rounded-full bg-yellow-400"
+                      className="h-[0.42em] w-[0.42em] rounded-full bg-yellow-400"
                       animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
                       transition={{ duration: 0.9, repeat: Infinity, delay: d * 0.15 }}
                     />
@@ -276,15 +320,15 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
               )}
 
               {!messages.length && !loading && (
-                <div className="pt-1">
-                  <div className="mb-2 text-[10.5px] font-bold uppercase tracking-[0.18em] text-gray-500">Popular questions</div>
-                  <div className="flex flex-wrap gap-1.5">
+                <div className="pt-[0.2em]">
+                  <div className="mb-[0.6em] text-[0.78em] font-bold uppercase tracking-[0.18em] text-gray-500">Popular questions</div>
+                  <div className="flex flex-wrap gap-[0.4em]">
                     {QUICK_PROMPTS.map((q) => (
                       <button
                         key={q.label}
                         type="button"
                         onClick={() => send(q.prompt)}
-                        className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] font-medium text-gray-300 transition hover:border-yellow-400/50 hover:text-white"
+                        className="rounded-full border border-white/10 bg-white/[0.03] px-[0.85em] py-[0.42em] text-[0.88em] font-medium text-gray-300 transition hover:border-yellow-400/50 hover:text-white"
                       >
                         {q.label}
                       </button>
@@ -300,9 +344,9 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                 e.preventDefault();
                 send(input);
               }}
-              className="relative border-t border-white/[0.07] p-3"
+              className="relative border-t border-white/[0.07] p-[0.8em]"
             >
-              <div className="flex items-end gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-1.5 pl-3.5 transition focus-within:border-yellow-400/50">
+              <div className="flex items-end gap-[0.5em] rounded-[1.1em] border border-white/10 bg-white/[0.04] p-[0.35em] pl-[0.95em] transition focus-within:border-yellow-400/50">
                 <textarea
                   ref={inputRef}
                   rows={1}
@@ -318,23 +362,23 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                       send(input);
                     }
                   }}
-                  placeholder="Ask about websites, AI or design…"
+                  placeholder="Type your message…"
                   aria-label="Type your message"
-                  className="max-h-[110px] flex-1 resize-none bg-transparent py-1.5 text-[16px] sm:text-[13.5px] text-white placeholder:text-gray-500 focus:outline-none"
+                  className="max-h-[8em] flex-1 resize-none bg-transparent py-[0.45em] text-[1em] leading-snug text-white placeholder:text-gray-500 focus:outline-none"
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || loading}
                   aria-label="Send message"
-                  className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-yellow-400 text-black transition hover:bg-yellow-300 disabled:bg-white/10 disabled:text-gray-500"
+                  className="grid h-[2.5em] w-[2.5em] shrink-0 place-items-center rounded-[0.8em] bg-yellow-400 text-black transition hover:bg-yellow-300 disabled:bg-white/10 disabled:text-gray-500"
                 >
-                  <ArrowUp size={17} strokeWidth={2.6} />
+                  <ArrowUp className="h-[1.2em] w-[1.2em]" strokeWidth={2.6} />
                 </button>
               </div>
-              <div className="mt-2 flex items-center justify-between px-1 text-[10.5px] text-gray-500">
-                <span>Powered by BrandiQue AI</span>
+              <div className="mt-[0.5em] flex items-center justify-between px-[0.2em] text-[0.78em] text-gray-500">
+                <span>Chats are saved only in your browser</span>
                 <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="font-semibold text-emerald-400 hover:text-emerald-300">
-                  Talk on WhatsApp ↗
+                  WhatsApp ↗
                 </a>
               </div>
             </form>
@@ -343,7 +387,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
       </AnimatePresence>
 
       {/* Launcher */}
-      <div className="fixed z-[99998] bottom-4 right-4 sm:bottom-6 sm:right-6">
+      <div className={`${SCALE} fixed z-[99998] bottom-[1.1em] right-[1.05em] desk:bottom-[1.6em] desk:right-[1.8em]`}>
         <motion.button
           type="button"
           onClick={() => setIsOpen((o) => !o)}
@@ -351,18 +395,18 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
           whileTap={{ scale: 0.94 }}
           aria-label={isOpen ? 'Close chat' : 'Chat with Darling, BrandiQue AI'}
           aria-expanded={isOpen}
-          className="group relative grid h-[52px] w-[52px] sm:h-14 sm:w-14 place-items-center rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 text-black shadow-[0_12px_30px_-8px_rgba(250,204,21,0.75)] focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          className="group relative grid h-[3.9em] w-[3.9em] place-items-center rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 text-black shadow-[0_0.9em_2.2em_-0.6em_rgba(250,204,21,0.75)] focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300"
         >
           {!isOpen && <span className="absolute inset-0 rounded-full bg-yellow-400/50 animate-ping [animation-duration:2.6s]" />}
           <AnimatePresence mode="wait" initial={false}>
             {isOpen ? (
               <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
-                <X size={22} strokeWidth={2.5} />
+                <X className="h-[1.6em] w-[1.6em]" strokeWidth={2.5} />
               </motion.span>
             ) : (
               <motion.span key="chat" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }} className="relative">
-                <MessageCircle size={23} strokeWidth={2.4} />
-                <Sparkles size={11} strokeWidth={2.6} className="absolute -top-1.5 -right-2" />
+                <MessageCircle className="h-[1.7em] w-[1.7em]" strokeWidth={2.4} />
+                <Sparkles className="absolute -right-[0.55em] -top-[0.4em] h-[0.8em] w-[0.8em]" strokeWidth={2.6} />
               </motion.span>
             )}
           </AnimatePresence>
