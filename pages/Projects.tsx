@@ -70,6 +70,8 @@ function ProjectMedia({ image, video, images = [], videos = [], title, fitMode =
         <img
           src={currentImg}
           alt={title}
+          loading="lazy"
+          decoding="async"
           referrerPolicy="no-referrer"
           onContextMenu={(e) => e.preventDefault()}
           onDragStart={(e) => e.preventDefault()}

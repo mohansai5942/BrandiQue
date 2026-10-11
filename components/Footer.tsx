@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Instagram, Twitter, AtSign, Mail, ArrowRight, Phone, MapPin } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { useSiteSettings } from '../context/SiteSettingsContext';
+import logoLightBg from '../assets/brand/logo-light-bg.webp';
+import logoDarkBg from '../assets/brand/logo-dark-bg.webp';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -37,14 +39,14 @@ const Footer: React.FC = () => {
             >
               {/* Light Theme Logo (Visible in Light Mode) */}
               <img 
-                src="https://cdn.imgchest.com/files/c912299e5353.png" 
-                alt="BrandiQue Web Solutions" 
+                src={logoLightBg} width={566} height={240} 
+                alt="BrandiQue Web Solutions" loading="lazy" decoding="async"
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 block dark:hidden" 
               />
               {/* Dark Theme Logo (Visible in Dark Mode) */}
               <img 
-                src="https://cdn.imgchest.com/files/1b3230978aa9.png" 
-                alt="BrandiQue Web Solutions" 
+                src={logoDarkBg} width={566} height={240} 
+                alt="BrandiQue Web Solutions" loading="lazy" decoding="async"
                 className="h-[40px] md:h-[48px] lg:h-[64px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 hidden dark:block" 
               />
             </Link>

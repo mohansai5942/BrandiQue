@@ -24,7 +24,7 @@ const FounderPromise: React.FC = () => {
           <div className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-gray-50 p-4 md:p-8 dark:border-white/10 dark:bg-[#0D1017]">
             <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-yellow-400/10 blur-3xl" />
             <div className="relative flex items-center gap-4">
-              <img src={founder.image} alt={`${founder.name}, Founder of ${COMPANY}`} loading="lazy" className="h-16 w-16 rounded-2xl object-cover ring-2 ring-yellow-400/40" />
+              <img src={founder.image} alt={`${founder.name}, Founder of ${COMPANY}`} loading="lazy" decoding="async" className="h-16 w-16 rounded-2xl object-cover ring-2 ring-yellow-400/40" />
               <div>
                 <div className="font-bold text-gray-900 dark:text-white">{founder.name}</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">Founder, {COMPANY}</div>

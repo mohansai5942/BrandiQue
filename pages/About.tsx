@@ -103,7 +103,7 @@ const About: React.FC = () => {
          <div className="relative shrink-0 order-1 group">
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/30 to-cyan-500/30 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
             <div className="w-64 h-64 md:w-80 md:h-80 desk:w-[420px] desk:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
-                <img src="https://files.catbox.moe/ignhd8.jpg" alt="Karri Praveen Kumar, team member" className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" />
+                <img src="https://files.catbox.moe/ignhd8.jpg" alt="Karri Praveen Kumar, team member" loading="lazy" decoding="async" className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" />
             </div>
          </div>
 
@@ -192,7 +192,7 @@ const About: React.FC = () => {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-neon-purple/10 rounded-full blur-2xl pointer-events-none group-hover:bg-neon-purple/20 transition-all"></div>
                     
                     <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-neon-purple/50 shadow-neon/30 shrink-0 relative group-hover:scale-105 transition-transform duration-300">
-                      <img src={founder.image} alt={`${founder.name}, Founder of ${COMPANY}`} className="w-full h-full object-cover" />
+                      <img src={founder.image} alt={`${founder.name}, Founder of ${COMPANY}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                     </div>
 
                     <div className="flex-1 text-center sm:text-left space-y-2">
@@ -211,7 +211,7 @@ const About: React.FC = () => {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/20 transition-all"></div>
                     
                     <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-blue-500/50 shadow-blue-500/30 shrink-0 relative group-hover:scale-105 transition-transform duration-300">
-                      <img src="https://files.catbox.moe/ignhd8.jpg" alt="Praveen" className="w-full h-full object-cover" />
+                      <img src="https://files.catbox.moe/ignhd8.jpg" alt="Praveen" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                     </div>
 
                     <div className="flex-1 text-center sm:text-left space-y-2">

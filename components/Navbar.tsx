@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag, Bot, Briefcase, Settings, Phone, Globe, Palette } from 'lucide-react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
+import logoLightBg from '../assets/brand/logo-light-bg.webp';
+import logoDarkBg from '../assets/brand/logo-dark-bg.webp';
 
 const Navbar: React.FC = () => {
   const { settings, getRawPhone, websites } = useSiteSettings();
@@ -164,14 +166,14 @@ const Navbar: React.FC = () => {
         <div className="max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16 mt-[20px] m-0 flex items-center justify-between relative">
           <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)} onContextMenu={(e) => e.preventDefault()}>
             <img
-              src="https://cdn.imgchest.com/files/c912299e5353.png"
+              src={logoLightBg} width={566} height={240}
               alt="BrandiQue Web Solutions"
               className="h-[52px] sm:h-[62px] desk:h-[78px] w-auto object-contain transition-all duration-300 block dark:hidden"
               loading="eager"
             />
 
             <img
-              src="https://cdn.imgchest.com/files/1b3230978aa9.png"
+              src={logoDarkBg} width={566} height={240}
               alt="BrandiQue Web Solutions"
               className="h-[52px] sm:h-[62px] desk:h-[78px] w-auto object-contain transition-all duration-300 hidden dark:block"
               loading="eager"
@@ -226,7 +228,7 @@ const Navbar: React.FC = () => {
                             <div className="flex items-center gap-3 min-w-0 relative z-10">
                               {web.logoUrl ? (
                                 <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border border-violet-500/30 overflow-hidden flex items-center justify-center p-0.5 shrink-0 group-hover:scale-105 group-hover:border-violet-500 transition-all duration-300 shadow-sm">
-                                  <img src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded" />
+                                  <img src={web.logoUrl} alt={web.name} loading="lazy" decoding="async" className="w-full h-full object-contain rounded" />
                                 </div>
                               ) : (
                                 <div className="w-8 h-8 rounded-lg bg-violet-500/10 dark:bg-violet-500/20 border border-violet-500/20 dark:border-violet-400/30 flex items-center justify-center text-violet-600 dark:text-violet-300 shrink-0 group-hover:scale-110 group-hover:bg-violet-600 group-hover:text-white transition-all duration-300 shadow-sm">
@@ -381,7 +383,7 @@ const Navbar: React.FC = () => {
                         <div className="flex items-center gap-3 min-w-0">
                           {web.logoUrl ? (
                             <div className="w-9 h-9 rounded-lg bg-white dark:bg-slate-900 border border-violet-500/30 overflow-hidden flex items-center justify-center p-0.5 shrink-0 shadow-sm">
-                              <img src={web.logoUrl} alt={web.name} className="w-full h-full object-contain rounded" />
+                              <img src={web.logoUrl} alt={web.name} loading="lazy" decoding="async" className="w-full h-full object-contain rounded" />
                             </div>
                           ) : (
                             <div className="p-2 rounded-lg text-violet-600 dark:text-violet-300 bg-violet-500/10 border border-violet-500/20 group-hover:scale-110 transition-transform"><Globe size={18} /></div>

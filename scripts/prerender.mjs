@@ -15,10 +15,14 @@ try {
  const loaded=new Set([entry.file,...(entry.imports||[]).map(k=>manifest[k].file)]);
  const chunkFiles=(key,acc=new Set())=>{const c=manifest[key];if(!c||acc.has(c.file))return acc;acc.add(c.file);for(const i of c.imports||[])chunkFiles(i,acc);return acc;};
  const preloadLinks=path=>{const key=pageSource[path];if(!key)return '';if(!manifest[key])throw new Error(`manifest: no chunk for ${key}`);return [...chunkFiles(key)].filter(f=>!loaded.has(f)).map(f=>`<link rel="modulepreload" crossorigin href="/${f}">`).join('\n    ');};
+ // Images imported by components (e.g. assets/brand/*.webp) resolve to their source path during SSR; point the
+ // prerendered HTML at the hashed build file the client bundle uses, so hydration matches.
+ const assetUrls=Object.entries(manifest).filter(([k,c])=>!/\.(tsx?|jsx?|css|html)$/.test(k)&&c.file&&k.startsWith('assets/')).map(([k,c])=>[`/${k}`,`/${c.file}`]);
+ const fixAssets=html=>assetUrls.reduce((h,[from,to])=>h.split(`"${from}"`).join(`"${to}"`),html);
  for (const path of Object.keys(pages)) if(!pageSource[path]) throw new Error(`prerender: add ${path} to pageSource`);
  for (const path of [...Object.keys(pages),'/404','/login','/admin']) {
   const links=preloadLinks(path);
-  const html=template.replace('<!--seo-head-->',headHTML(path)).replace('<!--app-html-->', path === '/admin' || path === '/login' ? '' : render(path)).replace('</head>', links ? `  ${links}\n  </head>` : '</head>');
+  const html=template.replace('<!--seo-head-->',headHTML(path)).replace('<!--app-html-->', path === '/admin' || path === '/login' ? '' : fixAssets(render(path))).replace('</head>', links ? `  ${links}\n  </head>` : '</head>');
   const filename=path==='/' ? 'dist/index.html' : path==='/404' ? 'dist/404.html' : `dist${path}/index.html`;
   await mkdir(filename.slice(0,filename.lastIndexOf('/')),{recursive:true});
   await writeFile(filename,html);

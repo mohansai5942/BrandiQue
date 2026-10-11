@@ -22,6 +22,8 @@ import { PILLARS, whatsappLink } from '../data/offers';
 import { useInquiry } from '../context/InquiryContext';
 import { INITIAL_N8N_PROJECTS } from './N8nProjectsData';
 import { lazyWidget } from '../lazyRoute';
+import logoLightBg from '../assets/brand/logo-light-bg.webp';
+import logoDarkBg from '../assets/brand/logo-dark-bg.webp';
 // React Flow (the workflow preview) is the heaviest library on the page; it loads in its own chunk and
 // fills its fixed-size preview box when ready, instead of blocking the whole home page.
 const N8nWorkflowViewer = lazyWidget(() => import('../components/N8nWorkflowViewer').then((m) => ({ default: m.N8nWorkflowViewer })));
@@ -127,6 +129,8 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
             <img
                src={image}
                alt={title}
+               loading="lazy"
+               decoding="async"
                className={`absolute inset-0 w-full h-full object-cover grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out ${
                   showVideo && video ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
                }`}
@@ -484,16 +488,18 @@ const Home: React.FC = () => {
                   </div>
                   <div className="pt-12 md:pt-20 opacity-30">
                      <img
-                        src="https://cdn.imgchest.com/files/1b3230978aa9.png"
+                        src={logoDarkBg} width={566} height={240}
                         alt="Logo"
                         onContextMenu={(e) => e.preventDefault()}
-                        className="h-12 md:h-16 mx-auto object-contain hidden dark:block"
+                        className="h-12 md:h-16 w-auto mx-auto object-contain hidden dark:block"
+                        loading="lazy" decoding="async"
                      />
                      <img
-                        src="https://cdn.imgchest.com/files/c912299e5353.png"
+                        src={logoLightBg} width={566} height={240}
                         alt="Logo"
                         onContextMenu={(e) => e.preventDefault()}
-                        className="h-12 md:h-16 mx-auto object-contain block dark:hidden"
+                        className="h-12 md:h-16 w-auto mx-auto object-contain block dark:hidden"
+                        loading="lazy" decoding="async"
                      />
                      <p className="text-[10px] font-bold uppercase tracking-[0.4em] mt-4">Visakhapatnam, India • Serving businesses across India</p>
                   </div>
