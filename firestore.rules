@@ -45,8 +45,10 @@ service cloud.firestore {
     }
 
     // ---------- published website content: public read, no client writes ----------
+    // Only the public contact settings document is readable (the website reads settings/contact).
+    // Any other settings document (e.g. admin-profile) is server-only.
     match /settings/{settingId} {
-      allow read: if true;
+      allow read: if settingId == 'contact';
       allow write: if false;
     }
 
