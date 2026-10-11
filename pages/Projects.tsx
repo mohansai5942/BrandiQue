@@ -565,7 +565,7 @@ export default function Projects() {
                         }`}
                       >
                         {/* Visual Workflow Canvas Header */}
-                        <div className="h-28 sm:h-48 md:h-52 bg-[#17181c] relative overflow-hidden border-b border-gray-200 dark:border-white/10 pointer-events-none">
+                        <div className="h-28 sm:h-48 md:h-52 bg-[#f4f5f7] dark:bg-[#17181c] relative overflow-hidden border-b border-gray-200 dark:border-white/10 pointer-events-none">
                           <N8nWorkflowViewer workflowJson={project.workflowJson} height="100%" showControls={false} fitPadding={0.18} />
                           <div className="absolute inset-0 bg-gradient-to-t from-[#0F1320]/80 via-transparent to-transparent" />
                           
@@ -882,7 +882,7 @@ export default function Projects() {
             </div>
 
             {/* Modal Canvas Body */}
-            <div className="flex-1 relative w-full h-full bg-[#17181c]">
+            <div className="flex-1 relative w-full h-full bg-[#f4f5f7] dark:bg-[#17181c]">
               <N8nWorkflowViewer 
                 workflowJson={selectedN8nProject.workflowJson} 
                 height="100%" 

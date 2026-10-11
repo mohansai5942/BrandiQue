@@ -104,7 +104,7 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
 
    if (workflowJson) {
       return (
-         <div className="relative w-full h-full bg-[#17181c] overflow-hidden pointer-events-none">
+         <div className="relative w-full h-full bg-[#f4f5f7] dark:bg-[#17181c] overflow-hidden pointer-events-none">
             <N8nWorkflowViewer workflowJson={workflowJson} height="100%" showControls={false} fitPadding={0.18} />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0F1320]/80 via-transparent to-transparent" />
          </div>

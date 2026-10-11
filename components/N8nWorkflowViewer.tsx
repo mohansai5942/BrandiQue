@@ -92,7 +92,7 @@ const getIconForType = (type: string, name: string, className: string = 'w-8 h-8
     return <MessageSquare className={`${className} text-[#5865F2]`} strokeWidth={1.8} />;
   }
   if (t.includes('notion') || n.includes('notion')) {
-    return <FileText className={`${className} text-[#FFFFFF]`} strokeWidth={1.8} />;
+    return <FileText className={`${className} text-gray-900 dark:text-[#FFFFFF]`} strokeWidth={1.8} />;
   }
   if (t.includes('stripe') || n.includes('stripe') || n.includes('payment')) {
     return <CreditCard className={`${className} text-[#635BFF]`} strokeWidth={1.8} />;
@@ -154,7 +154,7 @@ const getIconForType = (type: string, name: string, className: string = 'w-8 h-8
     return <GitMerge className={`${className} text-[#3498DB]`} strokeWidth={1.8} />;
   }
   if (t.includes('wait') || n.includes('wait') || t.includes('delay') || n.includes('delay')) {
-    return <Pause className={`${className} text-[#A2A4A8]`} strokeWidth={1.8} />;
+    return <Pause className={`${className} text-gray-500 dark:text-[#A2A4A8]`} strokeWidth={1.8} />;
   }
 
   // 6. Generic Triggers & Messaging
@@ -162,19 +162,19 @@ const getIconForType = (type: string, name: string, className: string = 'w-8 h-8
     return <Zap className={`${className} text-[#FF6D00]`} strokeWidth={1.8} />;
   }
   if (n.includes('image') || n.includes('photo')) {
-    return <ImageIcon className={`${className} text-[#F1F2F4]`} strokeWidth={1.8} />;
+    return <ImageIcon className={`${className} text-gray-900 dark:text-[#F1F2F4]`} strokeWidth={1.8} />;
   }
   if (n.includes('send') || n.includes('message') || n.includes('chat') || n.includes('notify')) {
     return <MessageSquare className={`${className} text-[#00E5FF]`} strokeWidth={1.8} />;
   }
 
   // 7. Helpers & Subnodes
-  if (t.includes('tool') || n.includes('tool')) return <Wrench className={`${className} text-[#F1F2F4]`} strokeWidth={1.8} />;
-  if (t.includes('memory') || n.includes('memory')) return <Cpu className={`${className} text-[#F1F2F4]`} strokeWidth={1.8} />;
-  if (t.includes('parser') || n.includes('parser')) return <FileCode className={`${className} text-[#F1F2F4]`} strokeWidth={1.8} />;
+  if (t.includes('tool') || n.includes('tool')) return <Wrench className={`${className} text-gray-900 dark:text-[#F1F2F4]`} strokeWidth={1.8} />;
+  if (t.includes('memory') || n.includes('memory')) return <Cpu className={`${className} text-gray-900 dark:text-[#F1F2F4]`} strokeWidth={1.8} />;
+  if (t.includes('parser') || n.includes('parser')) return <FileCode className={`${className} text-gray-900 dark:text-[#F1F2F4]`} strokeWidth={1.8} />;
 
   // Default fallback
-  return <SlidersHorizontal className={`${className} text-[#A2A4A8]`} strokeWidth={1.8} />;
+  return <SlidersHorizontal className={`${className} text-gray-500 dark:text-[#A2A4A8]`} strokeWidth={1.8} />;
 };
 
 function N8nStandardNode({ data }: any) {
@@ -183,25 +183,25 @@ function N8nStandardNode({ data }: any) {
 
   return (
     <div className="relative flex flex-col items-center group w-[80px]">
-      <Handle type="target" id="main" position={Position.Left} className="w-2.5 h-2.5 rounded border-[3px] border-[#17181c] bg-[#888c95] -ml-[5px]" />
+      <Handle type="target" id="main" position={Position.Left} className="w-2.5 h-2.5 rounded border-[3px] border-white dark:border-[#17181c] bg-[#888c95] -ml-[5px]" />
       
       {targetHandles.map((h: string) => (
         h !== 'main' && <Handle key={`t-${h}`} type="target" id={h} position={Position.Left} className="w-1 h-1 opacity-0 absolute pointer-events-none z-0" />
       ))}
       
-      <div className="w-[68px] h-[68px] bg-[#23252a] rounded-[14px] flex items-center justify-center border border-[#3a3d45] shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:border-[#62646a] transition-colors z-10">
+      <div className="w-[68px] h-[68px] bg-white dark:bg-[#23252a] rounded-[14px] flex items-center justify-center border border-[#d5d8de] dark:border-[#3a3d45] shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:border-[#62646a] transition-colors z-10">
         {getIconForType(data.type, data.label, 'w-7 h-7')}
       </div>
       
-      <Handle type="source" id="main" position={Position.Right} className="w-2.5 h-2.5 rounded border-[3px] border-[#17181c] bg-[#888c95] -mr-[5px]" />
+      <Handle type="source" id="main" position={Position.Right} className="w-2.5 h-2.5 rounded border-[3px] border-white dark:border-[#17181c] bg-[#888c95] -mr-[5px]" />
       
       {sourceHandles.map((h: string) => (
         h !== 'main' && <Handle key={`s-${h}`} type="source" id={h} position={Position.Right} className="w-1 h-1 opacity-0 absolute pointer-events-none z-0" />
       ))}
       
       <div className="absolute top-[76px] text-center w-[160px] z-20 pointer-events-none">
-        <div className="text-[12px] font-bold text-[#f1f2f4] leading-tight drop-shadow-md">{data.label}</div>
-        <div className="text-[10px] text-[#888c95] truncate mt-1">
+        <div className="text-[12px] font-bold text-gray-900 dark:text-[#f1f2f4] leading-tight drop-shadow-md">{data.label}</div>
+        <div className="text-[10px] text-gray-500 dark:text-[#888c95] truncate mt-1">
           {data.label}
         </div>
       </div>
@@ -212,29 +212,29 @@ function N8nStandardNode({ data }: any) {
 function N8nAgentNode({ data }: any) {
   return (
     <div className="relative flex flex-col items-center group">
-      <Handle type="target" id="main" position={Position.Left} className="w-2.5 h-2.5 rounded border-[3px] border-[#17181c] bg-[#888c95] -ml-[5px] !top-1/2" />
+      <Handle type="target" id="main" position={Position.Left} className="w-2.5 h-2.5 rounded border-[3px] border-white dark:border-[#17181c] bg-[#888c95] -ml-[5px] !top-1/2" />
       
-      <div className="w-[180px] h-[64px] bg-[#23252a] rounded-xl flex items-center px-4 border border-[#3a3d45] shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:border-[#62646a] transition-colors z-10">
-        <div className="w-10 h-10 bg-[#16171a] border border-[#2c2d31] rounded-lg flex items-center justify-center mr-3 shrink-0">
+      <div className="w-[180px] h-[64px] bg-white dark:bg-[#23252a] rounded-xl flex items-center px-4 border border-[#d5d8de] dark:border-[#3a3d45] shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:border-[#62646a] transition-colors z-10">
+        <div className="w-10 h-10 bg-gray-50 dark:bg-[#16171a] border border-gray-200 dark:border-[#2c2d31] rounded-lg flex items-center justify-center mr-3 shrink-0">
           {getIconForType(data.type, data.label, 'w-5 h-5')}
         </div>
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="text-[13px] font-bold text-[#f1f2f4] truncate">{data.label}</div>
-          <div className="text-[11px] text-[#888c95] truncate mt-0.5">Agent</div>
+          <div className="text-[13px] font-bold text-gray-900 dark:text-[#f1f2f4] truncate">{data.label}</div>
+          <div className="text-[11px] text-gray-500 dark:text-[#888c95] truncate mt-0.5">Agent</div>
         </div>
       </div>
 
-      <Handle type="source" id="main" position={Position.Right} className="w-2.5 h-2.5 rounded border-[3px] border-[#17181c] bg-[#888c95] -mr-[5px] !top-1/2" />
+      <Handle type="source" id="main" position={Position.Right} className="w-2.5 h-2.5 rounded border-[3px] border-white dark:border-[#17181c] bg-[#888c95] -mr-[5px] !top-1/2" />
       
-      <Handle type="target" id="ai_languageModel" position={Position.Bottom} className="w-2 h-2 rounded-sm border-[2px] border-[#17181c] bg-[#888c95] !left-[30%] -mb-[4px]" />
-      <div className="absolute -bottom-4 text-[9px] text-[#888c95] font-semibold pointer-events-none" style={{ left: '30%', transform: 'translateX(-50%)' }}>Chat Model*</div>
+      <Handle type="target" id="ai_languageModel" position={Position.Bottom} className="w-2 h-2 rounded-sm border-[2px] border-white dark:border-[#17181c] bg-[#888c95] !left-[30%] -mb-[4px]" />
+      <div className="absolute -bottom-4 text-[9px] text-gray-500 dark:text-[#888c95] font-semibold pointer-events-none" style={{ left: '30%', transform: 'translateX(-50%)' }}>Chat Model*</div>
 
-      <Handle type="target" id="ai_memory" position={Position.Bottom} className="w-2 h-2 rounded-sm border-[2px] border-[#17181c] bg-[#888c95] !left-[55%] -mb-[4px]" />
-      <div className="absolute -bottom-4 text-[9px] text-[#888c95] font-semibold pointer-events-none" style={{ left: '55%', transform: 'translateX(-50%)' }}>Memory</div>
+      <Handle type="target" id="ai_memory" position={Position.Bottom} className="w-2 h-2 rounded-sm border-[2px] border-white dark:border-[#17181c] bg-[#888c95] !left-[55%] -mb-[4px]" />
+      <div className="absolute -bottom-4 text-[9px] text-gray-500 dark:text-[#888c95] font-semibold pointer-events-none" style={{ left: '55%', transform: 'translateX(-50%)' }}>Memory</div>
 
-      <Handle type="target" id="ai_tool" position={Position.Bottom} className="w-2 h-2 rounded-sm border-[2px] border-[#17181c] bg-[#888c95] !left-[75%] -mb-[4px]" />
-      <div className="absolute -bottom-4 text-[9px] text-[#888c95] font-semibold flex items-center gap-1 pointer-events-none" style={{ left: '75%', transform: 'translateX(-50%)' }}>
-         Tool <div className="w-3 h-3 rounded-sm bg-[#3a3d45] flex items-center justify-center text-white"><Plus className="w-2 h-2" /></div>
+      <Handle type="target" id="ai_tool" position={Position.Bottom} className="w-2 h-2 rounded-sm border-[2px] border-white dark:border-[#17181c] bg-[#888c95] !left-[75%] -mb-[4px]" />
+      <div className="absolute -bottom-4 text-[9px] text-gray-500 dark:text-[#888c95] font-semibold flex items-center gap-1 pointer-events-none" style={{ left: '75%', transform: 'translateX(-50%)' }}>
+         Tool <div className="w-3 h-3 rounded-sm bg-gray-300 dark:bg-[#3a3d45] flex items-center justify-center text-white"><Plus className="w-2 h-2" /></div>
       </div>
       
       <Handle type="target" id="ai_outputParser" position={Position.Bottom} className="w-2 h-2 opacity-0 absolute pointer-events-none" style={{ left: '90%' }} />
@@ -256,19 +256,19 @@ function N8nSubNode({ data }: any) {
 
   return (
     <div className="relative flex flex-col items-center group w-[80px]">
-      <Handle type="source" id={outputId} position={Position.Top} className="w-2 h-2 rounded-sm border-[2px] border-[#17181c] bg-[#888c95] -mt-[4px]" />
+      <Handle type="source" id={outputId} position={Position.Top} className="w-2 h-2 rounded-sm border-[2px] border-white dark:border-[#17181c] bg-[#888c95] -mt-[4px]" />
       
       {sourceHandles.map((id: string) => (
         id !== outputId ? <Handle key={id} type="source" id={id} position={Position.Top} className="w-1 h-1 opacity-0 absolute top-0 pointer-events-none" /> : null
       ))}
       
-      <div className="w-[68px] h-[68px] bg-[#23252a] rounded-[14px] flex items-center justify-center border border-[#3a3d45] shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:border-[#62646a] transition-colors z-10 mt-1">
+      <div className="w-[68px] h-[68px] bg-white dark:bg-[#23252a] rounded-[14px] flex items-center justify-center border border-[#d5d8de] dark:border-[#3a3d45] shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:border-[#62646a] transition-colors z-10 mt-1">
         {getIconForType(data.type, data.label, 'w-7 h-7')}
       </div>
       
       <div className="absolute top-[80px] text-center w-[160px] pointer-events-none z-20">
-        <div className="text-[12px] font-bold text-[#f1f2f4] leading-tight drop-shadow-md">{data.label}</div>
-        <div className="text-[10px] text-[#888c95] truncate mt-1">
+        <div className="text-[12px] font-bold text-gray-900 dark:text-[#f1f2f4] leading-tight drop-shadow-md">{data.label}</div>
+        <div className="text-[10px] text-gray-500 dark:text-[#888c95] truncate mt-1">
           {data.label}
         </div>
       </div>
@@ -353,10 +353,10 @@ function CustomCanvasToolbar({ fitPadding = 0.2 }: { fitPadding?: number }) {
 
   return (
     <Panel position="bottom-right" className="m-2 sm:m-4 z-30">
-      <div className="flex items-center gap-0.5 sm:gap-1 bg-[#191b22]/90 backdrop-blur-md p-1 sm:p-1.5 rounded-lg sm:rounded-xl border border-white/10 shadow-2xl">
+      <div className="flex items-center gap-0.5 sm:gap-1 bg-white/90 dark:bg-[#191b22]/90 backdrop-blur-md p-1 sm:p-1.5 rounded-lg sm:rounded-xl border border-gray-200 dark:border-white/10 shadow-2xl">
         <button
           onClick={() => fitView({ padding: fitPadding, duration: 300 })}
-          className="p-1.5 sm:p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-md sm:rounded-lg transition-all flex items-center gap-1 text-[10px] sm:text-xs font-semibold"
+          className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:text-orange-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-md sm:rounded-lg transition-all flex items-center gap-1 text-[10px] sm:text-xs font-semibold"
           title="Fit to Screen"
         >
           <Maximize2 size={13} className="sm:hidden" />
@@ -366,7 +366,7 @@ function CustomCanvasToolbar({ fitPadding = 0.2 }: { fitPadding?: number }) {
         <div className="w-[1px] h-3.5 sm:h-4 bg-white/10 mx-0.5 sm:mx-1" />
         <button
           onClick={() => zoomIn({ duration: 200 })}
-          className="p-1.5 sm:p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
+          className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:text-orange-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
           title="Zoom In (+)"
         >
           <ZoomIn size={13} className="sm:hidden" />
@@ -374,7 +374,7 @@ function CustomCanvasToolbar({ fitPadding = 0.2 }: { fitPadding?: number }) {
         </button>
         <button
           onClick={() => zoomOut({ duration: 200 })}
-          className="p-1.5 sm:p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
+          className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:text-orange-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
           title="Zoom Out (-)"
         >
           <ZoomOut size={13} className="sm:hidden" />
@@ -382,7 +382,7 @@ function CustomCanvasToolbar({ fitPadding = 0.2 }: { fitPadding?: number }) {
         </button>
         <button
           onClick={() => fitView({ padding: 0.1, duration: 300 })}
-          className="p-1.5 sm:p-2 text-gray-300 hover:text-orange-400 hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
+          className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:text-orange-400 hover:bg-black/5 dark:hover:bg-white/10 rounded-md sm:rounded-lg transition-all"
           title="Reset Zoom"
         >
           <RotateCcw size={13} className="sm:hidden" />
@@ -412,6 +412,7 @@ function N8nWorkflowViewerInner({
   showControls = true,
   fitPadding = 0.2
 }: N8nWorkflowViewerProps) {
+  const isDark = useIsDark();
   const containerRef = useRef<HTMLDivElement>(null);
   const isInternalDragRef = useRef<boolean>(false);
   const [nodes, setNodes, onNodesChange] = useNodesState<any>([]);
@@ -571,9 +572,9 @@ function N8nWorkflowViewerInner({
   }, [parseAndRender]);
 
   return (
-    <div ref={containerRef} className={`w-full relative bg-[#17181c] overflow-hidden rounded-xl ${className}`} style={{ height }}>
+    <div ref={containerRef} className={`w-full relative bg-[#f4f5f7] dark:bg-[#17181c] overflow-hidden rounded-xl ${className}`} style={{ height }}>
       {error ? (
-        <div className="absolute inset-0 flex items-center justify-center p-4 bg-[#17181c]/90 backdrop-blur-sm z-30">
+        <div className="absolute inset-0 flex items-center justify-center p-4 bg-[#f4f5f7]/90 dark:bg-[#17181c]/90 backdrop-blur-sm z-30">
           <div className="bg-red-950/90 border border-red-800/80 text-red-200 text-xs px-4 py-3 rounded-lg flex items-center gap-2 max-w-md shadow-2xl">
             <AlertCircle className="w-5 h-5 shrink-0 text-red-400" />
             <span>Invalid n8n JSON syntax: {error}</span>
@@ -595,7 +596,7 @@ function N8nWorkflowViewerInner({
         zoomOnDoubleClick={!readOnly}
         fitView
         fitViewOptions={{ padding: fitPadding, includeHiddenNodes: true }}
-        colorMode="dark"
+        colorMode={isDark ? "dark" : "light"}
         proOptions={{ hideAttribution: true }}
         minZoom={0.05}
         maxZoom={2.5}
@@ -607,12 +608,24 @@ function N8nWorkflowViewerInner({
           isInternalDragRef={isInternalDragRef} 
           readOnly={readOnly}
         />
-        <Background variant={BackgroundVariant.Dots} gap={24} size={2} color="#2c2e35" />
+        <Background variant={BackgroundVariant.Dots} gap={24} size={2} color={isDark ? "#2c2e35" : "#d3d6dc"} />
         
         {showControls && <CustomCanvasToolbar fitPadding={fitPadding} />}
       </ReactFlow>
     </div>
   );
+}
+
+
+function useIsDark() {
+  const [dark, setDark] = useState(() => typeof document === 'undefined' || document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const el = document.documentElement;
+    const obs = new MutationObserver(() => setDark(el.classList.contains('dark')));
+    obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    return () => obs.disconnect();
+  }, []);
+  return dark;
 }
 
 export function N8nWorkflowViewer(props: N8nWorkflowViewerProps) {
