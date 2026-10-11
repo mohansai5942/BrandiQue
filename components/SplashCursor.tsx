@@ -731,14 +731,35 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
 
+    // Performance: the simulation only runs while there is something to show. After the last splat it
+    // keeps stepping until the dye has fully dissipated (DENSITY_DISSIPATION 3.5 leaves < 0.01% after
+    // ~240 frames), then the loop sleeps until the next pointer/touch/scroll input wakes it. Visually
+    // identical to running forever, without burning the GPU/main thread every frame on an idle page
+    // (and nothing runs at all until the visitor first moves the mouse).
+    const IDLE_FRAMES_BEFORE_SLEEP = 240;
+    let idleFrames = IDLE_FRAMES_BEFORE_SLEEP; // nothing drawn yet
+    let running = false;
+
+    function wake() {
+      if (running || !isActive) return;
+      running = true;
+      lastUpdateTime = Date.now();
+      animationFrameId.current = requestAnimationFrame(updateFrame);
+    }
+
     function updateFrame() {
-      if (!isActive) return;
+      if (!isActive) { running = false; return; }
       const dt = calcDeltaTime();
       if (resizeCanvas()) initFramebuffers();
       updateColors(dt);
       applyInputs();
       step(dt);
       render(null);
+      if (++idleFrames > IDLE_FRAMES_BEFORE_SLEEP) {
+        running = false;
+        animationFrameId.current = null;
+        return;
+      }
       animationFrameId.current = requestAnimationFrame(updateFrame);
     }
 
@@ -876,6 +897,8 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     }
 
     function splat(x: number, y: number, dx: number, dy: number, colorObj: { r: number; g: number; b: number }) {
+      idleFrames = 0; // new dye: keep simulating until it has faded out
+      wake();
       splatProgram.bind();
       gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
       gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
@@ -1041,6 +1064,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     let scrollTimeout: any = null;
 
     function handleMouseDown(e: MouseEvent) {
+      wake();
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
       let posY = scaleByPixelRatio(e.clientY);
@@ -1050,6 +1074,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
 
     let firstMouseMoveHandled = false;
     function handleMouseMove(e: MouseEvent) {
+      wake();
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
       let posY = scaleByPixelRatio(e.clientY);
@@ -1063,6 +1088,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     }
 
     function handleTouchStart(e: TouchEvent) {
+      wake();
       const touches = e.targetTouches;
       if (touches.length > 0) {
         isTouching = true;
@@ -1083,6 +1109,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     }
 
     function handleTouchMove(e: TouchEvent) {
+      wake();
       const touches = e.targetTouches;
       if (touches.length > 0) {
         isTouching = true;
@@ -1101,6 +1128,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     }
 
     function handleTouchEnd(e: TouchEvent) {
+      wake();
       const touches = e.targetTouches;
       if (touches.length === 0) {
         isTouching = false;
@@ -1110,6 +1138,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     }
 
     function handleScroll() {
+      if (isTouching) wake();
       const currentScrollX = window.scrollX;
       const currentScrollY = window.scrollY;
       const scrollDeltaX = currentScrollX - lastScrollX;
@@ -1152,13 +1181,14 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       }, 150);
     }
 
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('mousedown', handleMouseDown, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true } as any);
-    window.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
 
+    running = true;
     updateFrame();
 
     return () => {

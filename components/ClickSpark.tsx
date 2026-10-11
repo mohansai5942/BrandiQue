@@ -33,20 +33,24 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
   style
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const sparksRef = useRef<Spark[]>([]);
-  const startTimeRef = useRef<number | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const drawRef = useRef<(timestamp: number) => void>(() => {});
 
+  // Performance: the spark canvas used to cover the whole page (thousands of pixels tall) and was
+  // cleared and redrawn on every animation frame even with no sparks. It now covers only the viewport
+  // (position: fixed), follows the page while sparks are alive, and the draw loop runs only while
+  // there are sparks to draw. Sparks look and move exactly as before.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const parent = canvas.parentElement;
-    if (!parent) return;
-
     let resizeTimeout: any;
 
     const resizeCanvas = () => {
-      const { width, height } = parent.getBoundingClientRect();
+      const width = document.documentElement.clientWidth;
+      const height = document.documentElement.clientHeight;
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
@@ -58,13 +62,11 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
       resizeTimeout = setTimeout(resizeCanvas, 100);
     };
 
-    const ro = new ResizeObserver(handleResize);
-    ro.observe(parent);
-
+    window.addEventListener('resize', handleResize, { passive: true });
     resizeCanvas();
 
     return () => {
-      ro.disconnect();
+      window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeout);
     };
   }, []);
@@ -91,13 +93,12 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationId: number;
-
     const draw = (timestamp: number) => {
-      if (!startTimeRef.current) {
-        startTimeRef.current = timestamp;
-      }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Sparks are stored relative to the page container, so they scroll with the page as before.
+      const container = containerRef.current;
+      const rect = container ? container.getBoundingClientRect() : { left: 0, top: 0 };
 
       sparksRef.current = sparksRef.current.filter(spark => {
         const elapsed = timestamp - spark.startTime;
@@ -111,10 +112,12 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
         const distance = eased * sparkRadius * extraScale;
         const lineLength = sparkSize * (1 - eased);
 
-        const x1 = spark.x + distance * Math.cos(spark.angle);
-        const y1 = spark.y + distance * Math.sin(spark.angle);
-        const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
-        const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
+        const cx = spark.x + rect.left;
+        const cy = spark.y + rect.top;
+        const x1 = cx + distance * Math.cos(spark.angle);
+        const y1 = cy + distance * Math.sin(spark.angle);
+        const x2 = cx + (distance + lineLength) * Math.cos(spark.angle);
+        const y2 = cy + (distance + lineLength) * Math.sin(spark.angle);
 
         ctx.strokeStyle = sparkColor;
         ctx.lineWidth = 2;
@@ -126,20 +129,21 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
         return true;
       });
 
-      animationId = requestAnimationFrame(draw);
+      animationRef.current = sparksRef.current.length > 0 ? requestAnimationFrame(draw) : null;
     };
 
-    animationId = requestAnimationFrame(draw);
+    drawRef.current = draw;
 
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
     };
   }, [sparkColor, sparkSize, sparkRadius, sparkCount, duration, easeFunc, extraScale]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
+    const container = containerRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
@@ -152,10 +156,14 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     }));
 
     sparksRef.current.push(...newSparks);
+    if (animationRef.current === null) {
+      animationRef.current = requestAnimationFrame(drawRef.current);
+    }
   };
 
   return (
     <div
+      ref={containerRef}
       className={className}
       style={{
         position: 'relative',
@@ -172,7 +180,7 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
           height: '100%',
           display: 'block',
           userSelect: 'none',
-          position: 'absolute',
+          position: 'fixed',
           top: 0,
           left: 0,
           pointerEvents: 'none',
