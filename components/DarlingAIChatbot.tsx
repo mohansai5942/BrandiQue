@@ -99,7 +99,7 @@ interface DarlingAIChatbotProps {
 
 // Every size inside the widget is in em, and the widget's font size follows the site's
 // root scale on desktop, so browser zoom does not enlarge it (same behaviour as the site).
-const SCALE = 'text-[11.5px] lg:text-[12.5px] desk:text-[0.94rem]';
+const SCALE = 'text-[11.5px] lg:text-[12px] desk:text-[0.84rem]';
 
 export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinished = true }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -108,6 +108,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [cleared, setCleared] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
@@ -124,6 +125,10 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
 
   useEffect(() => {
     try {
+      if (!Object.keys(profile).length) {
+        localStorage.removeItem(PROFILE_KEY);
+        return;
+      }
       localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
     } catch {
       /* storage unavailable */
@@ -200,16 +205,21 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     if (window.innerWidth < 768) setIsOpen(false);
   };
 
-  // Deletes the conversation from this browser. Personal details the visitor shared stay saved.
-  const deleteChat = () => {
+  // Everything lives only in this browser (localStorage); nothing is stored on our servers.
+  // "Delete chat" permanently removes the conversation; "everything" also forgets the visitor's details.
+  const deleteChat = (everything = false) => {
     setMessages([]);
+    if (everything) setProfile({});
     try {
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem('brandique_darling_chat_history');
-      localStorage.removeItem('brandique_chat_history_v2');
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith('brandique_darling_chat') || k === 'brandique_chat_history_v2')
+        .forEach((k) => localStorage.removeItem(k));
+      sessionStorage.removeItem(STORAGE_KEY);
+      if (everything) localStorage.removeItem(PROFILE_KEY);
     } catch {
       /* storage unavailable */
     }
+    setConfirmDelete(false);
     setCleared(true);
     setTimeout(() => setCleared(false), 1800);
   };
@@ -231,7 +241,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             role="dialog"
             aria-modal="false"
             aria-label="Darling, BrandiQue AI assistant"
-            className={`${SCALE} fixed z-[99999] right-[1.05em] bottom-[5.6em] desk:right-[1.8em] desk:bottom-[6.6em] w-[min(84vw,27em)] desk:w-[28.5em] h-[min(37em,calc(100dvh-7.5em))] desk:h-[min(43em,calc(100vh-9em))] flex flex-col overflow-hidden rounded-[1.5em] border border-white/10 bg-[#0B0B0D]/95 text-gray-300 shadow-[0_2em_5em_-1.4em_rgba(0,0,0,0.9),0_0_0_1px_rgba(250,204,21,0.08)] backdrop-blur-2xl font-sans`}
+            className={`${SCALE} fixed z-[99999] right-[1.05em] bottom-[5.6em] desk:right-[1.8em] desk:bottom-[6.6em] w-[min(84vw,27em)] desk:w-[27em] h-[min(37em,calc(100dvh-7.5em))] desk:h-[min(40em,calc(100vh-9em))] flex flex-col overflow-hidden rounded-[1.5em] border border-white/10 bg-[#0B0B0D]/95 text-gray-300 shadow-[0_2em_5em_-1.4em_rgba(0,0,0,0.9),0_0_0_1px_rgba(250,204,21,0.08)] backdrop-blur-2xl font-sans`}
           >
             <div className="pointer-events-none absolute -top-[7em] -right-[5em] h-[16em] w-[16em] rounded-full bg-yellow-400/15 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-[8em] -left-[6em] h-[16em] w-[16em] rounded-full bg-amber-500/10 blur-3xl" />
@@ -251,7 +261,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
               <div className="flex items-center gap-[0.25em]">
                 <button
                   type="button"
-                  onClick={deleteChat}
+                  onClick={() => (cleared ? null : setConfirmDelete((c) => !c))}
                   title="Delete chat from this browser"
                   aria-label="Delete chat history from this browser"
                   className={`flex h-[2.3em] items-center gap-[0.35em] rounded-[0.65em] px-[0.6em] transition ${
@@ -272,6 +282,32 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                 </button>
               </div>
             </div>
+
+            <AnimatePresence initial={false}>
+              {confirmDelete && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="relative overflow-hidden border-b border-white/[0.07] bg-rose-500/[0.05]"
+                >
+                  <div className="px-[1.1em] py-[0.75em]">
+                    <div className="text-[0.86em] text-gray-300">Delete permanently from this browser?</div>
+                    <div className="mt-[0.55em] flex flex-wrap gap-[0.4em]">
+                      <button type="button" onClick={() => deleteChat(false)} className="rounded-full bg-rose-500 px-[0.9em] py-[0.38em] text-[0.84em] font-semibold text-white transition hover:bg-rose-400">
+                        Delete chat
+                      </button>
+                      <button type="button" onClick={() => deleteChat(true)} className="rounded-full border border-rose-400/40 px-[0.9em] py-[0.38em] text-[0.84em] font-semibold text-rose-300 transition hover:bg-rose-500/10">
+                        Chat + my details
+                      </button>
+                      <button type="button" onClick={() => setConfirmDelete(false)} className="rounded-full px-[0.8em] py-[0.38em] text-[0.84em] font-medium text-gray-400 hover:text-white">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Messages */}
             <div ref={scrollRef} className="relative flex-1 space-y-[0.8em] overflow-y-auto overscroll-contain px-[1em] py-[1.1em] [scrollbar-width:thin]">
@@ -376,7 +412,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
                 </button>
               </div>
               <div className="mt-[0.5em] flex items-center justify-between px-[0.2em] text-[0.78em] text-gray-500">
-                <span>Chats are saved only in your browser</span>
+                <span>Saved only on your device · never on our servers</span>
                 <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="font-semibold text-emerald-400 hover:text-emerald-300">
                   WhatsApp ↗
                 </a>
