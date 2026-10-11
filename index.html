@@ -4,55 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--seo-head-->
-    <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://brandique-chatbot.vercel.app https://www.brandique.in https://brandique.in https://aistudio.google.com https://*.aistudio.google.com https://*.run.app;" />
     <meta name="google-site-verification" content="yabpCgv5BOpOpfkzwsekwwHq1DGyhdGIsjG_UHh5Wb4" />
-    <script>
-      // Global error handler for unhandled promise rejections (e.g. fetch failures from external services)
-      window.addEventListener('unhandledrejection', function(event) {
-        if (event.reason && (
-          event.reason.message === 'Failed to fetch' || 
-          (event.reason.name === 'TypeError' && String(event.reason).includes('fetch'))
-        )) {
-          console.warn('Handled external fetch rejection safely:', event.reason);
-          event.preventDefault();
-        }
-      });
-
-      // Ensure fetch is always bound to window and safely catches network failures for external webhooks/CDNs
-      (function() {
-        if (typeof window !== 'undefined' && window.fetch) {
-          try {
-            const originalFetch = window.fetch.bind(window);
-            const safeFetch = async function(...args) {
-              try {
-                return await originalFetch(...args);
-              } catch (err) {
-                const urlStr = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url) ? args[0].url : '';
-                console.warn('Network request failed:', urlStr || args[0], err);
-                if (urlStr.includes('onrender.com') || urlStr.includes('formspree.io') || urlStr.includes('jsdelivr.net')) {
-                  return new Response(JSON.stringify({ ok: false, error: 'Network request intercepted' }), {
-                    status: 200,
-                    headers: { 'Content-Type': 'application/json' }
-                  });
-                }
-                throw err;
-              }
-            };
-            let currentFetch = safeFetch;
-            Object.defineProperty(window, 'fetch', {
-              get: function() { return currentFetch; },
-              set: function(fn) {
-                if (typeof fn === 'function') {
-                  currentFetch = fn;
-                }
-              },
-              configurable: true,
-              enumerable: true
-            });
-          } catch (e) {}
-        }
-      })();
-    </script>
     <link rel="icon" type="image/png" href="https://cdn.imgchest.com/files/bde72aa20905.png" />
     
     <!-- Performance: Preconnect to Fonts & CDN -->

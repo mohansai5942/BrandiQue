@@ -17,10 +17,18 @@ Deploy `dist` from `npm run build`. Public routes receive rendered HTML and uniq
 - `seo/render.tsx`: static rendering of existing public page components.
 - `scripts/prerender.mjs`: generates public HTML and sitemap.
 - `scripts/check-seo.mjs`: SEO regression validation.
-- `public/_redirects`, `_headers`, `vercel.json`: host routing/indexing rules.
+- `public/_redirects`, `public/_headers`: Cloudflare Pages routing, indexing and security headers (production). `vercel.json` is not used in production.
 
 Change `founder.image` in `seo/site.ts` (or replace its referenced local file), then rebuild. Both About portraits, Person schema and social metadata use the same source. No duplicate portrait copies are needed.
 
 Original mobile sizes, CSS, Tailwind CDN setup, layouts and animations are preserved. Add any future route to the router, `seo/site.ts` and `seo/render.tsx`. Keep default public data current for static rendering.
 
 See `SEO-IMPLEMENTATION.md` for restoration details, retained SEO and validation limitations.
+
+## Security
+
+- Hosting is Cloudflare Pages; security headers (HSTS, CSP, frame, referrer, permissions) live in `public/_headers`. The CSP allows the two inline scripts in `index.html` by SHA-256 hash; `scripts/prerender.mjs` recomputes the hashes on every build and `npm run test:seo` fails if they drift. If you add a new third-party script, API or font host, add its origin to the CSP.
+- The public site only reads published content and creates form submissions. Admin work happens in the BrandiQue Data Console (data.brandique.in, Firebase Admin SDK); `/admin` and `/login` here only redirect there.
+- `firestore.rules` must be published manually in the Firebase console (Firestore Database -> Rules). Public visitors may only create validated `messages` / `n8n_project_forms` documents and read `settings`, `websites`, `projects`, `n8n_projects`.
+- `firebase-applet-config.json` is the public Firebase web config (not a secret); access is controlled by the Firestore rules.
+- Form input is cleaned and validated in `utils/security.ts`; Firestore URLs are restricted to http(s) before they reach links or media.

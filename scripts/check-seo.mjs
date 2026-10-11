@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import {readFile,access} from 'node:fs/promises';
+import {readFile,access,readdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {parseHTML} from 'linkedom';
 const sitemap=await readFile('dist/sitemap.xml','utf8');
 const urls=[...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>m[1]);
@@ -53,6 +54,29 @@ const robots=await readFile('dist/robots.txt','utf8');assert(robots.includes('Si
 assert(!urls.some(url=>/admin|login|404/.test(url)));
 await access('dist/images/brandique-social.png');
 console.log(`PASS: ${urls.length} pages; unique metadata, responsive heading structure, canonical URLs, JSON-LD, founder image consistency, internal links/fragments, image alt text, sitemap and private/404 noindex.`);
+// Security: production headers, CSP inline-script hashes and no sensitive files in the output.
+{
+ const headers=await readFile('dist/_headers','utf8');
+ const csp=(headers.match(/^\s*Content-Security-Policy:\s*(.+)$/m)||[])[1];
+ assert(csp,'dist/_headers: Content-Security-Policy missing');
+ for(const h of ['Strict-Transport-Security','X-Content-Type-Options','Referrer-Policy','Permissions-Policy','X-Frame-Options','Cross-Origin-Opener-Policy']) assert(new RegExp(`^\\s*${h}:`,'m').test(headers),`dist/_headers: ${h} missing`);
+ const scriptSrc=csp.split(';').map(d=>d.trim()).find(d=>d.startsWith('script-src '));
+ assert(scriptSrc && !scriptSrc.includes("'unsafe-inline'") && !scriptSrc.includes("'unsafe-eval'"),'script-src must not allow unsafe-inline/unsafe-eval');
+ const walk=async dir=>(await Promise.all((await readdir(dir,{withFileTypes:true})).map(e=>e.isDirectory()?walk(`${dir}/${e.name}`):[`${dir}/${e.name}`]))).flat();
+ const files=await walk('dist');
+ for(const f of files){
+  assert(!/\.map$|\.env|tmp\.txt|patch_fix|firebase-applet-config|firebase-blueprint|metadata\.json|\.md$|firestore\.rules|package(-lock)?\.json$/.test(f),`sensitive or dev file shipped: ${f}`);
+  if(!f.endsWith('.html'))continue;
+  const html=await readFile(f,'utf8');
+  for(const m of html.matchAll(/<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/g)){
+   if(/ld\+json/.test(m[1]))continue;
+   const hash=`'sha256-${createHash('sha256').update(m[2]).digest('base64')}'`;
+   assert(scriptSrc.includes(hash),`${f}: inline script not allowed by CSP (${hash})`);
+  }
+ }
+ for(const f of files.filter(f=>f.endsWith('.js'))){const js=await readFile(f,'utf8');assert(!/sourceMappingURL=/.test(js),`${f}: source map reference`);}
+ console.log('PASS: security headers present, CSP hashes match every inline script, no source maps or dev/secret files in dist.');
+}
 // A founder source replacement must update both visible profile images and head data.
 const {createServer}=await import('vite');
 const vite=await createServer({server:{middlewareMode:true},appType:'custom'});

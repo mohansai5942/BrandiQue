@@ -5,3 +5,9 @@ migrated_prompt_history
 .env
 bun.lock
 bun.lockb
+.env.*
+!.env.example
+*.local
+*.map
+*.log
+npm-debug.log*

@@ -1,3 +1,20 @@
+# Cloudflare Pages response headers (production). vercel.json is not used in production.
+# The script-src sha256 hashes cover the two inline <script> blocks in index.html (theme
+# switch + Tailwind config). scripts/prerender.mjs recomputes them on every build and
+# rewrites this file in dist/, and `npm run test:seo` fails if they ever drift.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=(), midi=(), interest-cohort=(), browsing-topics=()
+  X-Frame-Options: SAMEORIGIN
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.tailwindcss.com 'sha256-NraBd1hddlT0KBw6EzRrBmKX8P6DRAwRQ/MqFLA48iY=' 'sha256-irjduaCXHmUNFMocaXuPdHRx7+oywxbdrfvFFrYOjB4='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://firestore.googleapis.com https://brandique-chatbot.vercel.app https://data.brandique.in https://formspree.io; frame-src 'self'; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests
+  ! Access-Control-Allow-Origin
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /admin
   X-Robots-Tag: noindex, nofollow
 /admin/*

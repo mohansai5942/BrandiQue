@@ -3,9 +3,13 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/:path*", "has": [{ "type": "host", "value": "www.brandique.in" }], "destination": "https://brandique.in/:path*", "permanent": true },
-    { "source": "/services/full-stack-web-development", "destination": "/services/full-stack", "permanent": true },
-    { "source": "/services/wordpress-development", "destination": "/services/wordpress", "permanent": true },
-    { "source": "/services/branding-identity", "destination": "/services/branding", "permanent": true }
+    { "source": "/services/full-stack-web-development", "destination": "/web-development", "permanent": true },
+    { "source": "/services/wordpress-development", "destination": "/web-development", "permanent": true },
+    { "source": "/services/full-stack", "destination": "/web-development", "permanent": true },
+    { "source": "/services/wordpress", "destination": "/web-development", "permanent": true },
+    { "source": "/services/branding-identity", "destination": "/services/graphic-design", "permanent": true },
+    { "source": "/services/branding", "destination": "/services/graphic-design", "permanent": true },
+    { "source": "/services/digital-marketing", "destination": "/services/graphic-design", "permanent": true }
   ],
   "headers": [
     { "source": "/admin/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
@@ -13,10 +17,11 @@
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "frame-src 'self' https://brandique-chatbot.vercel.app https://www.brandique.in https://brandique.in https://aistudio.google.com https://*.aistudio.google.com https://*.run.app;"
-        }
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" }
       ]
     }
   ]
