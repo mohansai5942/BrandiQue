@@ -71,9 +71,9 @@ const Footer: React.FC = () => {
                 { label: 'Web Development', to: '/web-development' },
                 { label: 'AI Agents & Automation', to: '/services/ai-automation' },
                 { label: 'Graphic Design', to: '/services/graphic-design' },
-                { label: 'WordPress & CMS', to: '/services/wordpress' },
-                { label: 'Brand Identity', to: '/services/branding' },
-                { label: 'Content & Marketing', to: '/services/digital-marketing' },
+                { label: 'Pricing & Packages', to: '/pricing' },
+                { label: 'Monthly Memberships', to: '/pricing#growth-plans' },
+                { label: 'Industry Solutions', to: '/solutions' },
               ].map((link, i) => (
                 <li key={i}>
                   <Link to={link.to} className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white text-[10px] md:text-xs lg:text-sm transition-all duration-200 flex items-center gap-1 group">

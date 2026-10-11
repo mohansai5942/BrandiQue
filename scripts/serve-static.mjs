@@ -3,7 +3,7 @@ import {createServer} from 'node:http';
 import {readFile,stat} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
 const root=resolve('dist');
-const aliases={'/services/full-stack-web-development':'/services/full-stack','/services/wordpress-development':'/services/wordpress','/services/branding-identity':'/services/branding'};
+const aliases={'/services/full-stack-web-development':'/web-development','/services/wordpress-development':'/web-development','/services/branding-identity':'/services/branding'};
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.xml':'application/xml','.txt':'text/plain'};
 createServer(async(req,res)=>{
  const path=decodeURIComponent(new URL(req.url,'http://localhost').pathname);

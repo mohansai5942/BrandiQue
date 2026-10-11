@@ -155,10 +155,7 @@ const Navbar: React.FC = () => {
   const SERVICE_ITEMS = [
     { title: "Web Development", path: "/web-development", desc: "Conversion-focused custom and WordPress websites", icon: Code, color: "text-cyan-300", gradient: "group-hover:border-cyan-300/50 group-hover:shadow-[0_0_20px_rgba(103,232,249,0.2)]" },
     { title: "AI Agents & Automations", path: "/services/ai-automation", desc: "Chatbots, n8n workflows and connected business tools", icon: Bot, color: "text-violet-300", gradient: "group-hover:border-violet-300/50 group-hover:shadow-[0_0_20px_rgba(196,181,253,0.2)]" },
-    { title: "Graphic Design", path: "/services/graphic-design", desc: "Social creatives, ads, thumbnails and brand collateral", icon: Palette, color: "text-amber-300", gradient: "group-hover:border-amber-300/50 group-hover:shadow-[0_0_20px_rgba(252,211,77,0.2)]" },
-    { title: "WordPress & CMS", path: "/services/wordpress", desc: "Manageable websites and content systems", icon: LayoutTemplate, color: "text-blue-400", gradient: "group-hover:border-blue-400/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]" },
-    { title: "Brand Identity", path: "/services/branding", desc: "Logo direction and practical brand systems", icon: PenTool, color: "text-pink-400", gradient: "group-hover:border-pink-400/50 group-hover:shadow-[0_0_20px_rgba(236,72,153,0.2)]" },
-    { title: "Content & Digital Marketing", path: "/services/digital-marketing", desc: "Content planning and campaign creative support", icon: Megaphone, color: "text-green-400", gradient: "group-hover:border-green-400/50 group-hover:shadow-[0_0_20px_rgba(74,222,128,0.2)]" }
+    { title: "Graphic Design", path: "/services/graphic-design", desc: "Logos, brand identity, social and ad creatives", icon: Palette, color: "text-amber-300", gradient: "group-hover:border-amber-300/50 group-hover:shadow-[0_0_20px_rgba(252,211,77,0.2)]" }
   ];
 
   return (

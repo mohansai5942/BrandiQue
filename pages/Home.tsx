@@ -17,6 +17,7 @@ import IndustrySolutions from '../components/IndustrySolutions';
 import HeroGrowth from '../components/HeroGrowth';
 import TrustProof from '../components/TrustProof';
 import FounderPromise from '../components/FounderPromise';
+import Memberships from '../components/Memberships';
 import { PILLARS, whatsappLink } from '../data/offers';
 import { useInquiry } from '../context/InquiryContext';
 import { INITIAL_N8N_PROJECTS } from './N8nProjectsData';
@@ -233,12 +234,7 @@ const Home: React.FC = () => {
                      );
                   })}
                </div>
-               <ScrollReveal>
-                  <div className="mt-10 flex flex-col items-center justify-center gap-3 text-center sm:flex-row">
-                     <span className="text-sm text-gray-500 dark:text-gray-400">Also available: WordPress & CMS, brand identity and content marketing.</span>
-                     <Link to="/services" className="inline-flex items-center gap-1.5 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-2.5 transition-all">All services <ArrowRight size={14} /></Link>
-                  </div>
-               </ScrollReveal>
+
             </div>
          </section>
 
@@ -276,8 +272,8 @@ const Home: React.FC = () => {
                <ScrollReveal>
                   <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
                      <span className="text-xs font-bold uppercase tracking-[0.3em] text-neon-purple">Portfolio Highlights</span>
-                     <h2 className="text-3xl md:text-5xl font-bold">Featured <span className="text-neon-blue">Creations.</span></h2>
-                     <p className="text-gray-500 text-lg font-light">A curated showcase spanning bespoke functional applications, agency architectures, and high-fidelity interactive designs.</p>
+                     <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Real work. <span className="text-yellow-500">Real businesses.</span></h2>
+                     <p className="text-gray-500 text-lg font-light">Websites, AI workflows and designs we have built. Explore them before you trust us with yours.</p>
                   </div>
 
                   <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 md:gap-12">
@@ -406,6 +402,8 @@ const Home: React.FC = () => {
                </ScrollReveal>
             </div>
          </section>
+
+         <Memberships />
 
          {/* 7. PROCESS */}
          <section className="py-20 md:py-24 max-w-6xl mx-auto px-4 md:px-6 text-center">

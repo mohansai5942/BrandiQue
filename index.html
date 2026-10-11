@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
   <head>
+    <script>(function(){var p=location.pathname.replace(/\/+$/,"")||"/";if(p==="/projects"||p==="/contact")document.documentElement.classList.add("legacy-scale");})();</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--seo-head-->
@@ -199,48 +200,29 @@
         overflow-x: hidden;
       }
 
-      /* MOBILE SPECIFIC SIZE REDUCTION (Under 768px) */
+      /* Legacy mobile/tablet scaling: kept only for Projects and Contact, which keep their original design. */
       @media (max-width: 767px) {
-        html {
-          font-size: 11px; /* Global scale-down of all rem units */
-        }
-        
-        /* Reduce Massive Headings in Hero */
-        .text-4xl { font-size: 2.5rem !important; }
-        .text-5xl { font-size: 3rem !important; }
-        
-        /* Reduce General Section Spacing on Mobile */
-        section { 
-          padding-top: 2rem !important; 
-          padding-bottom: 2rem !important; 
-        }
-        
-        /* Specific override for hero to maintain some stature but more compact */
-        section.pt-24 { 
-          padding-top: 6rem !important; 
-          padding-bottom: 3rem !important;
-          min-height: auto !important;
-        }
-
-        /* Shrink Margin/Gaps */
-        .mb-16 { margin-bottom: 2rem !important; }
-        .mb-24 { margin-bottom: 3rem !important; }
-        .gap-12 { gap: 1.5rem !important; }
-        .gap-16 { gap: 2rem !important; }
+        html.legacy-scale { font-size: 11px; }
+        html.legacy-scale .text-4xl { font-size: 2.5rem !important; }
+        html.legacy-scale .text-5xl { font-size: 3rem !important; }
+        html.legacy-scale section { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+        html.legacy-scale section.pt-24 { padding-top: 6rem !important; padding-bottom: 3rem !important; min-height: auto !important; }
+        html.legacy-scale .mb-16 { margin-bottom: 2rem !important; }
+        html.legacy-scale .mb-24 { margin-bottom: 3rem !important; }
+        html.legacy-scale .gap-12 { gap: 1.5rem !important; }
+        html.legacy-scale .gap-16 { gap: 2rem !important; }
       }
-
-      /* TABLET/SMALL DESKTOP RANGE (768px to 1200px) */
       @media (min-width: 768px) and (max-width: 1200px) {
-        html {
-          font-size: 13px; 
-        }
-        .text-8xl { font-size: 4rem !important; line-height: 1.1 !important; }
-        .text-7xl { font-size: 3.5rem !important; }
-        .text-6xl { font-size: 3rem !important; }
-        .text-5xl { font-size: 2.5rem !important; }
-        section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+        html.legacy-scale { font-size: 13px; }
+        html.legacy-scale .text-8xl { font-size: 4rem !important; line-height: 1.1 !important; }
+        html.legacy-scale .text-7xl { font-size: 3.5rem !important; }
+        html.legacy-scale .text-6xl { font-size: 3rem !important; }
+        html.legacy-scale .text-5xl { font-size: 2.5rem !important; }
+        html.legacy-scale section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
       }
-      
+      /* Modern pages: slightly smaller root on phones for balance, standard elsewhere. */
+      @media (max-width: 767px) { html:not(.legacy-scale) { font-size: 15px; } }
+
       html.dark body {
         background: #05070A;
         color: #ffffff;

@@ -2,8 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BadgeCheck, HelpCircle, MessageCircle, ShieldCheck, FileText, Repeat } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
+import PageHero, { btnPrimary, btnSecondary } from '../components/ui/PageHero';
 import GrowthOffers from '../components/GrowthOffers';
-import GrowthPlans from '../components/GrowthPlans';
+import Memberships from '../components/Memberships';
 import IndustrySolutions from '../components/IndustrySolutions';
 import { PRICING_FAQ, whatsappLink } from '../data/offers';
 import { useSiteSettings } from '../context/SiteSettingsContext';
@@ -13,7 +14,7 @@ const JUMP_LINKS = [
   { label: 'Web Development', href: '#pricing-web' },
   { label: 'AI Agents & Automations', href: '#pricing-ai' },
   { label: 'Graphic Design', href: '#pricing-design' },
-  { label: 'Monthly Plans', href: '#growth-plans' },
+  { label: 'Memberships', href: '#growth-plans' },
   { label: 'Industry Solutions', href: '#solutions' },
 ];
 
@@ -27,39 +28,27 @@ const Pricing: React.FC = () => {
   const { openInquiry } = useInquiry();
   const { settings } = useSiteSettings();
   return (
-    <div className="min-h-screen pt-32 md:pt-40 bg-gray-50 dark:bg-[#05070A] text-gray-900 dark:text-white transition-colors duration-300">
-      <section className="relative px-4 md:px-6 pb-12 md:pb-16 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,rgba(234,179,8,0.12),transparent_55%)]" />
-        <div className="relative max-w-5xl mx-auto text-center">
-          <ScrollReveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-2 text-[10px] md:text-xs font-bold tracking-[0.22em] uppercase text-yellow-600 dark:text-yellow-300">
-              <BadgeCheck size={14} /> BrandiQue · Pricing
-            </span>
-            <h1 className="mt-6 text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]">
-              Transparent pricing.<br /><span className="text-yellow-500">Built to pay for itself.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">
-              One-time packages to launch your website, AI automation or brand, monthly plans to keep it growing, and ready-made solutions for specific industries. Every project starts with a fixed written quote.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
-              <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-6 py-3.5 font-bold text-black hover:bg-yellow-300 transition-colors">
-                Get a free growth audit <ArrowRight size={17} />
-              </button>
-              <a href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I have a question about your pricing.')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 dark:border-white/15 px-6 py-3.5 font-semibold hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 transition-colors">
-                <MessageCircle size={17} /> Ask on WhatsApp
-              </a>
-            </div>
-            <nav aria-label="Pricing sections" className="mt-10 flex flex-wrap justify-center gap-2">
-              {JUMP_LINKS.map(link => (
-                <a key={link.href} href={link.href} className="rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 transition-colors hover:border-yellow-400/60 dark:border-white/10 dark:bg-white/5 dark:text-gray-300">{link.label}</a>
-              ))}
-            </nav>
-          </ScrollReveal>
-        </div>
-      </section>
+    <div className="min-h-screen bg-gray-50 dark:bg-[#05070A] text-gray-900 dark:text-white transition-colors duration-300">
+      <PageHero
+        eyebrow="Pricing & memberships"
+        eyebrowIcon={BadgeCheck}
+        title="Transparent pricing."
+        highlight="Built to pay for itself."
+        description="One-time packages to launch your design, website or AI automation, monthly memberships to keep it growing, and bundles that save when you use all three. Every project starts with a fixed written quote."
+        actions={<>
+          <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
+          <a href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I have a question about your pricing.')} target="_blank" rel="noopener noreferrer" className={btnSecondary}><MessageCircle size={18} /> Ask on WhatsApp</a>
+        </>}
+      >
+        <nav aria-label="Pricing sections" className="mt-10 flex flex-wrap justify-center gap-2">
+          {JUMP_LINKS.map(link => (
+            <a key={link.href} href={link.href} className="rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 transition-colors hover:border-yellow-400/60 dark:border-white/10 dark:bg-white/5 dark:text-gray-300">{link.label}</a>
+          ))}
+        </nav>
+      </PageHero>
 
       <GrowthOffers showHeading={false} />
-      <GrowthPlans />
+      <Memberships />
       <IndustrySolutions compact />
 
       <section className="px-4 md:px-6 py-20 md:py-24 bg-white dark:bg-[#080A0F] border-t border-gray-200 dark:border-white/5">

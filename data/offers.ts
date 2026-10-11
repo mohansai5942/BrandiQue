@@ -111,10 +111,10 @@ export const PACKAGES: Package[] = [
     note: 'Naming, packaging systems and editable source files may need a separate quote.',
   },
   {
-    pillar: 'design', name: 'Monthly Creatives', price: '₹5,000', suffix: 'per month',
-    description: 'A steady social presence with a planned batch of brand-aligned creatives every month.',
-    items: ['8 static social creatives per month', 'Simple monthly content calendar', 'Caption ideas for each post', 'One revision round per batch', 'Consistent brand look'],
-    note: 'Video editing, posting, ad spend and community management are excluded.',
+    pillar: 'design', name: 'Campaign Pack', price: '₹7,500', suffix: 'one-time · 12 designs',
+    description: 'Everything for one launch, offer or admission campaign, ready for social media and ads.',
+    items: ['8 social posts or carousels', '4 ad creatives in feed and story sizes', 'One consistent campaign look', 'Final PNG/JPG exports for every platform', 'One consolidated revision round'],
+    note: 'Need designs every month? Design memberships start at ₹5,000. Ad spend and posting are excluded.',
   },
 ];
 
@@ -172,7 +172,7 @@ export const INDUSTRY_SOLUTIONS: IndustrySolution[] = [
     problem: 'Parent enquiries arrive on WhatsApp at all hours, and admissions slip away when nobody replies or follows up.',
     includes: ['Admissions website or landing page', 'WhatsApp AI assistant for fees, batches and timings', 'Automatic follow-up until the parent visits', 'Fee-due and attendance alerts to parents', 'Monthly enquiry-to-admission report'],
     setup: '₹24,999',
-    plan: 'Growth plan',
+    plan: 'Growth bundle',
   },
   {
     slug: 'healthcare',
@@ -181,7 +181,7 @@ export const INDUSTRY_SOLUTIONS: IndustrySolution[] = [
     problem: 'Front desks are busy, appointment calls get missed and patients forget their follow-up visits.',
     includes: ['Clinic website with doctor and service pages', 'WhatsApp appointment requests and confirmations', 'Automatic appointment and follow-up reminders', 'Google review request after each visit', 'Digital prescription and bill workflow'],
     setup: '₹24,999',
-    plan: 'Growth plan',
+    plan: 'Growth bundle',
   },
   {
     slug: 'local-business',
@@ -190,7 +190,7 @@ export const INDUSTRY_SOLUTIONS: IndustrySolution[] = [
     problem: 'Customers ask the same questions about price, stock and timings, and slow replies send them to competitors.',
     includes: ['One-page website with catalogue or menu', 'WhatsApp AI assistant for FAQs and orders', 'Quotation or order details sent automatically', 'Leads and orders logged in Google Sheets', '8 offer creatives every month'],
     setup: '₹19,999',
-    plan: 'Growth plan',
+    plan: 'Growth bundle',
   },
   {
     slug: 'launch',
@@ -199,7 +199,7 @@ export const INDUSTRY_SOLUTIONS: IndustrySolution[] = [
     problem: 'A new business needs to look established from day one, without hiring three different agencies.',
     includes: ['Logo and brand identity kit', 'Business website (up to 5 pages)', '10 launch social media creatives', 'Google Business Profile setup', 'WhatsApp enquiry button and lead sheet'],
     setup: '₹24,999',
-    plan: 'Care plan',
+    plan: 'Web Care',
   },
 ];
 
@@ -217,3 +217,38 @@ export function whatsappLink(base: string, message: string): string {
   const url = base && base.startsWith('http') ? base : 'https://wa.me/917093320572';
   return `${url}${url.includes('?') ? '&' : '?'}text=${encodeURIComponent(message)}`;
 }
+
+// Monthly memberships: recurring revenue for each of the three services, plus all-in-one bundles.
+export type MembershipTrack = PillarId | 'bundle';
+
+export interface Membership {
+  track: MembershipTrack;
+  name: string;
+  price: string;
+  bestFor: string;
+  items: string[];
+  featured?: boolean;
+  saving?: string;
+}
+
+export const MEMBERSHIP_TRACKS: { id: MembershipTrack; label: string; short: string }[] = [
+  { id: 'bundle', label: 'All-in-one bundles', short: 'Bundles' },
+  { id: 'web', label: 'Web Development', short: 'Web' },
+  { id: 'ai', label: 'AI Agents & Automations', short: 'AI' },
+  { id: 'design', label: 'Graphic Design', short: 'Design' },
+];
+
+export const MEMBERSHIPS: Membership[] = [
+  // Web
+  { track: 'web', name: 'Web Care', price: '₹1,999', bestFor: 'Keep an existing website secure, updated and working.', items: ['Up to 2 hours of edits a month', 'Form, speed and uptime checks', 'Monthly backup and update checklist', 'Monthly change summary', 'WhatsApp support in working hours'] },
+  { track: 'web', name: 'Web Growth', price: '₹3,999', bestFor: 'Keep improving the site so it brings more enquiries.', featured: true, items: ['Everything in Web Care', 'Up to 5 hours of edits a month', 'One new landing page or section monthly', 'On-page SEO and Google Business updates', 'Monthly traffic and enquiry report'] },
+  // AI
+  { track: 'ai', name: 'AI Care', price: '₹2,999', bestFor: 'Keep your chatbot and automations running reliably.', items: ['Workflow monitoring and error fixes', 'Monthly chatbot answer review', 'Up to 1 hour of changes a month', 'API and token usage check', 'WhatsApp support in working hours'] },
+  { track: 'ai', name: 'AI Operations', price: '₹5,999', bestFor: 'Keep automating more of your business every month.', featured: true, items: ['Everything in AI Care', 'Chatbot tuning from real conversations', 'One new workflow or improvement monthly', 'Up to 4 hours of changes a month', 'Monthly leads and automation report'] },
+  // Design
+  { track: 'design', name: 'Design Lite', price: '₹5,000', bestFor: 'A steady, consistent social media presence.', items: ['8 social media creatives a month', 'Monthly content calendar', 'Caption ideas for every post', 'One revision round per batch', 'Brand-consistent templates'] },
+  { track: 'design', name: 'Design Pro', price: '₹9,999', bestFor: 'Brands running offers, ads and frequent campaigns.', featured: true, items: ['16 social media creatives a month', '4 ad creatives in multiple sizes', '2 thumbnails, banners or flyers', 'Two revision rounds per batch', 'Priority 48-hour turnaround'] },
+  // Bundles
+  { track: 'bundle', name: 'Growth', price: '₹6,999', bestFor: 'Website, AI assistant and social media, handled by one team.', featured: true, saving: 'Worth ₹9,998 separately', items: ['Web Care included', 'AI Care included', 'Design Lite included (8 creatives)', 'One monthly growth check-in', 'Monthly leads and enquiries report'] },
+  { track: 'bundle', name: 'Scale', price: '₹14,999', bestFor: 'A dedicated digital growth partner for growing teams.', saving: 'Worth ₹19,997 separately', items: ['Web Growth included', 'AI Operations included', 'Design Pro included (16 creatives)', 'Monthly strategy call', 'Priority support and same-day replies'] },
+];

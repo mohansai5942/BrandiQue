@@ -15,10 +15,6 @@ import Projects from './pages/Projects';
 import Services from './pages/Services';
 import Pricing from './pages/Pricing';
 import Solutions from './pages/Solutions';
-import FullStack from './pages/services/FullStack';
-import WordPress from './pages/services/WordPress';
-import Branding from './pages/services/Branding';
-import DigitalMarketing from './pages/services/DigitalMarketing';
 import AIAutomation from './pages/services/AIAutomation';
 import GraphicDesign from './pages/services/GraphicDesign';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -30,6 +26,11 @@ import DarlingAIChatbot from './components/DarlingAIChatbot';
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    const clean = pathname.replace(/\/+$/, '') || '/';
+    document.documentElement.classList.toggle('legacy-scale', clean === '/projects' || clean === '/contact');
+  }, [pathname]);
   
   useEffect(() => {
     if (hash) {
@@ -91,10 +92,6 @@ const App: React.FC = () => {
             <Route path="/services" element={<Services />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/solutions" element={<Solutions />} />
-            <Route path="/services/full-stack" element={<FullStack />} />
-            <Route path="/services/wordpress" element={<WordPress />} />
-            <Route path="/services/branding" element={<Branding />} />
-            <Route path="/services/digital-marketing" element={<DigitalMarketing />} />
             <Route path="/services/ai-automation" element={<AIAutomation />} />
             <Route path="/services/graphic-design" element={<GraphicDesign />} />
 

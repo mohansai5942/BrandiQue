@@ -15,16 +15,12 @@ import Services from '../pages/Services';
 import Pricing from '../pages/Pricing';
 import Solutions from '../pages/Solutions';
 import GraphicDesign from '../pages/services/GraphicDesign';
-import FullStack from '../pages/services/FullStack';
-import WordPress from '../pages/services/WordPress';
-import Branding from '../pages/services/Branding';
-import DigitalMarketing from '../pages/services/DigitalMarketing';
 import AIAutomation from '../pages/services/AIAutomation';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import TermsAndConditions from '../pages/TermsAndConditions';
 import CookiePolicy from '../pages/CookiePolicy';
 import NotFound from '../pages/NotFound';
-const components: Record<string, React.ComponentType> = {'/': Home,'/about': About,'/contact': Contact,'/web-development': WebDevelopment,'/projects': Projects,'/services': Services,'/pricing': Pricing,'/solutions': Solutions,'/services/graphic-design': GraphicDesign,'/services/full-stack': FullStack,'/services/wordpress': WordPress,'/services/branding': Branding,'/services/digital-marketing': DigitalMarketing,'/services/ai-automation': AIAutomation,'/privacy-policy': PrivacyPolicy,'/terms-and-conditions': TermsAndConditions,'/cookie-policy': CookiePolicy,'/404': NotFound};
+const components: Record<string, React.ComponentType> = {'/': Home,'/about': About,'/contact': Contact,'/web-development': WebDevelopment,'/projects': Projects,'/services': Services,'/pricing': Pricing,'/solutions': Solutions,'/services/graphic-design': GraphicDesign,'/services/ai-automation': AIAutomation,'/privacy-policy': PrivacyPolicy,'/terms-and-conditions': TermsAndConditions,'/cookie-policy': CookiePolicy,'/404': NotFound};
 export function render(path: string) {
  const Page=components[path] || NotFound;
  return renderToString(<StaticRouter location={path}><AuthProvider><SiteSettingsProvider><InquiryProvider><div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white"><Navbar /><main id="main-content" className="flex-grow"><Page /></main><Footer /></div></InquiryProvider></SiteSettingsProvider></AuthProvider></StaticRouter>);

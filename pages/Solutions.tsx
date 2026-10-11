@@ -2,8 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Layers, MessageCircle, Bot, Code2, Palette } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
+import PageHero, { btnPrimary, btnSecondary } from '../components/ui/PageHero';
 import IndustrySolutions from '../components/IndustrySolutions';
-import GrowthPlans from '../components/GrowthPlans';
+import Memberships from '../components/Memberships';
 import { useInquiry } from '../context/InquiryContext';
 
 const LAYERS = [
@@ -16,31 +17,18 @@ const LAYERS = [
 const Solutions: React.FC = () => {
   const { openInquiry } = useInquiry();
   return (
-    <div className="min-h-screen pt-32 md:pt-40 bg-gray-50 dark:bg-[#05070A] text-gray-900 dark:text-white transition-colors duration-300">
-      <section className="relative px-4 md:px-6 pb-8 md:pb-10 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,rgba(234,179,8,0.12),transparent_55%)]" />
-        <div className="relative max-w-5xl mx-auto text-center">
-          <ScrollReveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-2 text-[10px] md:text-xs font-bold tracking-[0.22em] uppercase text-yellow-600 dark:text-yellow-300">
-              <Layers size={14} /> Industry Solutions
-            </span>
-            <h1 className="mt-6 text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]">
-              One growth system.<br /><span className="text-yellow-500">Made for your business.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">
-              Instead of buying a website from one agency, a chatbot from another and designs from a freelancer, get all three working together, set up for how your industry actually gets customers.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
-              <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-6 py-3.5 font-bold text-black hover:bg-yellow-300 transition-colors">
-                Get a free growth audit <ArrowRight size={17} />
-              </button>
-              <Link to="/pricing" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 dark:border-white/15 px-6 py-3.5 font-semibold hover:border-yellow-400/60 transition-colors">
-                See all pricing
-              </Link>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
+    <div className="min-h-screen bg-gray-50 dark:bg-[#05070A] text-gray-900 dark:text-white transition-colors duration-300">
+      <PageHero
+        eyebrow="Industry solutions"
+        eyebrowIcon={Layers}
+        title="One growth system,"
+        highlight="made for your industry."
+        description="Instead of buying a website from one agency, a chatbot from another and designs from a freelancer, get all three working together, set up for how your industry actually gets customers."
+        actions={<>
+          <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
+          <Link to="/pricing" className={btnSecondary}>See all pricing</Link>
+        </>}
+      />
 
       <section className="px-4 md:px-6 pt-10">
         <div className="max-w-6xl mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
@@ -60,7 +48,7 @@ const Solutions: React.FC = () => {
       </section>
 
       <IndustrySolutions />
-      <GrowthPlans />
+      <Memberships />
     </div>
   );
 };

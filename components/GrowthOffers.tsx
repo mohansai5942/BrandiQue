@@ -19,12 +19,12 @@ const INQUIRY_SERVICE: Record<PillarId, string> = {
   design: 'Graphic Design',
 };
 
-interface GrowthOffersProps { showHeading?: boolean; pillars?: PillarId[]; }
+interface GrowthOffersProps { showHeading?: boolean; pillars?: PillarId[]; bare?: boolean; }
 
-const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars }) => {
+const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars, bare = false }) => {
   const { openInquiry } = useInquiry();
   return (
-    <section className="relative py-20 md:py-28 px-4 md:px-6 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
+    <section className={`relative px-4 md:px-6 bg-white dark:bg-[#080A0F] ${bare ? 'pt-12 pb-20 md:pb-28' : 'py-20 md:py-28 border-y border-gray-200 dark:border-white/5'}`}>
       <div className="max-w-[1320px] mx-auto">
         {showHeading && (
           <ScrollReveal>
@@ -54,7 +54,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                         <h3 className="text-2xl md:text-3xl font-bold tracking-tight">{pillar.title}</h3>
                       </div>
                     </div>
-                    <Link to={pillar.href} className="inline-flex items-center gap-2 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-3 transition-all">Explore {pillar.title} <ArrowRight size={16} /></Link>
+                    {!bare && <Link to={pillar.href} className="inline-flex items-center gap-2 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-3 transition-all">Explore {pillar.title} <ArrowRight size={16} /></Link>}
                   </div>
                 </ScrollReveal>
                 <div className="grid md:grid-cols-3 gap-5 lg:gap-6 items-stretch">

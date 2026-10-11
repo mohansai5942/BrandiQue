@@ -1,5 +1,13 @@
 https://www.brandique.in/* https://brandique.in/:splat 301
-/services/full-stack-web-development /services/full-stack 301
-/services/wordpress-development /services/wordpress 301
-/services/branding-identity /services/branding 301
+/services/full-stack-web-development /web-development 301
+/services/wordpress-development /web-development 301
+/services/full-stack /web-development 301
+/services/full-stack/ /web-development 301
+/services/wordpress /web-development 301
+/services/wordpress/ /web-development 301
+/services/branding-identity /services/graphic-design 301
+/services/branding /services/graphic-design 301
+/services/branding/ /services/graphic-design 301
+/services/digital-marketing /services/graphic-design 301
+/services/digital-marketing/ /services/graphic-design 301
 /* /404.html 404

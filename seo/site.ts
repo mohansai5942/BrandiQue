@@ -20,10 +20,6 @@ export const pages: Record<string, PageSEO> = {
   '/pricing': { title: 'Website, AI Automation & Graphic Design Pricing | BrandiQue', label: 'Pricing', description: 'Compare BrandiQue starting prices for websites, AI chatbots and automations, graphic design, monthly growth plans and industry solutions. Every project starts with a fixed written quote.' },
   '/solutions': { title: 'Industry Growth Solutions for Coaching, Clinics & Local Business | BrandiQue', label: 'Solutions', description: 'Ready-made growth systems that combine a website, WhatsApp AI assistant, automations and design for coaching centres, clinics, local businesses and new brands.' },
   '/web-development': { title: 'Website Design & Development Pricing | BrandiQue', label: 'Website development', service: 'Website design and development', description: 'Compare starting prices for personal, portfolio, business and e-commerce websites. Review inclusions, delivery steps and scope before requesting a project quote from BrandiQue.' },
-  '/services/full-stack': { title: 'Full-Stack & React Development | BrandiQue Web Solutions', label: 'Full-stack development', service: 'Full-stack web development', description: 'Custom React websites and full-stack web applications for business sites, portfolios and e-commerce. Explore BrandiQue’s process, features and deliverables.' },
-  '/services/wordpress': { title: 'WordPress & E-Commerce Development | BrandiQue', label: 'WordPress development', service: 'WordPress development', description: 'Build a manageable WordPress business website, portfolio or online store. BrandiQue provides responsive design, setup, optimization and handover guidance.' },
-  '/services/branding': { title: 'Brand Identity & Logo Design | BrandiQue Web Solutions', label: 'Branding and identity', service: 'Brand identity and logo design', description: 'Create a consistent brand with logo design, color palettes, typography and brand guidelines. Explore branding services from BrandiQue Web Solutions.' },
-  '/services/digital-marketing': { title: 'SEO & Digital Marketing Services | BrandiQue', label: 'Digital marketing', service: 'SEO and digital marketing', description: 'Explore SEO, social content and digital marketing services from BrandiQue Web Solutions. Plan campaigns and content around your audience and business goals.' },
   '/services/ai-automation': { title: 'AI Agents, Chatbots & Workflow Automation | BrandiQue', label: 'AI and automation', service: 'AI agents and workflow automation', description: 'Explore practical lead capture, chatbot and workflow automation services from BrandiQue. Every implementation is scoped around the required integrations, operating costs and handover needs.' },
   '/services/graphic-design': { title: 'Graphic Design for Brands, Social Media & Ads | BrandiQue', label: 'Graphic design', service: 'Graphic design and creative production', description: 'Get consistent graphic design for social media, advertising, thumbnails, banners, presentations and brand collateral. Explore the process and request a scoped quote from BrandiQue.' },
   '/projects': { title: 'Web Design & Automation Projects | BrandiQue', label: 'Projects', description: 'Explore BrandiQue Web Solutions’ website designs, development projects and n8n workflows. Find examples relevant to your next business website or automation.' },
@@ -32,9 +28,13 @@ export const pages: Record<string, PageSEO> = {
   '/cookie-policy': { title: 'Cookie Policy | BrandiQue Web Solutions', label: 'Cookie policy', description: 'Learn how BrandiQue Web Solutions uses cookies and local storage, including theme preferences, and how you can manage browser storage settings.' },
 };
 export const redirects: Record<string,string> = {
-  '/services/full-stack-web-development': '/services/full-stack',
-  '/services/wordpress-development': '/services/wordpress',
-  '/services/branding-identity': '/services/branding',
+  '/services/full-stack-web-development': '/web-development',
+  '/services/wordpress-development': '/web-development',
+  '/services/full-stack': '/web-development',
+  '/services/wordpress': '/web-development',
+  '/services/branding-identity': '/services/graphic-design',
+  '/services/branding': '/services/graphic-design',
+  '/services/digital-marketing': '/services/graphic-design',
 };
 export function getSEO(path: string) {
   return pages[path] || {title: path === '/login' ? 'Admin Login | BrandiQue' : path === '/admin' ? 'Admin | BrandiQue' : 'Page Not Found | BrandiQue', label: 'Page not found', description: 'This page is not available. Explore BrandiQue Web Solutions services or contact our team.'};
