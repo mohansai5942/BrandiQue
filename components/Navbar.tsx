@@ -351,9 +351,11 @@ const Navbar: React.FC = () => {
         </div>
       </header>
 
-      <div className={`fixed inset-0 z-[60] bg-black/30 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsOpen(false)} aria-hidden="true"></div>
+      {/* Closed: fades out exactly as before, then becomes visibility:hidden so the full-screen backdrop blur is
+          not composited on every scroll frame. Open: visible immediately, same fade-in. */}
+      <div className={`fixed inset-0 z-[60] bg-black/30 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100 visible' : 'opacity-0 pointer-events-none invisible'}`} style={{ transition: `opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear ${isOpen ? '0s' : '300ms'}` }} onClick={() => setIsOpen(false)} aria-hidden="true"></div>
 
-      <aside className={`fixed top-0 right-0 z-[70] h-[100dvh] w-[85%] max-w-[400px] bg-white dark:bg-[#0A0C11] shadow-2xl border-l border-gray-200 dark:border-white/10 transform transition-transform duration-300 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <aside className={`fixed top-0 right-0 z-[70] h-[100dvh] w-[85%] max-w-[400px] bg-white dark:bg-[#0A0C11] shadow-2xl border-l border-gray-200 dark:border-white/10 transform transition-transform duration-300 ease-out flex flex-col ${isOpen ? 'translate-x-0 visible' : 'translate-x-full invisible'}`} style={{ transition: `transform 300ms cubic-bezier(0, 0, 0.2, 1), visibility 0s linear ${isOpen ? '0s' : '300ms'}` }}>
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-white/50 dark:bg-[#0A0C11]/50 backdrop-blur-md sticky top-0 z-10 transition-colors duration-500">
           <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">Menu</span>
           <button onClick={() => setIsOpen(false)} className="p-2 -mr-2 text-gray-500 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-white/5" aria-label="Close Menu"><X size={24} /></button>
