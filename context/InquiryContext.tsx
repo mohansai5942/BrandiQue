@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { X, Check, ArrowRight, ArrowLeft, Loader2, Phone, Mail, User, ShieldCheck, HelpCircle } from 'lucide-react';
 import { collection, addDoc } from 'firebase/firestore';
+import { notifyAdmin } from '../notifyAdmin';
 import { db } from '../firebase';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -120,6 +121,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         });
         if (docRef && docRef.id) {
           createdDocId = docRef.id;
+          notifyAdmin('messages', docRef.id);
         }
       } catch (fbErr) {
         console.error("Firestore error in InquiryContext:", fbErr);

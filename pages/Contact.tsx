@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, LayoutTemplate, Code, PenTool, Megaphone, Bot } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import { collection, addDoc } from 'firebase/firestore';
+import { notifyAdmin } from '../notifyAdmin';
 import { db } from '../firebase';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 
@@ -46,6 +47,7 @@ const Contact: React.FC = () => {
         });
         if (docRef && docRef.id) {
           createdDocId = docRef.id;
+          notifyAdmin('messages', docRef.id);
         }
       } catch (fbError) {
         console.error("Firebase save error:", fbError);

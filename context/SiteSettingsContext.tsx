@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { doc, onSnapshot, setDoc, collection, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { notifyAdmin } from '../notifyAdmin';
 import { db } from '../firebase';
 import { Project, N8nProject, N8nProjectForm } from '../types';
 import { INITIAL_PROJECTS } from '../pages/ProjectsData';
@@ -568,6 +569,7 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     try {
       const docRef = await addDoc(collection(db, 'n8n_project_forms'), newItem);
+      notifyAdmin('n8n_project_forms', docRef.id);
       const added = { id: docRef.id, ...newItem };
       setN8nForms(prev => [added, ...prev.filter(f => f.id !== tempId && f.id !== added.id)]);
     } catch (err) {
