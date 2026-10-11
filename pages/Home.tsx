@@ -168,7 +168,7 @@ const Home: React.FC = () => {
 
          {/* 2. THE PROBLEM WE SOLVE */}
          <section className="py-20 md:py-24 border-y border-gray-200 dark:border-white/5 bg-white dark:bg-[#05070A]">
-            <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16">
                <ScrollReveal>
                   <div className="max-w-3xl mx-auto text-center">
                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">Why businesses lose customers online</p>
@@ -196,7 +196,7 @@ const Home: React.FC = () => {
 
          {/* 3. THREE CORE SERVICES */}
          <section id="services" className="py-20 md:py-28 bg-gray-50 dark:bg-[#05070A]">
-            <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16">
                <ScrollReveal>
                   <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">What we do</p>
@@ -240,7 +240,7 @@ const Home: React.FC = () => {
 
          {/* 4. HOW THE SYSTEM WORKS */}
          <section className="py-20 md:py-24 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
-            <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16">
                <ScrollReveal>
                   <h2 className="text-center text-3xl md:text-5xl font-bold tracking-tight">From first look to <span className="text-yellow-500">paying customer.</span></h2>
                </ScrollReveal>
@@ -268,7 +268,7 @@ const Home: React.FC = () => {
 
          {/* --- CURATED PROJECTS PREVIEW --- */}
          <section id="projects" className="py-24 bg-white dark:bg-[#05070A] border-t border-gray-200 dark:border-white/5">
-            <div className="max-w-[1500px] mx-auto px-6">
+            <div className="max-w-[100rem] mx-auto px-6">
                <ScrollReveal>
                   <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
                      <span className="text-xs font-bold uppercase tracking-[0.3em] text-neon-purple">Portfolio Highlights</span>
@@ -365,7 +365,7 @@ const Home: React.FC = () => {
 
          {/* 6. BEFORE / AFTER */}
          <section className="py-20 md:py-28 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
-            <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16">
                <ScrollReveal>
                   <div className="text-center max-w-3xl mx-auto">
                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">What changes for your business</p>
@@ -406,7 +406,7 @@ const Home: React.FC = () => {
          <Memberships />
 
          {/* 7. PROCESS */}
-         <section className="py-20 md:py-24 max-w-6xl mx-auto px-4 md:px-6 text-center">
+         <section className="py-20 md:py-24 max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16 text-center">
             <ScrollReveal>
                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Live in weeks, <span className="text-yellow-500">not months.</span></h2>
                <p className="mx-auto mt-5 max-w-2xl text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">A simple, fixed process so you always know what happens next and what it costs.</p>
@@ -435,7 +435,7 @@ const Home: React.FC = () => {
 
          {/* 9. FAQ */}
          <section id="faq" className="py-20 md:py-24 bg-gray-50 dark:bg-[#0A0C11]/50">
-            <div className="max-w-5xl mx-auto px-4 md:px-6">
+            <div className="max-w-5xl mx-auto px-5 md:px-8 desk:px-12 2xl:px-16">
                <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center tracking-tight">Frequently asked <span className="text-yellow-500">questions.</span></h2>
                <div className="grid md:grid-cols-2 gap-5">
                   {[
@@ -460,7 +460,7 @@ const Home: React.FC = () => {
          <section id="contact" className="py-32 relative overflow-hidden text-center bg-white dark:bg-[#05070A] border-t border-gray-100 dark:border-white/5">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-yellow-400/10 rounded-full blur-[120px] pointer-events-none"></div>
             <ScrollReveal>
-               <div className="max-w-[1500px] mx-auto px-6 space-y-10 relative z-10">
+               <div className="max-w-[100rem] mx-auto px-6 space-y-10 relative z-10">
                   <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tighter">Ready to get more <br /><span className="bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent">customers on autopilot?</span></h2>
                   <p className="text-gray-500 text-lg md:text-xl font-light max-w-2xl mx-auto">Start with a free growth audit. We'll show you exactly where you're losing enquiries and what to fix first.</p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">

@@ -19,7 +19,7 @@ const FounderPromise: React.FC = () => {
   const waHref = whatsappLink(settings.whatsapp, 'Hi Mohan, I would like to discuss a project for my business.');
   return (
     <section id="why-brandique" className="scroll-mt-24 py-20 md:py-28 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+      <div className="mx-auto grid max-w-[100rem] gap-12 px-5 md:px-8 desk:px-12 2xl:px-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <ScrollReveal>
           <div className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-gray-50 p-6 md:p-8 dark:border-white/10 dark:bg-[#0D1017]">
             <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-yellow-400/10 blur-3xl" />

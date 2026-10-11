@@ -19,8 +19,6 @@ const Contact: React.FC = () => {
     { id: 'Web Development', icon: Code },
     { id: 'AI Agents & Automations', icon: Bot },
     { id: 'Graphic Design', icon: PenTool },
-    { id: 'Brand Identity', icon: LayoutTemplate },
-    { id: 'Content & Digital Marketing', icon: Megaphone },
   ];
 
   const budgets = [
@@ -114,7 +112,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-28 md:pt-36 pb-20 px-4 md:px-6 max-w-[1500px] mx-auto w-full relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen pt-28 md:pt-36 desk:pt-40 pb-20 px-5 md:px-8 desk:px-12 2xl:px-16 max-w-[100rem] mx-auto w-full relative overflow-hidden transition-colors duration-300">
       
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none -z-10 bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
@@ -123,29 +121,28 @@ const Contact: React.FC = () => {
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+      <div className="grid desk:grid-cols-12 gap-12 desk:gap-20 items-start">
         
         {/* Left Column: Contact Info */}
-        <div id="contact-info" className="lg:col-span-5 relative z-10 flex flex-col justify-center h-full">
+        <div id="contact-info" className="desk:col-span-5 relative z-10 flex flex-col justify-center h-full">
            <ScrollReveal>
-               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-md mb-6 shadow-sm dark:shadow-neon/10 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors cursor-default">
-                   <div className="w-2 h-2 rounded-full bg-neon-blue animate-pulse"></div>
-                   <span className="text-[10px] md:text-xs font-bold tracking-widest text-gray-600 dark:text-gray-300 uppercase">Contact Us</span>
-               </div>
-               
-               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-gray-900 dark:text-white leading-[1.1] tracking-tight">
-                 Let's start a <br />
-                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-black dark:via-white to-blue-500 animate-gradient-x bg-[length:200%_auto]">conversation.</span>
+               <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300 md:text-[11px]">
+                   <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" /><span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" /></span>
+                   Contact · Replies within one working day
+               </span>
+
+               <h1 className="text-[2.4rem] sm:text-5xl desk:text-[4rem] font-bold mb-6 text-gray-900 dark:text-white leading-[1.06] tracking-tight">
+                 Let&rsquo;s grow your <span className="bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent">business together.</span>
                </h1>
                
                <p className="text-gray-600 dark:text-gray-400 mb-10 text-base md:text-lg leading-relaxed max-w-md font-light">
-                 Tell us what you want to build or improve. Choose a service, share a few project details and we’ll use that context to recommend a sensible next step.
+                 Need a website, an AI agent or design work? Share a few details and we’ll reply with a clear recommendation and a fixed written quote. No obligation.
                </p>
            </ScrollReveal>
 
            <ScrollReveal delay="delay-100" className="space-y-4 mb-10">
               {/* Contact Cards */}
-              <div className="group relative bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 hover:border-neon-purple/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(176,38,255,0.1)] hover:-translate-y-1">
+              <div className="group relative bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 hover:border-neon-purple/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:-translate-y-1">
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-neon-purple group-hover:scale-110 transition-transform">
@@ -213,9 +210,9 @@ const Contact: React.FC = () => {
         </div>
 
         {/* Right Column: FORM UI */}
-        <div className="lg:col-span-7 relative">
+        <div className="desk:col-span-7 relative">
            <ScrollReveal delay="delay-200" className="h-full">
-               <div className="relative bg-white dark:bg-[#0A0C11] border border-gray-200 dark:border-white/10 rounded-3xl p-6 md:p-8 lg:p-10 shadow-2xl overflow-hidden group hover:border-gray-300 dark:hover:border-white/20 transition-colors">
+               <div className="relative bg-white dark:bg-[#0A0C11] border border-gray-200 dark:border-white/10 rounded-3xl p-6 md:p-8 desk:p-10 shadow-2xl overflow-hidden group hover:border-gray-300 dark:hover:border-white/20 transition-colors">
                     {/* Ambient Glows */}
                     <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-neon-purple/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-neon-purple/10 transition-colors"></div>
                     <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-blue-500/5 rounded-full blur-[60px] pointer-events-none group-hover:bg-blue-500/10 transition-colors"></div>
@@ -245,7 +242,7 @@ const Contact: React.FC = () => {
                             {/* 1. Service Selection */}
                             <div className="space-y-3">
                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">What do you need help with?</label>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <div className="grid grid-cols-3 gap-2 sm:gap-3">
                                     {services.map((s) => (
                                         <button
                                             key={s.id}
@@ -253,7 +250,7 @@ const Contact: React.FC = () => {
                                             onClick={() => setSelectedService(s.id)}
                                             className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all duration-300 ${
                                                 selectedService === s.id 
-                                                ? 'bg-neon-purple/10 border-neon-purple text-neon-purple shadow-[0_0_15px_rgba(176,38,255,0.2)]' 
+                                                ? 'bg-neon-purple/10 border-neon-purple text-neon-purple shadow-[0_0_15px_rgba(234,179,8,0.2)]' 
                                                 : 'bg-gray-50 dark:bg-[#151A25]/50 border-gray-200 dark:border-white/5 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 hover:border-gray-300 dark:hover:border-white/10'
                                             }`}
                                         >

@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw, Bot, Layers, Eye, Copy, Check, X, Phone, Mail, Send, CheckCircle2, FileText, ArrowRight, ArrowLeft } from 'lucide-react';
+import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw, Bot, Layers, Eye, Copy, Check, X, Phone, Mail, Send, CheckCircle2, FileText, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import PageHero, { btnPrimary, btnSecondary } from '../components/ui/PageHero';
 import { collection, getDocs, addDoc, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { Project, N8nProject } from '../types';
@@ -119,7 +121,7 @@ function ProjectMedia({ image, video, images = [], videos = [], title, fitMode =
           onContextMenu={(e) => e.preventDefault()}
           onDragStart={(e) => e.preventDefault()}
           draggable={false}
-          className={`absolute inset-0 ${objectFitClass} grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out select-none pointer-events-none ${
+          className={`absolute inset-0 ${objectFitClass} grayscale-0 desk:grayscale desk:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out select-none pointer-events-none ${
             showVideo && currentVid ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
           }`}
         />
@@ -136,7 +138,7 @@ function ProjectMedia({ image, video, images = [], videos = [], title, fitMode =
           onContextMenu={(e) => e.preventDefault()}
           onDragStart={(e) => e.preventDefault()}
           draggable={false}
-          className={`absolute inset-0 ${objectFitClass} grayscale-0 lg:grayscale lg:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out select-none pointer-events-none ${
+          className={`absolute inset-0 ${objectFitClass} grayscale-0 desk:grayscale desk:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out select-none pointer-events-none ${
             showVideo ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           }`}
         />
@@ -296,7 +298,7 @@ export default function Projects() {
       className="group relative cursor-pointer block"
     >
        {/* Image / Visual Card */}
-       <div className="relative aspect-[16/10] bg-gray-100 dark:bg-white/[0.03] rounded-xl sm:rounded-2xl md:rounded-[2.5rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-700 group-hover:bg-neon-purple/5 group-hover:border-neon-purple/20 group-hover:translate-y-[-10px] group-hover:shadow-[0_25px_60px_rgba(176,38,255,0.15)]">
+       <div className="relative aspect-[16/10] bg-gray-100 dark:bg-white/[0.03] rounded-xl sm:rounded-2xl md:rounded-[2.5rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-700 group-hover:bg-neon-purple/5 group-hover:border-neon-purple/20 group-hover:translate-y-[-10px] group-hover:shadow-[0_25px_60px_rgba(234,179,8,0.15)]">
           <ProjectMedia 
              image={project.image} 
              video={project.video}
@@ -345,31 +347,20 @@ export default function Projects() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white min-h-screen pt-28 md:pt-36 pb-20 transition-colors duration-300"
+      className="bg-gray-50 dark:bg-[#05070A] text-gray-900 dark:text-white min-h-screen pb-20 transition-colors duration-300"
     >
-      <div className="container mx-auto px-4 max-w-[1500px]">
-        {/* Header */}
-        <div className="max-w-4xl mx-auto mb-16 md:mb-32 text-center md:text-left">
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-[10px] font-bold text-neon-purple dark:text-neon-blue tracking-[0.4em] md:tracking-[0.5em] uppercase mb-3 md:mb-4 block"
-          >
-            Showcase
-          </motion.span>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-4 md:mb-8 uppercase text-balance leading-[1.1]"
-          >
-            OUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue">PROJECTS.</span>
-          </motion.h1>
-          <p className="text-sm md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl text-balance font-light">
-            A curated selection of my work across custom software engineering, coding portfolios, and premium Figma prototypes.
-          </p>
-        </div>
-
+      <PageHero
+        eyebrow="Our work"
+        eyebrowIcon={Sparkles}
+        title="Real projects."
+        highlight="Real results."
+        description="Websites, AI automation workflows and design work we have built for businesses, brands and products. Explore the work, then let’s build yours."
+        actions={<>
+          <Link to="/contact" className={btnPrimary}>Start your project <ArrowRight size={18} /></Link>
+          <Link to="/services" className={btnSecondary}>Explore services</Link>
+        </>}
+      />
+      <div className="mx-auto w-full max-w-[100rem] px-5 md:px-8 desk:px-12 2xl:px-16 pt-4">
         {/* Category Filter Pills / Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-12 sm:mb-16 scrollbar-none max-w-full justify-start md:justify-center">
           {[
@@ -384,17 +375,17 @@ export default function Projects() {
               key={tab.id}
               onClick={() => {
                 setActiveCategory(tab.id as any);
-                window.scrollTo({ top: 320, behavior: 'smooth' });
+                window.scrollTo({ top: 520, behavior: 'smooth' });
               }}
               className={`px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 flex items-center gap-1.5 sm:gap-2 border ${
                 activeCategory === tab.id
-                  ? 'bg-gradient-to-r from-neon-purple to-neon-blue text-white border-transparent shadow-lg shadow-neon-purple/20 scale-105'
+                  ? 'bg-gray-900 text-white border-transparent shadow-lg dark:bg-yellow-400 dark:text-black scale-105'
                   : 'bg-white dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border-gray-200 dark:border-white/10 hover:border-neon-purple/30'
               }`}
             >
               <span>{tab.label}</span>
               <span className={`text-[8px] sm:text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
-                activeCategory === tab.id ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-white/10 text-gray-500 dark:text-gray-400'
+                activeCategory === tab.id ? 'bg-white/20 text-current' : 'bg-gray-200 dark:bg-white/10 text-gray-500 dark:text-gray-400'
               }`}>
                 {tab.count}
               </span>
@@ -426,7 +417,7 @@ export default function Projects() {
                 <button
                   onClick={() => {
                     setActiveCategory('main');
-                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                    window.scrollTo({ top: 520, behavior: 'smooth' });
                   }}
                   className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neon-purple dark:text-neon-blue hover:underline flex items-center gap-1"
                 >
@@ -450,7 +441,7 @@ export default function Projects() {
                     <button
                       onClick={() => {
                         setActiveCategory('main');
-                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                        window.scrollTo({ top: 520, behavior: 'smooth' });
                       }}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-neon-purple dark:hover:text-neon-blue hover:border-neon-purple/50 dark:hover:border-neon-blue/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
                     >
@@ -477,7 +468,7 @@ export default function Projects() {
                 <button
                   onClick={() => {
                     setActiveCategory('portfolio');
-                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                    window.scrollTo({ top: 520, behavior: 'smooth' });
                   }}
                   className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neon-purple dark:text-neon-blue hover:underline flex items-center gap-1"
                 >
@@ -501,7 +492,7 @@ export default function Projects() {
                     <button
                       onClick={() => {
                         setActiveCategory('portfolio');
-                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                        window.scrollTo({ top: 520, behavior: 'smooth' });
                       }}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-neon-purple dark:hover:text-neon-blue hover:border-neon-purple/50 dark:hover:border-neon-blue/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
                     >
@@ -533,10 +524,10 @@ export default function Projects() {
                   <button
                     onClick={() => {
                       setActiveCategory('n8n');
-                      window.scrollTo({ top: 320, behavior: 'smooth' });
+                      window.scrollTo({ top: 520, behavior: 'smooth' });
                     }}
                     className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider text-orange-500 dark:text-orange-400 hover:underline flex items-center gap-1 ${
-                      activeN8nProjects.length <= 6 ? 'lg:hidden' : ''
+                      activeN8nProjects.length <= 6 ? 'desk:hidden' : ''
                     }`}
                   >
                     View More ({activeN8nProjects.length}) <ArrowRight size={12} />
@@ -551,7 +542,7 @@ export default function Projects() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8"
+                  className="grid grid-cols-2 md:grid-cols-2 desk:grid-cols-3 gap-3 sm:gap-6 md:gap-8"
                 >
                   {(activeCategory === 'all' ? activeN8nProjects.slice(0, 6) : activeN8nProjects).map((project, i) => {
                     let nodeCount = project.nodeCount || 0;
@@ -570,7 +561,7 @@ export default function Projects() {
                         variants={cardVariants}
                         onClick={() => setSelectedN8nProject(project)}
                         className={`group relative cursor-pointer bg-white dark:bg-[#0F1320] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 hover:border-orange-500/50 hover:shadow-[0_20px_50px_rgba(255,109,0,0.15)] transition-all duration-500 flex flex-col justify-between ${
-                          isExtraMobileCard ? 'hidden lg:flex' : ''
+                          isExtraMobileCard ? 'hidden desk:flex' : ''
                         }`}
                       >
                         {/* Visual Workflow Canvas Header */}
@@ -634,11 +625,11 @@ export default function Projects() {
                 </motion.div>
 
                 {activeCategory === 'all' && activeN8nProjects.length > 4 && (
-                  <div className={`mt-8 md:mt-12 text-center ${activeN8nProjects.length <= 6 ? 'lg:hidden' : ''}`}>
+                  <div className={`mt-8 md:mt-12 text-center ${activeN8nProjects.length <= 6 ? 'desk:hidden' : ''}`}>
                     <button
                       onClick={() => {
                         setActiveCategory('n8n');
-                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                        window.scrollTo({ top: 520, behavior: 'smooth' });
                       }}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-orange-500 dark:hover:text-orange-400 hover:border-orange-500/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
                     >
@@ -665,7 +656,7 @@ export default function Projects() {
                 <button
                   onClick={() => {
                     setActiveCategory('figma');
-                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                    window.scrollTo({ top: 520, behavior: 'smooth' });
                   }}
                   className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neon-purple dark:text-neon-blue hover:underline flex items-center gap-1"
                 >
@@ -689,7 +680,7 @@ export default function Projects() {
                     <button
                       onClick={() => {
                         setActiveCategory('figma');
-                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                        window.scrollTo({ top: 520, behavior: 'smooth' });
                       }}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-neon-purple dark:hover:text-neon-blue hover:border-neon-purple/50 dark:hover:border-neon-blue/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
                     >
@@ -716,7 +707,7 @@ export default function Projects() {
                 <button
                   onClick={() => {
                     setActiveCategory('client');
-                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                    window.scrollTo({ top: 520, behavior: 'smooth' });
                   }}
                   className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neon-purple dark:text-neon-blue hover:underline flex items-center gap-1"
                 >
@@ -730,7 +721,7 @@ export default function Projects() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-10"
+                  className="grid grid-cols-2 desk:grid-cols-4 gap-3 sm:gap-6 md:gap-10"
                 >
                    {(activeCategory === 'all' ? clientProjects.slice(0, 4) : clientProjects).map((project, i) => (
                      <motion.a
@@ -744,7 +735,7 @@ export default function Projects() {
                      >
                         {/* Visual Logo Card */}
                         <div 
-                          className="relative aspect-square bg-white dark:bg-white/[0.02] rounded-xl sm:rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-500 group-hover:bg-gray-100/50 dark:group-hover:bg-white/[0.05] group-hover:border-neon-purple/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(176,38,255,0.08)] flex items-center justify-center p-3 sm:p-6 md:p-10 select-none"
+                          className="relative aspect-square bg-white dark:bg-white/[0.02] rounded-xl sm:rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 transition-all duration-500 group-hover:bg-gray-100/50 dark:group-hover:bg-white/[0.05] group-hover:border-neon-purple/30 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(234,179,8,0.08)] flex items-center justify-center p-3 sm:p-6 md:p-10 select-none"
                           onContextMenu={(e) => e.preventDefault()}
                         >
                            <ProjectMedia 
@@ -774,7 +765,7 @@ export default function Projects() {
                     <button
                       onClick={() => {
                         setActiveCategory('client');
-                        window.scrollTo({ top: 320, behavior: 'smooth' });
+                        window.scrollTo({ top: 520, behavior: 'smooth' });
                       }}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white hover:text-neon-purple dark:hover:text-neon-blue hover:border-neon-purple/50 dark:hover:border-neon-blue/50 text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md"
                     >
@@ -795,7 +786,7 @@ export default function Projects() {
         <div className="mt-12 md:mt-60 border-t border-gray-200 dark:border-white/5 pt-10 md:pt-40">
            <div className="max-w-4xl mx-auto">
               <div>
-                 <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.1] mb-8 md:mb-12 uppercase text-gray-900 dark:text-white">The <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue">Methodology</span> Behind The Build.</h2>
+                 <h2 className="text-3xl md:text-5xl desk:text-6xl font-bold tracking-tighter leading-[1.1] mb-8 md:mb-12 uppercase text-gray-900 dark:text-white">The <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue">Methodology</span> Behind The Build.</h2>
                  <div className="space-y-6 md:space-y-12">
                     {[
                       { step: "01", title: "STRATEGIC AUDIT", desc: "Before a single line of code is written, I audit the existing business logic and brand signals to ensure the product has a clear path to domination." },
@@ -816,21 +807,18 @@ export default function Projects() {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center py-12 md:py-20">
-           <h2 className="text-3xl md:text-5xl font-bold mb-6 md:mb-8 uppercase text-gray-900 dark:text-white">Have a vision?</h2>
-           <p className="text-xs md:text-lg text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mx-auto mb-8 md:mb-12 font-light">
-             Currently open for strategic partnerships and high-impact digital transformations. Let's build something that stands out.
-           </p>
-           <motion.a
-             href="https://wa.me/917093320572?text=Hello!%20I%20have%20a%20project%20idea.%20Can%20we%20discuss%20it%3F"
-             target="_blank"
-             rel="noopener noreferrer"
-             whileHover={{ scale: 1.05 }}
-             whileTap={{ scale: 0.95 }}
-             className="inline-block px-8 md:px-12 py-4 md:py-5 bg-neon-purple text-white font-bold text-[10px] md:text-xs tracking-[0.3em] rounded-xl md:rounded-2xl shadow-[0_4px_35px_rgba(176,38,255,0.25)] uppercase hover:bg-black transition-all duration-300"
-           >
-              START A PROJECT
-           </motion.a>
+        <div className="relative my-12 overflow-hidden rounded-[32px] bg-[#0B0D12] p-8 text-white md:my-20 md:p-14">
+          <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-yellow-400/20 blur-3xl" />
+          <div className="relative grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Want results like these for your business?</h2>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Tell us what you need: a website, an AI agent or design work. We reply within one working day with a clear plan and a fixed quote.</p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <Link to="/contact" className={btnPrimary}>Start your project <ArrowRight size={18} /></Link>
+              <a href="https://wa.me/917093320572?text=Hello!%20I%20have%20a%20project%20idea.%20Can%20we%20discuss%20it%3F" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-bold text-white transition-colors hover:border-green-400 hover:text-green-400">Chat on WhatsApp</a>
+            </div>
+          </div>
         </div>
       </div>
 

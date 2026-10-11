@@ -201,8 +201,8 @@ const getEmbedChatbotHtml = (initialIsMobile: boolean) => `<!doctype html>
       flex-shrink: 0;
     }
     .composer-form:focus-within {
-      border-color: rgba(176, 38, 255, 0.5);
-      box-shadow: 0 0 0 1px rgba(176, 38, 255, 0.25), 0 4px 14px rgba(0, 0, 0, 0.5);
+      border-color: rgba(234, 179, 8, 0.5);
+      box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.25), 0 4px 14px rgba(0, 0, 0, 0.5);
     }
     #input {
       flex: 1 1 auto;
@@ -824,7 +824,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 12, transition: { duration: 0.16 } }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed z-[99999] bottom-[68px] sm:bottom-[86px] right-3 sm:right-6 w-[calc(100vw-24px)] max-w-[325px] min-[380px]:max-w-[345px] sm:max-w-none sm:w-[385px] md:w-[400px] h-[430px] min-[380px]:h-[460px] sm:h-[545px] md:h-[565px] max-h-[70vh] sm:max-h-[calc(100vh-100px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(176,38,255,0.22)] overflow-hidden flex flex-col font-sans"
+            className="fixed z-[99999] bottom-[68px] sm:bottom-[86px] right-3 sm:right-6 w-[calc(100vw-24px)] max-w-[325px] min-[380px]:max-w-[345px] sm:max-w-none sm:w-[385px] md:w-[400px] h-[430px] min-[380px]:h-[460px] sm:h-[545px] md:h-[565px] max-h-[70vh] sm:max-h-[calc(100vh-100px)] rounded-2xl bg-[#090C12] border border-white/10 shadow-[0_20px_45px_rgba(0,0,0,0.85),0_0_25px_rgba(234,179,8,0.22)] overflow-hidden flex flex-col font-sans"
             role="dialog"
             aria-modal="true"
             aria-label="Darling AI Assistant"
@@ -916,7 +916,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
               initial={{ opacity: 0, x: 8, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: 8, scale: 0.95 }}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0E121B]/95 border border-neon-purple/40 text-xs font-medium text-white shadow-[0_4px_20px_rgba(176,38,255,0.25)] pointer-events-none whitespace-nowrap backdrop-blur-md"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0E121B]/95 border border-neon-purple/40 text-xs font-medium text-white shadow-[0_4px_20px_rgba(234,179,8,0.25)] pointer-events-none whitespace-nowrap backdrop-blur-md"
             >
               <span>Chat with us</span>
             </motion.div>
@@ -933,7 +933,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
           onBlur={() => setShowTooltip(false)}
           aria-label={isOpen ? 'Close chat' : 'Open chat'}
           aria-expanded={isOpen}
-          className="relative w-[52px] h-[52px] sm:w-[56px] sm:h-[56px] rounded-full p-[2px] bg-gradient-to-tr from-[#B026FF] via-[#00D4FF] to-[#B026FF] bg-[length:200%_200%] animate-gradient-x shadow-[0_8px_25px_rgba(176,38,255,0.38),0_0_15px_rgba(0,212,255,0.22)] hover:shadow-[0_10px_32px_rgba(176,38,255,0.55),0_0_22px_rgba(0,212,255,0.35)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center group focus:outline-none focus:ring-2 focus:ring-neon-purple focus:ring-offset-2 focus:ring-offset-[#05070A] cursor-pointer"
+          className="relative w-[52px] h-[52px] sm:w-[56px] sm:h-[56px] rounded-full p-[2px] bg-gradient-to-tr from-[#B026FF] via-[#00D4FF] to-[#B026FF] bg-[length:200%_200%] animate-gradient-x shadow-[0_8px_25px_rgba(234,179,8,0.38),0_0_15px_rgba(0,212,255,0.22)] hover:shadow-[0_10px_32px_rgba(234,179,8,0.55),0_0_22px_rgba(0,212,255,0.35)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center group focus:outline-none focus:ring-2 focus:ring-neon-purple focus:ring-offset-2 focus:ring-offset-[#05070A] cursor-pointer"
         >
           {/* Inner dark circle button */}
           <div className="w-full h-full rounded-full bg-[#0D1017] flex items-center justify-center text-white relative overflow-hidden group-hover:bg-[#121622] transition-colors">

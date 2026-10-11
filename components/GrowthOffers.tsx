@@ -24,8 +24,8 @@ interface GrowthOffersProps { showHeading?: boolean; pillars?: PillarId[]; bare?
 const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars, bare = false }) => {
   const { openInquiry } = useInquiry();
   return (
-    <section className={`relative px-4 md:px-6 bg-white dark:bg-[#080A0F] ${bare ? 'pt-12 pb-20 md:pb-28' : 'py-20 md:py-28 border-y border-gray-200 dark:border-white/5'}`}>
-      <div className="max-w-[1320px] mx-auto">
+    <section className={`relative px-5 md:px-8 desk:px-12 2xl:px-16 bg-white dark:bg-[#080A0F] ${bare ? 'pt-12 pb-20 md:pb-28' : 'py-20 md:py-28 border-y border-gray-200 dark:border-white/5'}`}>
+      <div className="max-w-[100rem] mx-auto">
         {showHeading && (
           <ScrollReveal>
             <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">

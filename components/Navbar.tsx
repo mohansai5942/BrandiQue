@@ -160,26 +160,26 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className={`fixed top-0 z-50 w-full -mt-[19px] transition-all duration-500 ease-custom will-change-transform ${scrolled ? 'bg-white/95 dark:bg-[#05070A]/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-1.5 md:py-2 shadow-sm' : 'bg-transparent py-2.5 md:py-4 lg:py-6'}`}>
-        <div className="max-w-[1600px] mx-auto px-4 md:px-6 mt-[20px] m-0 flex items-center justify-between relative">
+      <header className={`fixed top-0 z-50 w-full -mt-[19px] transition-all duration-500 ease-custom will-change-transform ${scrolled ? 'bg-white/95 dark:bg-[#05070A]/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-1.5 md:py-2 shadow-sm' : 'bg-transparent py-2.5 md:py-4 desk:py-6'}`}>
+        <div className="max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16 mt-[20px] m-0 flex items-center justify-between relative">
           <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)} onContextMenu={(e) => e.preventDefault()}>
             <img
               src="https://cdn.imgchest.com/files/c912299e5353.png"
               alt="BrandiQue Web Solutions"
-              className="h-[52px] sm:h-[62px] lg:h-[78px] w-auto object-contain transition-all duration-300 block dark:hidden"
+              className="h-[52px] sm:h-[62px] desk:h-[78px] w-auto object-contain transition-all duration-300 block dark:hidden"
               loading="eager"
             />
 
             <img
               src="https://cdn.imgchest.com/files/1b3230978aa9.png"
               alt="BrandiQue Web Solutions"
-              className="h-[52px] sm:h-[62px] lg:h-[78px] w-auto object-contain transition-all duration-300 hidden dark:block"
+              className="h-[52px] sm:h-[62px] desk:h-[78px] w-auto object-contain transition-all duration-300 hidden dark:block"
               loading="eager"
             />
 
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-2 p-1.5 rounded-full bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/5 backdrop-blur-md relative z-50 shadow-sm dark:shadow-none transition-colors duration-500">
+          <nav className="hidden desk:flex items-center gap-2 p-1.5 rounded-full bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/5 backdrop-blur-md relative z-50 shadow-sm dark:shadow-none transition-colors duration-500">
             {NAV_ITEMS.filter(item => item.path !== '/admin').map((item) => {
               if (item.hasWebsitesDropdown) {
                 const styles = getBadgeStyles(item.badgeStyle || 'violet');
@@ -331,7 +331,7 @@ const Navbar: React.FC = () => {
             })}
           </nav>
 
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden desk:flex items-center gap-3">
             <Link 
               to="/admin" 
               className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-full border group
@@ -349,7 +349,7 @@ const Navbar: React.FC = () => {
             <button onClick={toggleTheme} className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 hover:border-yellow-400/50 hover:bg-yellow-400/10 transition-all duration-300 hover:rotate-90 shadow-sm dark:shadow-none">{isDark ? <Sun size={18} /> : <Moon size={18} />}</button>
           </div>
 
-          <div className="lg:hidden flex items-center gap-2 relative z-50">
+          <div className="desk:hidden flex items-center gap-2 relative z-50">
             <button 
               className="p-2 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors focus:outline-none flex items-center justify-center" 
               onClick={() => setIsOpen(true)} 

@@ -23,7 +23,7 @@ const Services: React.FC = () => {
         eyebrowIcon={Layers}
         title="Three services. One team."
         highlight="One growth system."
-        description="Graphic design that makes you look trusted, websites that win the enquiry and AI agents that follow up automatically. Use one, or let all three work together."
+        description="Websites that win the enquiry, AI agents that reply and follow up automatically, and graphic design that makes you look trusted. Use one, or let all three work together."
         actions={<>
           <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" /></button>
           <Link to="/pricing" className={btnSecondary}>View all pricing</Link>
@@ -43,10 +43,10 @@ const Services: React.FC = () => {
           const Visual = SERVICE_VISUALS[p.id];
           const Icon = ICON[p.id];
           return (
-            <section key={p.id} id={`service-${p.id}`} className="scroll-mt-24 mx-auto max-w-6xl">
+            <section key={p.id} id={`service-${p.id}`} className="scroll-mt-24 mx-auto max-w-[100rem]">
               <ScrollReveal>
-                <div className="grid items-center gap-8 overflow-hidden rounded-[32px] border border-gray-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#0B0E14] md:p-10 lg:grid-cols-2 lg:gap-12">
-                  <div className={i % 2 === 1 ? 'lg:order-2' : ''}>
+                <div className="grid items-center gap-8 overflow-hidden rounded-[32px] border border-gray-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#0B0E14] md:p-10 desk:grid-cols-2 desk:gap-12">
+                  <div className={i % 2 === 1 ? 'desk:order-2' : ''}>
                     <div className="flex items-center gap-3">
                       <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${TONE[p.id]}`}><Icon size={24} /></span>
                       <span className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">Service {p.number}</span>
@@ -66,7 +66,7 @@ const Services: React.FC = () => {
                       <Link to={`/pricing#pricing-${p.id}`} className="inline-flex items-center justify-center rounded-full border border-gray-300 px-6 py-3.5 text-sm font-semibold transition-colors hover:border-yellow-400 dark:border-white/15">See packages</Link>
                     </div>
                   </div>
-                  <div className={`h-[320px] sm:h-[380px] ${i % 2 === 1 ? 'lg:order-1' : ''}`}><Visual /></div>
+                  <div className={`h-[20rem] sm:h-[24rem] ${i % 2 === 1 ? 'desk:order-1' : ''}`}><Visual /></div>
                 </div>
               </ScrollReveal>
             </section>

@@ -18,8 +18,8 @@ interface IndustrySolutionsProps { showHeading?: boolean; compact?: boolean; }
 const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({ showHeading = true, compact = false }) => {
   const { openInquiry } = useInquiry();
   return (
-    <section id="solutions" className="scroll-mt-24 py-20 md:py-28 px-4 md:px-6 bg-gray-50 dark:bg-[#05070A]">
-      <div className="max-w-6xl mx-auto">
+    <section id="solutions" className="scroll-mt-24 py-20 md:py-28 px-5 md:px-8 desk:px-12 2xl:px-16 bg-gray-50 dark:bg-[#05070A]">
+      <div className="max-w-[100rem] mx-auto">
         {showHeading && (
           <ScrollReveal>
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-10 md:mb-14">

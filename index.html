@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
   <head>
-    <script>(function(){var p=location.pathname.replace(/\/+$/,"")||"/";if(p==="/projects"||p==="/contact")document.documentElement.classList.add("legacy-scale");})();</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--seo-head-->
@@ -75,7 +74,8 @@
         theme: {
           extend: {
             screens: {
-              'lg': '768px', // Force desktop layout starting from tablet width
+              'lg': '768px', // Legacy: desktop layout from tablet width
+              'desk': '1024px', // Real laptop/desktop breakpoint for redesigned sections
             },
             colors: {
               navy: {
@@ -85,9 +85,9 @@
                 card: 'rgba(255, 255, 255, 0.02)',
               },
               neon: {
-                purple: '#B026FF', 
-                blue: '#00D4FF',
-                pink: '#FF2E93',
+                purple: '#D97706', 
+                blue: '#FACC15',
+                pink: '#F59E0B',
               },
             },
             fontFamily: {
@@ -166,8 +166,8 @@
                 '50%': { transform: 'translateY(-15px)' },
               },
               pulseGlow: {
-                '0%, 100%': { opacity: '1', boxShadow: '0 0 20px rgba(176, 38, 255, 0.4)' },
-                '50%': { opacity: '0.8', boxShadow: '0 0 40px rgba(176, 38, 255, 0.6)' },
+                '0%, 100%': { opacity: '1', boxShadow: '0 0 20px rgba(234, 179, 8, 0.4)' },
+                '50%': { opacity: '0.8', boxShadow: '0 0 40px rgba(234, 179, 8, 0.6)' },
               },
               'gradient-x': {
                 '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
@@ -184,8 +184,8 @@
               }
             },
             boxShadow: {
-              'neon': '0 0 20px rgba(176, 38, 255, 0.3)',
-              'neon-strong': '0 0 40px rgba(176, 38, 255, 0.5)',
+              'neon': '0 0 20px rgba(234, 179, 8, 0.3)',
+              'neon-strong': '0 0 40px rgba(234, 179, 8, 0.5)',
               'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
             }
           },
@@ -200,28 +200,13 @@
         overflow-x: hidden;
       }
 
-      /* Legacy mobile/tablet scaling: kept only for Projects and Contact, which keep their original design. */
-      @media (max-width: 767px) {
-        html.legacy-scale { font-size: 11px; }
-        html.legacy-scale .text-4xl { font-size: 2.5rem !important; }
-        html.legacy-scale .text-5xl { font-size: 3rem !important; }
-        html.legacy-scale section { padding-top: 2rem !important; padding-bottom: 2rem !important; }
-        html.legacy-scale section.pt-24 { padding-top: 6rem !important; padding-bottom: 3rem !important; min-height: auto !important; }
-        html.legacy-scale .mb-16 { margin-bottom: 2rem !important; }
-        html.legacy-scale .mb-24 { margin-bottom: 3rem !important; }
-        html.legacy-scale .gap-12 { gap: 1.5rem !important; }
-        html.legacy-scale .gap-16 { gap: 2rem !important; }
-      }
-      @media (min-width: 768px) and (max-width: 1200px) {
-        html.legacy-scale { font-size: 13px; }
-        html.legacy-scale .text-8xl { font-size: 4rem !important; line-height: 1.1 !important; }
-        html.legacy-scale .text-7xl { font-size: 3.5rem !important; }
-        html.legacy-scale .text-6xl { font-size: 3rem !important; }
-        html.legacy-scale .text-5xl { font-size: 2.5rem !important; }
-        html.legacy-scale section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
-      }
-      /* Modern pages: slightly smaller root on phones for balance, standard elsewhere. */
-      @media (max-width: 767px) { html:not(.legacy-scale) { font-size: 15px; } }
+      /* Consistent sizing on every screen. Phones and tablets use a fixed comfortable size;
+         laptops and desktops scale fluidly against a 1440px design, so a laptop running Windows
+         display scaling (125% / 150%) shows the same layout instead of a zoomed-in one. */
+      html { font-size: 16px; }
+      @media (max-width: 767px) { html { font-size: 15px; } }
+      @media (min-width: 768px) and (max-width: 1023px) { html { font-size: 13px; } }
+      @media (min-width: 1024px) { html { font-size: clamp(12.5px, calc(100vw / 1440 * 16), 18px); } }
 
       html.dark body {
         background: #05070A;
@@ -309,13 +294,13 @@
       }
 
       @keyframes nav-pulse {
-        0%, 100% { box-shadow: 0 0 12px rgba(176, 38, 255, 0.2); }
+        0%, 100% { box-shadow: 0 0 12px rgba(234, 179, 8, 0.2); }
         50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); }
       }
 
       .nav-highlight {
         position: relative;
-        background: linear-gradient(-45deg, rgba(176, 38, 255, 0.1), rgba(0, 212, 255, 0.1), rgba(176, 38, 255, 0.05));
+        background: linear-gradient(-45deg, rgba(234, 179, 8, 0.1), rgba(0, 212, 255, 0.1), rgba(234, 179, 8, 0.05));
         background-size: 200% 200%;
         animation: nav-shimmer 3s ease infinite, nav-pulse 3s ease-in-out infinite;
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -325,15 +310,15 @@
 
       html.dark .nav-highlight {
         border-color: rgba(255, 255, 255, 0.05);
-        background: linear-gradient(-45deg, rgba(176, 38, 255, 0.15), rgba(0, 212, 255, 0.15), rgba(176, 38, 255, 0.08));
+        background: linear-gradient(-45deg, rgba(234, 179, 8, 0.15), rgba(0, 212, 255, 0.15), rgba(234, 179, 8, 0.08));
         background-size: 200% 200%;
       }
 
       .nav-highlight:hover {
         transform: translateY(-2px) scale(1.05) !important;
-        background: linear-gradient(-45deg, rgba(176, 38, 255, 0.25), rgba(0, 212, 255, 0.25), rgba(176, 38, 255, 0.15)) !important;
-        border-color: rgba(176, 38, 255, 0.4) !important;
-        box-shadow: 0 10px 25px -5px rgba(176, 38, 255, 0.4), 0 8px 10px -6px rgba(0, 212, 255, 0.3) !important;
+        background: linear-gradient(-45deg, rgba(234, 179, 8, 0.25), rgba(0, 212, 255, 0.25), rgba(234, 179, 8, 0.15)) !important;
+        border-color: rgba(234, 179, 8, 0.4) !important;
+        box-shadow: 0 10px 25px -5px rgba(234, 179, 8, 0.4), 0 8px 10px -6px rgba(0, 212, 255, 0.3) !important;
         color: white !important;
       }
 
@@ -348,7 +333,7 @@
 
       .nav-highlight:hover svg {
         transform: rotate(12deg) scale(1.1);
-        filter: drop-shadow(0 0 5px rgba(176, 38, 255, 0.8));
+        filter: drop-shadow(0 0 5px rgba(234, 179, 8, 0.8));
       }
 
       body, div, span, header, footer, section, article, main, nav, a, button, input, textarea, select, svg {

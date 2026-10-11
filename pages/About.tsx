@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Check, Shield, Zap, LayoutTemplate, Star, Rocket, Code, ArrowRight, Heart, Cpu, Globe, Palette, Monitor, Box, Terminal, Database, Smartphone, Layers, Command, Target, ZapIcon, Info, Bot, Share2, PenTool } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
+import PageHero from '../components/ui/PageHero';
 import TextReveal from '../components/TextReveal';
 import ViewOptimizer from '../components/ViewOptimizer';
 
@@ -24,7 +25,7 @@ const TiltCard = ({ children, className = '' }: { children?: React.ReactNode, cl
             cardRef.current.style.transform = `perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg) scale3d(1.02, 1.02, 1.02)`;
         }
         if (glowRef.current) {
-            glowRef.current.style.background = `radial-gradient(600px circle at ${glowX}px ${glowY}px, rgba(176, 38, 255, 0.15), transparent 40%)`;
+            glowRef.current.style.background = `radial-gradient(600px circle at ${glowX}px ${glowY}px, rgba(234, 179, 8, 0.15), transparent 40%)`;
         }
     });
   };
@@ -35,7 +36,7 @@ const TiltCard = ({ children, className = '' }: { children?: React.ReactNode, cl
 
   return (
     <div ref={cardRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className={`relative transition-transform duration-200 ease-out will-change-transform group ${className} desktop-optimize-transform`}>
-      <div ref={glowRef} className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 rounded-[inherit] z-0" style={{ background: `radial-gradient(600px circle at center, rgba(176, 38, 255, 0.15), transparent 40%)` }} />
+      <div ref={glowRef} className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 rounded-[inherit] z-0" style={{ background: `radial-gradient(600px circle at center, rgba(234, 179, 8, 0.15), transparent 40%)` }} />
       <div className="relative z-10 h-full">{children}</div>
     </div>
   );
@@ -53,21 +54,29 @@ const About: React.FC = () => {
   useEffect(() => { setMounted(true); }, []);
 
   return (
-    <div className="min-h-screen pt-28 md:pt-36 pb-20 px-4 md:px-6 max-w-[1500px] mx-auto w-full relative overflow-hidden bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
+    <div className="min-h-screen pb-20 w-full relative overflow-hidden bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
+      <PageHero
+        eyebrow="About BrandiQue"
+        eyebrowIcon={Sparkles}
+        title="The team behind"
+        highlight="your growth."
+        description="BrandiQue Web Solutions is a Visakhapatnam studio for websites, AI agents and automations, and graphic design. A small, accountable team that treats your business like our own."
+      />
+      <div className="mx-auto w-full max-w-[100rem] px-5 md:px-8 desk:px-12 2xl:px-16 pt-6">
       
       {/* 1. HERO SECTION - MOHAN */}
-      <section id="founder" className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-20 mb-8 sm:mb-12 md:mb-16 lg:mb-20 px-4 lg:px-12 relative z-10">
-         <div className="text-center lg:text-left max-w-2xl order-2 lg:order-1 w-full">
+      <section id="founder" className="flex flex-col desk:flex-row items-center justify-between gap-8 md:gap-12 desk:gap-20 mb-8 sm:mb-12 md:mb-16 desk:mb-20 px-4 desk:px-12 relative z-10">
+         <div className="text-center desk:text-left max-w-2xl order-2 desk:order-1 w-full">
             <ScrollReveal>
-                <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-neon-purple/10 dark:bg-neon-purple/20 border border-neon-purple/30 dark:border-neon-purple/40 backdrop-blur-md mb-6 shadow-sm mx-auto lg:mx-0">
-                    <span className="text-xs font-extrabold tracking-widest text-neon-purple dark:text-purple-300 uppercase">Founder</span>
+                <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-neon-purple/10 dark:bg-neon-purple/20 border border-neon-purple/30 dark:border-neon-purple/40 backdrop-blur-md mb-6 shadow-sm mx-auto desk:mx-0">
+                    <span className="text-xs font-extrabold tracking-widest text-neon-purple dark:text-yellow-300 uppercase">Founder</span>
                 </div>
                 
-                <h1 className="text-[25.5px] xs:text-[31.5px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight tracking-tight whitespace-nowrap">
-                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-purple-400 to-blue-500 animate-gradient-x bg-[length:200%_auto]">{founder.name}</span>
-                </h1>
+                <h2 className="text-[25.5px] xs:text-[31.5px] sm:text-4xl md:text-5xl desk:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight tracking-tight whitespace-nowrap">
+                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple via-amber-400 to-yellow-500 animate-gradient-x bg-[length:200%_auto]">{founder.name}</span>
+                </h2>
                 
-                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left w-full break-words">
+                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg desk:text-xl leading-relaxed font-light text-left w-full break-words">
                    <p><strong>{founder.name}</strong> is the Founder of <strong>{COMPANY}</strong>, specializing in <span className="text-neon-purple font-medium">Web & App Engineering</span>, <span className="text-blue-500 font-medium">AI Agents</span>, workflow automation, <span className="text-cyan-500 dark:text-cyan-400 font-medium">UI/UX</span>, and strategic branding.</p>
                    <p>Known as K. Mohan, I combine technology and creativity to turn complex ideas into elegant digital products that help ambitious businesses build a strong online presence and accelerate growth.</p>
                 </div>
@@ -81,34 +90,34 @@ const About: React.FC = () => {
             </ScrollReveal>
          </div>
 
-         <div className="relative shrink-0 order-1 lg:order-2 group">
+         <div className="relative shrink-0 order-1 desk:order-2 group">
             <div className="absolute inset-0 bg-gradient-to-tr from-neon-purple/30 to-blue-500/30 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
-            <div className="w-64 h-64 md:w-80 md:h-80 lg:w-[420px] lg:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
+            <div className="w-64 h-64 md:w-80 md:h-80 desk:w-[420px] desk:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
                 <img src={founder.image} alt={`${founder.name}, Founder of ${COMPANY}`} className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" />
             </div>
          </div>
       </section>
 
       {/* 2. PRAVEEN SECTION (BELOW MOHAN, ABOVE DIGITAL PHILOSOPHY) */}
-      <section className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-20 mb-12 sm:mb-16 lg:mb-20 px-4 lg:px-12 relative z-10">
+      <section className="flex flex-col desk:flex-row items-center justify-between gap-8 md:gap-12 desk:gap-20 mb-12 sm:mb-16 desk:mb-20 px-4 desk:px-12 relative z-10">
          <div className="relative shrink-0 order-1 group">
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/30 to-cyan-500/30 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
-            <div className="w-64 h-64 md:w-80 md:h-80 lg:w-[420px] lg:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
+            <div className="w-64 h-64 md:w-80 md:h-80 desk:w-[420px] desk:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
                 <img src="https://files.catbox.moe/ignhd8.jpg" alt="Karri Praveen Kumar, team member" className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" />
             </div>
          </div>
 
-         <div className="text-center lg:text-left max-w-2xl order-2 w-full">
+         <div className="text-center desk:text-left max-w-2xl order-2 w-full">
             <ScrollReveal>
-                <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 dark:border-blue-500/40 backdrop-blur-md mb-6 shadow-sm mx-auto lg:mx-0">
+                <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 dark:border-blue-500/40 backdrop-blur-md mb-6 shadow-sm mx-auto desk:mx-0">
                    <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase">Co-Founder</span>
                 </div>
                 
-                <h2 className="text-[24.72px] xs:text-[30.9px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight tracking-tight whitespace-nowrap">
+                <h2 className="text-[24.72px] xs:text-[30.9px] sm:text-4xl md:text-5xl desk:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight tracking-tight whitespace-nowrap">
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 animate-gradient-x bg-[length:200%_auto]">Karri Praveen Kumar</span>
                 </h2>
                 
-                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed font-light text-left w-full break-words">
+                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg desk:text-xl leading-relaxed font-light text-left w-full break-words">
                    <p>As <strong>Graphic Designer & Web Developer</strong> at BrandiQue Web Solutions, I contribute to projects by crafting modern web applications with <span className="text-blue-500 font-medium">React & Next.js</span>.</p>
                    <p>By blending clean front-end architecture with creative <span className="text-cyan-500 dark:text-cyan-400 font-medium">Graphic Design</span>, I deliver intuitive digital experiences and impactful visual brand assets.</p>
                 </div>
@@ -136,15 +145,15 @@ const About: React.FC = () => {
         <div className="max-w-[1500px] mx-auto px-6 space-y-20">
           <ScrollReveal>
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-              <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white">Our Digital Philosophy</h2>
+              <h2 className="text-3xl md:text-5xl desk:text-6xl font-bold text-gray-900 dark:text-white">Our Digital Philosophy</h2>
               <p className="text-gray-500 dark:text-gray-400 text-base md:text-lg font-light leading-relaxed">Discover the principles that drive BrandiQue to deliver extraordinary results for every client, every time.</p>
             </div>
-            <div className="grid md:grid-cols-2 gap-12 lg:gap-20 text-left">
+            <div className="grid md:grid-cols-2 gap-12 desk:gap-20 text-left">
               <div className="space-y-8">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                   <Target className="text-neon-purple" /> Visionary Excellence
                 </h3>
-                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-sm md:text-base lg:text-lg leading-relaxed font-light">
+                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-sm md:text-base desk:text-lg leading-relaxed font-light">
                   <p>BrandiQue was established with a singular focus: to elevate the standard of the web for small and medium-sized enterprises. We believe that your digital footprint should be as unique as your fingerprints. We choose a practical implementation for your goals, with attention to clear user journeys, maintainable structure and performance-conscious delivery.</p>
                   <p>Our vision is to act as your long-term technical partner. We don't just hand over a set of files and disappear; we stay with you, providing the insights and technical support needed to ensure your digital assets continue to perform as your business scales. Every line of code we write is a building block for your future success.</p>
                 </div>
@@ -153,7 +162,7 @@ const About: React.FC = () => {
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                   <ZapIcon className="text-neon-blue" /> Technical Sophistication
                 </h3>
-                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-sm md:text-base lg:text-lg leading-relaxed font-light">
+                <div className="space-y-6 text-gray-600 dark:text-gray-400 text-sm md:text-base desk:text-lg leading-relaxed font-light">
                   <p>We are performance-obsessed engineers. By utilizing modern web technologies like React, Tailwind CSS, and headless CMS architectures, we create platforms that are visually stunning but functionally unbeatable. Our commitment to 'Clean Code' means your website will be easier to maintain, more secure against cyber threats, and significantly more visible in search engine rankings.</p>
                   <p>In an era where the majority of web traffic is mobile, our 'Mobile-First' responsive design strategy ensures that your brand looks premium on every device, from 4K monitors to small-screen smartphones. At BrandiQue, we merge the art of design with the science of engineering to create digital experiences that truly resonate.</p>
                 </div>
@@ -224,7 +233,7 @@ const About: React.FC = () => {
 
       {/* 3. CORE PILLARS */}
       <ViewOptimizer>
-      <div className="grid md:grid-cols-3 gap-8 mb-32 px-4 lg:px-8 max-w-[1500px] mx-auto">
+      <div className="grid md:grid-cols-3 gap-8 mb-32 px-4 desk:px-8 max-w-[1500px] mx-auto">
          {[
             { title: "What I Believe In", icon: Shield, theme: "purple", list: ["Custom solutions, zero templates", "Performance & UX above all", "Clean, scalable architecture", "Global standard compliance"] },
             { title: "Our Commitment", icon: LayoutTemplate, theme: "blue", list: ["Conversion-focused web development", "Practical AI agents and workflow automation", "Professional graphic design and creative assets", "Supporting brand identity and content services"] },
@@ -250,6 +259,7 @@ const About: React.FC = () => {
          ))}
       </div>
       </ViewOptimizer>
+      </div>
     </div>
   );
 };

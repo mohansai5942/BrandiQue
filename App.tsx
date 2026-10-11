@@ -27,10 +27,6 @@ import DarlingAIChatbot from './components/DarlingAIChatbot';
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
-  useEffect(() => {
-    const clean = pathname.replace(/\/+$/, '') || '/';
-    document.documentElement.classList.toggle('legacy-scale', clean === '/projects' || clean === '/contact');
-  }, [pathname]);
   
   useEffect(() => {
     if (hash) {

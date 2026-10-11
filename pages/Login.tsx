@@ -57,7 +57,7 @@ const Login: React.FC = () => {
           <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-neon-purple via-fuchsia-500 to-cyan-400 opacity-80 blur-md group-hover:opacity-100 transition duration-500 animate-pulse"></div>
           
           {/* Profile Ring Container */}
-          <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full p-1 bg-gradient-to-r from-neon-purple via-violet-500 to-cyan-400 shadow-[0_0_25px_rgba(176,38,255,0.4)]">
+          <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full p-1 bg-gradient-to-r from-neon-purple via-violet-500 to-cyan-400 shadow-[0_0_25px_rgba(234,179,8,0.4)]">
             <div className="w-full h-full rounded-full overflow-hidden bg-[#0F1320] flex items-center justify-center border-2 border-white/20">
               <img 
                 src={adminAvatar} 
@@ -145,7 +145,7 @@ const Login: React.FC = () => {
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className="w-full py-3.5 mt-3 bg-gradient-to-r from-violet-600 via-neon-purple to-cyan-500 hover:from-violet-500 hover:via-purple-500 hover:to-cyan-400 text-white font-black text-sm rounded-2xl transition-all duration-300 shadow-[0_4px_25px_rgba(176,38,255,0.4)] hover:shadow-[0_6px_35px_rgba(6,182,212,0.6)] active:scale-95 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
+            className="w-full py-3.5 mt-3 bg-gradient-to-r from-violet-600 via-neon-purple to-cyan-500 hover:from-violet-500 hover:via-purple-500 hover:to-cyan-400 text-white font-black text-sm rounded-2xl transition-all duration-300 shadow-[0_4px_25px_rgba(234,179,8,0.4)] hover:shadow-[0_6px_35px_rgba(6,182,212,0.6)] active:scale-95 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
           >
             {isSubmitting ? (
               <>

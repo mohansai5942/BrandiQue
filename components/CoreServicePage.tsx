@@ -54,7 +54,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* Outcomes */}
       <section aria-label="What you can expect" className="border-y border-gray-200 bg-white py-10 dark:border-white/5 dark:bg-[#080A0F]">
-        <dl className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-5 sm:grid-cols-3 md:px-6">
+        <dl className="mx-auto grid max-w-[100rem] grid-cols-1 gap-6 px-5 sm:grid-cols-3 md:px-6">
           {c.outcomes.map(o => (
             <div key={o.label} className="text-center sm:text-left">
               <dt className="sr-only">{o.label}</dt>
@@ -67,9 +67,9 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* What we build */}
       <section className="px-5 py-20 md:px-6 md:py-28">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-[100rem]">
           <ScrollReveal><SectionHeading eyebrow="What we deliver" title={c.buildsTitle} /></ScrollReveal>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 desk:grid-cols-3">
             {c.builds.map((b, i) => {
               const Icon = ICONS[b.icon] || Sparkles;
               return (
@@ -103,7 +103,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* One-time packages */}
       <section id="pricing" className="scroll-mt-24 border-t border-gray-200 bg-white pt-20 dark:border-white/5 dark:bg-[#080A0F] md:pt-28">
-        <div className="px-5 md:px-6"><ScrollReveal><SectionHeading eyebrow="One-time packages" title={<>Clear starting prices. <span className="text-yellow-500">Fixed written quote.</span></>} text="Pick a starting point. After a short call you get the exact scope, timeline and price in writing, and nothing starts until you approve." /></ScrollReveal></div>
+        <div className="px-5 md:px-8 desk:px-12 2xl:px-16"><ScrollReveal><SectionHeading eyebrow="One-time packages" title={<>Clear starting prices. <span className="text-yellow-500">Fixed written quote.</span></>} text="Pick a starting point. After a short call you get the exact scope, timeline and price in writing, and nothing starts until you approve." /></ScrollReveal></div>
         <GrowthOffers showHeading={false} pillars={[id]} bare />
       </section>
 
@@ -112,7 +112,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* Use cases */}
       <section className="px-5 py-20 md:px-6 md:py-28">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-[100rem]">
           <ScrollReveal><SectionHeading eyebrow="Who it's for" title="Built for businesses like yours" /></ScrollReveal>
           <div className="mt-12 grid gap-4 sm:grid-cols-2">
             {c.useCases.map((u, i) => (
@@ -129,7 +129,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* Process + tools */}
       <section className="border-y border-gray-200 bg-white px-5 py-20 dark:border-white/5 dark:bg-[#080A0F] md:px-6 md:py-28">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-[100rem]">
           <ScrollReveal><SectionHeading eyebrow="How we work" title={<>From first call to launch, <span className="text-yellow-500">no surprises.</span></>} /></ScrollReveal>
           <ol className="mt-12 grid gap-4 md:grid-cols-4">
             {c.process.map((p, i) => (
@@ -168,7 +168,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* CTA */}
       <section className="px-5 pb-20 md:px-6 md:pb-28">
-        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[32px] bg-[#0B0D12] p-8 text-white md:p-14">
+        <div className="relative mx-auto max-w-[100rem] overflow-hidden rounded-[32px] bg-[#0B0D12] p-8 text-white md:p-14">
           <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-yellow-400/20 blur-3xl" />
           <div className="relative grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
             <div>

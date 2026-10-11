@@ -30,8 +30,8 @@ const Solutions: React.FC = () => {
         </>}
       />
 
-      <section className="px-4 md:px-6 pt-10">
-        <div className="max-w-6xl mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="px-5 md:px-8 desk:px-12 2xl:px-16 pt-10">
+        <div className="max-w-[100rem] mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {LAYERS.map((layer, index) => (
             <ScrollReveal key={layer.title} delay={`delay-${index * 100}`}>
               <div className="h-full rounded-2xl border border-gray-200 bg-white p-5 dark:border-white/10 dark:bg-[#0D1017]">

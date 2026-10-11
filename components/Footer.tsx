@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-neon-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute top-20 left-10 w-[300px] h-[300px] bg-neon-purple/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-      <div className="max-w-[1600px] mx-auto px-6 relative z-10">
+      <div className="max-w-[100rem] mx-auto px-6 relative z-10">
         
         {/* Grid Layout: 2 cols Brand + 3 cols Links */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-10 mb-8 md:mb-10 lg:mb-16">
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
             <div className="flex gap-3 md:gap-3 lg:gap-4 pt-2">
               {SOCIAL_LINKS.map((item, i) => (
                 <a key={i} href={item.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-8 md:h-8 lg:w-10 lg:h-10 rounded-full bg-gray-100 dark:bg-[#151A25] border border-gray-200 dark:border-white/5 flex items-center justify-center text-gray-500 dark:text-gray-400 
-                                            transition-all duration-300 hover:border-neon-purple hover:text-white hover:bg-neon-purple hover:scale-[1.15] hover:rotate-12 hover:shadow-[0_0_20px_rgba(176,38,255,0.5)]">
+                                            transition-all duration-300 hover:border-neon-purple hover:text-white hover:bg-neon-purple hover:scale-[1.15] hover:rotate-12 hover:shadow-[0_0_20px_rgba(234,179,8,0.5)]">
                   <item.icon size={14} className="md:w-[14px] md:h-[14px] lg:w-[18px] lg:h-[18px]" />
                 </a>
               ))}

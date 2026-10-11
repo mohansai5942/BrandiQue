@@ -51,8 +51,8 @@ const Pricing: React.FC = () => {
       <Memberships />
       <IndustrySolutions compact />
 
-      <section className="px-4 md:px-6 py-20 md:py-24 bg-white dark:bg-[#080A0F] border-t border-gray-200 dark:border-white/5">
-        <div className="max-w-6xl mx-auto">
+      <section className="px-5 md:px-8 desk:px-12 2xl:px-16 py-20 md:py-24 bg-white dark:bg-[#080A0F] border-t border-gray-200 dark:border-white/5">
+        <div className="max-w-[100rem] mx-auto">
           <ScrollReveal>
             <h2 className="text-center text-3xl md:text-4xl font-bold tracking-tight">How pricing works</h2>
           </ScrollReveal>
@@ -70,7 +70,7 @@ const Pricing: React.FC = () => {
         </div>
       </section>
 
-      <section id="pricing-faq" className="px-4 md:px-6 py-20 md:py-24">
+      <section id="pricing-faq" className="px-5 md:px-8 desk:px-12 2xl:px-16 py-20 md:py-24">
         <div className="max-w-4xl mx-auto">
           <ScrollReveal>
             <h2 className="text-center text-3xl md:text-4xl font-bold tracking-tight">Pricing questions</h2>

@@ -27,15 +27,15 @@ const HIGHLIGHT: Record<NonNullable<PageHeroProps['accent']>, string> = {
 
 /** Shared hero used by every BrandiQue page so the site reads as one product. */
 const PageHero: React.FC<PageHeroProps> = ({ eyebrow, eyebrowIcon: Icon, title, highlight, description, actions, visual, children, accent = 'yellow' }) => (
-  <section className="relative overflow-hidden bg-gray-50 pb-14 pt-28 dark:bg-[#05070A] md:pb-20 md:pt-36 lg:pt-40">
+  <section className="relative overflow-hidden bg-gray-50 pb-14 pt-28 dark:bg-[#05070A] md:pb-20 md:pt-36 desk:pt-40">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000_60%,transparent_100%)]" />
     <div className={`pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full blur-[140px] ${GLOW[accent]}`} />
-    <div className={`relative z-10 mx-auto grid max-w-[1240px] items-center gap-12 px-5 md:px-6 ${visual ? 'lg:grid-cols-[1.05fr_0.95fr]' : ''}`}>
+    <div className={`relative z-10 mx-auto grid max-w-[100rem] items-center gap-12 px-5 md:px-8 desk:px-12 2xl:px-16 ${visual ? 'desk:grid-cols-[1.05fr_0.95fr]' : ''}`}>
       <div className={visual ? '' : 'mx-auto max-w-4xl text-center'}>
         <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300 md:text-[11px]">
           {Icon && <Icon size={13} />} {eyebrow}
         </span>
-        <h1 className="mt-6 text-[2.4rem] font-bold leading-[1.06] tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-[4rem]">
+        <h1 className="mt-6 text-[2.4rem] font-bold leading-[1.06] tracking-tight text-gray-900 dark:text-white sm:text-5xl desk:text-[4rem]">
           {title}{highlight && <> <span className={`bg-gradient-to-r bg-clip-text text-transparent ${HIGHLIGHT[accent]}`}>{highlight}</span></>}
         </h1>
         <p className={`mt-6 text-base leading-relaxed text-gray-600 dark:text-gray-400 md:text-lg ${visual ? 'max-w-xl' : 'mx-auto max-w-2xl'}`}>{description}</p>
@@ -43,9 +43,9 @@ const PageHero: React.FC<PageHeroProps> = ({ eyebrow, eyebrowIcon: Icon, title, 
         {children}
       </div>
       {visual && (
-        <div className="relative mx-auto w-full max-w-[500px]">
+        <div className="relative mx-auto w-full max-w-[32rem]">
           <div className="absolute -inset-6 rounded-[44px] bg-gradient-to-br from-yellow-400/15 via-transparent to-violet-500/15 blur-2xl" />
-          <div className="relative h-[340px] sm:h-[400px]">{visual}</div>
+          <div className="relative h-[21rem] sm:h-[25rem]">{visual}</div>
         </div>
       )}
     </div>

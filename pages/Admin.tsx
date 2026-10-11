@@ -3128,7 +3128,7 @@ const Admin: React.FC = () => {
                     <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-neon-purple via-fuchsia-500 to-cyan-400 opacity-80 blur-md group-hover:opacity-100 transition duration-500 animate-pulse"></div>
 
                     {/* Profile Ring Container */}
-                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-r from-neon-purple via-violet-500 to-cyan-400 shadow-[0_0_25px_rgba(176,38,255,0.4)]">
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-r from-neon-purple via-violet-500 to-cyan-400 shadow-[0_0_25px_rgba(234,179,8,0.4)]">
                       <div className="w-full h-full rounded-full overflow-hidden bg-[#0F1320] flex items-center justify-center border-2 border-white/20">
                         <img
                           src={contactFormAdminAvatar || defaultAdminAvatar}
@@ -5135,7 +5135,7 @@ const Admin: React.FC = () => {
                         {/* Round Profile Avatar with Glowing Ring */}
                         <div className="relative mb-3 group">
                           <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-neon-purple via-fuchsia-500 to-cyan-400 opacity-80 blur-md animate-pulse"></div>
-                          <div className="relative w-22 h-22 sm:w-24 sm:h-24 rounded-full p-1 bg-gradient-to-r from-neon-purple via-violet-500 to-cyan-400 shadow-[0_0_25px_rgba(176,38,255,0.4)]">
+                          <div className="relative w-22 h-22 sm:w-24 sm:h-24 rounded-full p-1 bg-gradient-to-r from-neon-purple via-violet-500 to-cyan-400 shadow-[0_0_25px_rgba(234,179,8,0.4)]">
                             <div className="w-full h-full rounded-full overflow-hidden bg-[#0F1320] flex items-center justify-center border-2 border-white/20">
                               <img
                                 src={contactFormAdminAvatar || defaultAdminAvatar}

@@ -14,7 +14,7 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true, initialTr
   return (
     <section id="growth-plans" className="scroll-mt-24 relative overflow-hidden bg-[#06080C] px-4 py-20 text-white md:px-6 md:py-28">
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-yellow-400/10 blur-[120px]" />
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative mx-auto max-w-[100rem]">
         {showHeading && (
           <ScrollReveal>
             <div className="mx-auto mb-10 max-w-3xl text-center md:mb-12">
