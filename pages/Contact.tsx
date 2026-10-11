@@ -115,7 +115,7 @@ const Contact: React.FC = () => {
       <div className="fixed inset-0 pointer-events-none -z-10 bg-gray-50 dark:bg-[#05070A] transition-colors duration-300">
          <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-neon-purple/20 dark:bg-neon-purple/5 rounded-full blur-[120px] animate-pulse-glow"></div>
          <div className="absolute bottom-[20%] left-[-10%] w-[600px] h-[600px] bg-blue-600/20 dark:bg-blue-600/5 rounded-full blur-[100px]"></div>
-         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
+         <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-20 mix-blend-soft-light"></div>
       </div>
 
       <div className="grid desk:grid-cols-12 gap-6 md:gap-12 desk:gap-20 items-start">
