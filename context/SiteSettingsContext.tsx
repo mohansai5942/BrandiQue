@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { doc, onSnapshot, collection, addDoc } from 'firebase/firestore';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { notifyAdmin } from '../notifyAdmin';
-import { db } from '../firebase';
+import { loadFirestore, whenIdle } from '../firestoreClient';
 import { Project, N8nProject, N8nProjectForm } from '../types';
 import { cleanText, isValidEmail, isValidPhone, LIMITS, safeExternalUrl, safeMediaUrl, SUBMIT_TIMEOUT_MS, withTimeout } from '../utils/security';
 import { INITIAL_PROJECTS } from '../pages/ProjectsData';
@@ -130,107 +129,118 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [n8nProjects, setN8nProjects] = useState<N8nProject[]>(INITIAL_N8N_PROJECTS);
   const [loadingN8nProjects, setLoadingN8nProjects] = useState(true);
 
-  // Published contact settings (managed in the BrandiQue Data Console).
+  // Live data from Firestore: published contact settings (managed in the BrandiQue Data Console) and the
+  // read-only websites / projects / n8n lists. Started when the browser is idle so the Firebase SDK never
+  // delays the first paint; the defaults above are shown until the snapshots arrive (as before).
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      doc(db, 'settings', 'contact'),
-      (snapshot) => {
-        setSettings(snapshot.exists() ? sanitizeSettings(snapshot.data() as Partial<SiteSettings>) : DEFAULT_SETTINGS);
-        setLoading(false);
-      },
-      () => {
-        setSettings(DEFAULT_SETTINGS);
-        setLoading(false);
-      }
-    );
-    return () => unsubscribe();
-  }, []);
+    let cancelled = false;
+    const unsubs: Array<() => void> = [];
+    const cancelIdle = whenIdle(() => {
+      loadFirestore().then(({ db, doc, collection, onSnapshot }) => {
+        if (cancelled) return;
+        // Published contact settings (managed in the BrandiQue Data Console).
+        unsubs.push(onSnapshot(
+          doc(db, 'settings', 'contact'),
+          (snapshot) => {
+            setSettings(snapshot.exists() ? sanitizeSettings(snapshot.data() as Partial<SiteSettings>) : DEFAULT_SETTINGS);
+            setLoading(false);
+          },
+          () => {
+            setSettings(DEFAULT_SETTINGS);
+            setLoading(false);
+          }
+        ));
 
-  // Websites menu (read-only on the public site).
-  useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'websites'), (snapshot) => {
-      if (snapshot.empty) {
-        setWebsites(DEFAULT_WEBSITES);
-        setLoadingWebsites(false);
-        return;
-      }
-      const items: WebsiteItem[] = [];
-      snapshot.forEach((docSnap) => {
-        const item = sanitizeWebsite({ ...(docSnap.data() as WebsiteItem), id: docSnap.id });
-        if (item) items.push(item);
+        // Websites menu (read-only on the public site).
+        unsubs.push(onSnapshot(collection(db, 'websites'), (snapshot) => {
+          if (snapshot.empty) {
+            setWebsites(DEFAULT_WEBSITES);
+            setLoadingWebsites(false);
+            return;
+          }
+          const items: WebsiteItem[] = [];
+          snapshot.forEach((docSnap) => {
+            const item = sanitizeWebsite({ ...(docSnap.data() as WebsiteItem), id: docSnap.id });
+            if (item) items.push(item);
+          });
+          items.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+          setWebsites(items);
+          setLoadingWebsites(false);
+        }, () => {
+          setWebsites(DEFAULT_WEBSITES);
+          setLoadingWebsites(false);
+        }));
+
+        // Portfolio projects (read-only on the public site).
+        unsubs.push(onSnapshot(collection(db, 'projects'), (snapshot) => {
+          if (snapshot.empty) {
+            setProjects(INITIAL_PROJECTS);
+            setLoadingProjects(false);
+            return;
+          }
+
+          const deduplicatedMap = new Map<string, Project>();
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data() as Project;
+            const projectItem: Project = sanitizeProject({ ...data, id: docSnap.id });
+            const titleKey = (typeof projectItem.title === 'string' ? projectItem.title : '').trim().toLowerCase();
+
+            if (!titleKey) return;
+
+            if (!deduplicatedMap.has(titleKey)) {
+              deduplicatedMap.set(titleKey, projectItem);
+            } else {
+              const existing = deduplicatedMap.get(titleKey)!;
+              deduplicatedMap.set(titleKey, existing.isDeleted && !projectItem.isDeleted ? projectItem : existing);
+            }
+          });
+
+          const list = Array.from(deduplicatedMap.values());
+          list.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+          setProjects(list);
+          setLoadingProjects(false);
+        }, () => {
+          setProjects(INITIAL_PROJECTS);
+          setLoadingProjects(false);
+        }));
+
+        // n8n workflow showcase (read-only on the public site).
+        unsubs.push(onSnapshot(collection(db, 'n8n_projects'), (snapshot) => {
+          if (snapshot.empty) {
+            setN8nProjects(INITIAL_N8N_PROJECTS);
+            setLoadingN8nProjects(false);
+            return;
+          }
+          const list: N8nProject[] = [];
+          snapshot.forEach((docSnap) => {
+            list.push(sanitizeN8nProject({ ...(docSnap.data() as N8nProject), id: docSnap.id }));
+          });
+          list.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+          setN8nProjects(list);
+          setLoadingN8nProjects(false);
+        }, () => {
+          setN8nProjects(INITIAL_N8N_PROJECTS);
+          setLoadingN8nProjects(false);
+        }));
+      }).catch(() => {
+        if (cancelled) return;
+        setSettings(DEFAULT_SETTINGS); setLoading(false);
+        setWebsites(DEFAULT_WEBSITES); setLoadingWebsites(false);
+        setProjects(INITIAL_PROJECTS); setLoadingProjects(false);
+        setN8nProjects(INITIAL_N8N_PROJECTS); setLoadingN8nProjects(false);
       });
-      items.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
-      setWebsites(items);
-      setLoadingWebsites(false);
-    }, () => {
-      setWebsites(DEFAULT_WEBSITES);
-      setLoadingWebsites(false);
     });
-    return () => unsub();
+    return () => {
+      cancelled = true;
+      cancelIdle();
+      unsubs.forEach((u) => u());
+    };
   }, []);
 
-  // Portfolio projects (read-only on the public site).
-  useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'projects'), (snapshot) => {
-      if (snapshot.empty) {
-        setProjects(INITIAL_PROJECTS);
-        setLoadingProjects(false);
-        return;
-      }
-
-      const deduplicatedMap = new Map<string, Project>();
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data() as Project;
-        const projectItem: Project = sanitizeProject({ ...data, id: docSnap.id });
-        const titleKey = (typeof projectItem.title === 'string' ? projectItem.title : '').trim().toLowerCase();
-
-        if (!titleKey) return;
-
-        if (!deduplicatedMap.has(titleKey)) {
-          deduplicatedMap.set(titleKey, projectItem);
-        } else {
-          const existing = deduplicatedMap.get(titleKey)!;
-          deduplicatedMap.set(titleKey, existing.isDeleted && !projectItem.isDeleted ? projectItem : existing);
-        }
-      });
-
-      const list = Array.from(deduplicatedMap.values());
-      list.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
-      setProjects(list);
-      setLoadingProjects(false);
-    }, () => {
-      setProjects(INITIAL_PROJECTS);
-      setLoadingProjects(false);
-    });
-    return () => unsub();
-  }, []);
-
-  // n8n workflow showcase (read-only on the public site).
-  useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'n8n_projects'), (snapshot) => {
-      if (snapshot.empty) {
-        setN8nProjects(INITIAL_N8N_PROJECTS);
-        setLoadingN8nProjects(false);
-        return;
-      }
-      const list: N8nProject[] = [];
-      snapshot.forEach((docSnap) => {
-        list.push(sanitizeN8nProject({ ...(docSnap.data() as N8nProject), id: docSnap.id }));
-      });
-      list.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
-      setN8nProjects(list);
-      setLoadingN8nProjects(false);
-    }, () => {
-      setN8nProjects(INITIAL_N8N_PROJECTS);
-      setLoadingN8nProjects(false);
-    });
-    return () => unsub();
-  }, []);
-
-  const getRawPhone = () => settings.phone.replace(/[^\d+]/g, '');
+  const getRawPhone = useCallback(() => settings.phone.replace(/[^\d+]/g, ''), [settings.phone]);
 
   // Public "request this workflow" form. Throws on failure so the form can show an error.
-  const addN8nFormSubmission = async (submission: Omit<N8nProjectForm, 'id' | 'createdAt'>) => {
+  const addN8nFormSubmission = useCallback(async (submission: Omit<N8nProjectForm, 'id' | 'createdAt'>) => {
     const newItem = {
       projectId: cleanText(submission.projectId, LIMITS.short),
       projectTitle: cleanText(submission.projectTitle, LIMITS.short),
@@ -241,25 +251,29 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
       isDeleted: false,
       createdAt: new Date().toISOString()
     };
-    const docRef = await withTimeout(addDoc(collection(db, 'n8n_project_forms'), newItem), SUBMIT_TIMEOUT_MS);
+    const docRef = await withTimeout(
+      loadFirestore().then(({ db, addDoc, collection }) => addDoc(collection(db, 'n8n_project_forms'), newItem)),
+      SUBMIT_TIMEOUT_MS
+    );
     notifyAdmin('n8n_project_forms', docRef.id);
-  };
+  }, []);
+
+  // Memoised so consumers only re-render when the data they read actually changes.
+  const value = useMemo(() => ({
+    settings,
+    websites,
+    projects,
+    n8nProjects,
+    addN8nFormSubmission,
+    loading,
+    loadingWebsites,
+    loadingProjects,
+    loadingN8nProjects,
+    getRawPhone
+  }), [settings, websites, projects, n8nProjects, addN8nFormSubmission, loading, loadingWebsites, loadingProjects, loadingN8nProjects, getRawPhone]);
 
   return (
-    <SiteSettingsContext.Provider
-      value={{
-        settings,
-        websites,
-        projects,
-        n8nProjects,
-        addN8nFormSubmission,
-        loading,
-        loadingWebsites,
-        loadingProjects,
-        loadingN8nProjects,
-        getRawPhone
-      }}
-    >
+    <SiteSettingsContext.Provider value={value}>
       {children}
     </SiteSettingsContext.Provider>
   );

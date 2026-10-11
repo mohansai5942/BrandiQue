@@ -82,7 +82,8 @@ const {createServer}=await import('vite');
 const vite=await createServer({server:{middlewareMode:true},appType:'custom'});
 try {
  const site=await vite.ssrLoadModule('/seo/site.ts');
- const {render}=await vite.ssrLoadModule('/seo/render.tsx');
+ const {render,prepare}=await vite.ssrLoadModule('/seo/render.tsx');
+ if(prepare) await prepare();
  const original=site.founder.image;
  try {
   site.founder.image='/images/replacement-test.webp';

@@ -11,15 +11,20 @@
     "test:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
+    "@fontsource/fira-code": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
     "@vitejs/plugin-react": "4.2.1",
     "@xyflow/react": "^12.11.6",
     "firebase": "^12.17.1",
     "linkedom": "^0.18.13",
     "lucide-react": "0.344.0",
     "motion": "^12.38.0",
+    "postcss": "^8.5.29",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.30.6",
+    "tailwindcss": "3.4.1",
     "typescript": "5.2.2",
     "vite": "5.4.21"
   },

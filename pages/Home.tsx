@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { Suspense, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import {
@@ -21,7 +21,10 @@ import Memberships from '../components/Memberships';
 import { PILLARS, whatsappLink } from '../data/offers';
 import { useInquiry } from '../context/InquiryContext';
 import { INITIAL_N8N_PROJECTS } from './N8nProjectsData';
-import { N8nWorkflowViewer } from '../components/N8nWorkflowViewer';
+import { lazyWidget } from '../lazyRoute';
+// React Flow (the workflow preview) is the heaviest library on the page; it loads in its own chunk and
+// fills its fixed-size preview box when ready, instead of blocking the whole home page.
+const N8nWorkflowViewer = lazyWidget(() => import('../components/N8nWorkflowViewer').then((m) => ({ default: m.N8nWorkflowViewer })));
 
 
 
@@ -102,10 +105,16 @@ const ProjectPreviewMedia: React.FC<PreviewProjectMediaProps> = ({ image, video,
       setShowVideo(false);
    };
 
+   // React Flow is client-only (it measures the DOM); render it after mount so the prerendered HTML matches.
+   const [mounted, setMounted] = useState(false);
+   useEffect(() => setMounted(true), []);
+
    if (workflowJson) {
       return (
          <div className="relative w-full h-full bg-[#f4f5f7] dark:bg-[#17181c] overflow-hidden pointer-events-none">
-            <N8nWorkflowViewer workflowJson={workflowJson} height="100%" showControls={false} fitPadding={0.18} />
+            {mounted && <Suspense fallback={null}>
+               <N8nWorkflowViewer workflowJson={workflowJson} height="100%" showControls={false} fitPadding={0.18} />
+            </Suspense>}
             <div className="absolute inset-0 bg-gradient-to-t from-[#0F1320]/80 via-transparent to-transparent" />
          </div>
       );

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, AlertCircle, LayoutTemplate, Code, PenTool, Megaphone, Bot } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
-import { collection, addDoc } from 'firebase/firestore';
 import { notifyAdmin } from '../notifyAdmin';
-import { db } from '../firebase';
+import { loadFirestore } from '../firestoreClient';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { cleanText, isValidEmail, LIMITS, SUBMIT_TIMEOUT_MS, telHref, withTimeout } from '../utils/security';
 
@@ -72,11 +71,11 @@ const Contact: React.FC = () => {
 
     // Both deliveries run in parallel; the request counts as sent if either one succeeds.
     // 1) Firestore (shown in the BrandiQue Data Console, with a push alert to the admin).
-    const firestoreTask = withTimeout(addDoc(collection(db, 'messages'), {
+    const firestoreTask = withTimeout(loadFirestore().then(({ db, addDoc, collection }) => addDoc(collection(db, 'messages'), {
       source: 'contact',
       ...payload,
       createdAt: new Date().toISOString()
-    }), SUBMIT_TIMEOUT_MS).then((docRef) => {
+    })), SUBMIT_TIMEOUT_MS).then((docRef) => {
       if (docRef && docRef.id) notifyAdmin('messages', docRef.id);
       return true;
     });

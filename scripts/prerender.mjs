@@ -1,13 +1,24 @@
 import { createServer } from 'vite';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
 try {
- const { render } = await vite.ssrLoadModule('/seo/render.tsx');
+ const { render, prepare } = await vite.ssrLoadModule('/seo/render.tsx');
+ await prepare();
  const { pages, headHTML, SITE_URL, redirects } = await vite.ssrLoadModule('/seo/site.ts');
  const template = await readFile('dist/index.html','utf8');
+ // Performance: each page's own JS chunk (pages are code-split in routes.tsx) is preloaded from its HTML,
+ // so it downloads in parallel with the main bundle instead of after it.
+ const manifest=JSON.parse(await readFile('dist/.vite/manifest.json','utf8'));
+ const entry=Object.values(manifest).find(c=>c.isEntry);
+ const pageSource={'/':'pages/Home.tsx','/about':'pages/About.tsx','/contact':'pages/Contact.tsx','/web-development':'pages/WebDevelopment.tsx','/projects':'pages/Projects.tsx','/services':'pages/Services.tsx','/pricing':'pages/Pricing.tsx','/solutions':'pages/Solutions.tsx','/services/ai-automation':'pages/services/AIAutomation.tsx','/services/graphic-design':'pages/services/GraphicDesign.tsx','/privacy-policy':'pages/PrivacyPolicy.tsx','/terms-and-conditions':'pages/TermsAndConditions.tsx','/cookie-policy':'pages/CookiePolicy.tsx','/404':'pages/NotFound.tsx'};
+ const loaded=new Set([entry.file,...(entry.imports||[]).map(k=>manifest[k].file)]);
+ const chunkFiles=(key,acc=new Set())=>{const c=manifest[key];if(!c||acc.has(c.file))return acc;acc.add(c.file);for(const i of c.imports||[])chunkFiles(i,acc);return acc;};
+ const preloadLinks=path=>{const key=pageSource[path];if(!key)return '';if(!manifest[key])throw new Error(`manifest: no chunk for ${key}`);return [...chunkFiles(key)].filter(f=>!loaded.has(f)).map(f=>`<link rel="modulepreload" crossorigin href="/${f}">`).join('\n    ');};
+ for (const path of Object.keys(pages)) if(!pageSource[path]) throw new Error(`prerender: add ${path} to pageSource`);
  for (const path of [...Object.keys(pages),'/404','/login','/admin']) {
-  const html=template.replace('<!--seo-head-->',headHTML(path)).replace('<!--app-html-->', path === '/admin' || path === '/login' ? '' : render(path));
+  const links=preloadLinks(path);
+  const html=template.replace('<!--seo-head-->',headHTML(path)).replace('<!--app-html-->', path === '/admin' || path === '/login' ? '' : render(path)).replace('</head>', links ? `  ${links}\n  </head>` : '</head>');
   const filename=path==='/' ? 'dist/index.html' : path==='/404' ? 'dist/404.html' : `dist${path}/index.html`;
   await mkdir(filename.slice(0,filename.lastIndexOf('/')),{recursive:true});
   await writeFile(filename,html);
@@ -24,5 +35,6 @@ try {
  const updated=headers.replace(/(script-src [^;]*?)((?: 'sha256-[A-Za-z0-9+/=]+')+)(;)/,(_,pre,_old,end)=>`${pre} ${hashes.join(' ')}${end}`);
  if(!/script-src [^;]*'sha256-/.test(updated)) throw new Error('dist/_headers: script-src hash list not found');
  await writeFile(headersFile,updated);
+ await rm('dist/.vite',{recursive:true,force:true});
  console.log(`Prerendered ${Object.keys(pages).length} public pages, private shells and 404; generated sitemap.`);
 } finally { await vite.close(); }

@@ -3,24 +3,15 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { InquiryProvider } from '../context/InquiryContext';
 import { SiteSettingsProvider } from '../context/SiteSettingsContext';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import Home from '../pages/Home';
-import About from '../pages/About';
-import Contact from '../pages/Contact';
-import WebDevelopment from '../pages/WebDevelopment';
-import Projects from '../pages/Projects';
-import Services from '../pages/Services';
-import Pricing from '../pages/Pricing';
-import Solutions from '../pages/Solutions';
-import GraphicDesign from '../pages/services/GraphicDesign';
-import AIAutomation from '../pages/services/AIAutomation';
-import PrivacyPolicy from '../pages/PrivacyPolicy';
-import TermsAndConditions from '../pages/TermsAndConditions';
-import CookiePolicy from '../pages/CookiePolicy';
-import NotFound from '../pages/NotFound';
-const components: Record<string, React.ComponentType> = {'/': Home,'/about': About,'/contact': Contact,'/web-development': WebDevelopment,'/projects': Projects,'/services': Services,'/pricing': Pricing,'/solutions': Solutions,'/services/graphic-design': GraphicDesign,'/services/ai-automation': AIAutomation,'/privacy-policy': PrivacyPolicy,'/terms-and-conditions': TermsAndConditions,'/cookie-policy': CookiePolicy,'/404': NotFound};
+import { AppLayout } from '../App';
+import { preloadAllRoutes } from '../routes';
+
+/** Load every page chunk so the code-split routes render synchronously during prerendering. */
+export async function prepare() {
+ await preloadAllRoutes();
+}
+
+// Renders exactly the tree the browser renders first (index.tsx), so the client can hydrate it.
 export function render(path: string) {
- const Page=components[path] || NotFound;
- return renderToString(<StaticRouter location={path}><SiteSettingsProvider><InquiryProvider><div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-navy-900 text-gray-900 dark:text-white"><Navbar /><main id="main-content" className="flex-grow"><Page /></main><Footer /></div></InquiryProvider></SiteSettingsProvider></StaticRouter>);
+ return renderToString(<StaticRouter location={path}><SiteSettingsProvider><InquiryProvider><AppLayout /></InquiryProvider></SiteSettingsProvider></StaticRouter>);
 }

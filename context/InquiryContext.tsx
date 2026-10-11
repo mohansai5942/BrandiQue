@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { X, Check, ArrowRight, ArrowLeft, Loader2, Phone, Mail, User, ShieldCheck, HelpCircle, AlertCircle } from 'lucide-react';
-import { collection, addDoc } from 'firebase/firestore';
 import { notifyAdmin } from '../notifyAdmin';
-import { db } from '../firebase';
+import { loadFirestore } from '../firestoreClient';
 import { cleanText, isValidEmail, isValidPhone, LIMITS, SUBMIT_TIMEOUT_MS, withTimeout } from '../utils/security';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -45,7 +44,9 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Service-specific answers
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
 
-  const openInquiry = (service: string, pkg: string = '') => {
+  // openInquiry/closeInquiry only call state setters, so they are stable (useCallback with no deps) and the
+  // context value below only changes when isOpen/serviceName/packageName do, not on every keystroke in the form.
+  const openInquiry = useCallback((service: string, pkg: string = '') => {
     setServiceName(service);
     setPackageName(pkg);
     setStep(1);
@@ -77,11 +78,16 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
     
     setIsOpen(true);
-  };
+  }, []);
 
-  const closeInquiry = () => {
+  const closeInquiry = useCallback(() => {
     setIsOpen(false);
-  };
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({ openInquiry, closeInquiry, isOpen, serviceName, packageName }),
+    [openInquiry, closeInquiry, isOpen, serviceName, packageName]
+  );
 
   const handleCustomAnswerChange = (question: string, value: string) => {
     setCustomAnswers(prev => ({ ...prev, [question]: value }));
@@ -147,7 +153,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const promptDetails = Object.entries(answers).map(([q, a]) => `${q}: ${a}`).join('\n');
       const finalMessage = `Phone: ${cleanPhone}\nTimeline: ${cleanTimeline}\nService Specifics:\n${promptDetails || 'None provided'}\n\nAdditional Details:\n${formattedMsg || 'None'}`;
 
-      const docRef = await withTimeout(addDoc(collection(db, 'messages'), {
+      const docRef = await withTimeout(loadFirestore().then(({ db, addDoc, collection }) => addDoc(collection(db, 'messages'), {
         source: 'service',
         name: cleanName,
         email: cleanEmail,
@@ -161,7 +167,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           phone: cleanPhone
         },
         createdAt: new Date().toISOString()
-      }), SUBMIT_TIMEOUT_MS);
+      })), SUBMIT_TIMEOUT_MS);
       if (docRef && docRef.id) notifyAdmin('messages', docRef.id);
 
       setIsSuccess(true);
@@ -446,7 +452,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   return (
-    <InquiryContext.Provider value={{ openInquiry, closeInquiry, isOpen, serviceName, packageName }}>
+    <InquiryContext.Provider value={contextValue}>
       {children}
 
       <AnimatePresence>
