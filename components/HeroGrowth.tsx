@@ -46,12 +46,8 @@ const HeroGrowth: React.FC = () => {
 
       <div className="relative z-10 mx-auto grid max-w-[100rem] items-center gap-3 md:gap-12 px-5 md:px-8 desk:px-12 2xl:px-16 desk:grid-cols-[1.05fr_0.95fr] desk:gap-14">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300 md:text-[11px]">
-            <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" /><span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" /></span>
-            Web · AI · Design growth studio
-          </div>
 
-          <h1 className="mt-6 text-[2.5rem] font-bold leading-[1.05] tracking-tight text-gray-900 dark:text-white sm:text-6xl desk:text-[4.4rem]">
+          <h1 className="text-[2.5rem] font-bold leading-[1.05] tracking-tight text-gray-900 dark:text-white sm:text-6xl desk:text-[4.4rem]">
             {SERVICES.map((s, i) => (
               <span key={s.key} className={`block transition-all duration-500 ${i === active ? s.accent : 'text-gray-900/25 dark:text-white/25'}`}>{s.line}</span>
             ))}

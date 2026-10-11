@@ -40,19 +40,19 @@ const FloatingPromotions: React.FC = () => {
             initial={{ opacity: 0, x: 50, y: 20 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-            className="pointer-events-auto w-full sm:w-80 rounded-2xl p-4 shadow-2xl border border-yellow-400/30 bg-[#0D1017] relative overflow-hidden"
+            className="pointer-events-auto w-full sm:w-80 rounded-2xl p-4 shadow-2xl border border-yellow-400/30 bg-white dark:bg-[#0D1017] relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-yellow-400"></div>
-            <button type="button" aria-label="Close" onClick={close} className="absolute top-2 right-2 p-1 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
+            <button type="button" aria-label="Close" onClick={close} className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
               <X size={16} />
             </button>
             <div className="flex gap-4 items-start">
-              <div className="w-10 h-10 rounded-xl bg-yellow-400/15 flex items-center justify-center text-yellow-300 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-yellow-400/15 flex items-center justify-center text-yellow-700 dark:text-yellow-300 shrink-0">
                 <Sparkles size={20} />
               </div>
               <div className="space-y-1 pr-4">
-                <h4 className="font-bold text-sm text-white">Free growth audit</h4>
-                <p className="text-xs text-gray-400 leading-relaxed">
+                <h4 className="font-bold text-sm text-gray-900 dark:text-white">Free growth audit</h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                   We review your website, WhatsApp and social presence and send 3 practical fixes. No cost, no obligation.
                 </p>
                 <div className="pt-2">

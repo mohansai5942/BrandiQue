@@ -168,16 +168,16 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* CTA */}
       <section className="px-5 pb-12 md:px-6 md:pb-28">
-        <div className="relative mx-auto max-w-[100rem] overflow-hidden rounded-[32px] bg-[#0B0D12] p-5 text-white md:p-14">
+        <div className="relative mx-auto max-w-[100rem] overflow-hidden rounded-[32px] border border-gray-200 bg-white p-5 text-gray-900 shadow-sm dark:border-transparent dark:bg-[#0B0D12] dark:text-white dark:shadow-none md:p-14">
           <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-yellow-400/20 blur-3xl" />
           <div className="relative grid gap-3 md:gap-8 md:grid-cols-[1fr_auto] md:items-center">
             <div>
               <h2 className="text-3xl font-bold tracking-tight md:text-5xl">{c.ctaTitle}</h2>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">{c.ctaText}</p>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-white/65 md:text-lg">{c.ctaText}</p>
             </div>
             <div className="flex flex-col gap-3">
               <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
-              <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-bold text-white transition-colors hover:border-green-400 hover:text-green-400"><MessageCircle size={18} /> Chat on WhatsApp</a>
+              <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 dark:border-white/20 px-7 py-4 font-bold text-gray-900 dark:text-white transition-colors hover:border-green-400 hover:text-green-400"><MessageCircle size={18} /> Chat on WhatsApp</a>
             </div>
           </div>
         </div>

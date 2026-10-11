@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ArrowUp, ArrowUpRight, Trash2, Sparkles, MessageCircle, Check } from 'lucide-react';
+import { X, ArrowUp, ArrowUpRight, Trash2, Sparkles, Bot, MessageCircle, Check } from 'lucide-react';
 
 const API_ENDPOINT = 'https://brandique-chatbot.vercel.app/api/chat';
 const STORAGE_KEY = 'brandique_darling_chat_v4';
@@ -250,12 +250,12 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
             <div className="relative flex items-center justify-between gap-[0.8em] border-b border-white/[0.07] px-[1.1em] py-[0.8em]">
               <div className="flex min-w-0 items-center gap-[0.75em]">
                 <div className="relative grid h-[2.6em] w-[2.6em] shrink-0 place-items-center rounded-[0.8em] bg-gradient-to-br from-yellow-300 to-amber-500 text-black shadow-[0_0.4em_1.4em_-0.4em_rgba(250,204,21,0.7)]">
-                  <Sparkles className="h-[1.2em] w-[1.2em]" strokeWidth={2.4} />
+                  <Bot className="h-[1.3em] w-[1.3em]" strokeWidth={2.3} />
                   <span className="absolute -bottom-[0.1em] -right-[0.1em] h-[0.85em] w-[0.85em] rounded-full border-[0.15em] border-[#0B0B0D] bg-emerald-400" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-[1.08em] font-bold leading-tight text-white">Darling</div>
-                  <div className="truncate text-[0.8em] leading-tight text-gray-400">BrandiQue AI assistant · online</div>
+                  <div className="truncate text-[0.8em] leading-tight text-gray-400">AI assistant · Online 24/7</div>
                 </div>
               </div>
               <div className="flex items-center gap-[0.25em]">

@@ -807,16 +807,16 @@ export default function Projects() {
         </div>
 
         {/* Call to Action */}
-        <div className="relative my-12 overflow-hidden rounded-[32px] bg-[#0B0D12] p-5 text-white md:my-20 md:p-14">
+        <div className="relative my-12 overflow-hidden rounded-[32px] border border-gray-200 bg-white p-5 text-gray-900 shadow-sm dark:border-transparent dark:bg-[#0B0D12] dark:text-white dark:shadow-none md:my-20 md:p-14">
           <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-yellow-400/20 blur-3xl" />
           <div className="relative grid gap-5 md:gap-8 md:grid-cols-[1fr_auto] md:items-center">
             <div>
               <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Want results like these for your business?</h2>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">Tell us what you need: a website, an AI agent or design work. We reply within one working day with a clear plan and a fixed quote.</p>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-white/65 md:text-lg">Tell us what you need: a website, an AI agent or design work. We reply within one working day with a clear plan and a fixed quote.</p>
             </div>
             <div className="flex flex-col gap-3">
               <Link to="/contact" className={btnPrimary}>Start your project <ArrowRight size={18} /></Link>
-              <a href="https://wa.me/917093320572?text=Hello!%20I%20have%20a%20project%20idea.%20Can%20we%20discuss%20it%3F" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-bold text-white transition-colors hover:border-green-400 hover:text-green-400">Chat on WhatsApp</a>
+              <a href="https://wa.me/917093320572?text=Hello!%20I%20have%20a%20project%20idea.%20Can%20we%20discuss%20it%3F" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 dark:border-white/20 px-7 py-4 font-bold text-gray-900 dark:text-white transition-colors hover:border-green-400 hover:text-green-400">Chat on WhatsApp</a>
             </div>
           </div>
         </div>
@@ -825,9 +825,9 @@ export default function Projects() {
       {/* Interactive n8n Workflow Modal Popup */}
       {selectedN8nProject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 md:p-8 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-[#13151b] border border-white/10 rounded-2xl sm:rounded-3xl w-full max-w-6xl h-[78vh] sm:h-[88vh] max-h-[85vh] sm:max-h-none flex flex-col shadow-2xl overflow-hidden my-auto">
+          <div className="bg-white dark:bg-[#13151b] border border-gray-200 dark:border-white/10 rounded-2xl sm:rounded-3xl w-full max-w-6xl h-[78vh] sm:h-[88vh] max-h-[85vh] sm:max-h-none flex flex-col shadow-2xl overflow-hidden my-auto">
             {/* Modal Header */}
-            <div className="px-3 py-2 sm:px-6 sm:py-4 border-b border-white/10 flex items-center justify-between bg-[#191b22] gap-1.5 sm:gap-3">
+            <div className="px-3 py-2 sm:px-6 sm:py-4 border-b border-gray-200 dark:border-white/10 flex items-center justify-between bg-gray-50 dark:bg-[#191b22] gap-1.5 sm:gap-3">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                 <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold shrink-0">
                   <Bot size={15} className="sm:hidden" />
@@ -837,7 +837,7 @@ export default function Projects() {
                   <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-orange-400 bg-orange-500/10 px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md inline-block">
                     {selectedN8nProject.category || 'n8n Workflow'}
                   </span>
-                  <h3 className="text-xs sm:text-base md:text-lg font-bold text-white mt-0.5 truncate">
+                  <h3 className="text-xs sm:text-base md:text-lg font-bold text-gray-900 dark:text-white mt-0.5 truncate">
                     {selectedN8nProject.title}
                   </h3>
                 </div>
@@ -893,7 +893,7 @@ export default function Projects() {
 
             {/* Modal Footer Description */}
             {selectedN8nProject.desc && (
-              <div className="p-2.5 sm:p-4 md:p-6 bg-[#191b22] border-t border-white/10 text-[10px] sm:text-xs md:text-sm text-gray-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5 sm:gap-4">
+              <div className="p-2.5 sm:p-4 md:p-6 bg-gray-50 dark:bg-[#191b22] border-t border-gray-200 dark:border-white/10 text-[10px] sm:text-xs md:text-sm text-gray-600 dark:text-gray-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5 sm:gap-4">
                 <p className="line-clamp-2 leading-tight sm:leading-relaxed text-[10px] sm:text-xs md:text-sm">{selectedN8nProject.desc}</p>
                 <button
                   onClick={() => setIsClientFormOpen(true)}
@@ -912,17 +912,17 @@ export default function Projects() {
       {/* CLIENT INQUIRY FORM POPUP MODAL */}
       {isClientFormOpen && selectedN8nProject && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div className="bg-[#13151b] border border-orange-500/30 rounded-3xl w-full max-w-lg p-4 md:p-8 shadow-2xl relative overflow-hidden">
+          <div className="bg-white dark:bg-[#13151b] border border-orange-500/30 rounded-3xl w-full max-w-lg p-4 md:p-8 shadow-2xl relative overflow-hidden">
             {/* Background glow */}
             <div className="absolute -top-12 -right-12 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+            <div className="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-white/10 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold">
                   <FileText size={20} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">Request Custom Workflow Setup</h3>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">Request Custom Workflow Setup</h3>
                   <p className="text-xs text-orange-400 font-medium truncate max-w-[260px]">
                     {selectedN8nProject.title}
                   </p>
@@ -931,7 +931,7 @@ export default function Projects() {
 
               <button
                 onClick={() => setIsClientFormOpen(false)}
-                className="p-1.5 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
+                className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
               >
                 <X size={18} />
               </button>
@@ -942,15 +942,15 @@ export default function Projects() {
                 <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center">
                   <CheckCircle2 size={32} />
                 </div>
-                <h4 className="text-lg font-bold text-white">Request Received!</h4>
-                <p className="text-xs text-gray-300 max-w-sm mx-auto leading-relaxed">
+                <h4 className="text-lg font-bold text-gray-900 dark:text-white">Request Received!</h4>
+                <p className="text-xs text-gray-600 dark:text-gray-300 max-w-sm mx-auto leading-relaxed">
                   Thank you! We have received your request for <strong>{selectedN8nProject.title}</strong>. Our team will get in touch with you shortly on your provided phone & email.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleClientFormSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5">
                     Your Full Name
                   </label>
                   <input
@@ -958,7 +958,7 @@ export default function Projects() {
                     value={clientName}
                     onChange={e => setClientName(e.target.value)}
                     placeholder="e.g. Rahul Sharma"
-                    className="w-full px-4 py-2.5 bg-[#1a1c24] border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1c24] border border-gray-200 dark:border-white/10 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
                   />
                 </div>
 
@@ -971,7 +971,7 @@ export default function Projects() {
                     value={clientEmail}
                     onChange={e => setClientEmail(e.target.value)}
                     placeholder="e.g. rahul@company.com"
-                    className="w-full px-4 py-2.5 bg-[#1a1c24] border border-orange-500/30 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1c24] border border-orange-500/30 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
                     required
                   />
                 </div>
@@ -985,13 +985,13 @@ export default function Projects() {
                     value={clientPhone}
                     onChange={e => setClientPhone(e.target.value)}
                     placeholder="e.g. +91 98765 43210"
-                    className="w-full px-4 py-2.5 bg-[#1a1c24] border border-emerald-500/30 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1c24] border border-emerald-500/30 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5">
                     Specific Business Requirements / Notes
                   </label>
                   <textarea
@@ -999,7 +999,7 @@ export default function Projects() {
                     value={clientMessage}
                     onChange={e => setClientMessage(e.target.value)}
                     placeholder="Tell us about your workflow automation goals or custom integration needs..."
-                    className="w-full px-4 py-2.5 bg-[#1a1c24] border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 resize-none"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a1c24] border border-gray-200 dark:border-white/10 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 resize-none"
                   />
                 </div>
 
@@ -1009,11 +1009,11 @@ export default function Projects() {
                   </p>
                 )}
 
-                <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-white/10">
                   <button
                     type="button"
                     onClick={() => setIsClientFormOpen(false)}
-                    className="px-4 py-2 text-xs font-semibold text-gray-400 hover:text-white transition-colors"
+                    className="px-4 py-2 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
                     Cancel
                   </button>

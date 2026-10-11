@@ -386,11 +386,11 @@ const Home: React.FC = () => {
                      </div>
                   </ScrollReveal>
                   <ScrollReveal delay="delay-100">
-                     <div className="h-full rounded-[28px] border border-yellow-400/40 bg-[#11130F] p-4 md:p-8 text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]">
-                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-300">With BrandiQue</p>
+                     <div className="h-full rounded-[28px] border border-yellow-400/40 bg-yellow-50 p-4 md:p-8 text-gray-900 dark:bg-[#11130F] dark:text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]">
+                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">With BrandiQue</p>
                         <ul className="mt-6 space-y-4">
                            {['An AI assistant answers within seconds, day or night', 'Every lead is saved to one sheet or CRM automatically', 'Follow-ups and reminders go out on their own', 'A consistent, premium look across every post and ad', 'A fast website that turns visitors into enquiries'].map(item => (
-                              <li key={item} className="flex gap-3 text-sm md:text-base leading-relaxed text-white/85"><span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-black"><Check size={12} /></span>{item}</li>
+                              <li key={item} className="flex gap-3 text-sm md:text-base leading-relaxed text-gray-700 dark:text-white/85"><span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-black"><Check size={12} /></span>{item}</li>
                            ))}
                         </ul>
                      </div>
