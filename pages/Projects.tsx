@@ -703,7 +703,7 @@ export default function Projects() {
               <h2 className="text-sm md:text-2xl font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-neon-purple dark:text-neon-blue">
                 // CLIENT & PERSONAL PROJECTS
               </h2>
-              {activeCategory === 'all' && clientProjects.length > 3 && (
+              {activeCategory === 'all' && clientProjects.length > 5 && (
                 <button
                   onClick={() => {
                     setActiveCategory('client');
@@ -721,9 +721,9 @@ export default function Projects() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-2 desk:grid-cols-3 gap-3 sm:gap-6 desk:gap-8 [&>*:last-child:nth-child(odd)]:col-span-2 desk:[&>*:last-child:nth-child(odd)]:col-span-1"
+                  className="grid grid-cols-2 md:grid-cols-3 desk:grid-cols-5 gap-3 sm:gap-5 [&>*:last-child:nth-child(odd)]:col-span-2 md:[&>*:last-child:nth-child(odd)]:col-span-1"
                 >
-                   {(activeCategory === 'all' ? clientProjects.slice(0, 3) : clientProjects).map((project, i) => (
+                   {(activeCategory === 'all' ? clientProjects.slice(0, 5) : clientProjects).map((project, i) => (
                      <motion.a
                        key={`client-${project.id || i}`}
                        href={project.link}
@@ -760,7 +760,7 @@ export default function Projects() {
                    ))}
                 </motion.div>
 
-                {activeCategory === 'all' && clientProjects.length > 3 && (
+                {activeCategory === 'all' && clientProjects.length > 5 && (
                   <div className="mt-8 md:mt-12 text-center">
                     <button
                       onClick={() => {

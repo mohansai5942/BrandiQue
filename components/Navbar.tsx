@@ -332,18 +332,6 @@ const Navbar: React.FC = () => {
           </nav>
 
           <div className="hidden desk:flex items-center gap-3">
-            <Link 
-              to="/admin" 
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-full border group
-                ${isActive('/admin') 
-                  ? 'bg-black dark:bg-white text-white dark:text-black border-transparent shadow-lg dark:shadow-[0_0_15px_rgba(255,255,255,0.2)] scale-105' 
-                  : 'bg-white/70 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:border-neon-purple hover:bg-neon-purple/5 hover:scale-105 shadow-sm dark:shadow-none'
-                }
-              `}
-            >
-              <Settings size={14} className="group-hover:rotate-45 transition-transform duration-300 text-neon-purple" />
-              <span>Admin</span>
-            </Link>
 
             <a href={settings.instagram || "https://www.instagram.com/brandiquewebsolutions/"} target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:border-neon-purple hover:bg-neon-purple/20 transition-all duration-300 hover:scale-110 shadow-sm dark:shadow-none"><Instagram size={18} /></a>
             <button onClick={toggleTheme} className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 hover:border-yellow-400/50 hover:bg-yellow-400/10 transition-all duration-300 hover:rotate-90 shadow-sm dark:shadow-none">{isDark ? <Sun size={18} /> : <Moon size={18} />}</button>
