@@ -78,7 +78,7 @@ const About: React.FC = () => {
                 
                 <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-lg desk:text-xl leading-relaxed font-light text-left w-full break-words">
                    <p><strong>{founder.name}</strong> is the Founder of <strong>{COMPANY}</strong>, specializing in <span className="text-neon-purple font-medium">Web & App Engineering</span>, <span className="text-blue-500 font-medium">AI Agents</span>, workflow automation, <span className="text-cyan-500 dark:text-cyan-400 font-medium">UI/UX</span>, and strategic branding.</p>
-                   <p>Known as K. Mohan, I combine technology and creativity to turn complex ideas into elegant digital products that help ambitious businesses build a strong online presence and accelerate growth.</p>
+                   <p>Known as K. Mohan Rao or Mohan Sai, I combine technology and creativity to turn complex ideas into elegant digital products that help ambitious businesses build a strong online presence and accelerate growth.</p>
                 </div>
 
                 <div className="flex flex-nowrap items-center justify-start gap-1 sm:gap-2 md:gap-2.5 pt-4 sm:pt-6 md:pt-8 pb-1 max-w-full overflow-hidden">
@@ -99,11 +99,11 @@ const About: React.FC = () => {
       </section>
 
       {/* 2. PRAVEEN SECTION (BELOW MOHAN, ABOVE DIGITAL PHILOSOPHY) */}
-      <section className="flex flex-col desk:flex-row items-center justify-between gap-5 md:gap-12 desk:gap-20 mb-8 sm:mb-16 desk:mb-20 px-4 desk:px-12 relative z-10">
+      <section data-nosnippet className="flex flex-col desk:flex-row items-center justify-between gap-5 md:gap-12 desk:gap-20 mb-8 sm:mb-16 desk:mb-20 px-4 desk:px-12 relative z-10">
          <div className="relative shrink-0 order-1 group">
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/30 to-cyan-500/30 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
             <div className="w-64 h-64 md:w-80 md:h-80 desk:w-[420px] desk:h-[420px] rounded-full overflow-hidden border-[8px] border-white dark:border-[#0A0C11] relative z-10 shadow-2xl bg-white dark:bg-[#0A0C11] transition-transform duration-500 group-hover:scale-[1.02]">
-                <img src="https://files.catbox.moe/ignhd8.jpg" alt="Karri Praveen Kumar, team member" loading="lazy" decoding="async" className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" />
+                <img src="https://files.catbox.moe/ignhd8.jpg" alt="" loading="lazy" decoding="async" className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-custom grayscale hover:grayscale-0" />
             </div>
          </div>
 
@@ -207,11 +207,11 @@ const About: React.FC = () => {
                   </div>
 
                   {/* Praveen - CEO */}
-                  <div className="relative group p-4 md:p-8 rounded-3xl bg-white dark:bg-[#0A0C11]/80 border border-gray-200 dark:border-white/10 hover:border-blue-500/60 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-3 md:gap-6">
+                  <div data-nosnippet className="relative group p-4 md:p-8 rounded-3xl bg-white dark:bg-[#0A0C11]/80 border border-gray-200 dark:border-white/10 hover:border-blue-500/60 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-3 md:gap-6">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/20 transition-all"></div>
                     
                     <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-blue-500/50 shadow-blue-500/30 shrink-0 relative group-hover:scale-105 transition-transform duration-300">
-                      <img src="https://files.catbox.moe/ignhd8.jpg" alt="Praveen" loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                      <img src="https://files.catbox.moe/ignhd8.jpg" alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                     </div>
 
                     <div className="flex-1 text-center sm:text-left space-y-2">

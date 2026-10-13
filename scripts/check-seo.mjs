@@ -32,7 +32,7 @@ for (const url of urls) {
  const people=graph.filter(n=>n['@type']==='Person'); assert.equal(people.length,pathname==='/about'||pathname==='/'?1:0);
  if(people.length) {assert(people[0].image.url.startsWith('https://brandique.in/images/brandique-founder'),`${pathname}: founder image`);assert.equal(people[0]['@id'],'https://brandique.in/about#founder');}
  if(pathname==='/about') {
-  assert.equal(people[0].name,'Kutikuppala Mohan Rao');assert.equal(people[0].jobTitle,'Founder');assert.equal(people[0].worksFor['@id'],org['@id']);
+  assert.equal(people[0].name,'Kutikuppala Mohan Rao');assert.match(people[0].jobTitle,/^Founder/);assert.equal(people[0].worksFor['@id'],org['@id']);
   const image=document.querySelector('#founder img').src;
   assert.equal(people[0].image.url,new URL(image,url).href);
   assert.equal(document.querySelector('meta[property="og:image"]').content,people[0].image.url);

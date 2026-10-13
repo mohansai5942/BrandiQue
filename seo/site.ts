@@ -4,7 +4,9 @@ export const SITE_URL = 'https://brandique.in';
 export const COMPANY = 'BrandiQue Web Solutions';
 export const founder = {
   name: 'Kutikuppala Mohan Rao',
-  alternateName: ['K. Mohan Rao', 'K Mohan Rao', 'K. Mohan', 'K Mohan', 'Mohan Rao', 'Mohan'],
+  alternateName: ['K. Mohan Rao', 'K Mohan Rao', 'Mohan Rao Kutikuppala', 'Mohan Rao K', 'Mohan Rao', 'Mohan Sai', 'Mohan K', 'K. Mohan', 'K Mohan', 'Kutikuppala Mohan', 'BrandiQue Founder', 'Mohan'],
+  givenName: 'Mohan Rao',
+  familyName: 'Kutikuppala',
   // Self-hosted, optimised WebP ("BrandiQue Founder" photo). srcSet lists the responsive sizes in public/images.
   image: '/images/brandique-founder.webp',
   srcSet: '/images/brandique-founder-160.webp 160w, /images/brandique-founder-320.webp 320w, /images/brandique-founder-640.webp 640w, /images/brandique-founder.webp 960w',
@@ -12,17 +14,17 @@ export const founder = {
   height: 960,
   alt: 'K. Mohan Rao, Founder of BrandiQue Web Solutions',
   title: 'BrandiQue Founder, K. Mohan Rao',
-  description: 'Kutikuppala Mohan Rao is the Founder of BrandiQue Web Solutions. His work focuses on web and app engineering, AI agents, workflow automation, UI/UX and branding.',
+  description: 'Kutikuppala Mohan Rao (K. Mohan Rao, also known as Mohan Sai) is the Founder of BrandiQue Web Solutions, Visakhapatnam. His work focuses on web and app engineering, AI agents, workflow automation, UI/UX and branding.',
 };
 export const organizationId = `${SITE_URL}/#organization`;
 export const founderId = `${SITE_URL}/about#founder`;
-export const founderSameAs = ['https://x.com/Mohan_Creator', 'https://www.threads.com/@mohan_creator/'];
+export const founderSameAs = ['https://x.com/Mohan_Creator', 'https://www.threads.com/@mohan_creator/', 'https://github.com/mohansai5942', 'https://www.instagram.com/brandiquewebsolutions/'];
 export const LOGO_URL = `${SITE_URL}/images/brandique-logo.png`;
 export const absoluteUrl = (path: string) => new URL(path, SITE_URL).href;
 export interface PageSEO { title: string; description: string; label: string; service?: string; }
 export const pages: Record<string, PageSEO> = {
-  '/': { title: 'BrandiQue Web Solutions | Web Development, AI Agents & Graphic Design', label: 'Home', description: 'BrandiQue Web Solutions, founded by K. Mohan Rao in Visakhapatnam, builds websites that win enquiries, AI agents that reply 24/7 and graphic design that earns trust.' },
-  '/about': { title: 'Kutikuppala Mohan Rao, Founder | BrandiQue Web Solutions', label: 'About', description: 'Meet Kutikuppala Mohan Rao, Founder of BrandiQue Web Solutions. Learn about our web development, AI automation and design work in Visakhapatnam.' },
+  '/': { title: 'BrandiQue Web Solutions | Web Development, AI Agents & Graphic Design', label: 'Home', description: 'BrandiQue Web Solutions, founded by Kutikuppala Mohan Rao (K. Mohan Rao) in Visakhapatnam, builds websites that win enquiries, AI agents that reply 24/7 and graphic design that earns trust.' },
+  '/about': { title: 'Kutikuppala Mohan Rao (K. Mohan Rao), Founder of BrandiQue Web Solutions', label: 'About', description: 'Kutikuppala Mohan Rao (K. Mohan Rao, Mohan Sai) is the Founder of BrandiQue Web Solutions, Visakhapatnam: web development, AI agents, automation and design.' },
   '/contact': { title: 'Contact BrandiQue Web Solutions | Visakhapatnam', label: 'Contact', description: 'Discuss a website, AI automation, branding or marketing project with BrandiQue Web Solutions in Visakhapatnam. Contact the team for a project-specific quote.' },
   '/services': { title: 'Web Development, AI Automation & Graphic Design Services | BrandiQue', label: 'Services', description: 'Explore BrandiQue’s three core services: business-focused website development, AI agents and workflow automation, and graphic design. Supporting brand and content services are available too.' },
   '/pricing': { title: 'Website, AI Automation & Graphic Design Pricing | BrandiQue', label: 'Pricing', description: 'Compare BrandiQue starting prices for websites, AI chatbots and automations, graphic design, monthly growth plans and industry solutions. Every project starts with a fixed written quote.' },
@@ -53,9 +55,9 @@ export function structuredData(path: string) {
   const graph: Record<string,unknown>[] = [
     {'@type':'Organization','@id': organizationId, name: COMPANY, alternateName: 'BrandiQue', url: `${SITE_URL}/`, logo: {'@type':'ImageObject', url: LOGO_URL, width: 192, height: 192}, image: LOGO_URL, founder: {'@id':founderId}, sameAs: ['https://www.instagram.com/brandiquewebsolutions/'], location: {'@type':'Place', name:'Visakhapatnam, India'}},
     {'@type':'WebSite','@id':`${SITE_URL}/#website`, url:`${SITE_URL}/`, name:COMPANY, publisher:{'@id':organizationId}},
-    {'@type': path === '/about' ? 'AboutPage' : path === '/contact' ? 'ContactPage' : path === '/projects' || path === '/services' || path === '/solutions' ? 'CollectionPage' : 'WebPage', '@id':`${absoluteUrl(path)}#webpage`, url:absoluteUrl(path), name:page.title, description:page.description, isPartOf:{'@id':`${SITE_URL}/#website`}, ...(path === '/about' ? {mainEntity:{'@id':founderId}} : {}), ...(path !== '/' ? {breadcrumb:{'@id':`${absoluteUrl(path)}#breadcrumb`}} : {})},
+    {'@type': path === '/about' ? ['AboutPage','ProfilePage'] : path === '/contact' ? 'ContactPage' : path === '/projects' || path === '/services' || path === '/solutions' ? 'CollectionPage' : 'WebPage', '@id':`${absoluteUrl(path)}#webpage`, url:absoluteUrl(path), name:page.title, description:page.description, isPartOf:{'@id':`${SITE_URL}/#website`}, ...(path === '/about' ? {mainEntity:{'@id':founderId}} : {}), ...(path !== '/' ? {breadcrumb:{'@id':`${absoluteUrl(path)}#breadcrumb`}} : {})},
   ];
-  if (path === '/about' || path === '/') graph.push({'@type':'Person','@id':founderId, name:founder.name, alternateName:founder.alternateName, jobTitle:'Founder', worksFor:{'@id':organizationId}, url:founderId, image:{'@type':'ImageObject', '@id':`${SITE_URL}/#founder-image`, url:absoluteUrl(founder.image), contentUrl:absoluteUrl(founder.image), width:founder.width, height:founder.height, caption:founder.alt, name:'BrandiQue Founder'}, sameAs:founderSameAs, description:founder.description});
+  if (path === '/about' || path === '/') graph.push({'@type':'Person','@id':founderId, name:founder.name, alternateName:founder.alternateName, givenName:founder.givenName, familyName:founder.familyName, jobTitle:'Founder of BrandiQue Web Solutions', homeLocation:{'@type':'Place', name:'Visakhapatnam, Andhra Pradesh, India'}, knowsAbout:['Web Development','AI Agents','Workflow Automation','UI/UX Design','Branding','Graphic Design'], worksFor:{'@id':organizationId}, url:founderId, image:{'@type':'ImageObject', '@id':`${SITE_URL}/#founder-image`, url:absoluteUrl(founder.image), contentUrl:absoluteUrl(founder.image), width:founder.width, height:founder.height, caption:founder.alt, name:'BrandiQue Founder'}, sameAs:founderSameAs, description:founder.description});
   if (path === '/') (graph[2] as Record<string,unknown>).about = {'@id':organizationId};
   if (page.service) graph.push({'@type':'Service','@id':`${absoluteUrl(path)}#service`, name:page.service, serviceType:page.service, description:page.description, url:absoluteUrl(path), provider:{'@id':organizationId}, mainEntityOfPage:{'@id':`${absoluteUrl(path)}#webpage`}});
   if (path !== '/') {
