@@ -29,12 +29,13 @@ for (const url of urls) {
  const graph=JSON.parse(document.querySelector('#page-schema').textContent)['@graph'];
  const org=graph.find(n=>n['@type']==='Organization');assert.equal(org.founder['@id'],'https://brandique.in/about#founder');
  assert(!JSON.stringify(graph).includes('Praveen'));
- const people=graph.filter(n=>n['@type']==='Person'); assert.equal(people.length,pathname==='/about'?1:0);
+ const people=graph.filter(n=>n['@type']==='Person'); assert.equal(people.length,pathname==='/about'||pathname==='/'?1:0);
+ if(people.length) {assert(people[0].image.url.startsWith('https://brandique.in/images/brandique-founder'),`${pathname}: founder image`);assert.equal(people[0]['@id'],'https://brandique.in/about#founder');}
  if(pathname==='/about') {
   assert.equal(people[0].name,'Kutikuppala Mohan Rao');assert.equal(people[0].jobTitle,'Founder');assert.equal(people[0].worksFor['@id'],org['@id']);
   const image=document.querySelector('#founder img').src;
-  assert.equal(people[0].image,new URL(image,url).href);
-  assert.equal(document.querySelector('meta[property="og:image"]').content,people[0].image);
+  assert.equal(people[0].image.url,new URL(image,url).href);
+  assert.equal(document.querySelector('meta[property="og:image"]').content,people[0].image.url);
   assert(!/Chief Executive Officer|\bCEO\b/.test(document.querySelector('main').textContent));
   assert.equal((document.querySelector('main').textContent.match(/Co-Founder/g)||[]).length,2,'Requested display labels');
  }
@@ -91,9 +92,9 @@ try {
   assert.equal(document.querySelector('#founder img').src,site.founder.image);
   assert.equal(document.querySelectorAll('img[src="/images/replacement-test.webp"]').length,2);
   const person=site.structuredData('/about')['@graph'].find(n=>n['@type']==='Person');
-  assert.equal(person.image,'https://brandique.in/images/replacement-test.webp');
-  assert.equal(document.querySelector('meta[property="og:image"]').content,person.image);
-  assert.equal(document.querySelector('meta[name="twitter:image"]').content,person.image);
+  assert.equal(person.image.url,'https://brandique.in/images/replacement-test.webp');
+  assert.equal(document.querySelector('meta[property="og:image"]').content,person.image.url);
+  assert.equal(document.querySelector('meta[name="twitter:image"]').content,person.image.url);
  } finally {site.founder.image=original;}
  console.log('PASS: replacing the shared founder image updates both portraits, Person, Open Graph and Twitter metadata.');
 } finally {await vite.close();}

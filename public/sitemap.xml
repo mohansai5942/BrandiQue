@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://brandique.in/</loc></url>
-  <url><loc>https://brandique.in/about</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url><loc>https://brandique.in/</loc>
+    <image:image><image:loc>https://brandique.in/images/brandique-founder.webp</image:loc></image:image>
+  </url>
+  <url><loc>https://brandique.in/about</loc>
+    <image:image><image:loc>https://brandique.in/images/brandique-founder.webp</image:loc></image:image>
+  </url>
   <url><loc>https://brandique.in/contact</loc></url>
   <url><loc>https://brandique.in/services</loc></url>
   <url><loc>https://brandique.in/pricing</loc></url>

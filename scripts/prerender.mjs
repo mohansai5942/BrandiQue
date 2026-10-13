@@ -5,7 +5,7 @@ const vite = await createServer({ server: { middlewareMode: true }, appType: 'cu
 try {
  const { render, prepare } = await vite.ssrLoadModule('/seo/render.tsx');
  await prepare();
- const { pages, headHTML, SITE_URL, redirects } = await vite.ssrLoadModule('/seo/site.ts');
+ const { pages, headHTML, SITE_URL, redirects, founder, absoluteUrl } = await vite.ssrLoadModule('/seo/site.ts');
  const template = await readFile('dist/index.html','utf8');
  // Performance: each page's own JS chunk (pages are code-split in routes.tsx) is preloaded from its HTML,
  // so it downloads in parallel with the main bundle instead of after it.
@@ -33,7 +33,9 @@ try {
   await mkdir(filename.slice(0,filename.lastIndexOf('/')),{recursive:true});
   await writeFile(filename,html);
  }
- const sitemap=`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${Object.keys(pages).map(p=>`  <url><loc>${SITE_URL}${p}</loc></url>`).join('\n')}\n</urlset>\n`;
+ // Image sitemap: the founder photo ("BrandiQue Founder") is listed for the home and About pages.
+ const founderImage=`  <image:image><image:loc>${absoluteUrl(founder.image)}</image:loc></image:image>`;
+ const sitemap=`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${Object.keys(pages).map(p=>p==='/'||p==='/about'?`  <url><loc>${SITE_URL}${p}</loc>\n  ${founderImage}\n  </url>`:`  <url><loc>${SITE_URL}${p}</loc></url>`).join('\n')}\n</urlset>\n`;
  await writeFile('dist/sitemap.xml',sitemap);
  try { await writeFile('public/sitemap.xml',sitemap); } catch (_) {}
  // Content-Security-Policy: allow exactly the inline <script> blocks of index.html by hash.
