@@ -1,0 +1,21 @@
+rules_version = '2';
+
+// Cloud Storage rules for the PUBLIC WEBSITE (brandique.in), not deployed automatically.
+//
+// The public site never uses the Firebase Storage SDK: it does not upload, list or delete files.
+// The only Storage files it shows are images/videos whose download URLs (with their access token)
+// are stored in Firestore by the Data Console; token download URLs are served without consulting
+// these rules. So the public site needs no Storage access at all: deny everything.
+//
+// IMPORTANT: the bucket (brandique-web-solutions.firebasestorage.app) is shared with the BrandiQue
+// Data Console (data.brandique.in), which uploads portfolio media and the admin avatar as a signed-in
+// admin. Its rules live in the BrandiQue-DataBase repo (storage.rules.example) and are the ones that
+// must be published for the bucket. Publishing THIS file over them would block the console's uploads.
+// Use this file only if the console ever stops uploading from the browser.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

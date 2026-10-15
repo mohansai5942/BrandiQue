@@ -1,3 +1,6 @@
+# NOTE: Cloudflare Pages ignores domain-level sources in _redirects, so the next line has no effect
+# (www.brandique.in currently answers 200). Set the www -> apex 301 as a Cloudflare Redirect Rule /
+# Bulk Redirect instead (see the security-hardening PR). Kept only so behaviour is unchanged.
 https://www.brandique.in/* https://brandique.in/:splat 301
 /services/full-stack-web-development /web-development 301
 /services/wordpress-development /web-development 301

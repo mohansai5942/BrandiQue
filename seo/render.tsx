@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router-dom';
 import { InquiryProvider } from '../context/InquiryContext';
 import { SiteSettingsProvider } from '../context/SiteSettingsContext';
 import { AppLayout } from '../App';

@@ -34,4 +34,4 @@ Browser visual verification remains unavailable because Chromium downloads faile
 
 Run `npm ci`, `npm run build` and deploy `dist`. Then verify the deployed host's canonical routes, redirects and 404 status. Submit `https://brandique.in/sitemap.xml` in Google Search Console; no submission has been performed here.
 
-External photos remain CDN-dependent; the founder CDN challenged automated downloads, so the photo was not recompressed. Prerendered public data uses repository defaults; keep them current when Firebase content changes. The pre-existing admin authentication fallback still warrants a separate security review. No ranking guarantees, fake reviews or awards were added.
+External photos remain CDN-dependent; the founder CDN challenged automated downloads, so the photo was not recompressed. Prerendered public data uses repository defaults; keep them current when Firebase content changes. The old in-site admin login was removed (admin work happens in the BrandiQue Data Console). No ranking guarantees, fake reviews or awards were added.

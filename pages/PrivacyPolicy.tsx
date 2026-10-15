@@ -24,6 +24,7 @@ const PrivacyPolicy: React.FC = () => {
           <ul className="list-disc pl-5 space-y-2">
             <li><strong>Personal Information:</strong> Name, email address, phone number, and other contact details provided via our contact forms.</li>
             <li><strong>Project Details:</strong> Information regarding your budget, project scope, and requirements submitted through our inquiry forms.</li>
+            <li><strong>AI Assistant Chats:</strong> Messages you send to our AI assistant and any details you share in the chat (such as your name, business, city, phone or email). They are sent with your messages to our assistant service, which uses third-party AI providers, to generate replies, and are saved in your browser's local storage so the assistant can remember you. You can delete them at any time from the assistant's delete option.</li>
             <li><strong>Technical Data:</strong> IP address, browser type, device information, and operating system collected automatically for analytics and security purposes.</li>
           </ul>
         </section>
@@ -32,7 +33,6 @@ const PrivacyPolicy: React.FC = () => {
           <h2 className="text-2xl font-bold text-black dark:text-white mb-4">3. How We Use Your Information</h2>
           <p>We use the information we collect or receive:</p>
           <ul className="list-disc pl-5 mt-4 space-y-2">
-            <li>To facilitate account creation and logon processes (for admin users).</li>
             <li>To send you marketing and promotional communications (with your consent).</li>
             <li>To respond to user inquiries and offer support.</li>
             <li>To deliver and facilitate delivery of services to the user.</li>

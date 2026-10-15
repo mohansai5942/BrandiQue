@@ -1,4 +1,4 @@
-/** Build-time Tailwind (v3.4.1). This is the exact config that used to run in the browser via the
+/** Build-time Tailwind (v3.4). This is the exact config that used to run in the browser via the
  *  Play CDN (tailwind.config in index.html); compiling it at build time gives the same CSS without the
  *  in-browser compiler. Keep `content` covering every file that holds class names. */
 /** @type {import('tailwindcss').Config} */

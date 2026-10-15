@@ -6,15 +6,38 @@ import { X, ArrowUp, ArrowUpRight, Trash2, Sparkles, Bot, MessageCircle, Check }
 
 const API_ENDPOINT = 'https://brandique-chatbot.vercel.app/api/chat';
 const STORAGE_KEY = 'brandique_darling_chat_v4';
-const PROFILE_KEY = 'brandique_darling_profile'; // personal details: kept in this browser permanently
+const PROFILE_KEY = 'brandique_darling_profile'; // personal details: kept in this browser only
+// Saved details are forgotten after this long without a visit (the timestamp is refreshed whenever the
+// chatbot loads), so a shared or old device does not keep them forever.
+const PROFILE_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
 
 type Profile = Partial<Record<'name' | 'business' | 'city' | 'phone' | 'email', string>>;
+const PROFILE_FIELDS = ['name', 'business', 'city', 'phone', 'email'] as const;
+
+const cleanProfile = (p: unknown): Profile => {
+  const out: Profile = {};
+  if (!p || typeof p !== 'object' || Array.isArray(p)) return out;
+  for (const k of PROFILE_FIELDS) {
+    const v = (p as Record<string, unknown>)[k];
+    if (typeof v === 'string' && v.trim()) out[k] = v.trim().slice(0, 120);
+  }
+  return out;
+};
 
 const loadProfile = (): Profile => {
   if (typeof window === 'undefined') return {};
   try {
-    const p = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
-    return p && typeof p === 'object' && !Array.isArray(p) ? p : {};
+    const raw = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
+    // Current format: { savedAt, profile }. Older saves were the bare profile object; they are kept
+    // and re-saved with a timestamp on the next write.
+    if (raw && typeof raw === 'object' && typeof raw.savedAt === 'number') {
+      if (Date.now() - raw.savedAt > PROFILE_MAX_AGE_MS) {
+        localStorage.removeItem(PROFILE_KEY);
+        return {};
+      }
+      return cleanProfile(raw.profile);
+    }
+    return cleanProfile(raw);
   } catch {
     return {};
   }
@@ -131,7 +154,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
         localStorage.removeItem(PROFILE_KEY);
         return;
       }
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      localStorage.setItem(PROFILE_KEY, JSON.stringify({ savedAt: Date.now(), profile }));
     } catch {
       /* storage unavailable */
     }
@@ -185,7 +208,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
         if (data.profile && typeof data.profile === 'object') {
           setProfile((p) => {
             const merged = { ...p };
-            for (const k of ['name', 'business', 'city', 'phone', 'email'] as const) {
+            for (const k of PROFILE_FIELDS) {
               if (typeof data.profile[k] === 'string' && data.profile[k].trim()) merged[k] = data.profile[k].trim().slice(0, 120);
             }
             return merged;
@@ -212,7 +235,8 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
     if (window.innerWidth < 768) setIsOpen(false);
   };
 
-  // Everything lives only in this browser (localStorage); nothing is stored on our servers.
+  // The conversation and the visitor's details are saved only in this browser (localStorage); messages and
+  // details are sent to the chatbot API to generate each reply (see the Privacy Policy).
   // "Delete chat" permanently removes the conversation; "everything" also forgets the visitor's details.
   const deleteChat = (everything = false) => {
     setMessages([]);
