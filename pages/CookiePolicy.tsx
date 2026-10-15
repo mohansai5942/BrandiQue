@@ -23,7 +23,7 @@ const CookiePolicy: React.FC = () => {
           <p>We use cookies to improve your browsing experience by:</p>
           <ul className="list-disc pl-5 mt-4 space-y-2">
             <li>Remembering your preferences (such as Light or Dark mode settings).</li>
-            <li>Keeping you signed in (for Admin access).</li>
+            <li>Remembering your chat with our AI assistant on this device, if you use it.</li>
             <li>Understanding how you use our website via analytics tools to help us improve our content and user experience.</li>
           </ul>
         </section>
@@ -35,7 +35,7 @@ const CookiePolicy: React.FC = () => {
             <h3 className="text-lg font-bold text-black dark:text-white mb-2">Necessary Cookies</h3>
             <p>
               These cookies are essential for the website to function properly. Without these cookies, the website would not work as intended. 
-              Examples include session cookies for admin login authentication.
+              This website does not offer visitor accounts or logins, so it sets no login cookies.
             </p>
           </div>
 
@@ -43,7 +43,10 @@ const CookiePolicy: React.FC = () => {
             <h3 className="text-lg font-bold text-black dark:text-white mb-2">Functionality Cookies</h3>
             <p>
               These cookies allow our website to remember choices you make (such as your user name, language or the region you are in) and provide enhanced, more personal features. 
-              We use `localStorage` to save your theme preference (Dark/Light mode).
+              We use `localStorage` to save your theme preference (Dark/Light mode). If you use our AI assistant, the
+              conversation and any details you share in it (such as your name, business, city, phone or email) are
+              saved in `localStorage` on your device. Saved details are removed after 180 days without a visit, and you can
+              delete the chat, or the chat and your details, at any time from the assistant's delete option.
             </p>
           </div>
 
