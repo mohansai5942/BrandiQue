@@ -66,7 +66,7 @@ console.log(`PASS: ${urls.length} pages; unique metadata, responsive heading str
  const walk=async dir=>(await Promise.all((await readdir(dir,{withFileTypes:true})).map(e=>e.isDirectory()?walk(`${dir}/${e.name}`):[`${dir}/${e.name}`]))).flat();
  const files=await walk('dist');
  for(const f of files){
-  assert(!/\.map$|\.env|tmp\.txt|patch_fix|firebase-applet-config|firebase-blueprint|metadata\.json|\.md$|firestore\.rules|package(-lock)?\.json$/.test(f),`sensitive or dev file shipped: ${f}`);
+  assert(!/\.map$|\.env|tmp\.txt|patch_fix|firebase-applet-config|firebase-blueprint|metadata\.json|\.md$|(firestore|storage)\.rules|package(-lock)?\.json$/.test(f),`sensitive or dev file shipped: ${f}`);
   if(!f.endsWith('.html'))continue;
   const html=await readFile(f,'utf8');
   for(const m of html.matchAll(/<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/g)){
