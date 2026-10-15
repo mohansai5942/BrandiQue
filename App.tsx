@@ -145,9 +145,10 @@ export const AppLayout: React.FC = () => {
   );
 };
 
+// React Router 7: startTransition navigation is the default (it was the v7_startTransition future flag).
 const App: React.FC = () => {
   return (
-    <BrowserRouter future={{ v7_startTransition: true }}>
+    <BrowserRouter>
       <AppLayout />
     </BrowserRouter>
   );
