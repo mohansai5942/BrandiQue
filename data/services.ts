@@ -1,6 +1,7 @@
 // Content for the four core service pages. One template renders all four,
 // so every service page shares the same structure, quality bar and conversion path.
 import type { PillarId } from './offers';
+import { VOICE_FAQS } from './voicePricing';
 
 export interface ServiceContent {
   id: PillarId;
@@ -35,6 +36,8 @@ export interface ServiceCompare {
   /** Optional label under the highlighted column (defaults to 'Recommended'). */
   recommendedLabel?: string;
   rows: { feature: string; values: (string | boolean)[] }[];
+  /** Optional grouped sections (rendered instead of a flat list when present). '–' or false = not included. */
+  groups?: { title: string; rows: { feature: string; values: (string | boolean)[] }[] }[];
   versus?: { title: string; columns: [string, string]; rows: { feature: string; values: [string, string] }[]; note: string };
 }
 
@@ -209,40 +212,55 @@ export const SERVICE_CONTENT: Record<PillarId, ServiceContent> = {
       { title: 'Live the same day', text: 'The agent starts calling, with transcripts, summaries and per-call costs in the call log.' },
     ],
     tools: ['Dedicated +91 line (DLT-registered)', 'Google Calendar', 'WhatsApp', 'CRM integrations', 'Webhooks', 'Pabbly Connect'],
-    faqs: [
-      { q: 'How much does a voice AI agent cost?', a: 'Monthly plans: Starter ₹2,799/month (317 minutes included), Pro ₹6,999/month (1,000 minutes) and Growth ₹22,999/month (3,571 minutes). Or pay as you go: top up minutes at ₹8.90 a minute, from ₹2,848 for 320 minutes. A one-time setup fee of ₹1,999 applies, and all prices are plus 18% GST.' },
-      { q: 'What is the difference between Starter, Pro and Growth?', a: 'Starter (₹2,799/month, 317 mins at ₹8.83/min) is for your first live voice agent: 2 team members, a 10 MB knowledge base, voice cloning, WhatsApp and SIP trunking. Pro (₹6,999/month, 1,000 mins at ₹7.00/min) adds live call monitoring, voicemail detection, agent versioning and the workflow builder with 10,000 runs a month, for 5 team members and a 50 MB knowledge base. Growth (₹22,999/month, 3,571 mins at ₹6.44/min) adds recording insights, email and SMS channels and 100,000 workflow runs a month, for 10 team members and a 100 MB knowledge base.' },
-      { q: 'How does pay as you go work?', a: 'Buy voice AI minutes when you need them, at ₹8.90 a minute, with a minimum top-up of 320 minutes (₹2,848). Top up ₹7,000 or more and the rate drops to ₹8.47 a minute with 2% bonus minutes. You can top up on any plan. Voice cloning, SIP trunking, WhatsApp and voicemail detection need a monthly plan.' },
-      { q: 'Is there a monthly fee?', a: 'Only if you choose a monthly plan: Starter ₹2,799, Pro ₹6,999 or Growth ₹22,999 a month, each with minutes included. If you prefer no monthly commitment, use pay as you go and top up minutes from ₹2,848.' },
-      { q: 'Is GST included?', a: 'No. All voice agent prices are plus 18% GST, added at checkout. For example, 500 pay-as-you-go minutes cost ₹4,450 plus GST.' },
-      { q: 'Which languages can the agent speak?', a: 'Every plan is natively multilingual: natural Telugu conversations that switch to English mid-call when the customer does.' },
-      { q: 'How are call minutes billed?', a: 'Per second, rounded up to the nearest 30 seconds, from your plan minutes and top-ups. Ring time and unanswered calls are not billed. If the balance runs out mid-call, the agent wraps up with a short goodbye instead of cutting off.' },
-      { q: 'Is there a setup fee or long contract?', a: 'There is a one-time setup fee of ₹1,999. There is no lock-in: monthly plans can be cancelled any time, and pay-as-you-go minutes are bought only when you need them.' },
-      { q: 'Do I need more than one agent?', a: 'Usually not at first. Each agent works in one mode, instant lead calling or bulk campaigns, so add a second only for a genuinely different job, each with its own script, voice and number.' },
-    ],
+    faqs: VOICE_FAQS,
     compare: {
-      eyebrow: 'Compare plans',
-      title: 'Every voice plan, side by side.',
-      text: 'Monthly plans include minutes and more features as you grow. Pay as you go gives you the base voice agent with no monthly commitment. All prices plus 18% GST and a one-time setup fee of ₹1,999.',
-      columns: ['Starter', 'Pro', 'Growth', 'Pay as you go'],
+      eyebrow: 'Voice AI plans',
+      title: 'Compare plans',
+      text: 'What each plan includes, side by side.',
+      columns: ['Starter', 'Pro', 'Growth'],
       recommended: 1,
       recommendedLabel: 'Most Popular',
-      rows: [
-        { feature: 'Price/month', values: ['₹2,799', '₹6,999', '₹22,999', 'None, top up from ₹2,848'] },
-        { feature: 'Included minutes', values: ['317', '1,000', '3,571', '320+ per top-up'] },
-        { feature: 'Effective per-min rate', values: ['₹8.83', '₹7.00', '₹6.44', '₹8.90 (₹8.47 on ₹7,000+)'] },
-        { feature: 'Team members', values: ['2', '5', '10', 'Base'] },
-        { feature: 'Knowledge base', values: ['10 MB', '50 MB', '100 MB', 'Base'] },
-        { feature: 'Voice cloning', values: [true, true, true, false] },
-        { feature: 'WhatsApp', values: [true, true, true, false] },
-        { feature: 'SIP trunking', values: [true, true, true, false] },
-        { feature: 'Live call monitoring', values: [false, true, true, false] },
-        { feature: 'Voicemail detection', values: [false, true, true, false] },
-        { feature: 'Agent versioning', values: [false, true, true, false] },
-        { feature: 'Workflow builder runs', values: ['—', '10,000/mo', '100,000/mo', '—'] },
-        { feature: 'Recording insights', values: [false, false, true, false] },
-        { feature: 'Email channel', values: [false, false, true, false] },
-        { feature: 'SMS channel', values: [false, false, true, false] },
+      rows: [],
+      groups: [
+        { title: 'Plan details', rows: [
+          { feature: 'Monthly price', values: ['₹2,799', '₹6,999', '₹22,999'] },
+          { feature: 'Voice AI rate / min', values: ['₹8.83', '₹7.00', '₹6.44'] },
+          { feature: 'Knowledge base', values: ['10 MB', '50 MB', '100 MB'] },
+          { feature: 'Team members', values: ['2', '5', '10'] },
+        ] },
+        { title: 'Usage', rows: [
+          { feature: 'Chatbot rate / message', values: ['₹0.84', '₹0.84', '₹0.84'] },
+          { feature: 'WhatsApp rate / message', values: ['₹0.84', '₹0.84', '₹0.84'] },
+          { feature: 'WhatsApp broadcast messages / month', values: ['–', '2,000', '10,000'] },
+        ] },
+        { title: 'Core', rows: [
+          { feature: 'Voice AI agents', values: [true, true, true] },
+          { feature: 'Call logs', values: [true, true, true] },
+          { feature: 'Integrations', values: [true, true, true] },
+        ] },
+        { title: 'Growth', rows: [
+          { feature: 'Voice cloning', values: [true, true, true] },
+          { feature: 'WhatsApp', values: [true, true, true] },
+          { feature: 'SIP trunking', values: [true, true, true] },
+        ] },
+        { title: 'Operate at scale', rows: [
+          { feature: 'Live call monitoring', values: [false, true, true] },
+          { feature: 'Voicemail detection', values: [false, true, true] },
+          { feature: 'Agent versioning', values: [false, true, true] },
+        ] },
+        { title: 'Intelligence', rows: [
+          { feature: 'Recording insights', values: [false, false, true] },
+        ] },
+        { title: 'Additional features', rows: [
+          { feature: 'Knowledge base', values: [true, true, true] },
+          { feature: 'Workflow builder', values: ['–', '10,000 executions/mo', '100,000 executions/mo'] },
+          { feature: 'Email channel', values: [false, false, true] },
+          { feature: 'SMS channel', values: [false, false, true] },
+        ] },
+        { title: 'Support', rows: [
+          { feature: 'Support channel', values: ['Email', 'Email', 'Email, Slack and WhatsApp'] },
+          { feature: 'Response time', values: ['24-hour response', '24-hour response', '12-hour response'] },
+        ] },
       ],
       versus: {
         title: 'AI voice agent vs. hiring a telecaller',
