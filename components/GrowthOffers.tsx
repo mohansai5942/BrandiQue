@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Bot, Check, Code2, Palette, PhoneCall, Sparkles } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import VoicePricing from './VoicePricing';
 import { PACKAGES, PILLARS, PillarId } from '../data/offers';
 import { useInquiry } from '../context/InquiryContext';
 
@@ -59,6 +60,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                     {!bare && <Link to={pillar.href} className="inline-flex items-center gap-2 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-3 transition-all">Explore {pillar.title} <ArrowRight size={16} /></Link>}
                   </div>
                 </ScrollReveal>
+                {pillar.id === 'voice' ? <VoicePricing /> : <>
                 <div className={`flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 ${items.some(pkg => pkg.badge) ? 'pt-4 md:pt-2' : ''} md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-5 lg:gap-6 items-stretch`}>
                   {items.map((pkg, index) => pkg.badge ? (
                     <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`} className="w-[84%] shrink-0 snap-start md:w-auto">
@@ -102,13 +104,14 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                   ))}
                 </div>
                 {pillar.plansNote && <p className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-5 py-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">{pillar.plansNote}</p>}
+                </>}
               </div>
             );
           })}
         </div>
 
         <p className="mt-8 md:mt-12 text-center text-xs text-gray-500 dark:text-gray-500">
-          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agent plans have a one-time setup fee of ₹1,999, no monthly fee, and are billed only per connected call minute. External services, taxes and third-party costs are quoted separately.
+          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agents: monthly plans from ₹2,799 or pay-as-you-go top-ups from ₹2,848, plus a one-time setup fee of ₹1,999 and 18% GST. External services, taxes and third-party costs are quoted separately.
         </p>
       </div>
     </section>
