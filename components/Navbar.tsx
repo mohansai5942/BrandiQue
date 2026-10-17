@@ -159,7 +159,7 @@ const Navbar: React.FC = () => {
     { title: "Web Development", path: "/web-development", desc: "Conversion-focused custom and WordPress websites", icon: Code, color: "text-cyan-300", gradient: "group-hover:border-cyan-300/50 group-hover:shadow-[0_0_20px_rgba(103,232,249,0.2)]" },
     { title: "AI Agents & Automations", path: "/services/ai-automation", desc: "Chatbots, n8n workflows and connected business tools", icon: Bot, color: "text-violet-300", gradient: "group-hover:border-violet-300/50 group-hover:shadow-[0_0_20px_rgba(196,181,253,0.2)]" },
     { title: "Graphic Design", path: "/services/graphic-design", desc: "Logos, brand identity, social and ad creatives", icon: Palette, color: "text-amber-300", gradient: "group-hover:border-amber-300/50 group-hover:shadow-[0_0_20px_rgba(252,211,77,0.2)]" },
-    { title: "Voice Calling AI Agents", path: "/services/voice-ai-agents", desc: "AI agents that call leads in Telugu, Hindi and English", icon: PhoneCall, color: "text-emerald-300", gradient: "group-hover:border-emerald-300/50 group-hover:shadow-[0_0_20px_rgba(110,231,183,0.2)]" }
+    { title: "Voice Calling AI Agents", path: "/services/voice-ai-agents", desc: "AI agents that call leads in Telugu and English", icon: PhoneCall, color: "text-emerald-300", gradient: "group-hover:border-emerald-300/50 group-hover:shadow-[0_0_20px_rgba(110,231,183,0.2)]" }
   ];
 
   return (

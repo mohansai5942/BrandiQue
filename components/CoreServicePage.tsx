@@ -113,7 +113,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       {/* One-time packages */}
       <section id="pricing" className="scroll-mt-24 border-t border-gray-200 bg-white pt-12 dark:border-white/5 dark:bg-[#080A0F] md:pt-28">
         <div className="px-5 md:px-8 desk:px-12 2xl:px-16"><ScrollReveal>{id === 'voice'
-          ? <SectionHeading eyebrow="Plans & pricing" title={<>One flat agent fee. <span className="text-yellow-500">Clear per-minute rates.</span></>} text="Every plan includes the agent, a dedicated +91 number and ₹500 of calling credit every 30 days. Pick the voice that fits the job, and pay only for connected minutes." />
+          ? <SectionHeading eyebrow="Plans & pricing" title={<>Pick the voice. <span className="text-yellow-500">₹5, ₹8 or ₹11 a minute.</span></>} text="Every plan has the same features and the same flat ₹2,099 agent fee every 30 days, with a dedicated +91 line and ₹500 calling credit. The plan sets the voice quality and the per-minute rate, and you pay only for connected minutes." />
           : <SectionHeading eyebrow="One-time packages" title={<>Clear starting prices. <span className="text-yellow-500">Fixed written quote.</span></>} text="Pick a starting point. After a short call you get the exact scope, timeline and price in writing, and nothing starts until you approve." />}</ScrollReveal></div>
         <GrowthOffers showHeading={false} pillars={[id]} bare />
       </section>
@@ -131,8 +131,8 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
                     <tr className="bg-gray-50 dark:bg-[#0D1017]">
                       <th scope="col" className="w-[34%] px-4 py-4 text-xs font-bold uppercase tracking-[0.14em] text-gray-500 md:px-6">Feature</th>
                       {c.compare.columns.map((col, i) => (
-                        <th key={col} scope="col" className={`px-3 py-4 text-center text-sm font-bold md:text-base ${i === 1 ? 'bg-yellow-400/10 text-gray-900 dark:text-white' : ''}`}>
-                          {col}{i === 1 && <span className="mt-1 block text-[9px] font-black uppercase tracking-wider text-yellow-600 dark:text-yellow-300">Recommended</span>}
+                        <th key={col} scope="col" className={`px-3 py-4 text-center text-sm font-bold md:text-base ${i === c.compare?.recommended ? 'bg-yellow-400/10 text-gray-900 dark:text-white' : ''}`}>
+                          {col}{i === c.compare?.recommended && <span className="mt-1 block text-[9px] font-black uppercase tracking-wider text-yellow-600 dark:text-yellow-300">Recommended</span>}
                         </th>
                       ))}
                     </tr>
@@ -141,7 +141,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
                     {c.compare.rows.map(r => (
                       <tr key={r.feature} className="border-t border-gray-200 dark:border-white/10">
                         <th scope="row" className="px-4 py-3.5 text-sm font-medium text-gray-700 dark:text-gray-300 md:px-6">{r.feature}</th>
-                        {r.values.map((v, i) => <td key={i} className={`px-3 py-3.5 text-center ${i === 1 ? 'bg-yellow-400/5' : ''}`}><Cell v={v} featured={i === 1} /></td>)}
+                        {r.values.map((v, i) => <td key={i} className={`px-3 py-3.5 text-center ${i === c.compare?.recommended ? 'bg-yellow-400/5' : ''}`}><Cell v={v} featured={i === c.compare?.recommended} /></td>)}
                       </tr>
                     ))}
                   </tbody>
