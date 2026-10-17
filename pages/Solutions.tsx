@@ -34,7 +34,7 @@ const Solutions: React.FC = () => {
         <div className="max-w-[100rem] mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {LAYERS.map((layer, index) => (
             <ScrollReveal key={layer.title} delay={`delay-${index * 100}`}>
-              <div className="h-full glass glass-glow motion-card rounded-2xl p-5">
+              <div className="h-full rounded-2xl border border-gray-200 bg-white p-5 dark:border-white/10 dark:bg-[#0D1017]">
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300"><layer.icon size={20} /></span>
                   <span className="text-xs font-bold text-gray-400">0{index + 1}</span>

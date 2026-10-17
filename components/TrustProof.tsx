@@ -1,5 +1,4 @@
 import React from 'react';
-import CountUp from './CountUp';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { INITIAL_PROJECTS } from '../pages/ProjectsData';
 import { INITIAL_N8N_PROJECTS } from '../pages/N8nProjectsData';
@@ -25,9 +24,9 @@ const TrustProof: React.FC = () => {
         <p className="text-center text-[10px] font-bold uppercase tracking-[0.28em] text-yellow-700 dark:text-yellow-300">Real work. Real numbers.</p>
         <dl className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
           {stats.map(stat => (
-            <div key={stat.label} className="motion-card glass rounded-3xl p-5 md:p-8">
+            <div key={stat.label} className="rounded-3xl border border-gray-200 bg-gray-50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 dark:border-white/10 dark:bg-[#0D1017] md:p-8">
               <dt className="sr-only">{stat.label}</dt>
-              <dd className="bg-gradient-to-r from-yellow-500 to-amber-400 bg-clip-text text-4xl font-black tracking-tight text-transparent md:text-6xl"><CountUp value={stat.value} /></dd>
+              <dd className="bg-gradient-to-r from-yellow-500 to-amber-400 bg-clip-text text-4xl font-black tracking-tight text-transparent md:text-6xl">{stat.value}</dd>
               <dd className="mt-3 text-xs leading-snug text-gray-600 dark:text-gray-300 md:text-sm">{stat.label}</dd>
             </div>
           ))}

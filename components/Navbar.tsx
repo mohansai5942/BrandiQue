@@ -33,7 +33,7 @@ const Navbar: React.FC = () => {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 24);
+          setScrolled(window.scrollY > 20);
           ticking = false;
         });
         ticking = true;
@@ -163,10 +163,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className={`fixed top-0 z-50 w-full -mt-[19px] transition-[padding] duration-300 ease-custom ${scrolled ? 'py-1.5 md:py-2 shadow-sm' : 'py-2.5 md:py-4 desk:py-6'}`}>
-        {/* Glass layer fades in only after scrolling — at the very top the
-            header is fully transparent (no background, no border, no flash). */}
-        <div aria-hidden className={`glass-nav pointer-events-none absolute inset-0 transition-opacity duration-300 ${scrolled ? 'opacity-100' : 'opacity-0'}`} />
+      <header className={`fixed top-0 z-50 w-full -mt-[19px] transition-all duration-500 ease-custom will-change-transform ${scrolled ? 'bg-white/95 dark:bg-[#05070A]/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 py-1.5 md:py-2 shadow-sm' : 'bg-transparent py-2.5 md:py-4 desk:py-6'}`}>
         <div className="max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16 mt-[20px] m-0 flex items-center justify-between relative">
           <Link to="/" className="flex items-center gap-3 group relative z-50 animate-logo-entrance" onClick={() => setIsOpen(false)} onContextMenu={(e) => e.preventDefault()}>
             <img
@@ -197,6 +194,8 @@ const Navbar: React.FC = () => {
                       }}
                       className={`relative group cursor-pointer overflow-hidden rounded-full px-4 py-1.5 ${styles.bg} text-white font-bold text-xs md:text-sm ${styles.shadow} hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 border border-white/30`}
                     >
+                      {/* Continuous Automatic Top Shine Animation */}
+                      <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shine pointer-events-none"></span>
 
                       {/* Interactive Hover Reflection Sweep */}
                       <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></span>
@@ -293,6 +292,8 @@ const Navbar: React.FC = () => {
                       active ? `${styles.ring} scale-105` : ''
                     }`}
                   >
+                    {/* Continuous Automatic Top Shine Animation */}
+                    <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shine pointer-events-none"></span>
 
                     {/* Interactive Hover Reflection Sweep */}
                     <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></span>
@@ -371,6 +372,8 @@ const Navbar: React.FC = () => {
                     onClick={() => setWebsitesOpen(!websitesOpen)} 
                     className="w-full flex items-center justify-between p-3.5 rounded-2xl relative overflow-hidden bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-500 text-white font-extrabold shadow-md border border-white/20 transition-all active:scale-[0.98]"
                   >
+                    {/* Continuous Automatic Top Shine Animation */}
+                    <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shine pointer-events-none"></span>
 
                     <div className="relative flex items-center gap-3 z-10">
                       <div className="p-2 rounded-xl bg-white/20 text-white shadow-inner"><Globe size={18} /></div>
@@ -439,6 +442,7 @@ const Navbar: React.FC = () => {
                   }`}
                   style={delayStyle}
                 >
+                  <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-shine pointer-events-none"></span>
                   <div className="relative flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-white/20 text-white"><item.icon size={18} /></div>
                     <span className="text-sm font-extrabold text-white">{item.label}</span>
