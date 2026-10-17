@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-// One shared passive scroll listener for the whole app (scroll progress bar,
-// parallax, …). rAF-throttled: subscribers re-render at most once per frame
+// One shared passive scroll listener for the whole app (parallax, navbar
+// state, …). rAF-throttled: subscribers re-render at most once per frame
 // while scrolling, and nothing runs when the page is idle.
 let currentY = 0;
 const subscribers = new Set<(y: number) => void>();
