@@ -57,12 +57,12 @@ export const PILLARS: Pillar[] = [
     number: '04',
     title: 'Voice Calling AI Agents',
     outcome: 'Call every lead. In their language.',
-    description: 'AI voice agents that call new leads within seconds and run bulk reminder and follow-up campaigns in natural Telugu, switching to English mid-call, with every call transcribed and summarised.',
+    description: 'AI voice agents that call new leads within minutes and run bulk reminder and follow-up campaigns in natural Telugu, switching to English mid-call, with every call transcribed and summarised.',
     href: '/services/voice-ai-agents',
     startingAt: '₹2,799',
     startingSuffix: '/month',
     secondary: { label: 'Pay as you go from', value: '₹2,848', suffix: '' },
-    points: ['Instant lead calling and bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook, Google Calendar and WhatsApp integrations'],
+    points: ['Instant lead calling and bulk campaigns', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook, Google Calendar and WhatsApp integrations'],
   },
 ];
 

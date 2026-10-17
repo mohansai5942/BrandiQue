@@ -17,7 +17,7 @@ const FLOATERS: Record<ServiceKey, { t: string; s: string }[]> = {
   web: [{ t: 'Website live', s: 'Mobile-first · SEO-ready' }, { t: 'New enquiry', s: 'via WhatsApp button' }],
   ai: [{ t: 'Lead captured', s: 'Saved to Google Sheets' }, { t: 'Reply sent', s: 'in seconds, 24 × 7' }],
   design: [{ t: 'Brand kit ready', s: 'Logo · colours · fonts' }, { t: '8 posts delivered', s: 'This month’s creatives' }],
-  voice: [{ t: 'Lead called', s: 'within seconds, in Telugu' }, { t: 'Visit booked', s: 'WhatsApp confirmation sent' }],
+  voice: [{ t: 'Lead called', s: 'within minutes, in Telugu' }, { t: 'Visit booked', s: 'WhatsApp confirmation sent' }],
 };
 
 const TRUST = ['Fixed written quotes', 'You own everything', 'Live in 1–4 weeks', 'Telugu & English support'];
