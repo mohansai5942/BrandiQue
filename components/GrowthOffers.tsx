@@ -69,6 +69,12 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                         <div className={`mt-6 border-y py-5 ${pkg.featured ? 'border-white/10' : 'border-gray-200 dark:border-white/10'}`}>
                           <div className="text-3xl md:text-4xl font-black tracking-tight">{pkg.price}</div>
                           <div className={`mt-1 text-xs ${pkg.featured ? 'text-white/55' : 'text-gray-500 dark:text-gray-400'}`}>{pkg.suffix}</div>
+                          {pkg.tier && (
+                            <div className="mt-4">
+                              <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">{pkg.tier.label}</span>
+                              <p className={`mt-2 text-sm font-medium ${pkg.featured ? 'text-white/80' : 'text-gray-700 dark:text-gray-300'}`}>{pkg.tier.line}</p>
+                            </div>
+                          )}
                         </div>
                         <ul className="mt-6 space-y-3 flex-1">
                           {pkg.items.map(item => <li key={item} className="flex gap-3 text-sm leading-relaxed"><Check size={17} className="mt-0.5 text-yellow-500 shrink-0" /><span>{item}</span></li>)}
@@ -81,13 +87,14 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                     </ScrollReveal>
                   ))}
                 </div>
+                {pillar.plansNote && <p className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-5 py-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">{pillar.plansNote}</p>}
               </div>
             );
           })}
         </div>
 
         <p className="mt-8 md:mt-12 text-center text-xs text-gray-500 dark:text-gray-500">
-          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agent plans are billed per agent every 30 days plus connected call minutes. External services, taxes and third-party costs are quoted separately.
+          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agent plans have no monthly fee and are billed only per connected call minute. External services, taxes and third-party costs are quoted separately.
         </p>
       </div>
     </section>

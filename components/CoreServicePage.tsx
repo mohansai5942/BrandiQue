@@ -113,7 +113,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       {/* One-time packages */}
       <section id="pricing" className="scroll-mt-24 border-t border-gray-200 bg-white pt-12 dark:border-white/5 dark:bg-[#080A0F] md:pt-28">
         <div className="px-5 md:px-8 desk:px-12 2xl:px-16"><ScrollReveal>{id === 'voice'
-          ? <SectionHeading eyebrow="Plans & pricing" title={<>Pick the voice. <span className="text-yellow-500">₹5, ₹8 or ₹11 a minute.</span></>} text="Every plan has the same features and the same flat ₹2,099 agent fee every 30 days, with a dedicated +91 line and ₹500 calling credit. The plan sets the voice quality and the per-minute rate, and you pay only for connected minutes." />
+          ? <SectionHeading eyebrow="Plans & pricing" title={<>Pick the voice. <span className="text-yellow-500">₹5, ₹8 or ₹11 a minute.</span></>} text="Every plan has the same features, a dedicated +91 line and ₹500 calling credit, with no monthly or agent fee. The plan sets the voice quality and the per-minute rate, and you pay only for connected minutes." />
           : <SectionHeading eyebrow="One-time packages" title={<>Clear starting prices. <span className="text-yellow-500">Fixed written quote.</span></>} text="Pick a starting point. After a short call you get the exact scope, timeline and price in writing, and nothing starts until you approve." />}</ScrollReveal></div>
         <GrowthOffers showHeading={false} pillars={[id]} bare />
       </section>

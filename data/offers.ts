@@ -12,10 +12,12 @@ export interface Pillar {
   description: string;
   href: string;
   startingAt: string;
-  /** Optional unit after the starting price, e.g. '/30 days' for subscription-priced services. */
+  /** Optional unit after the starting price, e.g. '/min' for usage-priced services. */
   startingSuffix?: string;
   /** Optional second price fact shown instead of "Membership from" on the Services page. */
   secondary?: { label: string; value: string; suffix?: string };
+  /** Optional line shown under this pillar's plan cards (e.g. how voice tiers differ). */
+  plansNote?: string;
   points: string[];
 }
 
@@ -57,9 +59,10 @@ export const PILLARS: Pillar[] = [
     outcome: 'Call every lead. In their language.',
     description: 'AI voice agents that call new leads within seconds and run bulk reminder and follow-up campaigns in natural Telugu, switching to English mid-call, with every call transcribed and summarised.',
     href: '/services/voice-ai-agents',
-    startingAt: '₹2,099',
-    startingSuffix: '/30 days',
-    secondary: { label: 'Calls from', value: '₹5', suffix: '/min' },
+    startingAt: '₹5',
+    startingSuffix: '/min',
+    secondary: { label: 'Setup or monthly fee', value: 'None', suffix: '' },
+    plansNote: 'For example, use Voice Starter for high-volume reminder campaigns and Voice Premium for hot new leads. You can change an agent’s tier any time, and it takes effect immediately.',
     points: ['Instant lead calling and bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook, Google Calendar and WhatsApp integrations'],
   },
 ];
@@ -73,6 +76,8 @@ export interface Package {
   items: string[];
   note: string;
   featured?: boolean;
+  /** Optional tier badge shown under the price (voice plans: the voice quality). */
+  tier?: { label: string; line: string };
 }
 
 export const PACKAGES: Package[] = [
@@ -133,24 +138,27 @@ export const PACKAGES: Package[] = [
     items: ['8 social posts or carousels', '4 ad creatives in feed and story sizes', 'One consistent campaign look', 'Final PNG/JPG exports for every platform', 'One consolidated revision round'],
     note: 'Need designs every month? Design memberships start at ₹5,000. Ad spend and posting are excluded.',
   },
-  // Voice Calling AI Agents: one flat agent fee (₹2,099 / 30 days) with identical features on every plan.
+  // Voice Calling AI Agents: billed only per connected minute (no agent or monthly fee), identical features on every plan.
   // The plan is the voice tier, which sets voice quality and the per-minute rate.
   {
-    pillar: 'voice', name: 'Voice Starter', price: '₹5/min', suffix: 'per connected minute · + ₹2,099 per agent / 30 days',
+    pillar: 'voice', name: 'Voice Starter', price: '₹5/min', suffix: 'per connected minute',
+    tier: { label: 'Budget-friendly voice', line: 'Covers most day-to-day calling' },
     description: 'Budget-friendly voice that covers most day-to-day calling, ideal for high-volume reminder campaigns.',
-    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit on every hire or renewal', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
+    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit when your agent goes live', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
     note: 'Same features on every plan; only the voice and per-minute rate change. Ring time and unanswered calls are not billed.',
   },
   {
-    pillar: 'voice', name: 'Voice Growth', price: '₹8/min', suffix: 'per connected minute · + ₹2,099 per agent / 30 days',
+    pillar: 'voice', name: 'Voice Growth', price: '₹8/min', suffix: 'per connected minute',
+    tier: { label: 'Great everyday quality', line: 'A step up in naturalness' },
     description: 'Great everyday quality, a clear step up in naturalness for regular lead and customer calls.',
-    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit on every hire or renewal', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
+    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit when your agent goes live', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
     note: 'Same features on every plan; only the voice and per-minute rate change. Ring time and unanswered calls are not billed.',
   },
   {
-    pillar: 'voice', name: 'Voice Premium', price: '₹11/min', suffix: 'per connected minute · + ₹2,099 per agent / 30 days',
+    pillar: 'voice', name: 'Voice Premium', price: '₹11/min', suffix: 'per connected minute',
+    tier: { label: 'The most lifelike voice', line: 'For calls where the first impression matters most' },
     description: 'Our most lifelike voice, for calls where the first impression matters most, like hot new leads.',
-    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit on every hire or renewal', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
+    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit when your agent goes live', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
     note: 'Same features on every plan; only the voice and per-minute rate change. Ring time and unanswered calls are not billed.',
   },
 ];
