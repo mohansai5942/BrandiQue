@@ -68,6 +68,11 @@ const HeroGrowth: React.FC = () => {
           <a href={waHref} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-green-700 hover:underline dark:text-green-400">
             <MessageCircle size={15} /> Or chat with us on WhatsApp
           </a>
+          <div className="mt-2">
+            <Link to="/roi-calculator" className="inline-flex items-center gap-1.5 text-sm font-semibold text-yellow-700 hover:underline dark:text-yellow-300">
+              Losing enquiries after hours? See what it costs you <ArrowRight size={14} />
+            </Link>
+          </div>
 
           <ul className="mt-8 grid max-w-xl grid-cols-2 gap-x-6 gap-y-3 border-t border-gray-200 pt-6 dark:border-white/10">
             {TRUST.map(item => <li key={item} className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><Check size={16} className="shrink-0 text-yellow-500" />{item}</li>)}

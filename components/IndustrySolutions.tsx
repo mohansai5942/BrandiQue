@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, GraduationCap, Stethoscope, Store, Rocket } from 'lucide-react';
+import { ArrowRight, Check, GraduationCap, Stethoscope, Store, Rocket, TrendingUp, MessageCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
-import { INDUSTRY_SOLUTIONS } from '../data/offers';
-import { useInquiry } from '../context/InquiryContext';
+import { INDUSTRY_SOLUTIONS, whatsappLink } from '../data/offers';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const ICONS: Record<string, LucideIcon> = {
   education: GraduationCap,
@@ -16,7 +16,7 @@ const ICONS: Record<string, LucideIcon> = {
 interface IndustrySolutionsProps { showHeading?: boolean; compact?: boolean; }
 
 const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({ showHeading = true, compact = false }) => {
-  const { openInquiry } = useInquiry();
+  const { settings } = useSiteSettings();
   return (
     <section id="solutions" className="scroll-mt-24 py-12 md:py-28 px-5 md:px-8 desk:px-12 2xl:px-16 bg-gray-50 dark:bg-[#05070A]">
       <div className="max-w-[100rem] mx-auto">
@@ -50,16 +50,26 @@ const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({ showHeading = tru
                   <h3 className="mt-2 text-2xl font-bold tracking-tight">{solution.name}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{solution.problem}</p>
                   {!compact && (
-                    <ul className="mt-5 flex-1 space-y-2.5">
-                      {solution.includes.map(item => (
-                        <li key={item} className="flex gap-2.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300"><Check size={16} className="mt-0.5 shrink-0 text-yellow-500" />{item}</li>
-                      ))}
-                    </ul>
+                    <>
+                      <ul className="mt-5 flex-1 space-y-2.5">
+                        {solution.includes.map(item => (
+                          <li key={item} className="flex gap-2.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300"><Check size={16} className="mt-0.5 shrink-0 text-yellow-500" />{item}</li>
+                        ))}
+                      </ul>
+                      <div className="mt-5 rounded-2xl border border-yellow-400/25 bg-yellow-400/5 p-4">
+                        <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-700 dark:text-yellow-300"><TrendingUp size={13} /> Why it pays for itself</p>
+                        <ul className="mt-2.5 space-y-2">
+                          {solution.roi.map(point => (
+                            <li key={point} className="flex gap-2 text-[13px] leading-relaxed text-gray-700 dark:text-gray-300"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-400" />{point}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
                   )}
                   <div className="mt-5 md:mt-7 flex flex-row gap-2 md:gap-3">
-                    <button type="button" onClick={() => openInquiry('AI Automation & Agents', solution.name)} className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-900 px-3 py-2.5 text-xs md:px-4 md:py-3.5 md:text-sm font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400">
-                      <span className="md:hidden">Get this</span><span className="hidden md:inline">Get this for my business</span> <ArrowRight size={14} />
-                    </button>
+                    <a href={whatsappLink(settings.whatsapp, solution.whatsappMessage)} target="_blank" rel="noopener noreferrer" className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-900 px-3 py-2.5 text-xs md:px-4 md:py-3.5 md:text-sm font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400">
+                      <MessageCircle size={14} /><span className="md:hidden">Get this</span><span className="hidden md:inline">Get this for my business</span> <ArrowRight size={14} />
+                    </a>
                     {compact && (
                       <Link to={`/solutions#${solution.slug}`} className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-3 py-2.5 text-xs md:px-4 md:py-3.5 md:text-sm font-semibold transition-colors hover:border-yellow-400/60 dark:border-white/15">What's included</Link>
                     )}
