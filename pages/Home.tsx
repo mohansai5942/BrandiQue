@@ -481,7 +481,7 @@ const Home: React.FC = () => {
                   <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tighter">Ready to get more <br /><span className="bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent">customers on autopilot?</span></h2>
                   <p className="text-gray-500 text-lg md:text-xl font-light max-w-2xl mx-auto">Start with a free growth audit. We'll show you exactly where you're losing enquiries and what to fix first.</p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
-                     <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="px-6 md:px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
+                     <button type="button" onClick={() => openInquiry('Free Growth Audit', '', { price: 'Free', source: 'Home · Final CTA' })} className="px-6 md:px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
                         Get My Free Audit <ArrowRight size={20} />
                      </button>
                      <a href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I would like a free growth audit for my business.')} target="_blank" rel="noopener noreferrer" className="px-6 md:px-10 py-5 border border-gray-300 dark:border-white/10 rounded-full font-bold text-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all">

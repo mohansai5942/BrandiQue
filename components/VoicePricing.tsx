@@ -58,7 +58,7 @@ const VoicePricing: React.FC = () => {
                   <ul className="mt-3 flex-1 space-y-3">
                     {p.features.map(f => <li key={f} className="flex gap-3 text-sm font-medium leading-relaxed"><Check size={17} className="mt-0.5 shrink-0 text-yellow-500" /><span>{f}</span></li>)}
                   </ul>
-                  <button type="button" onClick={() => openInquiry(SERVICE, `Voice ${p.name} plan · ${formatInr(p.priceInr)}/month`)} className={`mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${p.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400'}`}>
+                  <button type="button" onClick={() => openInquiry(SERVICE, `Voice ${p.name}`, { price: `${formatInr(p.priceInr)}/month`, minutes: `${p.includedMinutes.toLocaleString('en-IN')} mins/month`, rate: `₹${p.effectiveRate}/min`, billingType: 'Monthly subscription', setupFee: formatInr(VOICE_SETUP_FEE_INR), tax: `+ ${VOICE_GST_PERCENT}% GST`, source: `Voice pricing · ${p.cta}` })} className={`mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${p.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400'}`}>
                     {p.cta}<ArrowRight size={17} />
                   </button>
                 </article>
@@ -110,7 +110,7 @@ const VoicePricing: React.FC = () => {
               </p>
               <button
                 type="button"
-                onClick={() => openInquiry(SERVICE, `Pay as you go top-up · ${q.totalMinutes.toLocaleString('en-IN')} mins for ${formatInr(q.amountInr)} + GST`)}
+                onClick={() => openInquiry(SERVICE, 'Pay as you go top-up', { billingType: 'Pay as you go', paygMinutes: `${q.totalMinutes.toLocaleString('en-IN')} mins${q.bonusMinutes ? ` (incl. ${q.bonusMinutes} bonus)` : ''}`, paygAmount: formatInr(q.amountInr), rate: `₹${q.rate.toFixed(2)}/min`, setupFee: formatInr(VOICE_SETUP_FEE_INR), tax: `+ ${VOICE_GST_PERCENT}% GST`, source: `Voice pricing · Top up ${formatInr(q.amountInr)}` })}
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 py-4 text-base font-bold text-black transition-colors hover:bg-yellow-300 sm:w-auto"
               >
                 Top up {formatInr(q.amountInr)}<ArrowRight size={18} />

@@ -4,8 +4,8 @@ import { ArrowRight, Bot, Check, Code2, Palette, PhoneCall, Sparkles } from 'luc
 import type { LucideIcon } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import VoicePricing from './VoicePricing';
-import { PACKAGES, PILLARS, PillarId } from '../data/offers';
-import { useInquiry } from '../context/InquiryContext';
+import { PACKAGES, PILLARS, PillarId, Package } from '../data/offers';
+import { useInquiry, LeadContext } from '../context/InquiryContext';
 
 const PILLAR_ICONS: Record<PillarId, LucideIcon> = {
   web: Code2,
@@ -21,6 +21,13 @@ const INQUIRY_SERVICE: Record<PillarId, string> = {
   design: 'Graphic Design',
   voice: 'Voice Calling AI Agents',
 };
+
+const pkgContext = (pkg: Package): LeadContext => ({
+  price: [pkg.price, pkg.suffix].filter(Boolean).join(' '),
+  billingType: /month|\/mo/i.test(pkg.suffix ?? '') ? 'Monthly' : /one-time/i.test(pkg.suffix ?? '') ? 'One-time project' : undefined,
+  setupFee: pkg.setup,
+  source: `Pricing card · ${pkg.cta ?? 'Get a quote'}`,
+});
 
 interface GrowthOffersProps { showHeading?: boolean; pillars?: PillarId[]; bare?: boolean; }
 
@@ -77,7 +84,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                         <ul className={`mt-6 space-y-3 flex-1 border-t pt-6 ${pkg.featured ? 'border-white/10' : 'border-gray-200 dark:border-white/10'}`}>
                           {pkg.items.map(item => <li key={item} className="flex gap-3 text-sm font-medium leading-relaxed"><Check size={17} className="mt-0.5 text-yellow-500 shrink-0" /><span>{item}</span></li>)}
                         </ul>
-                        <button type="button" onClick={() => openInquiry(INQUIRY_SERVICE[pillar.id], pkg.name)} className={`mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${pkg.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400'}`}>
+                        <button type="button" onClick={() => openInquiry(INQUIRY_SERVICE[pillar.id], pkg.name, pkgContext(pkg))} className={`mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${pkg.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400'}`}>
                           {pkg.cta ?? 'Get a quote'}<ArrowRight size={17} />
                         </button>
                       </article>
@@ -96,7 +103,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                           {pkg.items.map(item => <li key={item} className="flex gap-3 text-sm leading-relaxed"><Check size={17} className="mt-0.5 text-yellow-500 shrink-0" /><span>{item}</span></li>)}
                         </ul>
                         <p className={`mt-6 text-xs leading-relaxed ${pkg.featured ? 'text-white/50' : 'text-gray-500 dark:text-gray-400'}`}>{pkg.note}</p>
-                        <button type="button" onClick={() => openInquiry(INQUIRY_SERVICE[pillar.id], pkg.name)} className={`mt-7 inline-flex items-center justify-between gap-3 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${pkg.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400 dark:hover:text-black'}`}>
+                        <button type="button" onClick={() => openInquiry(INQUIRY_SERVICE[pillar.id], pkg.name, pkgContext(pkg))} className={`mt-7 inline-flex items-center justify-between gap-3 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${pkg.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400 dark:hover:text-black'}`}>
                           Get a quote<ArrowRight size={17} />
                         </button>
                       </article>

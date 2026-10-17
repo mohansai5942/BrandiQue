@@ -1,14 +1,18 @@
-import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import { X, Check, ArrowRight, ArrowLeft, Loader2, Phone, Mail, User, ShieldCheck, HelpCircle, AlertCircle, MessageCircle } from 'lucide-react';
-import { notifyAdmin } from '../notifyAdmin';
-import { loadFirestore } from '../firestoreClient';
+import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
+import { X, Check, MessageCircle } from 'lucide-react';
 import { whatsappLink } from '../data/offers';
 import { useSiteSettings } from './SiteSettingsContext';
-import { cleanText, isValidEmail, isValidPhone, LIMITS, SUBMIT_TIMEOUT_MS, withTimeout } from '../utils/security';
 import { motion, AnimatePresence } from 'motion/react';
+import LeadForm, { LeadContext, contextRows } from '../components/LeadForm';
+
+export type { LeadContext } from '../components/LeadForm';
 
 interface InquiryContextType {
-  openInquiry: (service: string, pkg?: string) => void;
+  /**
+   * Opens the single-step enquiry form. `pkg` is a short plan/package name (kept for older callers);
+   * `ctx` carries everything else the button knows (price, minutes, billing type, setup fee, source).
+   */
+  openInquiry: (service: string, pkg?: string, ctx?: LeadContext) => void;
   closeInquiry: () => void;
   isOpen: boolean;
   serviceName: string;
@@ -30,466 +34,39 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isOpen, setIsOpen] = useState(false);
   const [serviceName, setServiceName] = useState('');
   const [packageName, setPackageName] = useState('');
-  const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [leadContext, setLeadContext] = useState<LeadContext>({});
   const [isSuccess, setIsSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [honeypot, setHoneypot] = useState(''); // hidden from people; bots fill it
+  const [formKey, setFormKey] = useState(0);
 
-  // Common fields
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [additionalMessage, setAdditionalMessage] = useState('');
-  const [budget, setBudget] = useState('₹15,000 to ₹30,000');
-  const [timeline, setTimeline] = useState('1-2 Months');
-
-  // Service-specific answers
-  const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
-
-  // openInquiry/closeInquiry only call state setters, so they are stable (useCallback with no deps) and the
-  // context value below only changes when isOpen/serviceName/packageName do, not on every keystroke in the form.
-  const openInquiry = useCallback((service: string, pkg: string = '') => {
+  // Stable callbacks: the context value only changes when isOpen/serviceName/packageName do.
+  const openInquiry = useCallback((service: string, pkg: string = '', ctx: LeadContext = {}) => {
     setServiceName(service);
     setPackageName(pkg);
-    setStep(1);
+    setLeadContext({ ...ctx, plan: ctx.plan ?? (pkg || undefined) });
     setIsSuccess(false);
-    setIsSubmitting(false);
-    setSubmitError(null);
-    setHoneypot('');
-    // Reset fields
-    setName('');
-    setEmail('');
-    setPhone('');
-    setAdditionalMessage('');
-    setCustomAnswers({});
-    
-    // Set default package pricing/budget if provided
-    if (pkg) {
-      if (service.toLowerCase().includes('wordpress')) {
-        if (pkg.toLowerCase().includes('personal')) setBudget('₹9,000 to ₹15,000');
-        else if (pkg.toLowerCase().includes('portfolio')) setBudget('₹10,000 to ₹17,000');
-        else if (pkg.toLowerCase().includes('business')) setBudget('₹15,000 to ₹25,000');
-        else if (pkg.toLowerCase().includes('ecommerce')) setBudget('₹25,000 to ₹50,000');
-      } else if (service.toLowerCase().includes('branding')) {
-        if (pkg.toLowerCase().includes('starter')) setBudget('₹10,000 to ₹15,000');
-        else if (pkg.toLowerCase().includes('growth')) setBudget('₹20,000 to ₹30,000');
-        else if (pkg.toLowerCase().includes('premium')) setBudget('₹40,000 to ₹70,000');
-      }
-    } else {
-      setBudget('₹20,000 to ₹50,000');
-    }
-    
+    setFormKey(k => k + 1); // fresh, empty form every time
     setIsOpen(true);
   }, []);
 
-  const closeInquiry = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+  const closeInquiry = useCallback(() => setIsOpen(false), []);
+
+  // Escape closes the dialog; body scroll is locked while it is open.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsOpen(false); };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+  }, [isOpen]);
 
   const contextValue = useMemo(
     () => ({ openInquiry, closeInquiry, isOpen, serviceName, packageName }),
     [openInquiry, closeInquiry, isOpen, serviceName, packageName]
   );
 
-  const handleCustomAnswerChange = (question: string, value: string) => {
-    setCustomAnswers(prev => ({ ...prev, [question]: value }));
-  };
-
-  const validateContactStep = (): string | null => {
-    if (!cleanText(name, LIMITS.name)) return 'Please enter your full name.';
-    if (!isValidEmail(cleanText(email, LIMITS.email))) return 'Please enter a valid email address.';
-    if (!isValidPhone(cleanText(phone, LIMITS.phone))) return 'Please enter a valid phone number (7 to 15 digits).';
-    return null;
-  };
-
-  const goNext = () => {
-    if (step === 1) {
-      const problem = validateContactStep();
-      if (problem) {
-        setSubmitError(problem);
-        return;
-      }
-    }
-    setSubmitError(null);
-    setStep(step + 1);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-    setSubmitError(null);
-
-    const problem = validateContactStep();
-    if (problem) {
-      setSubmitError(problem);
-      setStep(1);
-      return;
-    }
-
-    // Bots fill the hidden field: show success without storing anything.
-    if (honeypot) {
-      setIsSuccess(true);
-      setStep(4);
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const cleanName = cleanText(name, LIMITS.name);
-      const cleanEmail = cleanText(email, LIMITS.email).toLowerCase();
-      const cleanPhone = cleanText(phone, LIMITS.phone);
-      const cleanTimeline = cleanText(timeline, 50);
-
-      // Build clean service title
-      const fullServiceTitle = cleanText(packageName ? `${serviceName} (${packageName})` : serviceName, LIMITS.short);
-
-      // Map answers to a readable message block
-      const formattedMsg = cleanText(additionalMessage, LIMITS.message, { multiline: true });
-      const answers: Record<string, string> = {};
-      Object.entries(customAnswers).slice(0, 20).forEach(([q, a]) => {
-        const key = cleanText(q, 100);
-        const value = cleanText(a, 500);
-        if (key && value) answers[key] = value;
-      });
-      const promptDetails = Object.entries(answers).map(([q, a]) => `${q}: ${a}`).join('\n');
-      const finalMessage = `Phone: ${cleanPhone}\nTimeline: ${cleanTimeline}\nService Specifics:\n${promptDetails || 'None provided'}\n\nAdditional Details:\n${formattedMsg || 'None'}`;
-
-      const docRef = await withTimeout(loadFirestore().then(({ db, addDoc, collection }) => addDoc(collection(db, 'messages'), {
-        source: 'service',
-        name: cleanName,
-        email: cleanEmail,
-        phone: cleanPhone,
-        service: fullServiceTitle,
-        budget: cleanText(budget, 50),
-        message: finalMessage,
-        serviceDetails: {
-          ...answers,
-          timeline: cleanTimeline,
-          phone: cleanPhone
-        },
-        createdAt: new Date().toISOString()
-      })), SUBMIT_TIMEOUT_MS);
-      if (docRef && docRef.id) notifyAdmin('messages', docRef.id);
-
-      setIsSuccess(true);
-      setStep(4);
-    } catch (error) {
-      console.error('Service inquiry could not be saved:', error);
-      setSubmitError('Sorry, your request could not be sent. Please check your connection and try again, or message us on WhatsApp.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Define service-specific fields/questions
-  const renderServiceSpecificFields = () => {
-    const sNameLower = serviceName.toLowerCase();
-
-    if (sNameLower.includes('growth audit') || sNameLower.includes('growth plan')) {
-      return (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Type of Business</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Coaching / School', 'Clinic / Healthcare', 'Shop / Restaurant', 'Services / Other'].map((type) => (
-                <button
-                  type="button"
-                  key={type}
-                  onClick={() => handleCustomAnswerChange('Business Type', type)}
-                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                    customAnswers['Business Type'] === type
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Biggest Goal Right Now</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['More enquiries', 'Faster replies on WhatsApp', 'Less manual work', 'Better brand look'].map((goal) => (
-                <button
-                  type="button"
-                  key={goal}
-                  onClick={() => handleCustomAnswerChange('Main Goal', goal)}
-                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                    customAnswers['Main Goal'] === goal
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                  }`}
-                >
-                  {goal}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Website or Instagram Link (optional)</label>
-            <input
-              type="text"
-              maxLength={200}
-              placeholder="e.g., yourbusiness.com or @yourbusiness"
-              value={customAnswers['Current Link'] || ''}
-              onChange={(e) => handleCustomAnswerChange('Current Link', e.target.value)}
-              className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (sNameLower.includes('wordpress')) {
-      return (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Website Type</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Business Website', 'E-Commerce Store', 'Portfolio/Personal', 'Blog / Magazine'].map((type) => (
-                <button
-                  type="button"
-                  key={type}
-                  onClick={() => handleCustomAnswerChange('Website Type', type)}
-                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                    customAnswers['Website Type'] === type
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-white/20'
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Need Domain & Hosting?</label>
-            <div className="flex gap-3">
-              {['Yes, help me set up', 'No, I have my own'].map((option) => (
-                <button
-                  type="button"
-                  key={option}
-                  onClick={() => handleCustomAnswerChange('Hosting Assistance', option)}
-                  className={`flex-1 p-3 rounded-xl border text-xs font-semibold transition-all ${
-                    customAnswers['Hosting Assistance'] === option
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (sNameLower.includes('full-stack') || sNameLower.includes('web development') || sNameLower.includes('software')) {
-      return (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Platform Required</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Custom Web App (React/Next)', 'Mobile App (Android/iOS)', 'Full SaaS Platform', 'API & Integration'].map((plat) => (
-                <button
-                  type="button"
-                  key={plat}
-                  onClick={() => handleCustomAnswerChange('Platform', plat)}
-                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                    customAnswers['Platform'] === plat
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-white/20'
-                  }`}
-                >
-                  {plat}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Primary Development Goal</label>
-            <input
-              type="text"
-              placeholder="e.g., Build a fast rental dashboard"
-              value={customAnswers['Primary Goal'] || ''}
-              maxLength={500}
-              onChange={(e) => handleCustomAnswerChange('Primary Goal', e.target.value)}
-              className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (sNameLower.includes('branding') || sNameLower.includes('design')) {
-      return (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Design Deliverables</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Logo & Brand Guidelines', 'Social Media Templates', 'Stationery / Business Cards', 'Complete Custom Package'].map((deliv) => (
-                <button
-                  type="button"
-                  key={deliv}
-                  onClick={() => handleCustomAnswerChange('Deliverables', deliv)}
-                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                    customAnswers['Deliverables'] === deliv
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                  }`}
-                >
-                  {deliv}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Brand Vibe / Style</label>
-            <input
-              type="text"
-              placeholder="e.g., Minimalist, modern, playful, professional"
-              value={customAnswers['Brand Style'] || ''}
-              maxLength={500}
-              onChange={(e) => handleCustomAnswerChange('Brand Style', e.target.value)}
-              className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (sNameLower.includes('marketing') || sNameLower.includes('seo') || sNameLower.includes('digital')) {
-      return (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Primary Marketing Target</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Lead Generation', 'E-Commerce Sales Boost', 'Social Media Presence', 'Google Search (SEO)'].map((tgt) => (
-                <button
-                  type="button"
-                  key={tgt}
-                  onClick={() => handleCustomAnswerChange('Target', tgt)}
-                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                    customAnswers['Target'] === tgt
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                  }`}
-                >
-                  {tgt}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Target Audience Niche</label>
-            <input
-              type="text"
-              placeholder="e.g., Young adults, local homeowners, developers"
-              value={customAnswers['Target Niche'] || ''}
-              maxLength={500}
-              onChange={(e) => handleCustomAnswerChange('Target Niche', e.target.value)}
-              className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (sNameLower.includes('voice') || sNameLower.includes('calling')) {
-      return (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Calling Goal</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Instant Lead Calling', 'Reminder Campaigns', 'Appointment Booking', 'Inbound Call Answering'].map((goal) => (
-                <button
-                  type="button"
-                  key={goal}
-                  onClick={() => handleCustomAnswerChange('Voice Goal', goal)}
-                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                    customAnswers['Voice Goal'] === goal
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                  }`}
-                >
-                  {goal}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Call Languages & Monthly Volume</label>
-            <input
-              type="text"
-              placeholder="e.g., Telugu + English, about 1,000 calls a month"
-              value={customAnswers['Voice Languages & Volume'] || ''}
-              maxLength={500}
-              onChange={(e) => handleCustomAnswerChange('Voice Languages & Volume', e.target.value)}
-              className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (sNameLower.includes('ai') || sNameLower.includes('automation') || sNameLower.includes('agent')) {
-      return (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Automation Focus</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Custom AI Agents/Bots', 'n8n Workflow Automation', 'Lead Qualification Pipeline', 'Data Sync & Webhooks'].map((foc) => (
-                <button
-                  type="button"
-                  key={foc}
-                  onClick={() => handleCustomAnswerChange('AI Focus', foc)}
-                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                    customAnswers['AI Focus'] === foc
-                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                  }`}
-                >
-                  {foc}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Preferred Integrations</label>
-            <input
-              type="text"
-              placeholder="e.g., WhatsApp, Discord, Google Sheets, CRM"
-              value={customAnswers['AI Integrations'] || ''}
-              maxLength={500}
-              onChange={(e) => handleCustomAnswerChange('AI Integrations', e.target.value)}
-              className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-            />
-          </div>
-        </div>
-      );
-    }
-
-    // Default fallback simple questions
-    return (
-      <div className="space-y-4">
-        <div>
-          <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Project Classification</label>
-          <input
-            type="text"
-            placeholder="e.g., Web redesign, mobile prototype"
-            value={customAnswers['Project Classification'] || ''}
-            maxLength={500}
-            onChange={(e) => handleCustomAnswerChange('Project Classification', e.target.value)}
-            className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-          />
-        </div>
-      </div>
-    );
-  };
+  const waText = `Hi BrandiQue, I just sent an enquiry for ${serviceName}${leadContext.plan ? ` (${leadContext.plan})` : ''} on your website.${
+    contextRows(leadContext).filter(r => r.key !== 'plan').map(r => `\n${r.label}: ${r.value}`).join('')}`;
 
   return (
     <InquiryContext.Provider value={contextValue}>
@@ -497,271 +74,73 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+          <div
+            className="fixed inset-0 z-[200] flex items-end justify-center bg-black/70 backdrop-blur-md sm:items-center sm:p-4"
+            onMouseDown={e => { if (e.target === e.currentTarget) closeInquiry(); }}
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="bg-white dark:bg-[#0F1320] w-full max-w-xl rounded-[28px] border border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden flex flex-col max-h-[92vh]"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="inquiry-title"
+              data-inquiry-modal
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="relative flex max-h-[94vh] w-full flex-col overflow-hidden rounded-t-[28px] border border-gray-200 bg-white shadow-2xl dark:border-white/10 dark:bg-[#0D1017] sm:max-w-2xl sm:rounded-[28px]"
             >
-              {/* Header */}
-              <div className="p-6 border-b border-gray-200 dark:border-white/5 bg-gray-50/50 dark:bg-[#0A0C11]/50 flex justify-between items-start">
+              <div className="h-1.5 w-full shrink-0 bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500" />
+              <div className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-gray-300 dark:bg-white/15 sm:hidden" aria-hidden="true" />
+              <div className="flex shrink-0 items-start justify-between gap-4 px-5 pb-2 pt-4 sm:px-8 sm:pt-6">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-extrabold uppercase bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-full tracking-wider">
-                      Project Request
-                    </span>
-                    {packageName && (
-                      <span className="text-[10px] font-extrabold uppercase bg-neon-purple/10 text-neon-purple px-2 py-0.5 rounded-full tracking-wider">
-                        {packageName}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
-                    {serviceName} Inquiry
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-700 dark:text-yellow-300">BrandiQue · Quick enquiry</p>
+                  <h3 id="inquiry-title" className="mt-1 text-xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-2xl">
+                    {isSuccess ? 'Request received' : 'Get started in under a minute'}
                   </h3>
                 </div>
                 <button
+                  type="button"
                   onClick={closeInquiry}
-                  className="p-1.5 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white rounded-full transition-colors"
+                  aria-label="Close"
+                  className="rounded-full bg-black/5 p-2 text-gray-500 transition-colors hover:bg-black/10 hover:text-black focus:outline-none focus-visible:ring-4 focus-visible:ring-yellow-400/40 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white"
                 >
                   <X size={18} />
                 </button>
               </div>
 
-              {/* Progress Bar (Only steps 1-3) */}
-              {step <= 3 && (
-                <div className="h-1 w-full bg-gray-100 dark:bg-white/5">
-                  <div
-                    className="h-full bg-blue-500 transition-all duration-300"
-                    style={{ width: `${(step / 3) * 100}%` }}
-                  ></div>
-                </div>
-              )}
-
-              {/* Scrollable Form Content */}
-              <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
-                {step === 1 && (
-                  <div className="space-y-4 animate-fade-in">
-                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4">
-                      Let's start with your contact information:
-                    </h4>
-                    <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
-                      <label>
-                        Company website
-                        <input type="text" name="company_website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
-                      </label>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">Full Name</label>
-                      <div className="relative">
-                        <User className="absolute left-3.5 top-3.5 text-gray-400" size={16} />
-                        <input
-                          type="text"
-                          required
-                          placeholder="Your full name"
-                          maxLength={LIMITS.name}
-                          autoComplete="name"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">Email Address</label>
-                      <div className="relative">
-                        <Mail className="absolute left-3.5 top-3.5 text-gray-400" size={16} />
-                        <input
-                          type="email"
-                          required
-                          placeholder="name@company.com"
-                          maxLength={LIMITS.email}
-                          autoComplete="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">Phone Number</label>
-                      <div className="relative">
-                        <Phone className="absolute left-3.5 top-3.5 text-gray-400" size={16} />
-                        <input
-                          type="tel"
-                          required
-                          placeholder="e.g., +91 98765 43210"
-                          maxLength={LIMITS.phone}
-                          autoComplete="tel"
-                          inputMode="tel"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {step === 2 && (
-                  <div className="space-y-4 animate-fade-in">
-                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4">
-                      Tell us about your project specifics:
-                    </h4>
-                    {renderServiceSpecificFields()}
-                  </div>
-                )}
-
-                {step === 3 && (
-                  <div className="space-y-5 animate-fade-in">
-                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4">
-                      Budget, Timeline & Extra details:
-                    </h4>
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Estimated Budget Range</label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {['₹10,000 - ₹20,000', '₹20,000 - ₹40,000', '₹40,000 - ₹80,000', '₹80,000+ / Custom'].map((val) => (
-                          <button
-                            type="button"
-                            key={val}
-                            onClick={() => setBudget(val)}
-                            className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
-                              budget === val
-                                ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
-                                : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                            }`}
-                          >
-                            {val}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Timeline</label>
-                      <div className="flex gap-2">
-                        {['< 1 Month', '1-2 Months', '3+ Months'].map((val) => (
-                          <button
-                            type="button"
-                            key={val}
-                            onClick={() => setTimeline(val)}
-                            className={`flex-1 p-3 rounded-xl border text-xs font-semibold transition-all ${
-                              timeline === val
-                                ? 'bg-blue-500/10 border-blue-500 text-blue-500'
-                                : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
-                            }`}
-                          >
-                            {val}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">Additional Requirements or Comments</label>
-                      <textarea
-                        rows={3}
-                        placeholder="Tell us any special features or details you'd like to include..."
-                        maxLength={LIMITS.message}
-                        value={additionalMessage}
-                        onChange={(e) => setAdditionalMessage(e.target.value)}
-                        className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all resize-none"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {step === 4 && isSuccess && (
-                  <div className="py-8 flex flex-col items-center text-center animate-scale-in">
-                    <div className="w-16 h-16 bg-green-500/10 text-green-500 border border-green-500/20 rounded-full flex items-center justify-center mb-6">
+              <div className="custom-scrollbar flex-1 overflow-y-auto px-5 pb-6 pt-3 sm:px-8 sm:pb-8">
+                {isSuccess ? (
+                  <div className="flex flex-col items-center py-6 text-center">
+                    <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10 text-green-500">
                       <Check size={32} strokeWidth={3} />
                     </div>
-                    <h4 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-3">
-                      Thanks for submitting!
-                    </h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6 leading-relaxed">
-                      We have received your service inquiry. Our team will review the details and reach you shortly to discuss.
+                    <p className="mb-6 max-w-sm text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                      Thanks! We have your enquiry for <strong className="text-gray-900 dark:text-white">{serviceName}{leadContext.plan ? ` · ${leadContext.plan}` : ''}</strong>. Our team will reach you shortly.
                     </p>
                     <a
-                      href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I just requested a free growth audit on your website.')}
+                      href={whatsappLink(settings.whatsapp, waText)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mb-3 inline-flex items-center gap-2 rounded-xl border border-green-500/30 bg-green-500/10 px-5 py-3 text-sm font-bold text-green-600 transition-colors hover:bg-green-500/20 dark:text-green-400"
+                      className="mb-3 inline-flex items-center gap-2 rounded-2xl border border-green-500/30 bg-green-500/10 px-5 py-3 text-sm font-bold text-green-700 transition-colors hover:bg-green-500/20 dark:text-green-400"
                     >
                       <MessageCircle size={16} /> Chat instantly on WhatsApp
                     </a>
                     <p className="mb-6 text-[11px] text-gray-400">Fastest reply — usually within minutes in working hours.</p>
-                    <button
-                      onClick={closeInquiry}
-                      className="px-6 py-2.5 bg-blue-500 text-white font-bold text-sm rounded-xl hover:bg-black transition-colors shadow-lg shadow-blue-500/15"
-                    >
+                    <button type="button" onClick={closeInquiry} className="rounded-2xl bg-gray-900 px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white dark:text-black dark:hover:bg-yellow-400">
                       Done
                     </button>
                   </div>
+                ) : (
+                  <LeadForm
+                    key={formKey}
+                    formSource="service"
+                    service={serviceName}
+                    context={leadContext}
+                    idPrefix="inquiry"
+                    onSuccess={() => setIsSuccess(true)}
+                  />
                 )}
               </div>
-
-              {submitError && step <= 3 && (
-                <div role="alert" className="mx-6 mb-4 flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs font-semibold text-red-600 dark:text-red-400">
-                  <AlertCircle size={16} className="mt-0.5 shrink-0" />
-                  <span>{submitError}</span>
-                </div>
-              )}
-
-              {/* Footer Actions (Only steps 1-3) */}
-              {step <= 3 && (
-                <div className="p-5 border-t border-gray-200 dark:border-white/5 bg-gray-50/50 dark:bg-[#0A0C11]/50 flex justify-between items-center">
-                  <div>
-                    {step > 1 ? (
-                      <button
-                        type="button"
-                        onClick={() => { setSubmitError(null); setStep(step - 1); }}
-                        className="px-4 py-2.5 rounded-xl bg-white dark:bg-[#05070A] border border-gray-200 dark:border-white/10 text-xs font-bold text-gray-700 dark:text-gray-300 hover:border-gray-300 hover:text-black dark:hover:text-white transition-all flex items-center gap-1.5"
-                      >
-                        <ArrowLeft size={14} /> Back
-                      </button>
-                    ) : (
-                      <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1">
-                        <ShieldCheck size={12} /> Secure & Private
-                      </span>
-                    )}
-                  </div>
-
-                  <div>
-                    {step < 3 ? (
-                      <button
-                        type="button"
-                        disabled={step === 1 && (!name || !email || !phone)}
-                        onClick={goNext}
-                        className={`px-5 py-2.5 rounded-xl bg-blue-500 text-white font-bold text-xs hover:bg-black transition-all flex items-center gap-1.5 shadow-lg shadow-blue-500/10 ${
-                          step === 1 && (!name || !email || !phone) ? 'opacity-50 cursor-not-allowed' : ''
-                        }`}
-                      >
-                        Next <ArrowRight size={14} />
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                        className="px-6 py-2.5 rounded-xl bg-blue-500 text-white font-bold text-xs hover:bg-black transition-all flex items-center gap-1.5 shadow-lg shadow-blue-500/20"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <Loader2 className="animate-spin" size={14} /> Submitting...
-                          </>
-                        ) : (
-                          <>
-                            Submit Inquiry <Check size={14} />
-                          </>
-                        )}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
             </motion.div>
           </div>
         )}
