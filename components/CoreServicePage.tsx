@@ -132,7 +132,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
                       <th scope="col" className="w-[34%] px-4 py-4 text-xs font-bold uppercase tracking-[0.14em] text-gray-500 md:px-6">Feature</th>
                       {c.compare.columns.map((col, i) => (
                         <th key={col} scope="col" className={`px-3 py-4 text-center text-sm font-bold md:text-base ${i === c.compare?.recommended ? 'bg-yellow-400/10 text-gray-900 dark:text-white' : ''}`}>
-                          {col}{i === c.compare?.recommended && <span className="mt-1 block text-[9px] font-black uppercase tracking-wider text-yellow-600 dark:text-yellow-300">Recommended</span>}
+                          {col}{i === c.compare?.recommended && <span className="mt-1 block text-[9px] font-black uppercase tracking-wider text-yellow-600 dark:text-yellow-300">{c.compare?.recommendedLabel ?? 'Recommended'}</span>}
                         </th>
                       ))}
                     </tr>
