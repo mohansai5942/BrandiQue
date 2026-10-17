@@ -193,7 +193,7 @@ const Home: React.FC = () => {
                   {([
                      { icon: Globe, problem: 'They can\'t find or understand you', fix: 'A fast website that explains your offer in seconds and puts WhatsApp, call and enquiry buttons everywhere.' },
                      { icon: Bot, problem: 'Nobody replies or follows up', fix: 'AI agents that answer 24/7, capture every lead and follow up automatically until the customer decides.' },
-                     { icon: PhoneCall, problem: 'Leads go cold before anyone calls', fix: 'Voice calling AI agents that phone every new lead within seconds in Telugu and English, and book the visit on the call.', href: '/services/voice-ai-agents' },
+                     { icon: PhoneCall, problem: 'Leads go cold before anyone calls', fix: 'Voice calling AI agents that phone every new lead within minutes in Telugu and English, and book the visit on the call.', href: '/services/voice-ai-agents' },
                      { icon: Eye, problem: 'They don\'t trust what they see', fix: 'Graphic design and branding that make your business look established on every post, ad and profile.' },
                   ] as { icon: React.ElementType; problem: string; fix: string; href?: string }[]).map((item, i) => (
                      <ScrollReveal key={item.problem} delay={`delay-${i * 100}`}>
@@ -404,7 +404,7 @@ const Home: React.FC = () => {
                      <div className="h-full rounded-[28px] border border-yellow-400/40 bg-yellow-50 p-4 md:p-8 text-gray-900 dark:bg-[#11130F] dark:text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]">
                         <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">With BrandiQue</p>
                         <ul className="mt-6 space-y-4">
-                           {['An AI assistant answers within seconds, day or night', 'Every lead is saved to one sheet or CRM automatically', 'Follow-ups and reminders go out on their own', 'A consistent, premium look across every post and ad', 'A fast website that turns visitors into enquiries'].map(item => (
+                           {['An AI assistant answers within minutes, day or night', 'Every lead is saved to one sheet or CRM automatically', 'Follow-ups and reminders go out on their own', 'A consistent, premium look across every post and ad', 'A fast website that turns visitors into enquiries'].map(item => (
                               <li key={item} className="flex gap-3 text-sm md:text-base leading-relaxed text-gray-700 dark:text-white/85"><span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-black"><Check size={12} /></span>{item}</li>
                            ))}
                         </ul>

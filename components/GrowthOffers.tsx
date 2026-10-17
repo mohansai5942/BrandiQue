@@ -118,7 +118,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
         </div>
 
         <p className="mt-8 md:mt-12 text-center text-xs text-gray-500 dark:text-gray-500">
-          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agents: monthly plans from ₹2,799 or pay-as-you-go top-ups from ₹2,848, plus a one-time setup fee of ₹1,999 and 18% GST. External services, taxes and third-party costs are quoted separately.
+          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agents: monthly plans from ₹2,799 or pay-as-you-go top-ups from ₹2,848, plus a one-time setup fee of ₹1,999. All prices inclusive of taxes. External services and third-party costs are quoted separately.
         </p>
       </div>
     </section>

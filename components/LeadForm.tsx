@@ -25,7 +25,7 @@ export interface LeadContext {
   rate?: string;
   /** One-time setup fee, e.g. "₹1,999". */
   setupFee?: string;
-  /** Tax note, e.g. "+ 18% GST". */
+  /** Tax note, e.g. "All-inclusive". */
   tax?: string;
   /** Where on the page the button sits, e.g. "Voice pricing · Monthly plans". */
   source?: string;

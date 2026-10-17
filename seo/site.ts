@@ -55,7 +55,7 @@ export function getSEO(path: string) {
   return pages[path] || {title: path === '/login' ? 'Admin Login | BrandiQue' : path === '/admin' ? 'Admin | BrandiQue' : 'Page Not Found | BrandiQue', label: 'Page not found', description: 'This page is not available. Explore BrandiQue Web Solutions services or contact our team.'};
 }
 const CORE_SERVICES: [string,string][] = [['Web Development','/web-development'],['AI Agents & Automations','/services/ai-automation'],['Graphic Design','/services/graphic-design'],['Voice Calling AI Agents','/services/voice-ai-agents']];
-// Voice agent plans in JSON-LD: monthly subscriptions + pay-as-you-go minutes (INR, excl. 18% GST).
+// Voice agent plans in JSON-LD: monthly subscriptions + pay-as-you-go minutes (INR, inclusive of all taxes).
 function voiceOfferCatalog(url: string) {
   return {'@type':'OfferCatalog', name:'Voice Calling AI Agents plans', itemListElement:[
     ...VOICE_PLANS.map(p => ({'@type':'Offer', name:`${p.name} (monthly)`, description:`${p.tagline} ${p.includedMinutes} minutes included per month.`, url:`${url}#pricing`, priceCurrency:'INR', price:String(p.priceInr), priceSpecification:{'@type':'UnitPriceSpecification', price:p.priceInr, priceCurrency:'INR', unitText:'MONTH', valueAddedTaxIncluded:false}})),

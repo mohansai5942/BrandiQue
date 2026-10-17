@@ -57,12 +57,12 @@ export const PILLARS: Pillar[] = [
     number: '04',
     title: 'Voice Calling AI Agents',
     outcome: 'Call every lead. In their language.',
-    description: 'AI voice agents that call new leads within seconds and run bulk reminder and follow-up campaigns in natural Telugu, switching to English mid-call, with every call transcribed and summarised.',
+    description: 'AI voice agents that call new leads within minutes and run bulk reminder and follow-up campaigns in natural Telugu, switching to English mid-call, with every call transcribed and summarised.',
     href: '/services/voice-ai-agents',
     startingAt: '₹2,799',
     startingSuffix: '/month',
     secondary: { label: 'Pay as you go from', value: '₹2,848', suffix: '' },
-    points: ['Instant lead calling and bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook, Google Calendar and WhatsApp integrations'],
+    points: ['Instant lead calling and bulk campaigns', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook, Google Calendar and WhatsApp integrations'],
   },
 ];
 
@@ -360,7 +360,7 @@ export const CARE_PLANS: CarePlan[] = [
       'Voice cloning, WhatsApp and SIP trunking',
       'Pro ₹6,999 (1,000 mins) and Growth ₹22,999 (3,571 mins) plans',
       'Or pay as you go: ₹8.90/min from 320 mins',
-      '₹1,999 one-time setup · + 18% GST',
+      '₹1,999 one-time setup · all-inclusive',
     ],
     href: '/services/voice-ai-agents',
     whatsappMessage: 'Hi BrandiQue, I want the Voice AI Agent Starter plan (₹2,799/mo, 317 mins). Please share the subscription details.',
