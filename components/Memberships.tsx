@@ -1,5 +1,6 @@
 import React from 'react';
-import { Check, MessageCircle, Repeat, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Check, MessageCircle, Repeat, Sparkles } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { CARE_PLANS, whatsappLink, MembershipTrack } from '../data/offers';
 import { useSiteSettings } from '../context/SiteSettingsContext';
@@ -20,14 +21,14 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true }) => {
             <div className="mx-auto mb-7 max-w-3xl text-center md:mb-12">
               <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/25 bg-yellow-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-700 dark:text-yellow-300"><Repeat size={14} /> Monthly care plans</span>
               <h2 className="mt-6 text-3xl font-bold tracking-tight md:text-5xl">Stay maintained. <span className="text-yellow-400">Stay growing.</span></h2>
-              <p className="mt-5 text-base leading-relaxed text-gray-600 dark:text-white/65 md:text-lg">Recurring care plans that keep your website, AI and design improving every month. Billed monthly, cancel anytime.</p>
+              <p className="mt-5 text-base leading-relaxed text-gray-600 dark:text-white/65 md:text-lg">Recurring care plans that keep your website, AI, voice agents and design improving every month. Billed monthly, cancel anytime.</p>
             </div>
           </ScrollReveal>
         )}
 
-        <div className="mx-auto max-w-6xl items-stretch flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:gap-5 md:grid-cols-2">
+        <div data-care-plans className="mx-auto max-w-6xl items-stretch justify-start flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 md:mx-auto md:px-0 md:pb-0 md:overflow-visible md:flex-wrap md:justify-center md:gap-5">
           {CARE_PLANS.map(plan => (
-            <article key={plan.name} className={`w-[84%] shrink-0 snap-start md:w-auto relative flex h-full flex-col rounded-[28px] border p-4 transition-all duration-300 hover:-translate-y-1 md:p-8 ${plan.featured ? 'border-yellow-400/70 bg-gradient-to-b from-yellow-50 to-white dark:from-[#1A1A0F] dark:to-[#0D1017] shadow-[0_18px_70px_rgba(234,179,8,0.14)]' : 'border-gray-200 bg-white dark:border-white/10 dark:bg-[#0D1017]'}`}>
+            <article key={plan.name} className={`w-[84%] shrink-0 snap-center md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)] relative flex h-full flex-col rounded-[28px] border p-4 transition-all duration-300 hover:-translate-y-1 md:p-8 ${plan.featured ? 'border-yellow-400/70 bg-gradient-to-b from-yellow-50 to-white dark:from-[#1A1A0F] dark:to-[#0D1017] shadow-[0_18px_70px_rgba(234,179,8,0.14)]' : 'border-gray-200 bg-white dark:border-white/10 dark:bg-[#0D1017]'}`}>
               {plan.featured && <span className="absolute right-5 top-5 inline-flex items-center gap-1 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black uppercase tracking-wider text-black"><Sparkles size={10} /> Most popular</span>}
               <h3 className="text-2xl font-bold">{plan.name}</h3>
               <p className="mt-3 pr-6 text-sm leading-relaxed text-gray-600 dark:text-white/60">{plan.bestFor}</p>
@@ -40,6 +41,7 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true }) => {
               <a href={whatsappLink(settings.whatsapp, plan.whatsappMessage)} target="_blank" rel="noopener noreferrer" className={`mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${plan.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10'}`}>
                 <MessageCircle size={17} /> Subscribe on WhatsApp
               </a>
+              {plan.href && <Link to={plan.href} className="mt-3 inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-yellow-600 dark:text-white/70 dark:hover:text-yellow-300">See voice plans &amp; pricing <ArrowRight size={15} /></Link>}
             </article>
           ))}
         </div>

@@ -186,9 +186,7 @@ export const SERVICE_CONTENT: Record<PillarId, ServiceContent> = {
     intro: 'A voice agent that phones new enquiries within seconds, runs bulk reminder and follow-up campaigns, books appointments on the call and writes notes for every conversation. Live the same day: monthly plans from ₹2,799 with 317 minutes included, or pay as you go from ₹2,848, plus a one-time setup fee of ₹1,999.',
     accent: 'emerald',
     outcomes: [
-      { stat: 'Same day', label: 'From sign-up to a live calling agent' },
       { stat: '24 × 7', label: 'Calling all year, no shifts or leave' },
-      { stat: '20', label: 'Calls at a time in bulk campaigns' },
     ],
     buildsTitle: 'What your AI voice agent handles',
     builds: [

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Layers, MessageCircle, Bot, Code2, Palette } from 'lucide-react';
+import { ArrowRight, Layers, MessageCircle, Bot, Code2, Palette, PhoneCall } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import PageHero, { btnPrimary, btnSecondary } from '../components/ui/PageHero';
 import IndustrySolutions from '../components/IndustrySolutions';
@@ -11,6 +11,7 @@ const LAYERS = [
   { icon: Palette, title: 'Design', text: 'A brand and social presence that looks trusted before anyone calls you.' },
   { icon: Code2, title: 'Website', text: 'A fast website that explains your offer and turns visitors into enquiries.' },
   { icon: Bot, title: 'AI & Automation', text: 'An AI assistant and workflows that reply, follow up and log every lead.' },
+  { icon: PhoneCall, title: 'Voice AI Agents', text: 'An AI voice agent that calls every new lead in Telugu and English and books the visit.' },
   { icon: MessageCircle, title: 'Monthly growth', text: 'Ongoing updates, creatives and reports so results keep improving.' },
 ];
 
@@ -23,7 +24,7 @@ const Solutions: React.FC = () => {
         eyebrowIcon={Layers}
         title="One growth system,"
         highlight="made for your industry."
-        description="Instead of buying a website from one agency, a chatbot from another and designs from a freelancer, get all three working together, set up for how your industry actually gets customers."
+        description="Instead of buying a website from one agency, a chatbot from another, a calling team and designs from a freelancer, get all four working together, set up for how your industry actually gets customers."
         actions={<>
           <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
           <Link to="/pricing" className={btnSecondary}>See all pricing</Link>
@@ -31,7 +32,7 @@ const Solutions: React.FC = () => {
       />
 
       <section className="px-5 md:px-8 desk:px-12 2xl:px-16 pt-10">
-        <div className="max-w-[100rem] mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="max-w-[100rem] mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {LAYERS.map((layer, index) => (
             <ScrollReveal key={layer.title} delay={`delay-${index * 100}`}>
               <div className="h-full rounded-2xl border border-gray-200 bg-white p-5 dark:border-white/10 dark:bg-[#0D1017]">

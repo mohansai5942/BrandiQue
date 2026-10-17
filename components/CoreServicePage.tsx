@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight, ChevronDown, MessageCircle, LayoutTemplate, ShoppingCart, User, Rocket, Search, Bot, FileSpreadsheet, BellRing,
   FileText, Workflow, PenTool, Image, Megaphone, MonitorPlay, Layers, Sparkles, PhoneOutgoing, PhoneIncoming, Languages,
-  CalendarCheck, AudioLines, Check, Minus,
+  CalendarCheck, AudioLines, Check, Minus, Clock, PhoneCall,
 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import PageHero, { SectionHeading, btnPrimary, btnSecondary } from './ui/PageHero';
@@ -62,6 +62,32 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       </PageHero>
 
       {/* Outcomes */}
+      {c.outcomes.length === 1 ? (
+        <section aria-label="What you can expect" className="bg-white px-5 py-10 dark:bg-[#080A0F] md:px-8 md:py-14 desk:px-12">
+          <ScrollReveal>
+            <div data-voice-247 className="relative mx-auto max-w-5xl overflow-hidden rounded-[28px] border border-yellow-400/60 bg-gradient-to-br from-yellow-400 via-yellow-300 to-amber-400 p-6 text-black shadow-[0_24px_80px_rgba(234,179,8,0.25)] md:rounded-[36px] md:p-10">
+              <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/30 blur-3xl" />
+              <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full bg-black/10 blur-3xl" />
+              <dl className="relative flex flex-col items-center gap-5 text-center sm:flex-row sm:gap-8 sm:text-left">
+                <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-black text-yellow-300 shadow-xl md:h-24 md:w-24">
+                  <Clock size={40} strokeWidth={2.2} />
+                  <span className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full border-4 border-yellow-300 bg-black text-yellow-300"><PhoneCall size={14} /></span>
+                </div>
+                <div className="flex-1">
+                  <dt className="sr-only">{c.outcomes[0].label}</dt>
+                  <dd className="text-5xl font-black leading-none tracking-tight md:text-7xl">{c.outcomes[0].stat}</dd>
+                  <dd className="mt-3 text-base font-semibold leading-snug md:text-xl">{c.outcomes[0].label}</dd>
+                </div>
+                <div className="flex flex-wrap justify-center gap-2 sm:max-w-[15rem] sm:justify-end">
+                  {['Nights', 'Weekends', 'Festivals'].map(t => (
+                    <span key={t} className="inline-flex items-center gap-1.5 rounded-full bg-black/90 px-3 py-1.5 text-xs font-bold text-yellow-300"><Check size={12} /> {t}</span>
+                  ))}
+                </div>
+              </dl>
+            </div>
+          </ScrollReveal>
+        </section>
+      ) : (
       <section aria-label="What you can expect" className="border-y border-gray-200 bg-white py-10 dark:border-white/5 dark:bg-[#080A0F]">
         <dl className="mx-auto grid max-w-[100rem] grid-cols-3 gap-3 md:gap-6 px-5 md:px-8 desk:px-12">
           {c.outcomes.map(o => (
@@ -73,6 +99,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
           ))}
         </dl>
       </section>
+      )}
 
       {/* What we build */}
       <section className="px-5 py-12 md:px-8 desk:px-12 md:py-28">

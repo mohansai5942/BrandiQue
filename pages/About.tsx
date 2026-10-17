@@ -60,7 +60,7 @@ const About: React.FC = () => {
         eyebrowIcon={Sparkles}
         title="The team behind"
         highlight="your growth."
-        description="BrandiQue Web Solutions is a Visakhapatnam studio for websites, AI agents and automations, and graphic design. A small, accountable team that treats your business like our own."
+        description="BrandiQue Web Solutions is a Visakhapatnam studio for websites, AI agents and automations, graphic design and voice calling AI agents. A small, accountable team that treats your business like our own."
       />
       <div className="mx-auto w-full max-w-[100rem] px-5 md:px-8 desk:px-12 2xl:px-16 pt-6">
       

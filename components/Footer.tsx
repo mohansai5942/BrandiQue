@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
             </Link>
             
             <p className="text-gray-500 dark:text-gray-400 text-xs md:text-xs lg:text-sm leading-relaxed max-sm font-light">
-              We help businesses win and keep more customers with web development, AI agents & automations, and graphic design.
+              We help businesses win and keep more customers with web development, AI agents & automations, graphic design and voice calling AI agents.
             </p>
 
             <div className="flex gap-3 md:gap-3 lg:gap-4 pt-2">
