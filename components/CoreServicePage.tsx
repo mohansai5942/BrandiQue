@@ -113,7 +113,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
       {/* One-time packages */}
       <section id="pricing" className="scroll-mt-24 border-t border-gray-200 bg-white pt-12 dark:border-white/5 dark:bg-[#080A0F] md:pt-28">
         <div className="px-5 md:px-8 desk:px-12 2xl:px-16"><ScrollReveal>{id === 'voice'
-          ? <SectionHeading eyebrow="Plans & pricing" title={<>Pick the voice. <span className="text-yellow-500">₹5, ₹8 or ₹11 a minute.</span></>} text="Every plan has the same features, a dedicated +91 line and ₹500 calling credit, with no monthly or agent fee. The plan sets the voice quality and the per-minute rate, and you pay only for connected minutes." />
+          ? <SectionHeading eyebrow="Plans & pricing" title={<>Pick the voice. <span className="text-yellow-500">₹5, ₹8 or ₹11 a minute.</span></>} text="Three voice tiers. No setup fee, no monthly fee: you pay only for connected call minutes." />
           : <SectionHeading eyebrow="One-time packages" title={<>Clear starting prices. <span className="text-yellow-500">Fixed written quote.</span></>} text="Pick a starting point. After a short call you get the exact scope, timeline and price in writing, and nothing starts until you approve." />}</ScrollReveal></div>
         <GrowthOffers showHeading={false} pillars={[id]} bare />
       </section>
@@ -123,7 +123,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
         <section id="compare" className="scroll-mt-24 border-t border-gray-200 bg-white px-5 pb-12 pt-12 dark:border-white/5 dark:bg-[#080A0F] md:px-8 md:pb-28 md:pt-20 desk:px-12">
           <div className="mx-auto max-w-[100rem]">
             <ScrollReveal><SectionHeading eyebrow={c.compare.eyebrow} title={c.compare.title} text={c.compare.text} /></ScrollReveal>
-            <ScrollReveal>
+            {c.compare.rows.length > 0 && <ScrollReveal>
               <div className="mt-8 overflow-x-auto rounded-3xl border border-gray-200 dark:border-white/10 md:mt-12">
                 <table className="w-full min-w-[640px] border-collapse text-left">
                   <caption className="sr-only">{c.compare.title}</caption>
@@ -147,7 +147,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
                   </tbody>
                 </table>
               </div>
-            </ScrollReveal>
+            </ScrollReveal>}
             {c.compare.versus && (
               <ScrollReveal>
                 <div className="mt-10 md:mt-16">
