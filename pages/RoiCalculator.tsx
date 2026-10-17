@@ -34,7 +34,7 @@ const RoiCalculatorPage: React.FC = () => {
           <ScrollReveal>
             <SectionHeading
               eyebrow="The fix"
-              title={<>An AI agent that <span className="text-yellow-400">never sleeps.</span></>}
+              title={<>An AI agent that <span className="metallic-gold">never sleeps.</span></>}
               text="Replies in seconds on WhatsApp, your website or Telegram. Captures every lead. Follows up automatically. You approve the answers — it does the chasing."
             />
           </ScrollReveal>
