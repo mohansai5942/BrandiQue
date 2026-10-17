@@ -26,9 +26,8 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true }) => {
         )}
 
         <div className="mx-auto max-w-6xl items-stretch flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:gap-5 md:grid-cols-2">
-          {CARE_PLANS.map((plan, i) => (
-            <ScrollReveal key={plan.name} delay={`delay-${(i % 4) * 100}`} className="w-[84%] shrink-0 snap-start md:w-auto">
-            <article className={`relative flex h-full flex-col rounded-[28px] p-4 transition-all duration-300 hover:-translate-y-1 md:p-8 ${plan.featured ? 'hairline-gold bg-gradient-to-b from-yellow-50 to-white dark:from-[#1A1A1F] dark:to-[#0D1017] shadow-[0_18px_70px_rgba(234,179,8,0.14)]' : 'glass'}`}>
+          {CARE_PLANS.map(plan => (
+            <article key={plan.name} className={`w-[84%] shrink-0 snap-start md:w-auto relative flex h-full flex-col rounded-[28px] border p-4 transition-all duration-300 hover:-translate-y-1 md:p-8 ${plan.featured ? 'border-yellow-400/70 bg-gradient-to-b from-yellow-50 to-white dark:from-[#1A1A0F] dark:to-[#0D1017] shadow-[0_18px_70px_rgba(234,179,8,0.14)]' : 'border-gray-200 bg-white dark:border-white/10 dark:bg-[#0D1017]'}`}>
               {plan.featured && <span className="absolute right-5 top-5 inline-flex items-center gap-1 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black uppercase tracking-wider text-black"><Sparkles size={10} /> Most popular</span>}
               <h3 className="text-2xl font-bold">{plan.name}</h3>
               <p className="mt-3 pr-6 text-sm leading-relaxed text-gray-600 dark:text-white/60">{plan.bestFor}</p>
@@ -42,7 +41,6 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true }) => {
                 <MessageCircle size={17} /> Subscribe on WhatsApp
               </a>
             </article>
-            </ScrollReveal>
           ))}
         </div>
         <p className="mx-auto mt-8 max-w-3xl text-center text-xs leading-relaxed text-gray-500 dark:text-white/45">Billed monthly, cancel anytime. Care plans cover ongoing work; the first website, chatbot or brand setup is quoted separately. Hosting, API, messaging and ad costs are billed at cost.</p>

@@ -40,7 +40,7 @@ const FloatingPromotions: React.FC = () => {
             initial={{ opacity: 0, x: 50, y: 20 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-            className="glass glass-glow pointer-events-auto w-full sm:w-80 rounded-2xl p-4 shadow-2xl relative overflow-hidden"
+            className="pointer-events-auto w-full sm:w-80 rounded-2xl p-4 shadow-2xl border border-yellow-400/30 bg-white dark:bg-[#0D1017] relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-yellow-400"></div>
             <button type="button" aria-label="Close" onClick={close} className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">

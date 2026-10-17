@@ -14,7 +14,6 @@ import TextReveal from '../components/TextReveal';
 import SpotlightCard from '../components/SpotlightCard';
 import ViewOptimizer from '../components/ViewOptimizer';
 import IndustrySolutions from '../components/IndustrySolutions';
-import MagneticButton from '../components/MagneticButton';
 import HeroGrowth from '../components/HeroGrowth';
 import TrustProof from '../components/TrustProof';
 import FounderPromise from '../components/FounderPromise';
@@ -197,7 +196,7 @@ const Home: React.FC = () => {
                      { icon: Eye, problem: 'They don\'t trust what they see', fix: 'Graphic design and branding that make your business look established on every post, ad and profile.' },
                   ].map((item, i) => (
                      <ScrollReveal key={item.problem} delay={`delay-${i * 100}`}>
-                        <div className="glass glass-glow flex h-full gap-3.5 rounded-2xl md:block md:rounded-[28px] p-4 md:p-8">
+                        <div className="flex h-full gap-3.5 rounded-2xl md:block md:rounded-[28px] border border-gray-200 bg-gray-50 p-4 md:p-8 dark:border-white/10 dark:bg-[#0D1017]">
                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl md:h-12 md:w-12 md:rounded-2xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300"><item.icon size={20} /></div>
                            <div>
                            <h3 className="text-base font-bold md:mt-6 md:text-xl">{item.problem}</h3>
@@ -225,7 +224,7 @@ const Home: React.FC = () => {
                      const PillarIcon = pillar.id === 'web' ? Code : pillar.id === 'ai' ? Bot : Palette;
                      return (
                         <ScrollReveal key={pillar.id} delay={`delay-${i * 100}`}>
-                           <article className="glass glass-glow motion-card group flex h-full flex-col rounded-[28px] p-4 md:p-8 shadow-sm">
+                           <article className="group flex h-full flex-col rounded-[28px] border border-gray-200 bg-white p-4 md:p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 hover:shadow-xl dark:border-white/10 dark:bg-[#0D1017]">
                               <div className="flex items-center justify-between">
                                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-400 text-black"><PillarIcon size={24} /></div>
                                  <span className="text-xs font-bold tracking-[0.2em] text-gray-400">{pillar.number}</span>
@@ -268,7 +267,7 @@ const Home: React.FC = () => {
                      { step: '04', icon: BarChart3, title: 'Grow', text: 'A monthly report shows what worked, and we improve it every month.' },
                   ].map((item, i) => (
                      <ScrollReveal key={item.step} delay={`delay-${i * 100}`}>
-                        <div className="glass glass-glow relative h-full rounded-2xl p-4 md:p-6">
+                        <div className="relative h-full rounded-2xl border border-gray-200 bg-gray-50 p-4 md:p-6 dark:border-white/10 dark:bg-[#0D1017]">
                            <div className="flex items-center justify-between">
                               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300"><item.icon size={21} /></span>
                               <span className="text-xs font-black tracking-[0.2em] text-gray-400">{item.step}</span>
@@ -301,7 +300,7 @@ const Home: React.FC = () => {
                         return (
                            <div 
                               key={project.id || idx} 
-                              className="glass glass-glow group flex flex-col rounded-2xl md:rounded-[32px] overflow-hidden transition-all duration-500 hover:shadow-2xl"
+                              className="group flex flex-col bg-gray-50 dark:bg-[#0A0C11] rounded-2xl md:rounded-[32px] border border-gray-200 dark:border-white/5 overflow-hidden hover:border-neon-purple/30 transition-all duration-500 hover:shadow-2xl"
                            >
                               {/* Media layer */}
                               <div className="relative aspect-[16/9] w-full bg-gray-900 border-b border-gray-100 dark:border-white/5">
@@ -390,7 +389,7 @@ const Home: React.FC = () => {
                </ScrollReveal>
                <div className="mt-8 md:mt-12 grid gap-3 md:gap-5 md:grid-cols-2">
                   <ScrollReveal>
-                     <div className="glass glass-glow motion-card h-full rounded-[28px] p-4 md:p-8">
+                     <div className="h-full rounded-[28px] border border-gray-200 bg-gray-50 p-4 md:p-8 dark:border-white/10 dark:bg-[#0D1017]">
                         <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">Without a growth system</p>
                         <ul className="mt-6 space-y-4">
                            {['Enquiries after 8 PM wait until the next morning', 'Leads sit in WhatsApp chats and notebooks', 'Nobody follows up after the first reply', 'Posts look different every time, or stop completely', 'The website is outdated, or there isn\'t one'].map(item => (
@@ -400,7 +399,7 @@ const Home: React.FC = () => {
                      </div>
                   </ScrollReveal>
                   <ScrollReveal delay="delay-100">
-                     <div className="glass-glow motion-card h-full rounded-[28px] border border-yellow-400/40 bg-yellow-50 p-4 md:p-8 text-gray-900 dark:bg-[#11130F] dark:text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]">
+                     <div className="h-full rounded-[28px] border border-yellow-400/40 bg-yellow-50 p-4 md:p-8 text-gray-900 dark:bg-[#11130F] dark:text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]">
                         <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">With BrandiQue</p>
                         <ul className="mt-6 space-y-4">
                            {['An AI assistant answers within seconds, day or night', 'Every lead is saved to one sheet or CRM automatically', 'Follow-ups and reminders go out on their own', 'A consistent, premium look across every post and ad', 'A fast website that turns visitors into enquiries'].map(item => (
@@ -480,11 +479,9 @@ const Home: React.FC = () => {
                   <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tighter">Ready to get more <br /><span className="bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent">customers on autopilot?</span></h2>
                   <p className="text-gray-500 text-lg md:text-xl font-light max-w-2xl mx-auto">Start with a free growth audit. We'll show you exactly where you're losing enquiries and what to fix first.</p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
-                     <MagneticButton>
-                        <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="px-6 md:px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
-                           Get My Free Audit <ArrowRight size={20} />
-                        </button>
-                     </MagneticButton>
+                     <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="px-6 md:px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
+                        Get My Free Audit <ArrowRight size={20} />
+                     </button>
                      <a href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I would like a free growth audit for my business.')} target="_blank" rel="noopener noreferrer" className="px-6 md:px-10 py-5 border border-gray-300 dark:border-white/10 rounded-full font-bold text-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
                         Chat on WhatsApp
                      </a>
