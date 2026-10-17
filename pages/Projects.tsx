@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import * as Sentry from '@sentry/react';
 import { motion } from 'motion/react';
 import { ExternalLink, Github, Code2, Globe, Layout, Smartphone, RefreshCw, Bot, Layers, Eye, Copy, Check, X, Phone, Mail, Send, CheckCircle2, FileText, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -496,7 +497,7 @@ export default function Projects() {
                         const parsed = JSON.parse(project.workflowJson);
                         nodeCount = (parsed.nodes || []).length;
                       }
-                    } catch (e) {}
+                    } catch (e) { Sentry.captureException(e); }
 
                     const isExtraMobileCard = activeCategory === 'all' && i >= 4;
 

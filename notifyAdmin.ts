@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/react';
+
 // Pings the BrandiQue Data Console so admins get a phone notification for new form submissions.
 // The API re-reads the document server-side and notifies only once per fresh submission.
 export function notifyAdmin(collection: 'messages' | 'n8n_project_forms', id: string) {
@@ -9,6 +11,6 @@ export function notifyAdmin(collection: 'messages' | 'n8n_project_forms', id: st
       body: JSON.stringify({ collection, id }),
       keepalive: true,
       mode: 'cors',
-    }).catch(() => undefined);
-  } catch { /* never block the form */ }
+    }).catch((err) => { Sentry.captureException(err); });
+  } catch (err) { Sentry.captureException(err); /* never block the form */ }
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as Sentry from '@sentry/react';
 import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, AlertCircle, LayoutTemplate, Code, PenTool, Megaphone, Bot, MessageCircle } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import { notifyAdmin } from '../notifyAdmin';
@@ -104,7 +105,7 @@ const Contact: React.FC = () => {
   };
 
   const copyToClipboard = (text: string, field: string) => {
-      navigator.clipboard?.writeText(text).catch(() => undefined);
+      navigator.clipboard?.writeText(text).catch((err) => { Sentry.captureException(err); });
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
   };

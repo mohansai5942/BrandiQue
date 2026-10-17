@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
+import * as Sentry from '@sentry/react';
 // Styles: React Flow's base stylesheet first, then the site's Tailwind build (same cascade order as before).
 import '@xyflow/react/dist/style.css';
 import './index.css';
@@ -12,6 +13,17 @@ import { SiteSettingsProvider } from './context/SiteSettingsContext';
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error("Could not find root element to mount to");
+}
+
+// Error monitoring (Sentry, free tier): only active when a DSN is provided at build time
+// via the VITE_SENTRY_DSN env var, and only in production builds. No DSN is hardcoded.
+const sentryDsn = import.meta.env.VITE_SENTRY_DSN as string | undefined;
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    enabled: import.meta.env.PROD,
+    tracesSampleRate: 0.1,
+  });
 }
 
 const app = (
