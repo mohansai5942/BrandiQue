@@ -1,5 +1,6 @@
 // One source of truth for visible founder images and all entity/social references.
 // Replace this image in place, or change image here and rebuild the site.
+import { VOICE_PLANS, PAYG_BASE_RATE, PAYG_MIN_TOPUP_INR, PAYG_MIN_MINUTES } from '../data/voicePricing';
 export const SITE_URL = 'https://brandique.in';
 export const COMPANY = 'BrandiQue Web Solutions';
 export const founder = {
@@ -33,7 +34,7 @@ export const pages: Record<string, PageSEO> = {
   '/roi-calculator': { title: 'Missed Enquiry Cost Calculator | BrandiQue', label: 'ROI calculator', description: 'Calculate how much revenue your business loses every month to missed calls and slow replies — and how an AI agent recovers it.' },
   '/web-development': { title: 'Website Design & Development Pricing | BrandiQue', label: 'Website development', service: 'Website design and development', description: 'Compare starting prices for personal, portfolio, business and e-commerce websites. Review inclusions, delivery steps and scope before requesting a project quote from BrandiQue.' },
   '/services/ai-automation': { title: 'AI Agents, Chatbots & Workflow Automation | BrandiQue', label: 'AI and automation', service: 'AI agents and workflow automation', description: 'Explore practical lead capture, chatbot and workflow automation services from BrandiQue. Every implementation is scoped around the required integrations, operating costs and handover needs.' },
-  '/services/voice-ai-agents': { title: 'Voice Calling AI Agents in Telugu & English | BrandiQue', label: 'Voice calling AI agents', service: 'AI voice calling agents', description: 'AI voice agents that call new leads in seconds, run bulk reminder campaigns and book appointments in natural Telugu and English. ₹1,999 one-time setup, no monthly fee, then pay per connected minute from ₹5/min.' },
+  '/services/voice-ai-agents': { title: 'Voice Calling AI Agents in Telugu & English | BrandiQue', label: 'Voice calling AI agents', service: 'AI voice calling agents', description: 'AI voice agents that call new leads in seconds, run bulk reminder campaigns and book appointments in natural Telugu and English. Monthly plans from ₹2,799 (317 mins) or pay as you go from ₹2,848.' },
   '/services/graphic-design': { title: 'Graphic Design for Brands, Social Media & Ads | BrandiQue', label: 'Graphic design', service: 'Graphic design and creative production', description: 'Get consistent graphic design for social media, advertising, thumbnails, banners, presentations and brand collateral. Explore the process and request a scoped quote from BrandiQue.' },
   '/projects': { title: 'Web Design & Automation Projects | BrandiQue', label: 'Projects', description: 'Explore BrandiQue Web Solutions’ website designs, development projects and n8n workflows. Find examples relevant to your next business website or automation.' },
   '/privacy-policy': { title: 'Privacy Policy | BrandiQue Web Solutions', label: 'Privacy policy', description: 'Read how BrandiQue Web Solutions handles contact information, website usage data and privacy enquiries when you use our website and services.' },
@@ -52,6 +53,13 @@ export const redirects: Record<string,string> = {
 export function getSEO(path: string) {
   return pages[path] || {title: path === '/login' ? 'Admin Login | BrandiQue' : path === '/admin' ? 'Admin | BrandiQue' : 'Page Not Found | BrandiQue', label: 'Page not found', description: 'This page is not available. Explore BrandiQue Web Solutions services or contact our team.'};
 }
+// Voice agent plans in JSON-LD: monthly subscriptions + pay-as-you-go minutes (INR, excl. 18% GST).
+function voiceOfferCatalog(url: string) {
+  return {'@type':'OfferCatalog', name:'Voice Calling AI Agents plans', itemListElement:[
+    ...VOICE_PLANS.map(p => ({'@type':'Offer', name:`${p.name} (monthly)`, description:`${p.tagline} ${p.includedMinutes} minutes included per month.`, url:`${url}#pricing`, priceCurrency:'INR', price:String(p.priceInr), priceSpecification:{'@type':'UnitPriceSpecification', price:p.priceInr, priceCurrency:'INR', unitText:'MONTH', valueAddedTaxIncluded:false}})),
+    {'@type':'Offer', name:'Pay as you go', description:`Voice AI minutes top-up from ${PAYG_MIN_MINUTES} minutes.`, url:`${url}#pricing`, priceCurrency:'INR', price:String(PAYG_MIN_TOPUP_INR), priceSpecification:{'@type':'UnitPriceSpecification', price:PAYG_BASE_RATE, priceCurrency:'INR', unitText:'MINUTE', valueAddedTaxIncluded:false}},
+  ]};
+}
 export function structuredData(path: string) {
   if (!pages[path]) return null;
   const page = pages[path];
@@ -62,7 +70,7 @@ export function structuredData(path: string) {
   ];
   if (path === '/about' || path === '/') graph.push({'@type':'Person','@id':founderId, name:founder.name, alternateName:founder.alternateName, givenName:founder.givenName, familyName:founder.familyName, jobTitle:'Founder of BrandiQue Web Solutions', homeLocation:{'@type':'Place', name:'Visakhapatnam, Andhra Pradesh, India'}, knowsAbout:['Web Development','AI Agents','Workflow Automation','AI Voice Agents','UI/UX Design','Branding','Graphic Design'], worksFor:{'@id':organizationId}, url:founderId, image:{'@type':'ImageObject', '@id':`${SITE_URL}/#founder-image`, url:absoluteUrl(founder.image), contentUrl:absoluteUrl(founder.image), width:founder.width, height:founder.height, caption:founder.alt, name:'BrandiQue Founder'}, sameAs:founderSameAs, description:founder.description});
   if (path === '/') (graph[2] as Record<string,unknown>).about = {'@id':organizationId};
-  if (page.service) graph.push({'@type':'Service','@id':`${absoluteUrl(path)}#service`, name:page.service, serviceType:page.service, description:page.description, url:absoluteUrl(path), provider:{'@id':organizationId}, mainEntityOfPage:{'@id':`${absoluteUrl(path)}#webpage`}});
+  if (page.service) graph.push({'@type':'Service','@id':`${absoluteUrl(path)}#service`, name:page.service, serviceType:page.service, description:page.description, url:absoluteUrl(path), provider:{'@id':organizationId}, mainEntityOfPage:{'@id':`${absoluteUrl(path)}#webpage`}, ...(path === '/services/voice-ai-agents' ? {hasOfferCatalog: voiceOfferCatalog(absoluteUrl(path))} : {})});
   if (path !== '/') {
     const crumbs = [{name:'Home',item:`${SITE_URL}/`}, ...(path.startsWith('/services/') ? [{name:'Services',item:`${SITE_URL}/services`}] : []), {name:page.label,item:absoluteUrl(path)}];
     graph.push({'@type':'BreadcrumbList','@id':`${absoluteUrl(path)}#breadcrumb`, itemListElement:crumbs.map((c,i)=>({'@type':'ListItem',position:i+1,...c}))});

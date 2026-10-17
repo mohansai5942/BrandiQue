@@ -10,7 +10,7 @@ const SERVICES: { key: ServiceKey; label: string; line: string; icon: React.Elem
   { key: 'web', label: 'Web Development', line: 'Websites that sell.', icon: Code2, href: '/web-development', accent: 'text-cyan-600 dark:text-cyan-300', bar: 'bg-cyan-400', from: '₹9,000' },
   { key: 'ai', label: 'AI Agents & Automations', line: 'AI that follows up.', icon: Bot, href: '/services/ai-automation', accent: 'text-violet-600 dark:text-violet-300', bar: 'bg-violet-400', from: '₹12,000' },
   { key: 'design', label: 'Graphic Design', line: 'Design that wins trust.', icon: Palette, href: '/services/graphic-design', accent: 'text-amber-500 dark:text-amber-300', bar: 'bg-amber-400', from: '₹4,500' },
-  { key: 'voice', label: 'Voice Calling AI Agents', line: 'Voice AI that calls.', icon: PhoneCall, href: '/services/voice-ai-agents', accent: 'text-emerald-600 dark:text-emerald-300', bar: 'bg-emerald-400', from: '₹5/min' },
+  { key: 'voice', label: 'Voice Calling AI Agents', line: 'Voice AI that calls.', icon: PhoneCall, href: '/services/voice-ai-agents', accent: 'text-emerald-600 dark:text-emerald-300', bar: 'bg-emerald-400', from: '₹2,799/mo' },
 ];
 
 const FLOATERS: Record<ServiceKey, { t: string; s: string }[]> = {
