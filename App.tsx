@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-route
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ClickSpark from './components/ClickSpark';
+import ScrollProgressBar from './components/ScrollProgressBar';
 import FloatingPromotions from './components/FloatingPromotions';
 import { whenIdle } from './firestoreClient';
 import { lazyWidget } from './lazyRoute';
@@ -89,6 +90,7 @@ export const AppLayout: React.FC = () => {
   return (
     <>
       <SEO />
+      <ScrollProgressBar />
       <IdleExtras />
       <ScrollToTop />
       <ClickSpark

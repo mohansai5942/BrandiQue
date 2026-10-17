@@ -463,7 +463,7 @@ export const DarlingAIChatbot: React.FC<DarlingAIChatbotProps> = ({ isIntroFinis
           whileTap={{ scale: 0.94 }}
           aria-label={isOpen ? 'Close chat' : 'Chat with Darling, BrandiQue AI'}
           aria-expanded={isOpen}
-          className="group relative grid h-[3.9em] w-[3.9em] place-items-center rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 text-black shadow-[0_0.9em_2.2em_-0.6em_rgba(250,204,21,0.75)] focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300"
+          className="glass-soft group relative grid h-[3.9em] w-[3.9em] place-items-center rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 text-black shadow-[0_0.9em_2.2em_-0.6em_rgba(250,204,21,0.75)] focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300"
         >
           {!isOpen && <span className="absolute inset-0 rounded-full bg-yellow-400/50 animate-ping [animation-duration:2.6s]" />}
           <AnimatePresence mode="wait" initial={false}>
