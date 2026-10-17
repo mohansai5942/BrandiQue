@@ -171,7 +171,7 @@ const About: React.FC = () => {
           </ScrollReveal>
 
           <ScrollReveal delay="delay-200">
-            <div className="glass glass-glow p-5 md:p-14 rounded-[48px] text-left relative overflow-hidden">
+            <div className="bg-gray-100 dark:bg-white/5 p-5 md:p-14 rounded-[48px] border border-gray-200 dark:border-white/10 text-left relative overflow-hidden">
               <div className="absolute top-0 right-0 p-6 md:p-10 opacity-5 dark:opacity-10 text-neon-purple"><Sparkles size={120} /></div>
               <h3 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8">A Commitment from Leadership</h3>
               <div className="space-y-6 text-gray-600 dark:text-gray-400 text-base md:text-xl leading-relaxed font-light max-w-3xl">
