@@ -162,6 +162,10 @@ export interface IndustrySolution {
   includes: string[];
   setup: string;
   plan: string;
+  /** 3-bullet ROI pitch: why this package pays for itself. */
+  roi: string[];
+  /** Prefilled WhatsApp message naming the product. */
+  whatsappMessage: string;
 }
 
 // Productised bundles: one setup + one monthly plan, aimed at a specific industry.
@@ -174,6 +178,12 @@ export const INDUSTRY_SOLUTIONS: IndustrySolution[] = [
     includes: ['Admissions website or landing page', 'WhatsApp AI assistant for fees, batches and timings', 'Automatic follow-up until the parent visits', 'Fee-due and attendance alerts to parents', 'Monthly enquiry-to-admission report'],
     setup: '₹24,999',
     plan: 'Growth bundle',
+    roi: [
+      'One admission is worth ₹30,000–₹1,00,000 — a single saved admission pays for the setup',
+      'Parents enquire at 10 PM — the AI replies in seconds while competitors sleep',
+      'Automatic follow-ups until the parent visits — no more “we’ll think about it”',
+    ],
+    whatsappMessage: 'Hi BrandiQue, I want the Admission Autopilot for my coaching centre/school. Please share the details and a demo.',
   },
   {
     slug: 'healthcare',
@@ -183,6 +193,12 @@ export const INDUSTRY_SOLUTIONS: IndustrySolution[] = [
     includes: ['Clinic website with doctor and service pages', 'WhatsApp appointment requests and confirmations', 'Automatic appointment and follow-up reminders', 'Google review request after each visit', 'Digital prescription and bill workflow'],
     setup: '₹24,999',
     plan: 'Growth bundle',
+    roi: [
+      '10 missed calls a day × ₹500 a visit = ₹1.5L a month walking to another clinic',
+      'Appointment reminders fill slots and cut no-shows — automatically',
+      'Review requests after every visit build 5-star trust on autopilot',
+    ],
+    whatsappMessage: 'Hi BrandiQue, I want the Patient Autopilot for my clinic. Please share the details and a demo.',
   },
   {
     slug: 'local-business',
@@ -192,6 +208,12 @@ export const INDUSTRY_SOLUTIONS: IndustrySolution[] = [
     includes: ['One-page website with catalogue or menu', 'WhatsApp AI assistant for FAQs and orders', 'Quotation or order details sent automatically', 'Leads and orders logged in Google Sheets', '8 offer creatives every month'],
     setup: '₹19,999',
     plan: 'Growth bundle',
+    roi: [
+      'A 5-minute-late reply sends the customer to the shop next door',
+      'Instant answers on price, stock and timings — even at midnight',
+      'Every order logged in a sheet automatically — no more lost notebook orders',
+    ],
+    whatsappMessage: 'Hi BrandiQue, I want the WhatsApp Sales Desk for my business. Please share the details and a demo.',
   },
   {
     slug: 'launch',
@@ -201,6 +223,12 @@ export const INDUSTRY_SOLUTIONS: IndustrySolution[] = [
     includes: ['Logo and brand identity kit', 'Business website (up to 5 pages)', '10 launch social media creatives', 'Google Business Profile setup', 'WhatsApp enquiry button and lead sheet'],
     setup: '₹24,999',
     plan: 'Web Care',
+    roi: [
+      'Look established from day one — trust wins the first customer',
+      'Logo, website and launch creatives from one team — no agency juggling',
+      'Live in weeks, not months, with everything needed to start selling',
+    ],
+    whatsappMessage: 'Hi BrandiQue, I want the Business Launch Kit for my new business. Please share the details.',
   },
 ];
 
@@ -252,4 +280,73 @@ export const MEMBERSHIPS: Membership[] = [
   // Bundles
   { track: 'bundle', name: 'Growth', price: '₹6,999', bestFor: 'Website, AI assistant and social media, handled by one team.', featured: true, saving: 'Worth ₹9,998 separately', items: ['Web Care included', 'AI Care included', 'Design Lite included (8 creatives)', 'One monthly growth check-in', 'Monthly leads and enquiries report'] },
   { track: 'bundle', name: 'Scale', price: '₹14,999', bestFor: 'A dedicated digital growth partner for growing teams.', saving: 'Worth ₹19,997 separately', items: ['Web Growth included', 'AI Operations included', 'Design Pro included (16 creatives)', 'Monthly strategy call', 'Priority support and same-day replies'] },
+];
+
+// Care plans: the recurring-revenue reframe of memberships.
+// Simple, per-need monthly plans — billed monthly, cancel anytime.
+// Rendered by components/Memberships.tsx. (MEMBERSHIPS above is kept for
+// pages/Services.tsx "lowest membership" hints.)
+export interface CarePlan {
+  name: string;
+  price: string;
+  bestFor: string;
+  items: string[];
+  featured?: boolean;
+  whatsappMessage: string;
+}
+
+export const CARE_PLANS: CarePlan[] = [
+  {
+    name: 'Website Care',
+    price: '₹2,999',
+    bestFor: 'Your website stays fast, secure and updated — we handle the tech.',
+    items: [
+      'Up to 3 hours of website edits a month',
+      'Uptime, speed and form checks',
+      'Monthly backups and plugin updates',
+      'Broken-link and enquiry monitoring',
+      'WhatsApp support in working hours',
+    ],
+    whatsappMessage: 'Hi BrandiQue, I want the Website Care plan (₹2,999/mo). Please share the subscription details.',
+  },
+  {
+    name: 'AI Agent Monitoring',
+    price: '₹4,999',
+    bestFor: 'Your AI assistant and automations watched, tuned and fixed.',
+    items: [
+      'Workflow monitoring with instant error fixes',
+      'Monthly chatbot answer tuning from real chats',
+      'Up to 2 hours of improvements a month',
+      'AI and WhatsApp API usage check',
+      'Monthly automation and leads report',
+    ],
+    whatsappMessage: 'Hi BrandiQue, I want the AI Agent Monitoring plan (₹4,999/mo). Please share the subscription details.',
+  },
+  {
+    name: 'Growth',
+    price: '₹6,999',
+    bestFor: 'Website, AI and social media handled by one team.',
+    featured: true,
+    items: [
+      'Website Care included',
+      'AI Agent Monitoring included',
+      '8 social media creatives a month',
+      'One monthly growth check-in',
+      'Monthly leads and enquiries report',
+    ],
+    whatsappMessage: 'Hi BrandiQue, I want the Growth plan (₹6,999/mo). Please share the subscription details.',
+  },
+  {
+    name: 'Scale',
+    price: '₹14,999',
+    bestFor: 'A dedicated digital growth partner for growing teams.',
+    items: [
+      'Everything in Growth',
+      'One new automation or landing page each month',
+      '16 social media creatives a month',
+      'Monthly strategy call',
+      'Priority support with same-day replies',
+    ],
+    whatsappMessage: 'Hi BrandiQue, I want the Scale plan (₹14,999/mo). Please share the subscription details.',
+  },
 ];

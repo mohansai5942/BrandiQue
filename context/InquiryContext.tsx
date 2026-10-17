@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import { X, Check, ArrowRight, ArrowLeft, Loader2, Phone, Mail, User, ShieldCheck, HelpCircle, AlertCircle } from 'lucide-react';
+import { X, Check, ArrowRight, ArrowLeft, Loader2, Phone, Mail, User, ShieldCheck, HelpCircle, AlertCircle, MessageCircle } from 'lucide-react';
 import { notifyAdmin } from '../notifyAdmin';
 import { loadFirestore } from '../firestoreClient';
+import { whatsappLink } from '../data/offers';
+import { useSiteSettings } from './SiteSettingsContext';
 import { cleanText, isValidEmail, isValidPhone, LIMITS, SUBMIT_TIMEOUT_MS, withTimeout } from '../utils/security';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -24,6 +26,7 @@ export const useInquiry = () => {
 };
 
 export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { settings } = useSiteSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [serviceName, setServiceName] = useState('');
   const [packageName, setPackageName] = useState('');
@@ -644,6 +647,15 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
                     <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6 leading-relaxed">
                       We have received your service inquiry. Our team will review the details and reach you shortly to discuss.
                     </p>
+                    <a
+                      href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I just requested a free growth audit on your website.')}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mb-3 inline-flex items-center gap-2 rounded-xl border border-green-500/30 bg-green-500/10 px-5 py-3 text-sm font-bold text-green-600 transition-colors hover:bg-green-500/20 dark:text-green-400"
+                    >
+                      <MessageCircle size={16} /> Chat instantly on WhatsApp
+                    </a>
+                    <p className="mb-6 text-[11px] text-gray-400">Fastest reply — usually within minutes in working hours.</p>
                     <button
                       onClick={closeInquiry}
                       className="px-6 py-2.5 bg-blue-500 text-white font-bold text-sm rounded-xl hover:bg-black transition-colors shadow-lg shadow-blue-500/15"

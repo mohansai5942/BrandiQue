@@ -9,7 +9,7 @@ import FloatingPromotions from './components/FloatingPromotions';
 import { whenIdle } from './firestoreClient';
 import { lazyWidget } from './lazyRoute';
 import {
-  Home, About, Contact, WebDevelopment, Projects, Services, Pricing, Solutions, AIAutomation,
+  Home, About, Contact, WebDevelopment, Projects, Services, Pricing, Solutions, Referral, RoiCalculator, AIAutomation,
   GraphicDesign, PrivacyPolicy, TermsAndConditions, CookiePolicy, NotFound, preloadAllRoutes,
 } from './routes';
 
@@ -114,6 +114,8 @@ export const AppLayout: React.FC = () => {
             <Route path="/services" element={<Services />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/solutions" element={<Solutions />} />
+            <Route path="/referral" element={<Referral />} />
+            <Route path="/roi-calculator" element={<RoiCalculator />} />
             <Route path="/services/ai-automation" element={<AIAutomation />} />
             <Route path="/services/graphic-design" element={<GraphicDesign />} />
 

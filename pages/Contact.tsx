@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, AlertCircle, LayoutTemplate, Code, PenTool, Megaphone, Bot } from 'lucide-react';
+import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, AlertCircle, LayoutTemplate, Code, PenTool, Megaphone, Bot, MessageCircle } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import { notifyAdmin } from '../notifyAdmin';
+import { whatsappLink } from '../data/offers';
 import { loadFirestore } from '../firestoreClient';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { cleanText, isValidEmail, LIMITS, SUBMIT_TIMEOUT_MS, telHref, withTimeout } from '../utils/security';
@@ -223,9 +224,18 @@ const Contact: React.FC = () => {
                                 </div>
                             </div>
                             <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Request Sent Successfully!</h3>
-                            <p className="text-gray-600 dark:text-gray-400 max-w-sm mx-auto mb-7 md:mb-10 text-sm leading-relaxed">
+                            <p className="text-gray-600 dark:text-gray-400 max-w-sm mx-auto mb-7 text-sm leading-relaxed">
                                 Your request has been recorded. We’ll review the details and follow up using the contact information you provided.
                             </p>
+                            <a
+                                href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I just sent a request on your contact page.')}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mb-3 inline-flex items-center gap-2 rounded-xl border border-green-500/30 bg-green-500/10 px-5 py-3 text-sm font-bold text-green-600 transition-colors hover:bg-green-500/20 dark:text-green-400"
+                            >
+                                <MessageCircle size={16} /> Chat instantly on WhatsApp
+                            </a>
+                            <p className="mb-7 text-[11px] text-gray-400">Fastest reply — usually within minutes in working hours.</p>
                             <button 
                                 onClick={() => setFormStatus('idle')}
                                 className="px-5 md:px-8 py-3 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm transition-all hover:scale-105 flex items-center gap-2"

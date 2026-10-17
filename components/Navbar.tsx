@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag, Bot, Briefcase, Settings, Phone, Globe, Palette } from 'lucide-react';
+import { Instagram, Sun, Moon, Menu, X, Home, Code, Info, Mail, ChevronRight, Layers, LayoutTemplate, PenTool, Megaphone, ChevronDown, ArrowRight, Sparkles, ExternalLink, Tag, Bot, Briefcase, Settings, Phone, Globe, Palette, Users, Calculator } from 'lucide-react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import logoLightBg from '../assets/brand/logo-light-bg.webp';
 import logoDarkBg from '../assets/brand/logo-dark-bg.webp';
@@ -126,6 +126,7 @@ const Navbar: React.FC = () => {
     { label: 'Services', path: '/services', icon: Layers, hasDropdown: true },
     { label: 'Pricing', path: '/pricing', icon: Tag },
     { label: 'Projects', path: '/projects', icon: Briefcase },
+    { label: 'Referral', path: '/referral', icon: Users },
     { label: 'About', path: '/about', icon: Info },
     { label: 'Contact', path: '/contact', icon: Mail, badgeStyle: 'amber' },
   ];
@@ -272,6 +273,7 @@ const Navbar: React.FC = () => {
                       <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/5 text-center transition-colors duration-500">
                         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
                           <Link to="/solutions" className="text-xs font-bold text-yellow-600 dark:text-yellow-300 hover:text-black dark:hover:text-white uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"><Sparkles size={12} /> Industry Solutions</Link>
+                          <Link to="/roi-calculator" className="text-xs font-bold text-yellow-600 dark:text-yellow-300 hover:text-black dark:hover:text-white uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"><Calculator size={12} /> ROI Calculator</Link>
                           <Link to="/services" className="text-xs font-bold text-gray-500 hover:text-black dark:hover:text-white uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">View Overview Page <ArrowRight size={12} /></Link>
                         </div>
                       </div>
@@ -420,6 +422,7 @@ const Navbar: React.FC = () => {
                       </Link>
                     ))}
                     <Link to="/solutions" onClick={() => setIsOpen(false)} className="mt-2 py-3 flex items-center justify-center gap-2 text-xs font-bold text-yellow-600 dark:text-yellow-300 bg-yellow-400/5 rounded-xl border border-yellow-400/25 hover:bg-yellow-400/10 transition-colors"><Sparkles size={14} /> Industry Solutions</Link>
+                    <Link to="/roi-calculator" onClick={() => setIsOpen(false)} className="mt-2 py-3 flex items-center justify-center gap-2 text-xs font-bold text-yellow-600 dark:text-yellow-300 bg-yellow-400/5 rounded-xl border border-yellow-400/25 hover:bg-yellow-400/10 transition-colors"><Calculator size={14} /> ROI Calculator</Link>
                     <Link to="/services" onClick={() => setIsOpen(false)} className="mt-2 py-3 flex items-center justify-center gap-2 text-xs font-bold text-neon-purple bg-neon-purple/5 rounded-xl border border-neon-purple/20 hover:bg-neon-purple/10 transition-colors">View All Services <ArrowRight size={14} /></Link>
                   </div>
                 </div>
