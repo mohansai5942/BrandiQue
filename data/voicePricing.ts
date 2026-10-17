@@ -1,9 +1,8 @@
 // Voice Calling AI Agents pricing: monthly subscription plans + pay-as-you-go top-ups.
 // Single source of truth for the voice pricing block, compare table, Services/Home tiles and hero.
-// All prices in INR and exclusive of 18% GST.
+// All prices in INR, inclusive of all taxes.
 
 export const VOICE_SETUP_FEE_INR = 1999;
-export const VOICE_GST_PERCENT = 18;
 
 export interface VoicePlan {
   id: 'starter' | 'pro' | 'growth';
@@ -112,9 +111,9 @@ export const VOICE_FAQS: { q: string; a: string }[] = [
   { q: 'How do plan credits and top-ups work?', a: 'Your monthly price is prepaid balance for voice minutes and messages: Starter ₹2,799 covers 317 minutes at ₹8.83 a minute, Pro ₹6,999 covers 1,000 minutes at ₹7.00, and Growth ₹22,999 covers 3,571 minutes at ₹6.44. Your plan decides which features you get. Top-ups add more balance, and top-ups of ₹7,000 or more get ₹8.47 a minute with 2% bonus minutes, but top-ups do not unlock plan features.' },
   { q: 'Can I use BrandiQue Voice AI without a subscription?', a: 'Yes. With pay as you go you buy minutes when you need them at ₹8.90 a minute, from 320 minutes (₹2,848) in steps of 10 minutes, with no monthly plan. Top up ₹7,000 or more for ₹8.47 a minute and 2% bonus minutes. Monthly plans lower your per-minute rate and unlock features such as voice cloning, WhatsApp and SIP trunking, and you can upgrade anytime. Your balance carries over.' },
   { q: 'Is there a prompt limit?', a: 'For the best call quality, keep an agent prompt under about 10,000 to 13,000 characters (around 3,500 tokens). We write and tune the agent script with you during setup.' },
-  { q: 'What additional fees should I expect?', a: 'A one-time setup fee of ₹1,999, and 18% GST on every plan and top-up. Chatbot and WhatsApp messages are billed at ₹0.84 each. Meta bills its own WhatsApp template charges to your WhatsApp Business account, and anything extra, such as more phone numbers or more calls at the same time, is quoted before you approve it.' },
+  { q: 'What additional fees should I expect?', a: 'A one-time setup fee of ₹1,999. All prices are all-inclusive — no extra taxes on plans or top-ups. Chatbot and WhatsApp messages are billed at ₹0.84 each. Meta bills its own WhatsApp template charges to your WhatsApp Business account, and anything extra, such as more phone numbers or more calls at the same time, is quoted before you approve it.' },
   { q: 'How is WhatsApp messaging billed?', a: 'Every message your agent sends is billed once at a flat ₹0.84, whether it is an agent reply or a campaign message. Incoming messages from your customers are free. Broadcast campaigns are included up to 2,000 messages a month on Pro and 10,000 a month on Growth.' },
   { q: 'Do marketing WhatsApp messages cost more than support or utility messages?', a: 'No. BrandiQue charges the same ₹0.84 for every outgoing message, templates and free text alike. Meta’s own charges are not included in this rate: Meta bills your WhatsApp Business account separately for template messages, and those charges vary by category (marketing, utility, authentication) and destination country.' },
-  { q: 'Is GST added to WhatsApp message charges?', a: 'Not per message. Messages are deducted from your prepaid balance, so nothing is added to each message. 18% GST is charged when you pay for your plan or top-up and appears on that invoice.' },
+  { q: 'Are there any taxes on top of the listed prices?', a: 'No. All prices are all-inclusive. Messages are deducted from your prepaid balance, so nothing is added per message and nothing extra is charged when you pay for your plan or top-up.' },
   { q: 'Are there any other charges for WhatsApp?', a: 'WhatsApp calls use the voice AI per-minute rate of your plan. Outgoing WhatsApp messages use the separate ₹0.84 per-message rate. Incoming messages and conversations have no separate charge, and there is no WhatsApp setup or monthly fee beyond the one-time ₹1,999 agent setup.' },
 ];

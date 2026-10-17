@@ -360,7 +360,7 @@ export const CARE_PLANS: CarePlan[] = [
       'Voice cloning, WhatsApp and SIP trunking',
       'Pro ₹6,999 (1,000 mins) and Growth ₹22,999 (3,571 mins) plans',
       'Or pay as you go: ₹8.90/min from 320 mins',
-      '₹1,999 one-time setup · + 18% GST',
+      '₹1,999 one-time setup · all-inclusive',
     ],
     href: '/services/voice-ai-agents',
     whatsappMessage: 'Hi BrandiQue, I want the Voice AI Agent Starter plan (₹2,799/mo, 317 mins). Please share the subscription details.',
