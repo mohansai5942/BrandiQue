@@ -8,9 +8,6 @@ import { loadFirestore } from '../firestoreClient';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { cleanText, isValidEmail, LIMITS, SUBMIT_TIMEOUT_MS, telHref, withTimeout } from '../utils/security';
 
-// --- CONFIGURATION ---
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgvgdpng";
-
 const Contact: React.FC = () => {
   const { settings, getRawPhone } = useSiteSettings();
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -71,34 +68,17 @@ const Contact: React.FC = () => {
     setFormStatus('submitting');
     const payload = { service, name, email, budget, message };
 
-    // Both deliveries run in parallel; the request counts as sent if either one succeeds.
-    // 1) Firestore (shown in the BrandiQue Data Console, with a push alert to the admin).
-    const firestoreTask = withTimeout(loadFirestore().then(({ db, addDoc, collection }) => addDoc(collection(db, 'messages'), {
-      source: 'contact',
-      ...payload,
-      createdAt: new Date().toISOString()
-    })), SUBMIT_TIMEOUT_MS).then((docRef) => {
+    // Saved to Firestore (shown in the BrandiQue Data Console, with a push alert to the admin).
+    try {
+      const docRef = await withTimeout(loadFirestore().then(({ db, addDoc, collection }) => addDoc(collection(db, 'messages'), {
+        source: 'contact',
+        ...payload,
+        createdAt: new Date().toISOString()
+      })), SUBMIT_TIMEOUT_MS);
       if (docRef && docRef.id) notifyAdmin('messages', docRef.id);
-      return true;
-    });
-    // 2) Email copy via Formspree.
-    const formspreeTask = withTimeout(fetch(FORMSPREE_ENDPOINT, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    }), SUBMIT_TIMEOUT_MS).then((res) => res.ok);
-
-    const [firestoreResult, formspreeResult] = await Promise.allSettled([firestoreTask, formspreeTask]);
-    if (firestoreResult.status === 'rejected') console.error('Contact form could not be saved to Firestore:', firestoreResult.reason);
-    if (formspreeResult.status === 'rejected') console.error('Contact form email delivery failed:', formspreeResult.reason);
-    const saved = (firestoreResult.status === 'fulfilled' && firestoreResult.value) || (formspreeResult.status === 'fulfilled' && formspreeResult.value);
-
-    if (saved) {
       finish();
-    } else {
+    } catch (err) {
+      Sentry.captureException(err);
       setFormStatus('idle');
       setFormError('Sorry, your request could not be sent. Please check your connection and try again, or email or WhatsApp us directly.');
     }
