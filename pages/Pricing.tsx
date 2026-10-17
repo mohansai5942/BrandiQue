@@ -7,6 +7,7 @@ import GrowthOffers from '../components/GrowthOffers';
 import Memberships from '../components/Memberships';
 import IndustrySolutions from '../components/IndustrySolutions';
 import { PRICING_FAQ, whatsappLink } from '../data/offers';
+import { VOICE_FAQS } from '../data/voicePricing';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { useInquiry } from '../context/InquiryContext';
 
@@ -81,6 +82,19 @@ const Pricing: React.FC = () => {
               <ScrollReveal key={item.q}>
                 <div className="h-full rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0D1017] p-4 md:p-6">
                   <h3 className="flex items-start gap-2 font-bold"><HelpCircle size={17} className="mt-0.5 shrink-0 text-yellow-500" />{item.q}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.a}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+          <ScrollReveal>
+            <h3 id="voice-pricing-faq" className="mt-14 scroll-mt-24 text-center text-2xl md:text-3xl font-bold tracking-tight">Voice AI agents: plans &amp; billing</h3>
+          </ScrollReveal>
+          <div className="mt-8 grid gap-4 md:grid-cols-2" data-voice-faqs>
+            {VOICE_FAQS.map(item => (
+              <ScrollReveal key={item.q}>
+                <div className="h-full rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0D1017] p-4 md:p-6">
+                  <h4 className="flex items-start gap-2 font-bold"><HelpCircle size={17} className="mt-0.5 shrink-0 text-yellow-500" />{item.q}</h4>
                   <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.a}</p>
                 </div>
               </ScrollReveal>

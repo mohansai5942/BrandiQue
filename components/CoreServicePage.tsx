@@ -31,7 +31,7 @@ const ICON_TONE: Record<string, string> = {
 
 const Cell: React.FC<{ v: string | boolean; featured?: boolean }> = ({ v, featured }) => {
   if (v === true) return <Check size={18} aria-label="Included" className="mx-auto text-yellow-500" />;
-  if (v === false) return <Minus size={18} aria-label="Not included" className="mx-auto text-gray-300 dark:text-white/20" />;
+  if (v === false || v === '–') return <Minus size={18} aria-label="Not included" className="mx-auto text-gray-300 dark:text-white/20" />;
   return <span className={`text-xs md:text-sm font-semibold ${featured ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>{v}</span>;
 };
 
@@ -147,6 +147,39 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
                   </tbody>
                 </table>
               </div>
+            </ScrollReveal>}
+            {c.compare.groups && c.compare.groups.length > 0 && <ScrollReveal>
+              <div data-compare-plans className="mt-8 overflow-x-auto rounded-3xl border border-gray-200 dark:border-white/10 md:mt-12">
+                <table className="w-full min-w-[600px] border-collapse text-left">
+                  <caption className="sr-only">{c.compare.title}: {c.compare.text}</caption>
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-[#0D1017]">
+                      <th scope="col" className="sticky left-0 z-10 w-[36%] bg-gray-50 px-4 py-4 text-xs font-bold uppercase tracking-[0.14em] text-gray-500 dark:bg-[#0D1017] md:px-6"><span className="sr-only">Feature</span></th>
+                      {c.compare.columns.map((col, i) => (
+                        <th key={col} scope="col" className={`px-3 py-4 text-center text-sm font-bold md:text-base ${i === c.compare?.recommended ? 'border-x border-t-2 border-yellow-400/60 border-t-yellow-400 bg-yellow-400/15 text-gray-900 dark:text-white' : ''}`}>
+                          {i === c.compare?.recommended && <span className="mb-1 block text-[9px] font-black uppercase tracking-wider text-yellow-700 dark:text-yellow-300">{c.compare?.recommendedLabel ?? 'Recommended'}</span>}{col}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  {c.compare.groups.map(g => (
+                    <tbody key={g.title}>
+                      <tr className="border-t border-gray-200 bg-white dark:border-white/10 dark:bg-[#080A0F]">
+                        <th scope="colgroup" colSpan={c.compare!.columns.length + 1} className="px-4 pb-2 pt-6 text-left md:px-6">
+                          <span className="sticky left-4 inline-block text-sm font-black tracking-tight text-gray-900 dark:text-white md:left-6 md:text-base">{g.title}</span>
+                        </th>
+                      </tr>
+                      {g.rows.map(r => (
+                        <tr key={`${g.title}-${r.feature}`} className="border-t border-gray-100 dark:border-white/5">
+                          <th scope="row" className="sticky left-0 z-10 bg-white px-4 py-3.5 text-sm font-medium text-gray-700 dark:bg-[#080A0F] dark:text-gray-300 md:px-6">{r.feature}</th>
+                          {r.values.map((v, i) => <td key={i} className={`px-3 py-3.5 text-center ${i === c.compare?.recommended ? 'border-x border-yellow-400/60 bg-yellow-400/5' : ''}`}><Cell v={v} featured={i === c.compare?.recommended} /></td>)}
+                        </tr>
+                      ))}
+                    </tbody>
+                  ))}
+                </table>
+              </div>
+              {id === 'voice' && <p className="mt-4 text-center text-xs leading-relaxed text-gray-500 dark:text-gray-400">All prices plus 18% GST. One-time setup fee ₹1,999. Prefer no monthly plan? Pay as you go from ₹2,848 (320 minutes at ₹8.90/min).</p>}
             </ScrollReveal>}
             {c.compare.versus && (
               <ScrollReveal>

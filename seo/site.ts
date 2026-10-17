@@ -1,6 +1,7 @@
 // One source of truth for visible founder images and all entity/social references.
 // Replace this image in place, or change image here and rebuild the site.
-import { VOICE_PLANS, PAYG_BASE_RATE, PAYG_MIN_TOPUP_INR, PAYG_MIN_MINUTES } from '../data/voicePricing';
+import { VOICE_PLANS, PAYG_BASE_RATE, PAYG_MIN_TOPUP_INR, PAYG_MIN_MINUTES, VOICE_FAQS } from '../data/voicePricing';
+import { PRICING_FAQ } from '../data/offers';
 export const SITE_URL = 'https://brandique.in';
 export const COMPANY = 'BrandiQue Web Solutions';
 export const founder = {
@@ -71,6 +72,9 @@ export function structuredData(path: string) {
   if (path === '/about' || path === '/') graph.push({'@type':'Person','@id':founderId, name:founder.name, alternateName:founder.alternateName, givenName:founder.givenName, familyName:founder.familyName, jobTitle:'Founder of BrandiQue Web Solutions', homeLocation:{'@type':'Place', name:'Visakhapatnam, Andhra Pradesh, India'}, knowsAbout:['Web Development','AI Agents','Workflow Automation','AI Voice Agents','UI/UX Design','Branding','Graphic Design'], worksFor:{'@id':organizationId}, url:founderId, image:{'@type':'ImageObject', '@id':`${SITE_URL}/#founder-image`, url:absoluteUrl(founder.image), contentUrl:absoluteUrl(founder.image), width:founder.width, height:founder.height, caption:founder.alt, name:'BrandiQue Founder'}, sameAs:founderSameAs, description:founder.description});
   if (path === '/') (graph[2] as Record<string,unknown>).about = {'@id':organizationId};
   if (page.service) graph.push({'@type':'Service','@id':`${absoluteUrl(path)}#service`, name:page.service, serviceType:page.service, description:page.description, url:absoluteUrl(path), provider:{'@id':organizationId}, mainEntityOfPage:{'@id':`${absoluteUrl(path)}#webpage`}, ...(path === '/services/voice-ai-agents' ? {hasOfferCatalog: voiceOfferCatalog(absoluteUrl(path))} : {})});
+  // FAQ JSON-LD: voice pricing & billing FAQs on the voice page; general + voice FAQs on /pricing (mirrors the visible FAQs).
+  const faqs = path === '/services/voice-ai-agents' ? VOICE_FAQS : path === '/pricing' ? [...PRICING_FAQ, ...VOICE_FAQS] : null;
+  if (faqs) graph.push({'@type':'FAQPage','@id':`${absoluteUrl(path)}#faq`, isPartOf:{'@id':`${absoluteUrl(path)}#webpage`}, mainEntity:faqs.map(f => ({'@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}}))});
   if (path !== '/') {
     const crumbs = [{name:'Home',item:`${SITE_URL}/`}, ...(path.startsWith('/services/') ? [{name:'Services',item:`${SITE_URL}/services`}] : []), {name:page.label,item:absoluteUrl(path)}];
     graph.push({'@type':'BreadcrumbList','@id':`${absoluteUrl(path)}#breadcrumb`, itemListElement:crumbs.map((c,i)=>({'@type':'ListItem',position:i+1,...c}))});

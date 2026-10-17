@@ -4,7 +4,7 @@ import ScrollReveal from './ScrollReveal';
 import { useInquiry } from '../context/InquiryContext';
 import {
   VOICE_PLANS, VOICE_SETUP_FEE_INR, VOICE_GST_PERCENT, PAYG_MIN_MINUTES, PAYG_MAX_SLIDER_MINUTES, PAYG_BASE_RATE,
-  PAYG_DISCOUNT_RATE, PAYG_DISCOUNT_THRESHOLD_INR, PAYG_BONUS_PERCENT, PAYG_DISCOUNT_MIN_MINUTES, formatInr, paygQuote,
+  PAYG_DISCOUNT_RATE, PAYG_DISCOUNT_THRESHOLD_INR, PAYG_BONUS_PERCENT, PAYG_DISCOUNT_MIN_MINUTES, PAYG_STEP_MINUTES, formatInr, paygQuote,
 } from '../data/voicePricing';
 
 const SERVICE = 'Voice Calling AI Agents';
@@ -81,20 +81,20 @@ const VoicePricing: React.FC = () => {
             <label htmlFor="voice-payg-minutes" className="mt-8 block text-sm font-bold">Minutes you need</label>
             <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center">
               <input
-                id="voice-payg-minutes" type="number" inputMode="numeric" min={PAYG_MIN_MINUTES} step={1}
+                id="voice-payg-minutes" type="number" inputMode="numeric" min={PAYG_MIN_MINUTES} step={PAYG_STEP_MINUTES}
                 value={minutesInput}
                 onChange={e => setMinutesInput(e.target.value)}
                 onBlur={() => setMinutesInput(String(q.minutes))}
                 className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-lg font-bold text-gray-900 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 dark:border-white/15 dark:bg-white/5 dark:text-white sm:w-40"
               />
               <input
-                type="range" aria-label="Minutes you need" min={PAYG_MIN_MINUTES} max={PAYG_MAX_SLIDER_MINUTES} step={1}
+                type="range" aria-label="Minutes you need" min={PAYG_MIN_MINUTES} max={PAYG_MAX_SLIDER_MINUTES} step={PAYG_STEP_MINUTES}
                 value={Math.min(q.minutes, PAYG_MAX_SLIDER_MINUTES)}
                 onChange={e => setMinutesInput(e.target.value)}
                 className="w-full flex-1 accent-yellow-400"
               />
             </div>
-            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">Minimum {PAYG_MIN_MINUTES} minutes.</p>
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">Minimum {PAYG_MIN_MINUTES} minutes, in steps of {PAYG_STEP_MINUTES}.</p>
 
             <p className="mt-6 flex items-start gap-2.5 rounded-2xl border border-yellow-400/30 bg-yellow-400/10 px-4 py-3 text-sm font-medium text-gray-800 dark:text-yellow-100">
               <Info size={17} className="mt-0.5 shrink-0 text-yellow-600 dark:text-yellow-300" />
