@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import * as Sentry from '@sentry/react';
 import { notifyAdmin } from '../notifyAdmin';
 import { loadFirestore, whenIdle } from '../firestoreClient';
 import { Project, N8nProject, N8nProjectForm } from '../types';
@@ -222,7 +223,8 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
           setN8nProjects(INITIAL_N8N_PROJECTS);
           setLoadingN8nProjects(false);
         }));
-      }).catch(() => {
+      }).catch((err) => {
+        Sentry.captureException(err);
         if (cancelled) return;
         setSettings(DEFAULT_SETTINGS); setLoading(false);
         setWebsites(DEFAULT_WEBSITES); setLoadingWebsites(false);

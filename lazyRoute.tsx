@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Sentry from '@sentry/react';
 
 type Loader<P> = () => Promise<{ default: React.ComponentType<P> }>;
 export type LazyRoute<P = {}> = React.FC<P> & { preload: () => Promise<void>; prefetch: () => Promise<void> };
@@ -28,7 +29,8 @@ const Nothing: React.FC = () => null;
  *  instead of letting the error take down the whole page. */
 export function lazyWidget<T extends React.ComponentType<any>>(loader: () => Promise<{ default: T }>): React.LazyExoticComponent<T> {
   return React.lazy<T>(() =>
-    loader().catch(() => {
+    loader().catch((err) => {
+      Sentry.captureException(err);
       recoverFromChunkError();
       return { default: Nothing as unknown as T };
     })
@@ -58,6 +60,7 @@ export function lazyRoute<P = {}>(loader: Loader<P>): LazyRoute<P> {
           pending = null;
           if (recover) {
             failed = true;
+            Sentry.captureException(err);
             recoverFromChunkError();
           }
           throw err;
