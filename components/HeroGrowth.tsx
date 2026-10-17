@@ -5,8 +5,6 @@ import { useInquiry } from '../context/InquiryContext';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { whatsappLink } from '../data/offers';
 import { SERVICE_VISUALS, ServiceKey } from './ServiceVisuals';
-import MagneticButton from './MagneticButton';
-import Parallax from './Parallax';
 
 const SERVICES: { key: ServiceKey; label: string; line: string; icon: React.ElementType; href: string; accent: string; bar: string; from: string }[] = [
   { key: 'web', label: 'Web Development', line: 'Websites that sell.', icon: Code2, href: '/web-development', accent: 'text-cyan-600 dark:text-cyan-300', bar: 'bg-cyan-400', from: '₹9,000' },
@@ -60,11 +58,9 @@ const HeroGrowth: React.FC = () => {
           </p>
 
           <div className="mt-6 md:mt-8 flex flex-row flex-wrap items-center gap-2.5 md:gap-3">
-            <MagneticButton>
-              <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="group inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-black shadow-[0_12px_40px_rgba(234,179,8,0.35)] transition-all hover:-translate-y-0.5 hover:bg-yellow-300">
-                Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-              </button>
-            </MagneticButton>
+            <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="group inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-black shadow-[0_12px_40px_rgba(234,179,8,0.35)] transition-all hover:-translate-y-0.5 hover:bg-yellow-300">
+              Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </button>
             <Link to="/services" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-gray-900 transition-colors hover:border-yellow-400 dark:border-white/15 dark:bg-white/5 dark:text-white">
               Explore services
             </Link>
@@ -83,8 +79,7 @@ const HeroGrowth: React.FC = () => {
           </ul>
         </div>
 
-        <Parallax speed={0.08} max={110} className="relative mx-auto w-full max-w-[34rem]">
-        <div className="relative" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+        <div className="relative mx-auto w-full max-w-[34rem]" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
           <div className="absolute -inset-6 rounded-[44px] bg-gradient-to-br from-cyan-400/20 via-violet-500/10 to-amber-400/20 blur-2xl" />
           <div className="pointer-events-none absolute -inset-10 hidden rounded-full border border-dashed border-gray-300/60 animate-spin-slow dark:border-white/10 xl:block" />
           {FLOATERS[current.key].map((f, i) => (
@@ -112,7 +107,6 @@ const HeroGrowth: React.FC = () => {
             </Link>
           </div>
         </div>
-        </Parallax>
       </div>
       <style>{`@keyframes heroProgress{from{width:0}to{width:100%}}`}</style>
     </section>
