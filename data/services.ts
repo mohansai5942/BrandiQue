@@ -32,6 +32,8 @@ export interface ServiceCompare {
   columns: string[];
   /** Optional column index to highlight as recommended. */
   recommended?: number;
+  /** Optional label under the highlighted column (defaults to 'Recommended'). */
+  recommendedLabel?: string;
   rows: { feature: string; values: (string | boolean)[] }[];
   versus?: { title: string; columns: [string, string]; rows: { feature: string; values: [string, string] }[]; note: string };
 }
@@ -224,6 +226,7 @@ export const SERVICE_CONTENT: Record<PillarId, ServiceContent> = {
       text: 'Monthly plans include minutes and more features as you grow. Pay as you go gives you the base voice agent with no monthly commitment. All prices plus 18% GST and a one-time setup fee of ₹1,999.',
       columns: ['Starter', 'Pro', 'Growth', 'Pay as you go'],
       recommended: 1,
+      recommendedLabel: 'Most Popular',
       rows: [
         { feature: 'Price/month', values: ['₹2,799', '₹6,999', '₹22,999', 'None, top up from ₹2,848'] },
         { feature: 'Included minutes', values: ['317', '1,000', '3,571', '320+ per top-up'] },
