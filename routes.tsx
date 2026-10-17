@@ -10,6 +10,8 @@ export const Projects = lazyRoute(() => import('./pages/Projects'));
 export const Services = lazyRoute(() => import('./pages/Services'));
 export const Pricing = lazyRoute(() => import('./pages/Pricing'));
 export const Solutions = lazyRoute(() => import('./pages/Solutions'));
+export const Referral = lazyRoute(() => import('./pages/Referral'));
+export const RoiCalculator = lazyRoute(() => import('./pages/RoiCalculator'));
 export const AIAutomation = lazyRoute(() => import('./pages/services/AIAutomation'));
 export const GraphicDesign = lazyRoute(() => import('./pages/services/GraphicDesign'));
 export const PrivacyPolicy = lazyRoute(() => import('./pages/PrivacyPolicy'));
@@ -26,6 +28,8 @@ export const routeComponents: Record<string, LazyRoute> = {
   '/services': Services,
   '/pricing': Pricing,
   '/solutions': Solutions,
+  '/referral': Referral,
+  '/roi-calculator': RoiCalculator,
   '/services/ai-automation': AIAutomation,
   '/services/graphic-design': GraphicDesign,
   '/privacy-policy': PrivacyPolicy,
