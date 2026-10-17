@@ -19,14 +19,15 @@ const TrustProof: React.FC = () => {
   ];
 
   return (
-    <section aria-label="Why businesses trust BrandiQue" className="relative border-y border-gray-200 bg-white py-12 md:py-14 dark:border-white/5 dark:bg-[#080A0F]">
+    <section aria-label="Why businesses trust BrandiQue" className="relative border-y border-gray-200 bg-white py-12 md:py-20 dark:border-white/5 dark:bg-[#080A0F]">
       <div className="mx-auto max-w-[100rem] px-5 md:px-8 desk:px-12 2xl:px-16">
-        <dl className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-0 md:divide-x md:divide-gray-200 md:dark:divide-white/10">
+        <p className="text-center text-[10px] font-bold uppercase tracking-[0.28em] text-yellow-700 dark:text-yellow-300">Real work. Real numbers.</p>
+        <dl className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
           {stats.map(stat => (
-            <div key={stat.label} className="md:px-8 first:md:pl-0">
+            <div key={stat.label} className="rounded-3xl border border-gray-200 bg-gray-50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 dark:border-white/10 dark:bg-[#0D1017] md:p-8">
               <dt className="sr-only">{stat.label}</dt>
-              <dd className="text-3xl md:text-5xl font-black tracking-tight text-gray-900 dark:text-white">{stat.value}</dd>
-              <dd className="mt-2 text-xs md:text-sm leading-snug text-gray-500 dark:text-gray-400">{stat.label}</dd>
+              <dd className="bg-gradient-to-r from-yellow-500 to-amber-400 bg-clip-text text-4xl font-black tracking-tight text-transparent md:text-6xl">{stat.value}</dd>
+              <dd className="mt-3 text-xs leading-snug text-gray-600 dark:text-gray-300 md:text-sm">{stat.label}</dd>
             </div>
           ))}
         </dl>
