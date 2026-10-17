@@ -10,7 +10,7 @@ import { whenIdle } from './firestoreClient';
 import { lazyWidget } from './lazyRoute';
 import {
   Home, About, Contact, WebDevelopment, Projects, Services, Pricing, Solutions, Referral, RoiCalculator, AIAutomation,
-  GraphicDesign, PrivacyPolicy, TermsAndConditions, CookiePolicy, NotFound, preloadAllRoutes,
+  GraphicDesign, VoiceAIAgents, PrivacyPolicy, TermsAndConditions, CookiePolicy, NotFound, preloadAllRoutes,
 } from './routes';
 
 // Loaded in their own chunks so they never hold up the first paint.
@@ -118,6 +118,7 @@ export const AppLayout: React.FC = () => {
             <Route path="/roi-calculator" element={<RoiCalculator />} />
             <Route path="/services/ai-automation" element={<AIAutomation />} />
             <Route path="/services/graphic-design" element={<GraphicDesign />} />
+            <Route path="/services/voice-ai-agents" element={<VoiceAIAgents />} />
 
             {/* Legacy admin URLs now permanently redirect to the dedicated data dashboard. */}
             <Route path="/login" element={<AdminDashboardRedirect />} />

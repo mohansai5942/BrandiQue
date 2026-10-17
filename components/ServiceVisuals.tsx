@@ -1,7 +1,7 @@
 import React from 'react';
-import { Bot, CheckCheck, FileSpreadsheet, BellRing, CalendarClock, MessageCircle, Gauge, Smartphone, Search, Star } from 'lucide-react';
+import { Bot, CheckCheck, FileSpreadsheet, BellRing, CalendarClock, MessageCircle, Gauge, Smartphone, Search, Star, PhoneCall, AudioLines, FileText } from 'lucide-react';
 
-export type ServiceKey = 'web' | 'ai' | 'design';
+export type ServiceKey = 'web' | 'ai' | 'design' | 'voice';
 
 const stagger = (i: number, base = 120) => ({ animationDelay: `${base + i * 140}ms` });
 
@@ -116,4 +116,40 @@ export const DesignVisual: React.FC = () => (
   </div>
 );
 
-export const SERVICE_VISUALS: Record<ServiceKey, React.FC> = { web: WebVisual, ai: AIVisual, design: DesignVisual };
+const CALL = [
+  { from: 'a', text: 'Namaskaram! BrandiQue Clinic nundi call chestunnam. Mee appointment enquiry gurinchi.' },
+  { from: 'c', text: 'Haa, Saturday morning slot unda?' },
+  { from: 'a', text: 'Saturday 10:30 AM free undi. Book cheyyamantara?' },
+  { from: 'c', text: 'Yes, please book it.' },
+];
+
+/** Animated AI voice call: live waveform, bilingual transcript and the actions it triggers. */
+export const VoiceVisual: React.FC = () => (
+  <div className="relative flex h-full w-full flex-col overflow-hidden rounded-[24px] border border-gray-200 bg-white shadow-2xl dark:border-white/10 dark:bg-[#0B0E14]">
+    <div className="flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-3 text-white">
+      <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-white/15"><PhoneCall size={15} /><span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-green-300 animate-pulse" /></div>
+      <div className="min-w-0 flex-1"><div className="truncate text-xs font-bold">AI Voice Agent · Example call</div><div className="text-[10px] text-white/75">Live · Telugu + English · 00:42</div></div>
+      <div className="flex h-6 items-end gap-[3px]" aria-hidden="true">
+        {[0, 1, 2, 3, 4, 5].map(i => <span key={i} className="w-[3px] rounded-full bg-white/80 animate-pulse" style={{ height: `${[10, 18, 12, 22, 14, 8][i]}px`, animationDelay: `${i * 120}ms` }} />)}
+      </div>
+    </div>
+    <div className="flex-1 space-y-2 bg-gray-50 px-3 py-3 dark:bg-[#0F141B]">
+      {CALL.map((m, i) => (
+        <div key={i} className={`flex ${m.from === 'a' ? 'justify-start' : 'justify-end'}`}>
+          <div className={`max-w-[85%] rounded-2xl px-3 py-2 text-[11px] leading-snug shadow-sm opacity-0 animate-fade-up ${m.from === 'a' ? 'rounded-tl-sm bg-white text-gray-800 dark:bg-[#1C232D] dark:text-gray-100' : 'rounded-tr-sm bg-emerald-100 text-gray-800 dark:bg-emerald-900/60 dark:text-white'}`} style={stagger(i, 200)}>
+            {m.from === 'a' && <AudioLines size={11} className="mr-1 inline text-emerald-500" />}{m.text}
+          </div>
+        </div>
+      ))}
+    </div>
+    <div className="grid grid-cols-3 divide-x divide-gray-200 border-t border-gray-200 dark:divide-white/10 dark:border-white/10">
+      {[{ icon: CalendarClock, l: 'Slot booked' }, { icon: MessageCircle, l: 'WhatsApp sent' }, { icon: FileText, l: 'Call summary' }].map((x, i) => (
+        <div key={x.l} className="flex flex-col items-center gap-1 px-1 py-2.5 opacity-0 animate-fade-in" style={stagger(i, 900)}>
+          <x.icon size={14} className="text-emerald-500 dark:text-emerald-300" /><span className="text-[9px] font-semibold text-gray-600 dark:text-gray-300">{x.l}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+export const SERVICE_VISUALS: Record<ServiceKey, React.FC> = { web: WebVisual, ai: AIVisual, design: DesignVisual, voice: VoiceVisual };

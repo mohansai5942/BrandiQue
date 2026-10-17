@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as Sentry from '@sentry/react';
-import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, AlertCircle, LayoutTemplate, Code, PenTool, Megaphone, Bot, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, AlertCircle, LayoutTemplate, Code, PenTool, Megaphone, Bot, MessageCircle, PhoneCall } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import { notifyAdmin } from '../notifyAdmin';
 import { whatsappLink } from '../data/offers';
@@ -21,6 +21,7 @@ const Contact: React.FC = () => {
     { id: 'Web Development', icon: Code },
     { id: 'AI Agents & Automations', icon: Bot },
     { id: 'Graphic Design', icon: PenTool },
+    { id: 'Voice Calling AI Agents', icon: PhoneCall },
   ];
 
   const budgets = [

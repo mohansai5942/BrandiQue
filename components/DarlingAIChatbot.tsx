@@ -52,13 +52,14 @@ const welcomeFor = (name?: string): ChatMessage => ({
   role: 'assistant',
   content: name
     ? `Welcome back, **${name}** 🙂 How can I help you today?`
-    : "Hi, I'm **Darling**, BrandiQue's AI assistant 🙂 Ask me anything about **websites**, **AI agents & automations** or **graphic design**.",
+    : "Hi, I'm **Darling**, BrandiQue's AI assistant 🙂 Ask me anything about **websites**, **AI agents & automations**, **graphic design** or **voice calling AI agents**.",
 });
 
 const QUICK_PROMPTS = [
   { label: 'Website pricing', prompt: 'How much does a website cost?' },
   { label: 'AI chatbot', prompt: 'Tell me about your AI chatbots' },
   { label: 'Graphic design', prompt: 'What graphic design services do you offer?' },
+  { label: 'Voice AI agents', prompt: 'Tell me about your voice calling AI agents and pricing' },
   { label: 'Monthly plans', prompt: 'What monthly memberships do you have?' },
   { label: 'Free growth audit', prompt: 'What is the free growth audit?' },
   { label: 'Founder', prompt: 'Who is the founder of BrandiQue?' },

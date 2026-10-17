@@ -7,7 +7,7 @@ import {
    Globe, Layers, ShieldCheck, ZapIcon, Target, Check, HelpCircle,
    Sparkles, Shield, Star, Monitor, Smartphone, Database, Globe2, Palette,
    History, Award, Activity, FileCode, HeartHandshake, Eye, Lightbulb, Workflow,
-   Terminal, Braces, Binary, Bot, ExternalLink
+   Terminal, Braces, Binary, Bot, ExternalLink, PhoneCall
 } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import TextReveal from '../components/TextReveal';
@@ -209,19 +209,19 @@ const Home: React.FC = () => {
             </div>
          </section>
 
-         {/* 3. THREE CORE SERVICES */}
+         {/* 3. FOUR CORE SERVICES */}
          <section id="services" className="py-12 md:py-28 bg-gray-50 dark:bg-[#05070A]">
             <div className="max-w-[100rem] mx-auto px-5 md:px-8 desk:px-12 2xl:px-16">
                <ScrollReveal>
                   <div className="text-center max-w-3xl mx-auto mb-8 md:mb-16">
                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">What we do</p>
-                     <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">Three services. <span className="text-yellow-500">One growth team.</span></h2>
-                     <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">Use one service on its own, or combine all three so your design, website and automations work together.</p>
+                     <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">Four services. <span className="text-yellow-500">One growth team.</span></h2>
+                     <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">Use one service on its own, or combine them so your design, website, automations and calling work together.</p>
                   </div>
                </ScrollReveal>
-               <div className="grid gap-3 md:gap-5 lg:gap-6 md:grid-cols-3">
+               <div className="grid gap-3 md:gap-5 lg:gap-6 md:grid-cols-2 xl:grid-cols-4">
                   {PILLARS.map((pillar, i) => {
-                     const PillarIcon = pillar.id === 'web' ? Code : pillar.id === 'ai' ? Bot : Palette;
+                     const PillarIcon = pillar.id === 'web' ? Code : pillar.id === 'ai' ? Bot : pillar.id === 'voice' ? PhoneCall : Palette;
                      return (
                         <ScrollReveal key={pillar.id} delay={`delay-${i * 100}`}>
                            <article className="group flex h-full flex-col rounded-[28px] border border-gray-200 bg-white p-4 md:p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 hover:shadow-xl dark:border-white/10 dark:bg-[#0D1017]">
@@ -240,7 +240,7 @@ const Home: React.FC = () => {
                               <div className="mt-7 flex items-end justify-between border-t border-gray-200 pt-5 dark:border-white/10">
                                  <div>
                                     <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-gray-500">Starting at</div>
-                                    <div className="text-2xl font-black tracking-tight">{pillar.startingAt}</div>
+                                    <div className="text-2xl font-black tracking-tight">{pillar.startingAt}{pillar.startingSuffix && <span className="text-sm font-semibold text-gray-500">{pillar.startingSuffix}</span>}</div>
                                  </div>
                                  <Link to={pillar.href} className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400">Explore <ArrowRight size={14} /></Link>
                               </div>

@@ -399,6 +399,43 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       );
     }
 
+    if (sNameLower.includes('voice') || sNameLower.includes('calling')) {
+      return (
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Calling Goal</label>
+            <div className="grid grid-cols-2 gap-2">
+              {['Instant Lead Calling', 'Reminder Campaigns', 'Appointment Booking', 'Inbound Call Answering'].map((goal) => (
+                <button
+                  type="button"
+                  key={goal}
+                  onClick={() => handleCustomAnswerChange('Voice Goal', goal)}
+                  className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${
+                    customAnswers['Voice Goal'] === goal
+                      ? 'bg-blue-500/10 border-blue-500 text-blue-500 dark:text-blue-400'
+                      : 'bg-gray-50 dark:bg-[#05070A] border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-gray-300'
+                  }`}
+                >
+                  {goal}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Call Languages & Monthly Volume</label>
+            <input
+              type="text"
+              placeholder="e.g., Telugu + English, about 1,000 calls a month"
+              value={customAnswers['Voice Languages & Volume'] || ''}
+              maxLength={500}
+              onChange={(e) => handleCustomAnswerChange('Voice Languages & Volume', e.target.value)}
+              className="w-full bg-gray-50 dark:bg-[#05070A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-all"
+            />
+          </div>
+        </div>
+      );
+    }
+
     if (sNameLower.includes('ai') || sNameLower.includes('automation') || sNameLower.includes('agent')) {
       return (
         <div className="space-y-4">

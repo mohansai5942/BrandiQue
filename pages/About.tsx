@@ -136,7 +136,7 @@ const About: React.FC = () => {
         <div className="space-y-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed">
           <p>Founded by Kutikuppala Mohan Rao, BrandiQue Web Solutions brings together web development, design and automation. Based in Visakhapatnam (Vizag), Andhra Pradesh, our work helps businesses turn their requirements into usable digital products.</p>
           <p>Our mission is to make digital projects easier to understand and manage. Our vision is to be a long-term technical partner, supporting a business from its first website through changing content, integrations and workflows.</p>
-          <p>Explore our three core services: <Link className="underline underline-offset-4" to="/web-development">web development</Link>, <Link className="underline underline-offset-4" to="/services/ai-automation">AI agents and automations</Link> and <Link className="underline underline-offset-4" to="/services/graphic-design">graphic design</Link>. <Link className="underline underline-offset-4" to="/contact">Contact the team</Link> to discuss a project.</p>
+          <p>Explore our four core services: <Link className="underline underline-offset-4" to="/web-development">web development</Link>, <Link className="underline underline-offset-4" to="/services/ai-automation">AI agents and automations</Link>, <Link className="underline underline-offset-4" to="/services/graphic-design">graphic design</Link> and <Link className="underline underline-offset-4" to="/services/voice-ai-agents">voice calling AI agents</Link>. <Link className="underline underline-offset-4" to="/contact">Contact the team</Link> to discuss a project.</p>
         </div>
       </section>
 

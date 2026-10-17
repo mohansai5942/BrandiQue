@@ -9,7 +9,7 @@ interface PageHeroProps {
   actions?: React.ReactNode;
   visual?: React.ReactNode;
   children?: React.ReactNode;
-  accent?: 'yellow' | 'cyan' | 'violet' | 'amber';
+  accent?: 'yellow' | 'cyan' | 'violet' | 'amber' | 'emerald';
 }
 
 const GLOW: Record<NonNullable<PageHeroProps['accent']>, string> = {
@@ -17,12 +17,14 @@ const GLOW: Record<NonNullable<PageHeroProps['accent']>, string> = {
   cyan: 'bg-cyan-400/15',
   violet: 'bg-violet-500/15',
   amber: 'bg-amber-400/15',
+  emerald: 'bg-emerald-400/15',
 };
 const HIGHLIGHT: Record<NonNullable<PageHeroProps['accent']>, string> = {
   yellow: 'from-yellow-400 via-amber-300 to-yellow-500',
   cyan: 'from-cyan-500 via-sky-400 to-blue-500',
   violet: 'from-violet-500 via-fuchsia-400 to-purple-500',
   amber: 'from-amber-400 via-orange-400 to-rose-400',
+  emerald: 'from-emerald-500 via-teal-400 to-cyan-500',
 };
 
 /** Shared hero used by every BrandiQue page so the site reads as one product. */

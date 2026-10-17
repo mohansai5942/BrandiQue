@@ -72,6 +72,7 @@ const Footer: React.FC = () => {
                 { label: 'Web Development', to: '/web-development' },
                 { label: 'AI Agents & Automation', to: '/services/ai-automation' },
                 { label: 'Graphic Design', to: '/services/graphic-design' },
+                { label: 'Voice Calling AI Agents', to: '/services/voice-ai-agents' },
                 { label: 'Pricing & Packages', to: '/pricing' },
                 { label: 'Monthly Memberships', to: '/pricing#growth-plans' },
                 { label: 'Industry Solutions', to: '/solutions' },
