@@ -186,21 +186,23 @@ const Home: React.FC = () => {
                   <div className="max-w-3xl mx-auto text-center">
                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">Why businesses lose customers online</p>
                      <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">Most customers don't say no. <span className="text-yellow-500">They just never hear back.</span></h2>
-                     <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">A slow reply, no follow-up or an outdated look is enough to send a ready-to-buy customer to a competitor. BrandiQue fixes all three with one connected system.</p>
+                     <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400">A slow reply, no call back, no follow-up or an outdated look is enough to send a ready-to-buy customer to a competitor. BrandiQue fixes all four with one connected system.</p>
                   </div>
                </ScrollReveal>
-               <div className="mt-8 md:mt-12 grid gap-3 md:gap-5 md:grid-cols-3">
-                  {[
+               <div className="mt-8 md:mt-12 grid gap-3 md:gap-5 md:grid-cols-2 lg:grid-cols-4">
+                  {([
                      { icon: Globe, problem: 'They can\'t find or understand you', fix: 'A fast website that explains your offer in seconds and puts WhatsApp, call and enquiry buttons everywhere.' },
                      { icon: Bot, problem: 'Nobody replies or follows up', fix: 'AI agents that answer 24/7, capture every lead and follow up automatically until the customer decides.' },
+                     { icon: PhoneCall, problem: 'Leads go cold before anyone calls', fix: 'Voice calling AI agents that phone every new lead within seconds in Telugu and English, and book the visit on the call.', href: '/services/voice-ai-agents' },
                      { icon: Eye, problem: 'They don\'t trust what they see', fix: 'Graphic design and branding that make your business look established on every post, ad and profile.' },
-                  ].map((item, i) => (
+                  ] as { icon: React.ElementType; problem: string; fix: string; href?: string }[]).map((item, i) => (
                      <ScrollReveal key={item.problem} delay={`delay-${i * 100}`}>
                         <div className="flex h-full gap-3.5 rounded-2xl md:block md:rounded-[28px] border border-gray-200 bg-gray-50 p-4 md:p-8 dark:border-white/10 dark:bg-[#0D1017]">
                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl md:h-12 md:w-12 md:rounded-2xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300"><item.icon size={20} /></div>
                            <div>
                            <h3 className="text-base font-bold md:mt-6 md:text-xl">{item.problem}</h3>
                            <p className="mt-1 md:mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.fix}</p>
+                           {item.href && <Link to={item.href} className="mt-2 md:mt-4 inline-flex items-center gap-1 text-sm font-semibold text-yellow-700 hover:underline dark:text-yellow-300">Voice Calling AI Agents <ArrowRight size={14} /></Link>}
                            </div>
                         </div>
                      </ScrollReveal>
@@ -455,7 +457,7 @@ const Home: React.FC = () => {
                <div className="grid md:grid-cols-2 gap-3 md:gap-5">
                   {[
                      { q: 'What does the free growth audit include?', a: 'We look at your website (or lack of one), Google and social presence and how fast enquiries get answered, then send 3 practical fixes. There is no obligation to buy.' },
-                     { q: 'Do I need all three services?', a: 'No. Many clients start with one, like a website or a WhatsApp chatbot, and add the rest when they are ready.' },
+                     { q: 'Do I need all four services?', a: 'No. Many clients start with one, like a website, a WhatsApp chatbot or a voice calling AI agent, and add the rest when they are ready.' },
                      { q: 'Can the AI assistant reply in Telugu or Hindi?', a: 'Yes, AI assistants can be set up to understand and reply in the languages your customers use, and to hand over to a person when needed.' },
                      { q: 'Do you work with businesses outside Visakhapatnam?', a: 'Yes. We work remotely with businesses across India and abroad over WhatsApp, calls and video meetings.' },
                   ].map((faq) => (

@@ -274,7 +274,7 @@ export function whatsappLink(base: string, message: string): string {
   return `${url}${url.includes('?') ? '&' : '?'}text=${encodeURIComponent(message)}`;
 }
 
-// Monthly memberships: recurring revenue for each of the three services, plus all-in-one bundles.
+// Monthly memberships: recurring revenue for each of the four services, plus all-in-one bundles.
 export type MembershipTrack = PillarId | 'bundle';
 
 export interface Membership {
@@ -320,6 +320,7 @@ export interface CarePlan {
   bestFor: string;
   items: string[];
   featured?: boolean;
+  href?: string;
   whatsappMessage: string;
 }
 
@@ -349,6 +350,20 @@ export const CARE_PLANS: CarePlan[] = [
       'Monthly automation and leads report',
     ],
     whatsappMessage: 'Hi BrandiQue, I want the AI Agent Monitoring plan (₹4,999/mo). Please share the subscription details.',
+  },
+  {
+    name: 'Voice AI Agent',
+    price: '₹2,799',
+    bestFor: 'An AI voice agent that calls your leads in Telugu and English, every day.',
+    items: [
+      '317 calling minutes a month (Starter plan)',
+      'Voice cloning, WhatsApp and SIP trunking',
+      'Pro ₹6,999 (1,000 mins) and Growth ₹22,999 (3,571 mins) plans',
+      'Or pay as you go: ₹8.90/min from 320 mins',
+      '₹1,999 one-time setup · + 18% GST',
+    ],
+    href: '/services/voice-ai-agents',
+    whatsappMessage: 'Hi BrandiQue, I want the Voice AI Agent Starter plan (₹2,799/mo, 317 mins). Please share the subscription details.',
   },
   {
     name: 'Growth',

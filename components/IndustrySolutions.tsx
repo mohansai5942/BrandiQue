@@ -27,7 +27,7 @@ const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({ showHeading = tru
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">Ready-made solutions</p>
                 <h2 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight">Built for your industry. <span className="text-yellow-500">Ready in weeks.</span></h2>
               </div>
-              <p className="max-w-md text-sm md:text-base leading-relaxed text-gray-600 dark:text-gray-400">Website, AI and design combined into one package for a specific type of business, with one setup price and one monthly plan.</p>
+              <p className="max-w-md text-sm md:text-base leading-relaxed text-gray-600 dark:text-gray-400">Website, AI, voice calling and design combined into one package for a specific type of business, with one setup price and one monthly plan.</p>
             </div>
           </ScrollReveal>
         )}

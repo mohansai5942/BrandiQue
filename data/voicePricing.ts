@@ -24,7 +24,7 @@ export interface VoicePlan {
 export const VOICE_PLANS: VoicePlan[] = [
   {
     id: 'starter', name: 'Starter', tagline: 'For your first live voice agent.', priceInr: 2799, includedMinutes: 317, effectiveRate: '8.83',
-    teamMembers: 2, knowledgeBase: '10 MB', everythingIn: 'Everything in Free, plus',
+    teamMembers: 2, knowledgeBase: '10 MB', everythingIn: 'Includes',
     features: ['Voice cloning', 'WhatsApp', 'SIP trunking'], cta: 'Get Starter',
   },
   {
