@@ -17,3 +17,108 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  /* CSS-only card hover: gentle lift + warm yellow glow.
+     GPU-cheap (transform; shadow paints only on hover). */
+  .motion-card {
+    @apply transition-all duration-300 hover:-translate-y-1;
+  }
+  .motion-card:hover {
+    box-shadow: 0 24px 48px -16px rgba(234, 179, 8, 0.28);
+  }
+}
+
+/* Respect users who prefer reduced motion: neutralize ALL animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .glass,
+  .glass-soft {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .shine::after {
+    display: none !important;
+  }
+}
+
+/* ---------- Liquid glass (frosted) ---------- */
+/* Unlayered so it wins over Tailwind bg utilities. backdrop-blur is GPU-heavy:
+   use ONLY on small fixed/compact elements (navbar, chat button, cards) —
+   never on full-page sections or scroll-animated elements. */
+.glass {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)) padding-box,
+    linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.06) 40%, rgba(255, 255, 255, 0.02) 60%, rgba(255, 255, 255, 0.2)) border-box;
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Frost without touching the element's own background (for tinted buttons). */
+.glass-soft {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(10px) saturate(1.15);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 768px) {
+  .glass,
+  .glass-soft {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+}
+
+/* ---------- Metal shine sweep (hover only, transform-only) ---------- */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: translateX(-160%) skewX(-20deg);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.shine:hover::after {
+  transform: translateX(340%) skewX(-20deg);
+}
+
+/* ---------- Metallic gold display text (readable on light + dark) ---------- */
+.metallic-gold {
+  background: linear-gradient(175deg, #7c5e00 0%, #c9a227 30%, #f7e08b 50%, #c9a227 70%, #7c5e00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Gradient hairline border (gold → transparent) ---------- */
+.hairline-gold {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(90deg, transparent, rgba(202, 138, 4, 0.5), transparent) border-box;
+}
+.dark .hairline-gold {
+  background:
+    linear-gradient(#0d1017, #0d1017) padding-box,
+    linear-gradient(90deg, transparent, rgba(234, 179, 8, 0.55), transparent) border-box;
+}
