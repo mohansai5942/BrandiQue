@@ -20,7 +20,7 @@
     "esbuild": "0.28.2",
     "firebase": "^12.17.1",
     "linkedom": "^0.18.13",
-    "lucide-react": "0.344.0",
+    "lucide-react": "1.57.0",
     "motion": "^12.38.0",
     "postcss": "^8.5.30",
     "react": "18.2.0",
