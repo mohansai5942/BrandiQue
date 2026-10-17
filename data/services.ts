@@ -1,4 +1,4 @@
-// Content for the three core service pages. One template renders all three,
+// Content for the four core service pages. One template renders all four,
 // so every service page shares the same structure, quality bar and conversion path.
 import type { PillarId } from './offers';
 
@@ -8,7 +8,7 @@ export interface ServiceContent {
   title: string;
   highlight: string;
   intro: string;
-  accent: 'cyan' | 'violet' | 'amber';
+  accent: 'cyan' | 'violet' | 'amber' | 'emerald';
   outcomes: { stat: string; label: string }[];
   buildsTitle: string;
   builds: { title: string; text: string; icon: string }[];
@@ -17,9 +17,21 @@ export interface ServiceContent {
   process: { title: string; text: string }[];
   tools: string[];
   faqs: { q: string; a: string }[];
+  /** Optional comparison tables rendered after pricing (plans side by side, and vs. the usual alternative). */
+  compare?: ServiceCompare;
   ctaTitle: string;
   ctaText: string;
   inquiry: string;
+}
+
+export interface ServiceCompare {
+  eyebrow: string;
+  title: string;
+  text: string;
+  /** Plan names as column headers; each row has one cell per column (true = included, false = not included). */
+  columns: string[];
+  rows: { feature: string; values: (string | boolean)[] }[];
+  versus?: { title: string; columns: [string, string]; rows: { feature: string; values: [string, string] }[]; note: string };
 }
 
 export const SERVICE_CONTENT: Record<PillarId, ServiceContent> = {
@@ -158,5 +170,87 @@ export const SERVICE_CONTENT: Record<PillarId, ServiceContent> = {
     ctaTitle: 'Let’s make your brand impossible to ignore.',
     ctaText: 'Share your platform, audience and deadline. We confirm scope and a fixed quote before any design begins.',
     inquiry: 'Graphic Design',
+  },
+  voice: {
+    id: 'voice',
+    eyebrow: 'Service 04 · Voice Calling AI Agents',
+    title: 'AI voice agents that call every lead in',
+    highlight: 'Telugu, Hindi and English.',
+    intro: 'A voice agent that phones new enquiries within seconds, runs reminder and follow-up campaigns, books appointments on the call and logs every conversation. Set up for your business by our team, with a flat price per agent and clear per-minute rates.',
+    accent: 'emerald',
+    outcomes: [
+      { stat: 'Seconds', label: 'From new lead to first call' },
+      { stat: '24 × 7', label: 'Calling on your schedule, every day' },
+      { stat: '3', label: 'Languages: Telugu, Hindi and English' },
+    ],
+    buildsTitle: 'What your AI voice agent handles',
+    builds: [
+      { icon: 'phoneOut', title: 'Instant lead calling', text: 'A new form, ad or website lead gets a call within seconds, while interest is highest.' },
+      { icon: 'megaphone', title: 'Bulk call campaigns', text: 'Reminders, renewals, fee dues and offers called to your list, many calls at a time.' },
+      { icon: 'phoneIn', title: 'Inbound call answering', text: 'Answers common questions on your number and takes details when your team is busy. Scoped on request.' },
+      { icon: 'languages', title: 'Telugu, Hindi & English', text: 'Natural local-language conversations that switch to English mid-call when the customer does.' },
+      { icon: 'calendar', title: 'Bookings & WhatsApp follow-up', text: 'Books slots in Google Calendar during the call and sends a WhatsApp confirmation after it.' },
+      { icon: 'audio', title: 'Recordings, transcripts & analytics', text: 'Every call recorded, transcribed and summarised, with outcomes synced to your CRM or Sheets.' },
+    ],
+    useCases: [
+      { who: 'Coaching centres & colleges', what: 'Call every admission enquiry instantly, book campus visits and remind parents about fee dues.' },
+      { who: 'Clinics & diagnostic centres', what: 'Appointment confirmations, follow-up visit reminders and report-ready calls.' },
+      { who: 'Real estate & builders', what: 'Qualify ad leads by budget and location, then book site visits for your sales team.' },
+      { who: 'Shops, finance & service businesses', what: 'Renewal, EMI and service-due reminders, plus feedback calls after every job.' },
+    ],
+    process: [
+      { title: 'Discovery call', text: 'We learn your leads, call goals, languages and the tools you already use.' },
+      { title: 'Script & voice', text: 'Call script, knowledge and voice tier agreed with you, in the languages your customers speak.' },
+      { title: 'Connect & test', text: 'Number, CRM, WhatsApp and calendar connected, then tested on real sample calls.' },
+      { title: 'Go live & tune', text: 'Launch with call recordings and summaries, and script tuning from the first real calls.' },
+    ],
+    tools: ['AI voice models', 'Dedicated +91 numbers', 'WhatsApp Cloud API', 'Google Calendar', 'Google Sheets', 'n8n', 'Webhooks & APIs', 'CRM integrations'],
+    faqs: [
+      { q: 'How much does a voice AI agent cost?', a: 'A flat ₹2,099 per agent every 30 days, which includes the agent, a dedicated +91 number and ₹500 of calling credit. Calls are then billed per connected minute: ₹3.30 on Voice Starter, ₹5.50 on Voice Growth and ₹7.70 on Voice Premium.' },
+      { q: 'Which languages can it speak?', a: 'Telugu, Hindi and English. The agent can switch to English mid-call when the customer does, so conversations feel natural for customers in Andhra Pradesh, Telangana and beyond.' },
+      { q: 'Are unanswered calls charged?', a: 'No. Only connected talk time is billed from your prepaid credit. Ring time and unanswered calls are free, and you can see the cost of every call in the call log.' },
+      { q: 'Is there a setup fee or long contract?', a: 'Standard setup of your script, number and voice is included, and the plan renews every 30 days with no lock-in. Custom CRM or n8n integrations beyond the plan are quoted upfront.' },
+      { q: 'Will it replace my telecallers?', a: 'It takes over the repetitive, time-critical calls such as first lead calls and reminders, so your team spends its time on the conversations that need a human. Interested leads can be handed straight to your staff.' },
+    ],
+    compare: {
+      eyebrow: 'Compare plans',
+      title: 'Same agent. Choose the voice.',
+      text: 'Every plan has the same flat agent fee and features. The plan sets the voice quality and the per-minute rate, and you can switch plans any time.',
+      columns: ['Voice Starter', 'Voice Growth', 'Voice Premium'],
+      rows: [
+        { feature: 'Agent fee (per 30 days)', values: ['₹2,099', '₹2,099', '₹2,099'] },
+        { feature: 'Call rate (per connected minute)', values: ['₹3.30', '₹5.50', '₹7.70'] },
+        { feature: 'Voice quality', values: ['Clear', 'Natural', 'Most lifelike'] },
+        { feature: 'Calling credit included every 30 days', values: ['₹500', '₹500', '₹500'] },
+        { feature: 'Custom voice agent setup (script, knowledge, voice)', values: [true, true, true] },
+        { feature: 'Dedicated +91 calling number', values: [true, true, true] },
+        { feature: 'Telugu, Hindi and English', values: [true, true, true] },
+        { feature: 'Outbound lead calling and bulk campaigns', values: [true, true, true] },
+        { feature: 'Inbound call answering', values: ['On request', 'On request', 'On request'] },
+        { feature: 'Call recording, transcripts and summaries', values: [true, true, true] },
+        { feature: 'Google Calendar booking during calls', values: [false, true, true] },
+        { feature: 'WhatsApp confirmations and follow-ups', values: [false, true, true] },
+        { feature: 'CRM, Google Sheets and webhook sync', values: [false, true, true] },
+        { feature: 'Custom n8n workflows after calls', values: [false, false, true] },
+        { feature: 'Script tuning from real recordings', values: ['Launch tuning', 'Launch tuning', 'Ongoing'] },
+        { feature: 'Support', values: ['WhatsApp, working hours', 'WhatsApp, working hours', 'Priority WhatsApp'] },
+      ],
+      versus: {
+        title: 'AI voice agent vs. hiring a telecaller',
+        columns: ['BrandiQue voice agent', 'Telecaller'],
+        rows: [
+          { feature: 'Monthly cost', values: ['From ₹2,099 + call minutes', 'Salary, often ₹15,000+'] },
+          { feature: 'Time to start', values: ['Days, after setup and testing', 'Weeks of hiring and training'] },
+          { feature: 'Hours covered', values: ['Any time you schedule', 'One shift, minus leave'] },
+          { feature: 'Calls at once', values: ['Many in parallel', 'One'] },
+          { feature: 'Call notes', values: ['Automatic summary for every call', 'When there is time'] },
+          { feature: 'Scaling up', values: ['Change a setting or add an agent', 'Hire and train again'] },
+        ],
+        note: 'A person still handles unusual or sensitive conversations better. The best results come from the agent making the first and repetitive calls, and your team taking over interested leads.',
+      },
+    },
+    ctaTitle: 'Every lead deserves a call within a minute.',
+    ctaText: 'Tell us who you need to call and in which language. We will show you how a voice agent would handle it, free.',
+    inquiry: 'Voice Calling AI Agents',
   },
 };

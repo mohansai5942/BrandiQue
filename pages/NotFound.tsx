@@ -7,6 +7,7 @@ const POPULAR = [
   { to: '/web-development', label: 'Web development' },
   { to: '/services/ai-automation', label: 'AI agents & automation' },
   { to: '/services/graphic-design', label: 'Graphic design' },
+  { to: '/services/voice-ai-agents', label: 'Voice calling AI agents' },
   { to: '/pricing', label: 'Pricing' },
   { to: '/projects', label: 'Projects' },
 ];

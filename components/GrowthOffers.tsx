@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bot, Check, Code2, Palette, Sparkles } from 'lucide-react';
+import { ArrowRight, Bot, Check, Code2, Palette, PhoneCall, Sparkles } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { PACKAGES, PILLARS, PillarId } from '../data/offers';
@@ -10,6 +10,7 @@ const PILLAR_ICONS: Record<PillarId, LucideIcon> = {
   web: Code2,
   ai: Bot,
   design: Palette,
+  voice: PhoneCall,
 };
 
 // Inquiry service names are matched by InquiryContext to show the right questions.
@@ -17,6 +18,7 @@ const INQUIRY_SERVICE: Record<PillarId, string> = {
   web: 'Web Development',
   ai: 'AI Automation & Agents',
   design: 'Graphic Design',
+  voice: 'Voice Calling AI Agents',
 };
 
 interface GrowthOffersProps { showHeading?: boolean; pillars?: PillarId[]; bare?: boolean; }
@@ -85,7 +87,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
         </div>
 
         <p className="mt-8 md:mt-12 text-center text-xs text-gray-500 dark:text-gray-500">
-          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. External services, taxes and third-party costs are quoted separately.
+          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agent plans are billed per agent every 30 days plus connected call minutes. External services, taxes and third-party costs are quoted separately.
         </p>
       </div>
     </section>

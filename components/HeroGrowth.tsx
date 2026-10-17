@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Code2, Bot, Palette, MessageCircle } from 'lucide-react';
+import { ArrowRight, Check, Code2, Bot, Palette, MessageCircle, PhoneCall } from 'lucide-react';
 import { useInquiry } from '../context/InquiryContext';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { whatsappLink } from '../data/offers';
@@ -10,12 +10,14 @@ const SERVICES: { key: ServiceKey; label: string; line: string; icon: React.Elem
   { key: 'web', label: 'Web Development', line: 'Websites that sell.', icon: Code2, href: '/web-development', accent: 'text-cyan-600 dark:text-cyan-300', bar: 'bg-cyan-400', from: '₹9,000' },
   { key: 'ai', label: 'AI Agents & Automations', line: 'AI that follows up.', icon: Bot, href: '/services/ai-automation', accent: 'text-violet-600 dark:text-violet-300', bar: 'bg-violet-400', from: '₹12,000' },
   { key: 'design', label: 'Graphic Design', line: 'Design that wins trust.', icon: Palette, href: '/services/graphic-design', accent: 'text-amber-500 dark:text-amber-300', bar: 'bg-amber-400', from: '₹4,500' },
+  { key: 'voice', label: 'Voice Calling AI Agents', line: 'Voice AI that calls.', icon: PhoneCall, href: '/services/voice-ai-agents', accent: 'text-emerald-600 dark:text-emerald-300', bar: 'bg-emerald-400', from: '₹2,099' },
 ];
 
 const FLOATERS: Record<ServiceKey, { t: string; s: string }[]> = {
   web: [{ t: 'Website live', s: 'Mobile-first · SEO-ready' }, { t: 'New enquiry', s: 'via WhatsApp button' }],
   ai: [{ t: 'Lead captured', s: 'Saved to Google Sheets' }, { t: 'Reply sent', s: 'in seconds, 24 × 7' }],
   design: [{ t: 'Brand kit ready', s: 'Logo · colours · fonts' }, { t: '8 posts delivered', s: 'This month’s creatives' }],
+  voice: [{ t: 'Lead called', s: 'within seconds, in Telugu' }, { t: 'Visit booked', s: 'WhatsApp confirmation sent' }],
 };
 
 const TRUST = ['Fixed written quotes', 'You own everything', 'Live in 1–4 weeks', 'Telugu & English support'];
@@ -54,7 +56,7 @@ const HeroGrowth: React.FC = () => {
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-gray-600 dark:text-gray-400 md:text-lg">
-            BrandiQue is one team for <strong className="font-semibold text-gray-900 dark:text-white">websites</strong>, <strong className="font-semibold text-gray-900 dark:text-white">AI agents</strong> and <strong className="font-semibold text-gray-900 dark:text-white">graphic design</strong>. We build the site that wins the enquiry, the AI that replies and follows up, and the design that makes customers trust you, so you grow without hiring three agencies.
+            BrandiQue is one team for <strong className="font-semibold text-gray-900 dark:text-white">websites</strong>, <strong className="font-semibold text-gray-900 dark:text-white">AI agents</strong>, <strong className="font-semibold text-gray-900 dark:text-white">graphic design</strong> and <strong className="font-semibold text-gray-900 dark:text-white">AI voice calling</strong>. We build the site that wins the enquiry, the AI that replies and follows up, the voice agent that calls every lead, and the design that makes customers trust you, so you grow without hiring four agencies.
           </p>
 
           <div className="mt-6 md:mt-8 flex flex-row flex-wrap items-center gap-2.5 md:gap-3">
@@ -89,7 +91,7 @@ const HeroGrowth: React.FC = () => {
             </div>
           ))}
           <div className="relative rounded-[30px] border border-gray-200 bg-white/70 p-3 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.03]">
-            <div role="tablist" aria-label="Our services" className="grid grid-cols-3 gap-1.5">
+            <div role="tablist" aria-label="Our services" className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
               {SERVICES.map((s, i) => (
                 <button key={s.key} role="tab" type="button" aria-selected={i === active} onClick={() => setActive(i)} className={`relative overflow-hidden rounded-xl px-2 py-2.5 text-left transition-colors ${i === active ? 'bg-gray-900 text-white dark:bg-white dark:text-black' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5'}`}>
                   <s.icon size={15} className={i === active ? '' : s.accent} />

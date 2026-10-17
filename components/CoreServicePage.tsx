@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, ChevronDown, MessageCircle, LayoutTemplate, ShoppingCart, User, Rocket, Search, Bot, FileSpreadsheet, BellRing,
-  FileText, Workflow, PenTool, Image, Megaphone, MonitorPlay, Layers, Sparkles,
+  FileText, Workflow, PenTool, Image, Megaphone, MonitorPlay, Layers, Sparkles, PhoneOutgoing, PhoneIncoming, Languages,
+  CalendarCheck, AudioLines, Check, Minus,
 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import PageHero, { SectionHeading, btnPrimary, btnSecondary } from './ui/PageHero';
@@ -18,12 +19,20 @@ import { useSiteSettings } from '../context/SiteSettingsContext';
 const ICONS: Record<string, React.ElementType> = {
   layout: LayoutTemplate, cart: ShoppingCart, user: User, rocket: Rocket, search: Search, message: MessageCircle, bot: Bot,
   sheet: FileSpreadsheet, bell: BellRing, file: FileText, workflow: Workflow, pen: PenTool, image: Image, megaphone: Megaphone,
-  monitor: MonitorPlay, layers: Layers,
+  monitor: MonitorPlay, layers: Layers, phoneOut: PhoneOutgoing, phoneIn: PhoneIncoming, languages: Languages, calendar: CalendarCheck,
+  audio: AudioLines,
 };
 const ICON_TONE: Record<string, string> = {
   cyan: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-300',
   violet: 'bg-violet-500/10 text-violet-600 dark:text-violet-300',
   amber: 'bg-amber-400/15 text-amber-600 dark:text-amber-300',
+  emerald: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300',
+};
+
+const Cell: React.FC<{ v: string | boolean; featured?: boolean }> = ({ v, featured }) => {
+  if (v === true) return <Check size={18} aria-label="Included" className="mx-auto text-yellow-500" />;
+  if (v === false) return <Minus size={18} aria-label="Not included" className="mx-auto text-gray-300 dark:text-white/20" />;
+  return <span className={`text-xs md:text-sm font-semibold ${featured ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>{v}</span>;
 };
 
 const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
@@ -103,9 +112,73 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* One-time packages */}
       <section id="pricing" className="scroll-mt-24 border-t border-gray-200 bg-white pt-12 dark:border-white/5 dark:bg-[#080A0F] md:pt-28">
-        <div className="px-5 md:px-8 desk:px-12 2xl:px-16"><ScrollReveal><SectionHeading eyebrow="One-time packages" title={<>Clear starting prices. <span className="text-yellow-500">Fixed written quote.</span></>} text="Pick a starting point. After a short call you get the exact scope, timeline and price in writing, and nothing starts until you approve." /></ScrollReveal></div>
+        <div className="px-5 md:px-8 desk:px-12 2xl:px-16"><ScrollReveal>{id === 'voice'
+          ? <SectionHeading eyebrow="Plans & pricing" title={<>One flat agent fee. <span className="text-yellow-500">Clear per-minute rates.</span></>} text="Every plan includes the agent, a dedicated +91 number and ₹500 of calling credit every 30 days. Pick the voice that fits the job, and pay only for connected minutes." />
+          : <SectionHeading eyebrow="One-time packages" title={<>Clear starting prices. <span className="text-yellow-500">Fixed written quote.</span></>} text="Pick a starting point. After a short call you get the exact scope, timeline and price in writing, and nothing starts until you approve." />}</ScrollReveal></div>
         <GrowthOffers showHeading={false} pillars={[id]} bare />
       </section>
+
+      {/* Comparison tables (only for services that define them) */}
+      {c.compare && (
+        <section id="compare" className="scroll-mt-24 border-t border-gray-200 bg-white px-5 pb-12 pt-12 dark:border-white/5 dark:bg-[#080A0F] md:px-8 md:pb-28 md:pt-20 desk:px-12">
+          <div className="mx-auto max-w-[100rem]">
+            <ScrollReveal><SectionHeading eyebrow={c.compare.eyebrow} title={c.compare.title} text={c.compare.text} /></ScrollReveal>
+            <ScrollReveal>
+              <div className="mt-8 overflow-x-auto rounded-3xl border border-gray-200 dark:border-white/10 md:mt-12">
+                <table className="w-full min-w-[640px] border-collapse text-left">
+                  <caption className="sr-only">{c.compare.title}</caption>
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-[#0D1017]">
+                      <th scope="col" className="w-[34%] px-4 py-4 text-xs font-bold uppercase tracking-[0.14em] text-gray-500 md:px-6">Feature</th>
+                      {c.compare.columns.map((col, i) => (
+                        <th key={col} scope="col" className={`px-3 py-4 text-center text-sm font-bold md:text-base ${i === 1 ? 'bg-yellow-400/10 text-gray-900 dark:text-white' : ''}`}>
+                          {col}{i === 1 && <span className="mt-1 block text-[9px] font-black uppercase tracking-wider text-yellow-600 dark:text-yellow-300">Recommended</span>}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {c.compare.rows.map(r => (
+                      <tr key={r.feature} className="border-t border-gray-200 dark:border-white/10">
+                        <th scope="row" className="px-4 py-3.5 text-sm font-medium text-gray-700 dark:text-gray-300 md:px-6">{r.feature}</th>
+                        {r.values.map((v, i) => <td key={i} className={`px-3 py-3.5 text-center ${i === 1 ? 'bg-yellow-400/5' : ''}`}><Cell v={v} featured={i === 1} /></td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </ScrollReveal>
+            {c.compare.versus && (
+              <ScrollReveal>
+                <div className="mt-10 md:mt-16">
+                  <h3 className="text-center text-2xl font-bold tracking-tight md:text-3xl">{c.compare.versus.title}</h3>
+                  <div className="mx-auto mt-6 max-w-4xl overflow-x-auto rounded-3xl border border-gray-200 dark:border-white/10">
+                    <table className="w-full min-w-[520px] border-collapse text-left">
+                      <caption className="sr-only">{c.compare.versus.title}</caption>
+                      <thead>
+                        <tr className="bg-gray-50 dark:bg-[#0D1017]">
+                          <th scope="col" className="px-4 py-4 text-xs font-bold uppercase tracking-[0.14em] text-gray-500 md:px-6"><span className="sr-only">Feature</span></th>
+                          {c.compare.versus.columns.map((col, i) => <th key={col} scope="col" className={`px-4 py-4 text-sm font-bold md:text-base ${i === 0 ? 'text-yellow-700 dark:text-yellow-300' : ''}`}>{col}</th>)}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {c.compare.versus.rows.map(r => (
+                          <tr key={r.feature} className="border-t border-gray-200 dark:border-white/10">
+                            <th scope="row" className="px-4 py-3.5 text-sm font-medium text-gray-700 dark:text-gray-300 md:px-6">{r.feature}</th>
+                            <td className="px-4 py-3.5 text-sm font-semibold text-gray-900 dark:text-white">{r.values[0]}</td>
+                            <td className="px-4 py-3.5 text-sm text-gray-600 dark:text-gray-400">{r.values[1]}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="mx-auto mt-5 max-w-3xl text-center text-xs leading-relaxed text-gray-500 dark:text-gray-400">{c.compare.versus.note}</p>
+                </div>
+              </ScrollReveal>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Membership for this service */}
       <Memberships initialTrack={id} />

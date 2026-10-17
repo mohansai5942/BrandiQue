@@ -2,7 +2,7 @@ import { safeExternalUrl } from '../utils/security';
 // Single source of truth for BrandiQue offers and prices.
 // Home, Pricing and Solutions all read from here so prices never drift apart.
 
-export type PillarId = 'web' | 'ai' | 'design';
+export type PillarId = 'web' | 'ai' | 'design' | 'voice';
 
 export interface Pillar {
   id: PillarId;
@@ -12,6 +12,10 @@ export interface Pillar {
   description: string;
   href: string;
   startingAt: string;
+  /** Optional unit after the starting price, e.g. '/30 days' for subscription-priced services. */
+  startingSuffix?: string;
+  /** Optional second price fact shown instead of "Membership from" on the Services page. */
+  secondary?: { label: string; value: string; suffix?: string };
   points: string[];
 }
 
@@ -45,6 +49,18 @@ export const PILLARS: Pillar[] = [
     href: '/services/graphic-design',
     startingAt: '₹4,500',
     points: ['Social media posts and ad creatives', 'Logo and brand identity kits', 'Thumbnails, banners, flyers and presentations', 'Monthly creative plans for steady posting'],
+  },
+  {
+    id: 'voice',
+    number: '04',
+    title: 'Voice Calling AI Agents',
+    outcome: 'Call every lead. In their language.',
+    description: 'AI voice agents that call new leads within seconds, run reminder and follow-up campaigns, and talk naturally in Telugu, Hindi and English, with every call recorded and summarised.',
+    href: '/services/voice-ai-agents',
+    startingAt: '₹2,099',
+    startingSuffix: '/30 days',
+    secondary: { label: 'Calls from', value: '₹3.30', suffix: '/min' },
+    points: ['Outbound lead calling and bulk call campaigns', 'Telugu, Hindi and English, switching mid-call', 'Call recording, transcripts and summaries', 'CRM, WhatsApp, Google Calendar and n8n integrations'],
   },
 ];
 
@@ -116,6 +132,25 @@ export const PACKAGES: Package[] = [
     description: 'Everything for one launch, offer or admission campaign, ready for social media and ads.',
     items: ['8 social posts or carousels', '4 ad creatives in feed and story sizes', 'One consistent campaign look', 'Final PNG/JPG exports for every platform', 'One consolidated revision round'],
     note: 'Need designs every month? Design memberships start at ₹5,000. Ad spend and posting are excluded.',
+  },
+  // Voice Calling AI Agents (one flat agent fee per 30 days; the plan sets the voice quality and per-minute rate)
+  {
+    pillar: 'voice', name: 'Voice Starter', price: '₹2,099', suffix: 'per agent / 30 days · calls ₹3.30/min',
+    description: 'A clear, budget-friendly voice for high-volume reminders, confirmations and follow-up campaigns.',
+    items: ['One AI voice agent with a dedicated +91 number', 'Starter voice tier at ₹3.30 per connected minute', '₹500 calling credit added every 30 days', 'Telugu, Hindi and English, switching mid-call', 'Call recording, transcripts and summaries'],
+    note: 'Billed per connected minute from prepaid credit. Unanswered calls and ring time are not billed.',
+  },
+  {
+    pillar: 'voice', name: 'Voice Growth', price: '₹2,099', suffix: 'per agent / 30 days · calls ₹5.50/min', featured: true,
+    description: 'A more natural voice for calling fresh leads, booking appointments and qualifying enquiries.',
+    items: ['Everything in Voice Starter', 'Growth voice tier at ₹5.50 per connected minute', 'Google Calendar booking during the call', 'WhatsApp confirmation after every call', 'CRM, Google Sheets or webhook sync'],
+    note: 'Billed per connected minute from prepaid credit. Unanswered calls and ring time are not billed.',
+  },
+  {
+    pillar: 'voice', name: 'Voice Premium', price: '₹2,099', suffix: 'per agent / 30 days · calls ₹7.70/min',
+    description: 'Our most lifelike voice, for high-value leads where the first impression decides the sale.',
+    items: ['Everything in Voice Growth', 'Premium voice tier at ₹7.70 per connected minute', 'Custom n8n workflows after each call', 'Script tuning from real call recordings', 'Priority WhatsApp support'],
+    note: 'Billed per connected minute from prepaid credit. Unanswered calls and ring time are not billed.',
   },
 ];
 
@@ -265,6 +300,7 @@ export const MEMBERSHIP_TRACKS: { id: MembershipTrack; label: string; short: str
   { id: 'web', label: 'Web Development', short: 'Web' },
   { id: 'ai', label: 'AI Agents & Automations', short: 'AI' },
   { id: 'design', label: 'Graphic Design', short: 'Design' },
+  { id: 'voice', label: 'Voice Calling AI Agents', short: 'Voice' },
 ];
 
 export const MEMBERSHIPS: Membership[] = [

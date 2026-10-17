@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Code2, Bot, Palette, Layers } from 'lucide-react';
+import { ArrowRight, Check, Code2, Bot, Palette, Layers, PhoneCall } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import PageHero, { SectionHeading, btnPrimary, btnSecondary } from '../components/ui/PageHero';
 import { SERVICE_VISUALS } from '../components/ServiceVisuals';
@@ -9,8 +9,8 @@ import FounderPromise from '../components/FounderPromise';
 import { PILLARS, MEMBERSHIPS, PillarId } from '../data/offers';
 import { useInquiry } from '../context/InquiryContext';
 
-const ICON: Record<PillarId, React.ElementType> = { web: Code2, ai: Bot, design: Palette };
-const TONE: Record<PillarId, string> = { web: 'text-cyan-600 dark:text-cyan-300 bg-cyan-500/10', ai: 'text-violet-600 dark:text-violet-300 bg-violet-500/10', design: 'text-amber-600 dark:text-amber-300 bg-amber-400/15' };
+const ICON: Record<PillarId, React.ElementType> = { web: Code2, ai: Bot, design: Palette, voice: PhoneCall };
+const TONE: Record<PillarId, string> = { web: 'text-cyan-600 dark:text-cyan-300 bg-cyan-500/10', ai: 'text-violet-600 dark:text-violet-300 bg-violet-500/10', design: 'text-amber-600 dark:text-amber-300 bg-amber-400/15', voice: 'text-emerald-600 dark:text-emerald-300 bg-emerald-500/10' };
 
 const lowestMembership = (id: PillarId) => MEMBERSHIPS.filter(m => m.track === id)[0]?.price;
 
@@ -21,15 +21,15 @@ const Services: React.FC = () => {
       <PageHero
         eyebrow="Our services"
         eyebrowIcon={Layers}
-        title="Three services. One team."
+        title="Four services. One team."
         highlight="One growth system."
-        description="Websites that win the enquiry, AI agents that reply and follow up automatically, and graphic design that makes you look trusted. Use one, or let all three work together."
+        description="Websites that win the enquiry, AI agents that reply and follow up automatically, graphic design that makes you look trusted, and AI voice agents that call every lead. Use one, or let them all work together."
         actions={<>
           <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" /></button>
           <Link to="/pricing" className={btnSecondary}>View all pricing</Link>
         </>}
       >
-        <nav aria-label="Jump to a service" className="mt-10 grid grid-cols-3 gap-2 sm:mx-auto sm:max-w-xl">
+        <nav aria-label="Jump to a service" className="mt-10 grid grid-cols-2 gap-2 sm:mx-auto sm:max-w-2xl sm:grid-cols-4">
           {PILLARS.map(p => { const Icon = ICON[p.id]; return (
             <a key={p.id} href={`#service-${p.id}`} className="flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-white px-2 py-4 text-center text-xs font-bold transition-colors hover:border-yellow-400/60 dark:border-white/10 dark:bg-white/5">
               <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${TONE[p.id]}`}><Icon size={19} /></span>{p.title}
@@ -58,8 +58,10 @@ const Services: React.FC = () => {
                       {p.points.map(pt => <li key={pt} className="flex gap-2.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300"><Check size={16} className="mt-0.5 shrink-0 text-yellow-500" />{pt}</li>)}
                     </ul>
                     <div className="mt-7 grid grid-cols-2 gap-3 rounded-2xl bg-gray-50 p-4 dark:bg-white/5">
-                      <div><div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Projects from</div><div className="text-2xl font-black">{p.startingAt}</div></div>
-                      <div><div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Membership from</div><div className="text-2xl font-black">{lowestMembership(p.id)}<span className="text-sm font-semibold text-gray-500">/mo</span></div></div>
+                      <div><div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{p.startingSuffix ? 'Plans from' : 'Projects from'}</div><div className="text-2xl font-black">{p.startingAt}{p.startingSuffix && <span className="text-sm font-semibold text-gray-500">{p.startingSuffix}</span>}</div></div>
+                      {p.secondary
+                        ? <div><div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{p.secondary.label}</div><div className="text-2xl font-black">{p.secondary.value}<span className="text-sm font-semibold text-gray-500">{p.secondary.suffix}</span></div></div>
+                        : <div><div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Membership from</div><div className="text-2xl font-black">{lowestMembership(p.id)}<span className="text-sm font-semibold text-gray-500">/mo</span></div></div>}
                     </div>
                     <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                       <Link to={p.href} className="inline-flex items-center justify-center gap-2 rounded-full bg-gray-900 px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white dark:text-black dark:hover:bg-yellow-400">Explore {p.title} <ArrowRight size={16} /></Link>
@@ -75,7 +77,7 @@ const Services: React.FC = () => {
       </div>
 
       <section className="px-5 pb-12 md:px-6">
-        <ScrollReveal><SectionHeading eyebrow="Better together" title={<>Bundle all three <span className="text-yellow-500">and save.</span></>} text="Most growing businesses need all three. Our bundles cost less than buying each membership separately, and one team owns the results." /></ScrollReveal>
+        <ScrollReveal><SectionHeading eyebrow="Better together" title={<>Bundle services <span className="text-yellow-500">and save.</span></>} text="Most growing businesses need more than one. Our bundles cost less than buying each membership separately, and one team owns the results." /></ScrollReveal>
       </section>
       <Memberships showHeading={false} initialTrack="bundle" />
       <FounderPromise />
