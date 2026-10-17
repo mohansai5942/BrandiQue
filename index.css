@@ -44,9 +44,6 @@
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-  .shine::after {
-    display: none !important;
-  }
 }
 
 /* ---------- Liquid glass (frosted) ---------- */
@@ -73,6 +70,15 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
+/* Dark glass for the navbar: dark translucent, never white. */
+.glass-nav {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, rgba(8, 10, 14, 0.78), rgba(8, 10, 14, 0.62));
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 @media (max-width: 768px) {
   .glass,
   .glass-soft {
@@ -81,33 +87,36 @@
   }
 }
 
-/* ---------- Metal shine sweep (hover only, transform-only) ---------- */
-.shine {
+/* ---------- Cursor-tracking liquid glass shine ---------- */
+/* A specular highlight that follows the cursor across glass cards.
+   --mx/--my are set by the useCursorGlow hook (one delegated rAF mousemove).
+   Opacity-only fade, GPU-cheap. */
+.glass-glow {
   position: relative;
-  overflow: hidden;
 }
-.shine::after {
+.glass-glow::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 45%;
-  height: 100%;
-  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-  transform: translateX(-160%) skewX(-20deg);
-  transition: transform 0.7s ease;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.16),
+    rgba(255, 255, 255, 0.04) 45%,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
   pointer-events: none;
+  z-index: 1;
 }
-.shine:hover::after {
-  transform: translateX(340%) skewX(-20deg);
+.glass-glow:hover::before {
+  opacity: 1;
 }
-
-/* ---------- Metallic gold display text (readable on light + dark) ---------- */
-.metallic-gold {
-  background: linear-gradient(175deg, #7c5e00 0%, #c9a227 30%, #f7e08b 50%, #c9a227 70%, #7c5e00 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+@media (prefers-reduced-motion: reduce) {
+  .glass-glow::before {
+    display: none;
+  }
 }
 
 /* ---------- Gradient hairline border (gold → transparent) ---------- */

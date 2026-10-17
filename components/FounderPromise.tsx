@@ -21,7 +21,7 @@ const FounderPromise: React.FC = () => {
     <section id="why-brandique" className="scroll-mt-24 py-12 md:py-28 bg-white dark:bg-[#080A0F] border-y border-gray-200 dark:border-white/5">
       <div className="mx-auto grid max-w-[100rem] gap-3 md:gap-12 px-5 md:px-8 desk:px-12 2xl:px-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <ScrollReveal>
-          <div className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-gray-50 p-4 md:p-8 dark:border-white/10 dark:bg-[#0D1017]">
+          <div className="glass glass-glow relative overflow-hidden rounded-[32px] p-4 md:p-8">
             <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-yellow-400/10 blur-3xl" />
             <div className="relative flex items-center gap-4">
               <img src={founder.image} srcSet={founder.srcSet} sizes="64px" width={founder.width} height={founder.height} alt={founder.alt} title={founder.title} loading="lazy" decoding="async" className="h-16 w-16 rounded-2xl object-cover ring-2 ring-yellow-400/40" />
@@ -48,7 +48,7 @@ const FounderPromise: React.FC = () => {
           <div className="mt-8 space-y-3">
             {COMMITMENTS.map((item, i) => (
               <ScrollReveal key={item.title} delay={`delay-${i * 50}`}>
-                <div className="flex gap-4 rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-white/10 dark:bg-[#0D1017]">
+                <div className="glass glass-glow flex gap-4 rounded-2xl p-5">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300"><item.icon size={20} /></span>
                   <div>
                     <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
