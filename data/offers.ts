@@ -12,10 +12,12 @@ export interface Pillar {
   description: string;
   href: string;
   startingAt: string;
-  /** Optional unit after the starting price, e.g. '/30 days' for subscription-priced services. */
+  /** Optional unit after the starting price, e.g. '/min' for usage-priced services. */
   startingSuffix?: string;
   /** Optional second price fact shown instead of "Membership from" on the Services page. */
   secondary?: { label: string; value: string; suffix?: string };
+  /** Optional line shown under this pillar's plan cards (e.g. how voice tiers differ). */
+  plansNote?: string;
   points: string[];
 }
 
@@ -57,9 +59,10 @@ export const PILLARS: Pillar[] = [
     outcome: 'Call every lead. In their language.',
     description: 'AI voice agents that call new leads within seconds and run bulk reminder and follow-up campaigns in natural Telugu, switching to English mid-call, with every call transcribed and summarised.',
     href: '/services/voice-ai-agents',
-    startingAt: '₹2,099',
-    startingSuffix: '/30 days',
-    secondary: { label: 'Calls from', value: '₹5', suffix: '/min' },
+    startingAt: '₹5',
+    startingSuffix: '/min',
+    secondary: { label: 'Setup or monthly fee', value: 'None', suffix: '' },
+    plansNote: 'Billed per connected minute only. No setup fee, no monthly fee. Ring time and unanswered calls are not billed.',
     points: ['Instant lead calling and bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook, Google Calendar and WhatsApp integrations'],
   },
 ];
@@ -73,6 +76,12 @@ export interface Package {
   items: string[];
   note: string;
   featured?: boolean;
+  /** Optional tier badge shown above the price (compact tier card layout, e.g. voice plans). */
+  badge?: string;
+  /** Optional label for the featured ribbon (defaults to 'Recommended'). */
+  featuredLabel?: string;
+  /** Optional button text (defaults to 'Get a quote'). */
+  cta?: string;
 }
 
 export const PACKAGES: Package[] = [
@@ -133,25 +142,25 @@ export const PACKAGES: Package[] = [
     items: ['8 social posts or carousels', '4 ad creatives in feed and story sizes', 'One consistent campaign look', 'Final PNG/JPG exports for every platform', 'One consolidated revision round'],
     note: 'Need designs every month? Design memberships start at ₹5,000. Ad spend and posting are excluded.',
   },
-  // Voice Calling AI Agents: one flat agent fee (₹2,099 / 30 days) with identical features on every plan.
-  // The plan is the voice tier, which sets voice quality and the per-minute rate.
+  // Voice Calling AI Agents: billed only per connected minute (no agent, setup or monthly fee).
+  // Three voice tiers, mirroring the reference tier cards: only voice, latency and rate differ.
   {
-    pillar: 'voice', name: 'Voice Starter', price: '₹5/min', suffix: 'per connected minute · + ₹2,099 per agent / 30 days',
-    description: 'Budget-friendly voice that covers most day-to-day calling, ideal for high-volume reminder campaigns.',
-    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit on every hire or renewal', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
-    note: 'Same features on every plan; only the voice and per-minute rate change. Ring time and unanswered calls are not billed.',
+    pillar: 'voice', name: 'Voice Starter', badge: 'Starter', price: '₹5', suffix: '/min', cta: 'Start Calling',
+    description: 'Budget-friendly. Mostly used for bulk calling campaigns.',
+    items: ['Native Multilingual', 'Value Voices', 'Low Latency', 'Budget bulk calling'],
+    note: '',
   },
   {
-    pillar: 'voice', name: 'Voice Growth', price: '₹8/min', suffix: 'per connected minute · + ₹2,099 per agent / 30 days',
-    description: 'Great everyday quality, a clear step up in naturalness for regular lead and customer calls.',
-    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit on every hire or renewal', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
-    note: 'Same features on every plan; only the voice and per-minute rate change. Ring time and unanswered calls are not billed.',
+    pillar: 'voice', name: 'Voice Growth', badge: 'Growth', featuredLabel: 'Most Popular', price: '₹8', suffix: '/min', cta: 'Start Calling', featured: true,
+    description: 'The All-Rounder. High realism for everyday customer interactions and support.',
+    items: ['Native Multilingual', 'Standard Voices', 'Low Latency', 'The All-Rounder'],
+    note: '',
   },
   {
-    pillar: 'voice', name: 'Voice Premium', price: '₹11/min', suffix: 'per connected minute · + ₹2,099 per agent / 30 days',
-    description: 'Our most lifelike voice, for calls where the first impression matters most, like hot new leads.',
-    items: ['One AI voice agent, live the same day', 'Dedicated +91 calling line (DLT-registered)', '₹500 calling credit on every hire or renewal', 'Bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook and Pabbly Connect integrations', 'Google Calendar booking and WhatsApp follow-ups', '99.9% uptime SLA, no setup fee, no lock-in'],
-    note: 'Same features on every plan; only the voice and per-minute rate change. Ring time and unanswered calls are not billed.',
+    pillar: 'voice', name: 'Voice Premium', badge: 'Premium', price: '₹11', suffix: '/min', cta: 'Start Calling',
+    description: 'Curated native speakers. The most real-like voices from our exclusive library.',
+    items: ['Native Multilingual', 'Premium Voices', 'Ultra-low Latency', 'Custom integrations'],
+    note: '',
   },
 ];
 

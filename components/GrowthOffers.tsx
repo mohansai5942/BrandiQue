@@ -59,8 +59,27 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                     {!bare && <Link to={pillar.href} className="inline-flex items-center gap-2 text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:gap-3 transition-all">Explore {pillar.title} <ArrowRight size={16} /></Link>}
                   </div>
                 </ScrollReveal>
-                <div className="flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-5 lg:gap-6 items-stretch">
-                  {items.map((pkg, index) => (
+                <div className={`flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 ${items.some(pkg => pkg.badge) ? 'pt-4 md:pt-2' : ''} md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-5 lg:gap-6 items-stretch`}>
+                  {items.map((pkg, index) => pkg.badge ? (
+                    <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`} className="w-[84%] shrink-0 snap-start md:w-auto">
+                      <article className={`relative h-full rounded-[28px] p-6 md:p-8 border flex flex-col transition-all duration-300 hover:-translate-y-1 ${pkg.featured ? 'border-yellow-400/70 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.14)] md:scale-[1.03]' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] text-gray-900 dark:text-white'}`}>
+                        {pkg.featured && <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-yellow-400 px-4 py-1 text-[10px] font-black tracking-[0.16em] text-black uppercase shadow">{pkg.featuredLabel ?? 'Recommended'}</span>}
+                        <h4 className="sr-only">{pkg.name}</h4>
+                        <span className={`self-start rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] ${pkg.featured ? 'bg-yellow-400/15 text-yellow-300' : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'}`}>{pkg.badge}</span>
+                        <div className="mt-5 flex items-baseline gap-1.5">
+                          <span className="text-4xl md:text-5xl font-black tracking-tight">{pkg.price}</span>
+                          <span className={`text-base font-semibold ${pkg.featured ? 'text-white/60' : 'text-gray-500 dark:text-gray-400'}`}>{pkg.suffix}</span>
+                        </div>
+                        <p className={`mt-4 text-sm leading-relaxed md:min-h-[60px] ${pkg.featured ? 'text-white/75' : 'text-gray-600 dark:text-gray-400'}`}>{pkg.description}</p>
+                        <ul className={`mt-6 space-y-3 flex-1 border-t pt-6 ${pkg.featured ? 'border-white/10' : 'border-gray-200 dark:border-white/10'}`}>
+                          {pkg.items.map(item => <li key={item} className="flex gap-3 text-sm font-medium leading-relaxed"><Check size={17} className="mt-0.5 text-yellow-500 shrink-0" /><span>{item}</span></li>)}
+                        </ul>
+                        <button type="button" onClick={() => openInquiry(INQUIRY_SERVICE[pillar.id], pkg.name)} className={`mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${pkg.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400'}`}>
+                          {pkg.cta ?? 'Get a quote'}<ArrowRight size={17} />
+                        </button>
+                      </article>
+                    </ScrollReveal>
+                  ) : (
                     <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`} className="w-[84%] shrink-0 snap-start md:w-auto">
                       <article className={`relative h-full rounded-[28px] p-4 md:p-8 border flex flex-col transition-all duration-300 hover:-translate-y-1 ${pkg.featured ? 'border-yellow-400/60 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] text-gray-900 dark:text-white'}`}>
                         {pkg.featured && <span className="absolute top-4 right-4 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black tracking-wider text-black uppercase">Recommended</span>}
@@ -81,13 +100,14 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                     </ScrollReveal>
                   ))}
                 </div>
+                {pillar.plansNote && <p className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-5 py-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">{pillar.plansNote}</p>}
               </div>
             );
           })}
         </div>
 
         <p className="mt-8 md:mt-12 text-center text-xs text-gray-500 dark:text-gray-500">
-          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agent plans are billed per agent every 30 days plus connected call minutes. External services, taxes and third-party costs are quoted separately.
+          Indicative starting prices for clearly scoped work. You receive a fixed written quote before any work begins. Voice agent plans have no monthly fee and are billed only per connected call minute. External services, taxes and third-party costs are quoted separately.
         </p>
       </div>
     </section>

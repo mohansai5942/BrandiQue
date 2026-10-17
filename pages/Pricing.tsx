@@ -35,7 +35,7 @@ const Pricing: React.FC = () => {
         eyebrowIcon={BadgeCheck}
         title="Transparent pricing."
         highlight="Built to pay for itself."
-        description="One-time packages to launch your design, website or AI automation, voice agent plans billed every 30 days, monthly memberships to keep it growing, and bundles that save when you use all three. Every project starts with a fixed written quote."
+        description="One-time packages to launch your design, website or AI automation, voice agent plans billed only per connected minute, monthly memberships to keep it growing, and bundles that save when you use all three. Every project starts with a fixed written quote."
         actions={<>
           <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
           <a href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I have a question about your pricing.')} target="_blank" rel="noopener noreferrer" className={btnSecondary}><MessageCircle size={18} /> Ask on WhatsApp</a>
