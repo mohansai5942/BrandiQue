@@ -26,7 +26,7 @@ const RoiCalculator: React.FC = () => {
     <section className="px-5 py-12 md:px-8 md:py-20">
       <div className="mx-auto max-w-4xl">
         <ScrollReveal>
-          <div className="overflow-hidden rounded-[28px] glass">
+          <div className="overflow-hidden rounded-[28px] border border-gray-200 bg-white dark:border-white/10 dark:bg-[#0D1017]">
             <div className="border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/[0.03] px-5 py-5 md:px-8">
               <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">
                 <Calculator size={14} /> Missed-enquiry cost calculator
@@ -76,7 +76,7 @@ const RoiCalculator: React.FC = () => {
                 </div>
               </div>
 
-              <div className="hairline-gold flex flex-col justify-center rounded-2xl p-5 md:p-7">
+              <div className="flex flex-col justify-center rounded-2xl border border-yellow-400/25 bg-yellow-400/5 p-5 md:p-7">
                 <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-red-600 dark:text-red-400">
                   <TrendingDown size={14} /> Estimated revenue lost
                 </p>

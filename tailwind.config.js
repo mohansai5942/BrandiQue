@@ -57,6 +57,7 @@ export default {
         'pulse-glow': 'pulseGlow 3s infinite',
         'gradient-x': 'gradient-x 5s ease infinite',
         'blob': 'blob 10s infinite',
+        'shine': 'shine 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'spin-slow': 'spin 12s linear infinite',
         'border-beam': 'borderBeam 8s linear infinite',
         'marquee': 'marquee 30s linear infinite',
@@ -70,6 +71,11 @@ export default {
         marquee: {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-100%)' },
+        },
+        shine: {
+          '0%': { left: '-100%', opacity: '0' },
+          '50%': { opacity: '0.5' },
+          '100%': { left: '100%', opacity: '0' },
         },
         revealText: {
           '0%': { transform: 'translateY(110%)' },
