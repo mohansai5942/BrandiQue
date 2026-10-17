@@ -178,7 +178,7 @@ export const SERVICE_CONTENT: Record<PillarId, ServiceContent> = {
     eyebrow: 'Service 04 · Voice Calling AI Agents',
     title: 'AI voice agents that call every lead in',
     highlight: 'natural Telugu and English.',
-    intro: 'A voice agent that phones new enquiries within seconds, runs bulk reminder and follow-up campaigns, books appointments on the call and writes notes for every conversation. Live the same day, with no monthly or agent fee: you pay only per connected minute, from ₹5 a minute.',
+    intro: 'A voice agent that phones new enquiries within seconds, runs bulk reminder and follow-up campaigns, books appointments on the call and writes notes for every conversation. Live the same day for a one-time setup fee of ₹1,999, with no monthly or agent fee: after setup you pay only per connected minute, from ₹5 a minute.',
     accent: 'emerald',
     outcomes: [
       { stat: 'Same day', label: 'From sign-up to a live calling agent' },
@@ -208,24 +208,24 @@ export const SERVICE_CONTENT: Record<PillarId, ServiceContent> = {
     ],
     tools: ['Dedicated +91 line (DLT-registered)', 'Google Calendar', 'WhatsApp', 'CRM integrations', 'Webhooks', 'Pabbly Connect'],
     faqs: [
-      { q: 'How much does a voice AI agent cost?', a: 'There is no setup fee and no monthly fee. You pay only per connected minute: ₹5 on Starter, ₹8 on Growth and ₹11 on Premium.' },
+      { q: 'How much does a voice AI agent cost?', a: 'A one-time setup fee of ₹1,999, then only per connected minute: ₹5 on Starter, ₹8 on Growth and ₹11 on Premium. There is no monthly fee.' },
       { q: 'What is the difference between Starter, Growth and Premium?', a: 'Starter (₹5/min) is budget-friendly, with value voices and low latency, mostly used for bulk calling campaigns. Growth (₹8/min) is the all-rounder, with standard voices, low latency and high realism for everyday customer interactions and support. Premium (₹11/min) uses curated native speakers, the most real-like voices from our exclusive library, with ultra-low latency and custom integrations. All three are natively multilingual.' },
       { q: 'Which languages can the agent speak?', a: 'Every plan is natively multilingual: natural Telugu conversations that switch to English mid-call when the customer does.' },
       { q: 'How are call minutes billed?', a: 'Per second, rounded up to the nearest 30 seconds, from your prepaid credit. Ring time and unanswered calls are not billed. If the balance runs out mid-call, the agent wraps up with a short goodbye instead of cutting off.' },
-      { q: 'Is there a setup fee or long contract?', a: 'No setup fee, no monthly fee and no lock-in. You pay only for connected call minutes, and you can stop any time.' },
+      { q: 'Is there a setup fee or long contract?', a: 'There is a one-time setup fee of ₹1,999. After that there is no monthly fee and no lock-in: you pay only for connected call minutes, and you can stop any time.' },
       { q: 'Do I need more than one agent?', a: 'Usually not at first. Each agent works in one mode, instant lead calling or bulk campaigns, so add a second only for a genuinely different job, each with its own script, voice and number.' },
     ],
     compare: {
       eyebrow: 'Agent vs. telecaller',
       title: 'Pay per minute, not per salary.',
-      text: 'No setup fee and no monthly fee. You pay only for connected call minutes, from ₹5 a minute.',
+      text: 'A one-time setup fee of ₹1,999 and no monthly fee. After that you pay only for connected call minutes, from ₹5 a minute.',
       columns: [],
       rows: [],
       versus: {
         title: 'AI voice agent vs. hiring a telecaller',
         columns: ['BrandiQue voice agent', 'Telecaller'],
         rows: [
-          { feature: 'Cost', values: ['Pay only per minute, from ₹5/min', 'Around ₹18,000 a month'] },
+          { feature: 'Cost', values: ['₹1,999 one-time setup + from ₹5/min', 'Around ₹18,000 a month'] },
           { feature: 'Recruitment cost', values: ['None', '₹5,000–₹20,000 per hire'] },
           { feature: 'Training time', values: ['Same day', '2–6 weeks'] },
           { feature: 'Hours covered', values: ['24/7, all year', 'One shift, minus leave'] },
