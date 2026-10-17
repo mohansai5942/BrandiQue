@@ -140,7 +140,7 @@ const Contact: React.FC = () => {
 
            <ScrollReveal delay="delay-100" className="space-y-4 mb-7 md:mb-10">
               {/* Contact Cards */}
-              <div className="group relative bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 hover:border-neon-purple/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:-translate-y-1">
+              <div className="group relative glass glass-glow border-gray-200 dark:border-white/5 hover:border-neon-purple/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:-translate-y-1">
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-neon-purple group-hover:scale-110 transition-transform">
@@ -157,7 +157,7 @@ const Contact: React.FC = () => {
                  </div>
               </div>
 
-              <div className="group relative bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 hover:border-blue-500/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] hover:-translate-y-1">
+              <div className="group relative glass glass-glow border-gray-200 dark:border-white/5 hover:border-blue-500/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] hover:-translate-y-1">
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 dark:text-blue-400 group-hover:scale-110 transition-transform">
@@ -174,7 +174,7 @@ const Contact: React.FC = () => {
                  </div>
               </div>
 
-              <div className="group relative bg-white dark:bg-[#0F1320] border border-gray-200 dark:border-white/5 hover:border-green-500/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] hover:-translate-y-1">
+              <div className="group relative glass glass-glow border-gray-200 dark:border-white/5 hover:border-green-500/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] hover:-translate-y-1">
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-500 dark:text-green-400 group-hover:scale-110 transition-transform">
@@ -210,7 +210,7 @@ const Contact: React.FC = () => {
         {/* Right Column: FORM UI */}
         <div className="desk:col-span-7 relative">
            <ScrollReveal delay="delay-200" className="h-full">
-               <div className="relative bg-white dark:bg-[#0A0C11] border border-gray-200 dark:border-white/10 rounded-3xl p-4 md:p-8 desk:p-10 shadow-2xl overflow-hidden group hover:border-gray-300 dark:hover:border-white/20 transition-colors">
+               <div className="glass glass-glow relative rounded-3xl p-4 md:p-8 desk:p-10 shadow-2xl overflow-hidden group transition-colors">
                     {/* Ambient Glows */}
                     <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-neon-purple/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-neon-purple/10 transition-colors"></div>
                     <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-blue-500/5 rounded-full blur-[60px] pointer-events-none group-hover:bg-blue-500/10 transition-colors"></div>
@@ -354,7 +354,6 @@ const Contact: React.FC = () => {
                                     <>
                                         <span className="relative z-10">Send Request</span>
                                         <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-700/50 dark:via-gray-100/50 to-transparent skew-x-12 -translate-x-full group-hover:animate-shine"></div>
                                     </>
                                 )}
                             </button>
