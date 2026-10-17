@@ -61,8 +61,8 @@ export const PILLARS: Pillar[] = [
     href: '/services/voice-ai-agents',
     startingAt: '₹5',
     startingSuffix: '/min',
-    secondary: { label: 'Setup or monthly fee', value: 'None', suffix: '' },
-    plansNote: 'Billed per connected minute only. No setup fee, no monthly fee. Ring time and unanswered calls are not billed.',
+    secondary: { label: 'One-time setup fee', value: '₹1,999', suffix: '' },
+    plansNote: 'One-time setup fee: ₹1,999. After that you are billed per connected minute only, with no monthly fee. Ring time and unanswered calls are not billed.',
     points: ['Instant lead calling and bulk campaigns, up to 20 calls at a time', 'Native Telugu, switching to English mid-call', 'Automatic transcripts and call summaries', 'CRM, webhook, Google Calendar and WhatsApp integrations'],
   },
 ];
@@ -82,6 +82,8 @@ export interface Package {
   featuredLabel?: string;
   /** Optional button text (defaults to 'Get a quote'). */
   cta?: string;
+  /** Optional small line under the price on tier cards (e.g. one-time setup fee). */
+  setup?: string;
 }
 
 export const PACKAGES: Package[] = [
@@ -142,22 +144,22 @@ export const PACKAGES: Package[] = [
     items: ['8 social posts or carousels', '4 ad creatives in feed and story sizes', 'One consistent campaign look', 'Final PNG/JPG exports for every platform', 'One consolidated revision round'],
     note: 'Need designs every month? Design memberships start at ₹5,000. Ad spend and posting are excluded.',
   },
-  // Voice Calling AI Agents: billed only per connected minute (no agent, setup or monthly fee).
+  // Voice Calling AI Agents: ₹1,999 one-time setup fee, then billed only per connected minute (no agent or monthly fee).
   // Three voice tiers, mirroring the reference tier cards: only voice, latency and rate differ.
   {
-    pillar: 'voice', name: 'Voice Starter', badge: 'Starter', price: '₹5', suffix: '/min', cta: 'Start Calling',
+    pillar: 'voice', name: 'Voice Starter', badge: 'Starter', price: '₹5', suffix: '/min', cta: 'Start Calling', setup: '+ ₹1,999 one-time setup fee',
     description: 'Budget-friendly. Mostly used for bulk calling campaigns.',
     items: ['Native Multilingual', 'Value Voices', 'Low Latency', 'Budget bulk calling'],
     note: '',
   },
   {
-    pillar: 'voice', name: 'Voice Growth', badge: 'Growth', featuredLabel: 'Most Popular', price: '₹8', suffix: '/min', cta: 'Start Calling', featured: true,
+    pillar: 'voice', name: 'Voice Growth', badge: 'Growth', featuredLabel: 'Most Popular', price: '₹8', suffix: '/min', cta: 'Start Calling', featured: true, setup: '+ ₹1,999 one-time setup fee',
     description: 'The All-Rounder. High realism for everyday customer interactions and support.',
     items: ['Native Multilingual', 'Standard Voices', 'Low Latency', 'The All-Rounder'],
     note: '',
   },
   {
-    pillar: 'voice', name: 'Voice Premium', badge: 'Premium', price: '₹11', suffix: '/min', cta: 'Start Calling',
+    pillar: 'voice', name: 'Voice Premium', badge: 'Premium', price: '₹11', suffix: '/min', cta: 'Start Calling', setup: '+ ₹1,999 one-time setup fee',
     description: 'Curated native speakers. The most real-like voices from our exclusive library.',
     items: ['Native Multilingual', 'Premium Voices', 'Ultra-low Latency', 'Custom integrations'],
     note: '',
