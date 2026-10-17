@@ -4,6 +4,7 @@ import { ArrowRight, Check, MessageCircle, Repeat, Sparkles } from 'lucide-react
 import ScrollReveal from './ScrollReveal';
 import { CARE_PLANS, whatsappLink, MembershipTrack } from '../data/offers';
 import { useSiteSettings } from '../context/SiteSettingsContext';
+import { useInquiry } from '../context/InquiryContext';
 
 // Legacy props kept so existing callers (Home, Pricing, Services, Solutions,
 // CoreServicePage) keep compiling; the section now always shows the care plans.
@@ -11,6 +12,7 @@ interface MembershipsProps { showHeading?: boolean; initialTrack?: MembershipTra
 
 const Memberships: React.FC<MembershipsProps> = ({ showHeading = true }) => {
   const { settings } = useSiteSettings();
+  const { openInquiry } = useInquiry();
 
   return (
     <section id="growth-plans" className="scroll-mt-24 relative overflow-hidden bg-gray-50 px-4 py-12 text-gray-900 dark:bg-[#06080C] dark:text-white md:px-6 md:py-28">
@@ -38,8 +40,11 @@ const Memberships: React.FC<MembershipsProps> = ({ showHeading = true }) => {
               <ul className="mt-6 flex-1 space-y-3">
                 {plan.items.map(item => <li key={item} className="flex gap-3 text-sm leading-relaxed text-gray-700 dark:text-white/85"><Check size={17} className="mt-0.5 shrink-0 text-yellow-400" /><span>{item}</span></li>)}
               </ul>
-              <a href={whatsappLink(settings.whatsapp, plan.whatsappMessage)} target="_blank" rel="noopener noreferrer" className={`mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${plan.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10'}`}>
-                <MessageCircle size={17} /> Subscribe on WhatsApp
+              <button type="button" onClick={() => openInquiry('Monthly Care Plan', plan.name, { price: `${plan.price}/month`, billingType: 'Monthly subscription · cancel anytime', source: 'Monthly care plans' })} className={`mt-8 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${plan.featured ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-gray-900 text-white hover:bg-yellow-400 hover:text-black dark:bg-white/10'}`}>
+                Subscribe to {plan.name} <ArrowRight size={17} />
+              </button>
+              <a href={whatsappLink(settings.whatsapp, plan.whatsappMessage)} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-green-700 hover:underline dark:text-green-400">
+                <MessageCircle size={14} /> Or ask on WhatsApp
               </a>
               {plan.href && <Link to={plan.href} className="mt-3 inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-yellow-600 dark:text-white/70 dark:hover:text-yellow-300">See voice plans &amp; pricing <ArrowRight size={15} /></Link>}
             </article>

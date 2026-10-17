@@ -38,7 +38,7 @@ const Pricing: React.FC = () => {
         highlight="Built to pay for itself."
         description="One-time packages to launch your design, website or AI automation, voice agent plans from ₹2,799/month or pay as you go from ₹2,848, monthly memberships to keep it growing, and bundles that save when you use all three. Every project starts with a fixed written quote."
         actions={<>
-          <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
+          <button type="button" onClick={() => openInquiry('Free Growth Audit', '', { price: 'Free', source: 'Pricing page' })} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
           <a href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I have a question about your pricing.')} target="_blank" rel="noopener noreferrer" className={btnSecondary}><MessageCircle size={18} /> Ask on WhatsApp</a>
         </>}
       >
@@ -103,7 +103,7 @@ const Pricing: React.FC = () => {
           <div className="mt-10 rounded-3xl border border-yellow-400/25 bg-yellow-400/5 p-4 md:p-8 text-center">
             <ShieldCheck size={26} className="mx-auto text-yellow-500" />
             <p className="mt-3 text-sm md:text-base text-gray-700 dark:text-gray-300">Not sure which package fits? Ask for a free audit and we'll recommend one, even if the answer is the smallest package.</p>
-            <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="mt-5 inline-flex items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white dark:text-black dark:hover:bg-yellow-400">Get my free audit <ArrowRight size={16} /></button>
+            <button type="button" onClick={() => openInquiry('Free Growth Audit', '', { price: 'Free', source: 'Pricing page' })} className="mt-5 inline-flex items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white dark:text-black dark:hover:bg-yellow-400">Get my free audit <ArrowRight size={16} /></button>
           </div>
           <p className="mt-8 text-center text-xs leading-relaxed text-gray-500 px-2">
             All prices are indicative starting prices in Indian Rupees. Applicable taxes, domain and hosting, paid themes/plugins, third-party licences, messaging/API usage, ad spend and other external charges are excluded unless explicitly included in a written quote.

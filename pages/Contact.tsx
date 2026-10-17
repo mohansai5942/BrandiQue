@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as Sentry from '@sentry/react';
 import { Mail, Phone, MapPin, CheckCircle, ArrowRight, Sparkles, Globe, Clock, Copy, Check, ExternalLink, Loader2, AlertCircle, LayoutTemplate, Code, PenTool, Megaphone, Bot, MessageCircle, PhoneCall } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
+import LeadForm from '../components/LeadForm';
 import { notifyAdmin } from '../notifyAdmin';
 import { whatsappLink } from '../data/offers';
 import { loadFirestore } from '../firestoreClient';
@@ -11,11 +12,9 @@ import { cleanText, isValidEmail, LIMITS, SUBMIT_TIMEOUT_MS, telHref, withTimeou
 const Contact: React.FC = () => {
   const { settings, getRawPhone } = useSiteSettings();
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
-  const [formData, setFormData] = useState({ name: '', email: '', budget: '', message: '' });
   const [selectedService, setSelectedService] = useState('Web Development');
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [honeypot, setHoneypot] = useState(''); // hidden from people; bots fill it
+  const [formKey, setFormKey] = useState(0);
 
   const services = [
     { id: 'Web Development', icon: Code },
@@ -27,63 +26,6 @@ const Contact: React.FC = () => {
   const budgets = [
     '< ₹10k', '₹10k - ₹50k', '₹50k - ₹1L', '₹1L+'
   ];
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formStatus === 'submitting') return;
-    setFormError(null);
-
-    const name = cleanText(formData.name, LIMITS.name);
-    const email = cleanText(formData.email, LIMITS.email);
-    const message = cleanText(formData.message, LIMITS.message, { multiline: true });
-    const budget = budgets.includes(formData.budget) ? formData.budget : '';
-    const service = services.some((s) => s.id === selectedService) ? selectedService : 'Web Development';
-
-    if (!name) {
-      setFormError('Please enter your name.');
-      return;
-    }
-    if (!isValidEmail(email)) {
-      setFormError('Please enter a valid email address.');
-      return;
-    }
-    if (message.length < 5) {
-      setFormError('Please add a few details about your project.');
-      return;
-    }
-
-    const finish = () => {
-      setFormStatus('success');
-      setFormData({ name: '', email: '', budget: '', message: '' });
-      setSelectedService('Web Development');
-      setHoneypot('');
-      setTimeout(() => setFormStatus('idle'), 8000);
-    };
-
-    // Bots fill the hidden field: show success without sending anything.
-    if (honeypot) {
-      finish();
-      return;
-    }
-
-    setFormStatus('submitting');
-    const payload = { service, name, email, budget, message };
-
-    // Saved to Firestore (shown in the BrandiQue Data Console, with a push alert to the admin).
-    try {
-      const docRef = await withTimeout(loadFirestore().then(({ db, addDoc, collection }) => addDoc(collection(db, 'messages'), {
-        source: 'contact',
-        ...payload,
-        createdAt: new Date().toISOString()
-      })), SUBMIT_TIMEOUT_MS);
-      if (docRef && docRef.id) notifyAdmin('messages', docRef.id);
-      finish();
-    } catch (err) {
-      Sentry.captureException(err);
-      setFormStatus('idle');
-      setFormError('Sorry, your request could not be sent. Please check your connection and try again, or email or WhatsApp us directly.');
-    }
-  };
 
   const copyToClipboard = (text: string, field: string) => {
       navigator.clipboard?.writeText(text).catch((err) => { Sentry.captureException(err); });
@@ -219,134 +161,48 @@ const Contact: React.FC = () => {
                             </a>
                             <p className="mb-7 text-[11px] text-gray-400">Fastest reply — usually within minutes in working hours.</p>
                             <button 
-                                onClick={() => setFormStatus('idle')}
+                                onClick={() => { setFormKey(k => k + 1); setFormStatus('idle'); }}
                                 className="px-5 md:px-8 py-3 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm transition-all hover:scale-105 flex items-center gap-2"
                             >
                                 Send Another Request <ArrowRight size={16} />
                             </button>
                         </div>
                     ) : (
-                        <form id="contact-form" onSubmit={handleSubmit} className="space-y-8 relative z-10" noValidate>
-                            <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
-                                <label>
-                                    Company website
-                                    <input type="text" name="company_website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
-                                </label>
-                            </div>
-                            
-                            {/* 1. Service Selection */}
-                            <div className="space-y-3">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">What do you need help with?</label>
-                                <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                                    {services.map((s) => (
-                                        <button
-                                            key={s.id}
-                                            type="button"
-                                            onClick={() => setSelectedService(s.id)}
-                                            className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all duration-300 ${
-                                                selectedService === s.id 
-                                                ? 'bg-neon-purple/10 border-neon-purple text-neon-purple shadow-[0_0_15px_rgba(234,179,8,0.2)]' 
-                                                : 'bg-gray-50 dark:bg-[#151A25]/50 border-gray-200 dark:border-white/5 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 hover:border-gray-300 dark:hover:border-white/10'
-                                            }`}
-                                        >
-                                            <s.icon size={20} className={selectedService === s.id ? 'text-neon-purple' : 'text-gray-400'} />
-                                            <span className="text-[10px] md:text-xs font-bold text-center">{s.id}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* 2. Personal Info */}
-                            <div className="grid md:grid-cols-2 gap-3 md:gap-6">
-                                <div className="space-y-2 group">
-                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1 group-focus-within:text-black dark:group-focus-within:text-white transition-colors">Your Name</label>
-                                    <input 
-                                        type="text" 
-                                        required
-                                        value={formData.name}
-                                        maxLength={LIMITS.name}
-                                        autoComplete="name"
-                                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                                        className="w-full bg-gray-50 dark:bg-[#151A25]/50 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple focus:bg-white dark:focus:bg-[#151A25] transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                                        placeholder="John Doe"
-                                    />
-                                </div>
-                                <div className="space-y-2 group">
-                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1 group-focus-within:text-black dark:group-focus-within:text-white transition-colors">Email Address</label>
-                                    <input 
-                                        type="email" 
-                                        required
-                                        value={formData.email}
-                                        maxLength={LIMITS.email}
-                                        autoComplete="email"
-                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                        className="w-full bg-gray-50 dark:bg-[#151A25]/50 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple focus:bg-white dark:focus:bg-[#151A25] transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                                        placeholder="john@example.com"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* 3. Budget Selection */}
-                            <div className="space-y-2 group">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1 group-focus-within:text-black dark:group-focus-within:text-white transition-colors">Approximate Budget (optional)</label>
-                                <select 
-                                    value={formData.budget}
-                                    onChange={(e) => setFormData({...formData, budget: e.target.value})}
-                                    className="w-full bg-gray-50 dark:bg-[#151A25]/50 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple focus:bg-white dark:focus:bg-[#151A25] transition-all appearance-none cursor-pointer"
-                                >
-                                    <option value="" className="text-gray-400">I’m not sure yet</option>
-                                    {budgets.map(b => (
-                                        <option key={b} value={b} className="bg-white dark:bg-[#0A0C11]">{b}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* 4. Project Details */}
-                            <div className="space-y-2 group">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1 group-focus-within:text-black dark:group-focus-within:text-white transition-colors">Project Details</label>
-                                <textarea 
-                                    rows={4}
-                                    required
-                                    value={formData.message}
-                                    maxLength={LIMITS.message}
-                                    onChange={(e) => setFormData({...formData, message: e.target.value})}
-                                    className="w-full bg-gray-50 dark:bg-[#151A25]/50 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-neon-purple focus:bg-white dark:focus:bg-[#151A25] transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none"
-                                    placeholder="Tell us about your project goals, timeline, and requirements..."
-                                />
-                            </div>
-
-                            {formError && (
-                                <div role="alert" className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 dark:text-red-400">
-                                    <AlertCircle size={18} className="mt-0.5 shrink-0" />
-                                    <span>{formError}</span>
-                                </div>
-                            )}
-
-                            {/* Submit Button */}
-                            <button 
-                                type="submit" 
-                                disabled={formStatus === 'submitting'}
-                                className="w-full py-4 bg-black dark:bg-white text-white dark:text-black font-bold rounded-xl text-sm md:text-base hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(0,0,0,0.1)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 group relative overflow-hidden"
-                            >
-                                {formStatus === 'submitting' ? (
-                                    <>
-                                        <Loader2 size={18} className="animate-spin" /> Sending Request...
-                                    </>
-                                ) : (
-                                    <>
-                                        <span className="relative z-10">Send Request</span>
-                                        <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-700/50 dark:via-gray-100/50 to-transparent skew-x-12 -translate-x-full group-hover:animate-shine"></div>
-                                    </>
-                                )}
-                            </button>
-                            
-                            <div className="flex items-center justify-center gap-2 text-[10px] text-gray-500">
-                                <Sparkles size={10} className="text-neon-purple" />
-                                <span>Share only what you know so far. Budget can be decided later.</span>
-                            </div>
-
-                        </form>
+                        <div id="contact-form" className="relative z-10">
+                            <LeadForm
+                                key={formKey}
+                                formSource="contact"
+                                service={selectedService}
+                                context={{ source: 'Contact page', billingType: 'Fixed written quote' }}
+                                idPrefix="contact"
+                                hideSummary
+                                onSuccess={() => setFormStatus('success')}
+                                before={
+                                    <div>
+                                        <p className="mb-2 text-[13px] font-semibold text-gray-800 dark:text-white/85">What do you need help with?</p>
+                                        <div role="radiogroup" aria-label="Service" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                                            {services.map((s) => (
+                                                <button
+                                                    key={s.id}
+                                                    type="button"
+                                                    role="radio"
+                                                    aria-checked={selectedService === s.id}
+                                                    onClick={() => setSelectedService(s.id)}
+                                                    className={`flex flex-col items-center justify-center gap-1.5 rounded-2xl border p-3 text-center transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-yellow-400/30 ${
+                                                        selectedService === s.id
+                                                        ? 'border-yellow-400 bg-yellow-400/10 text-gray-900 shadow-[0_0_0_1px_rgba(250,204,21,0.6)] dark:text-white'
+                                                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-white/10 dark:bg-white/[0.03] dark:text-white/60 dark:hover:border-white/20'
+                                                    }`}
+                                                >
+                                                    <s.icon size={18} className={selectedService === s.id ? 'text-yellow-600 dark:text-yellow-300' : 'text-gray-400'} />
+                                                    <span className="text-[11px] font-bold leading-tight md:text-xs">{s.id}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                }
+                            />
+                        </div>
                     )}
                </div>
            </ScrollReveal>

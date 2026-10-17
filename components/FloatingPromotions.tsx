@@ -28,7 +28,7 @@ const FloatingPromotions: React.FC = () => {
 
   const startAudit = () => {
     close();
-    openInquiry('Free Growth Audit');
+    openInquiry('Free Growth Audit', '', { price: 'Free', source: 'Floating promotion' });
   };
 
   return (

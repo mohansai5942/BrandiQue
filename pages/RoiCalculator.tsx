@@ -40,7 +40,7 @@ const RoiCalculatorPage: React.FC = () => {
           </ScrollReveal>
           <ScrollReveal delay="delay-100">
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <button type="button" onClick={() => openInquiry('AI Automation & Agents', 'AI Chatbot')} className={btnPrimary}>
+              <button type="button" onClick={() => openInquiry('AI Automation & Agents', 'AI Chatbot', { source: 'ROI calculator' })} className={btnPrimary}>
                 Get my AI agent <ArrowRight size={18} />
               </button>
               <a href={whatsappLink(settings.whatsapp, 'Hi BrandiQue, I want an AI agent for my business. Please share the details.')} target="_blank" rel="noopener noreferrer" className={btnSecondary}>

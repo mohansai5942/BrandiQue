@@ -26,7 +26,7 @@ const Solutions: React.FC = () => {
         highlight="made for your industry."
         description="Instead of buying a website from one agency, a chatbot from another, a calling team and designs from a freelancer, get all four working together, set up for how your industry actually gets customers."
         actions={<>
-          <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
+          <button type="button" onClick={() => openInquiry('Free Growth Audit', '', { price: 'Free', source: 'Solutions hero' })} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
           <Link to="/pricing" className={btnSecondary}>See all pricing</Link>
         </>}
       />

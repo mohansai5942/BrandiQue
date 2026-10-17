@@ -5,6 +5,7 @@ import type { LucideIcon } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { INDUSTRY_SOLUTIONS, whatsappLink } from '../data/offers';
 import { useSiteSettings } from '../context/SiteSettingsContext';
+import { useInquiry } from '../context/InquiryContext';
 
 const ICONS: Record<string, LucideIcon> = {
   education: GraduationCap,
@@ -17,6 +18,7 @@ interface IndustrySolutionsProps { showHeading?: boolean; compact?: boolean; }
 
 const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({ showHeading = true, compact = false }) => {
   const { settings } = useSiteSettings();
+  const { openInquiry } = useInquiry();
   return (
     <section id="solutions" className="scroll-mt-24 py-12 md:py-28 px-5 md:px-8 desk:px-12 2xl:px-16 bg-gray-50 dark:bg-[#05070A]">
       <div className="max-w-[100rem] mx-auto">
@@ -67,8 +69,11 @@ const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({ showHeading = tru
                     </>
                   )}
                   <div className="mt-5 md:mt-7 flex flex-row gap-2 md:gap-3">
-                    <a href={whatsappLink(settings.whatsapp, solution.whatsappMessage)} target="_blank" rel="noopener noreferrer" className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-900 px-3 py-2.5 text-xs md:px-4 md:py-3.5 md:text-sm font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400">
-                      <MessageCircle size={14} /><span className="md:hidden">Get this</span><span className="hidden md:inline">Get this for my business</span> <ArrowRight size={14} />
+                    <button type="button" onClick={() => openInquiry('Industry Solution', solution.name, { setupFee: solution.setup, price: `${solution.setup} setup + ${solution.plan}`, billingType: 'One-time setup + monthly plan', extra: { Industry: solution.industry }, source: 'Industry solutions' })} className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-900 px-3 py-2.5 text-xs md:px-4 md:py-3.5 md:text-sm font-bold text-white transition-colors hover:bg-yellow-400 hover:text-black dark:bg-white/10 dark:hover:bg-yellow-400">
+                      <span className="md:hidden">Get this</span><span className="hidden md:inline">Get this for my business</span> <ArrowRight size={14} />
+                    </button>
+                    <a href={whatsappLink(settings.whatsapp, solution.whatsappMessage)} target="_blank" rel="noopener noreferrer" aria-label={`Ask about ${solution.name} on WhatsApp`} className="inline-flex items-center justify-center rounded-xl border border-green-500/30 bg-green-500/10 px-3 text-green-700 transition-colors hover:bg-green-500/20 dark:text-green-400">
+                      <MessageCircle size={16} />
                     </a>
                     {compact && (
                       <Link to={`/solutions#${solution.slug}`} className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-3 py-2.5 text-xs md:px-4 md:py-3.5 md:text-sm font-semibold transition-colors hover:border-yellow-400/60 dark:border-white/15">What's included</Link>

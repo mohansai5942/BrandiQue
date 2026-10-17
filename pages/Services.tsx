@@ -25,7 +25,7 @@ const Services: React.FC = () => {
         highlight="One growth system."
         description="Websites that win the enquiry, AI agents that reply and follow up automatically, graphic design that makes you look trusted, and AI voice agents that call every lead. Use one, or let them all work together."
         actions={<>
-          <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" /></button>
+          <button type="button" onClick={() => openInquiry('Free Growth Audit', '', { price: 'Free', source: 'Services hero' })} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" /></button>
           <Link to="/pricing" className={btnSecondary}>View all pricing</Link>
         </>}
       >

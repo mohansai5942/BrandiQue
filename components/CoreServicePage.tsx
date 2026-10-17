@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight, ChevronDown, MessageCircle, LayoutTemplate, ShoppingCart, User, Rocket, Search, Bot, FileSpreadsheet, BellRing,
   FileText, Workflow, PenTool, Image, Megaphone, MonitorPlay, Layers, Sparkles, PhoneOutgoing, PhoneIncoming, Languages,
-  CalendarCheck, AudioLines, Check, Minus, Clock, PhoneCall,
+  CalendarCheck, AudioLines, Check, Minus, Clock, PhoneCall, X,
 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import PageHero, { SectionHeading, btnPrimary, btnSecondary } from './ui/PageHero';
@@ -54,7 +54,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
         accent={c.accent}
         visual={<Visual />}
         actions={<>
-          <button type="button" onClick={() => openInquiry(c.inquiry)} className={btnPrimary}>Get a fixed quote <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" /></button>
+          <button type="button" onClick={() => openInquiry(c.inquiry, '', { billingType: 'Fixed written quote', source: 'Service page · Get a fixed quote' })} className={btnPrimary}>Get a fixed quote <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" /></button>
           <a href="#pricing" className={btnSecondary}>See pricing</a>
         </>}
       >
@@ -63,29 +63,15 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
 
       {/* Outcomes */}
       {c.outcomes.length === 1 ? (
-        <section aria-label="What you can expect" className="bg-white px-5 py-10 dark:bg-[#080A0F] md:px-8 md:py-14 desk:px-12">
-          <ScrollReveal>
-            <div data-voice-247 className="relative mx-auto max-w-5xl overflow-hidden rounded-[28px] border border-yellow-400/60 bg-gradient-to-br from-yellow-400 via-yellow-300 to-amber-400 p-6 text-black shadow-[0_24px_80px_rgba(234,179,8,0.25)] md:rounded-[36px] md:p-10">
-              <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/30 blur-3xl" />
-              <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full bg-black/10 blur-3xl" />
-              <dl className="relative flex flex-col items-center gap-5 text-center sm:flex-row sm:gap-8 sm:text-left">
-                <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-black text-yellow-300 shadow-xl md:h-24 md:w-24">
-                  <Clock size={40} strokeWidth={2.2} />
-                  <span className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full border-4 border-yellow-300 bg-black text-yellow-300"><PhoneCall size={14} /></span>
-                </div>
-                <div className="flex-1">
-                  <dt className="sr-only">{c.outcomes[0].label}</dt>
-                  <dd className="text-5xl font-black leading-none tracking-tight md:text-7xl">{c.outcomes[0].stat}</dd>
-                  <dd className="mt-3 text-base font-semibold leading-snug md:text-xl">{c.outcomes[0].label}</dd>
-                </div>
-                <div className="flex flex-wrap justify-center gap-2 sm:max-w-[15rem] sm:justify-end">
-                  {['Nights', 'Weekends', 'Festivals'].map(t => (
-                    <span key={t} className="inline-flex items-center gap-1.5 rounded-full bg-black/90 px-3 py-1.5 text-xs font-bold text-yellow-300"><Check size={12} /> {t}</span>
-                  ))}
-                </div>
-              </dl>
-            </div>
-          </ScrollReveal>
+        <section aria-label="What you can expect" className="bg-white px-5 py-6 dark:bg-[#080A0F] md:px-8 md:py-8 desk:px-12">
+          <div className="flex justify-center">
+            <p data-voice-247 className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-2.5 gap-y-1 rounded-full border border-yellow-400/60 bg-yellow-400 px-4 py-2 text-center text-sm font-semibold text-black shadow-[0_8px_28px_rgba(234,179,8,0.22)] md:flex-nowrap md:whitespace-nowrap md:px-5 md:text-base">
+              <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black text-yellow-300" aria-hidden="true"><Clock size={14} strokeWidth={2.5} /></span>
+              <strong className="font-black tracking-tight">{c.outcomes[0].stat}</strong>
+              <span aria-hidden="true" className="text-black/50">·</span>
+              <span>{c.outcomes[0].label}</span>
+            </p>
+          </div>
         </section>
       ) : (
       <section aria-label="What you can expect" className="border-y border-gray-200 bg-white py-10 dark:border-white/5 dark:bg-[#080A0F]">
@@ -212,26 +198,55 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
               <ScrollReveal>
                 <div className="mt-10 md:mt-16">
                   <h3 className="text-center text-2xl font-bold tracking-tight md:text-3xl">{c.compare.versus.title}</h3>
-                  <div className="mx-auto mt-6 max-w-4xl overflow-x-auto rounded-3xl border border-gray-200 dark:border-white/10">
-                    <table className="w-full min-w-[520px] border-collapse text-left">
+                  {/* Desktop / tablet: table */}
+                  <div data-versus-table className="mx-auto mt-6 hidden max-w-4xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-[#0D1017] sm:block">
+                    <table className="w-full table-fixed border-collapse text-left">
                       <caption className="sr-only">{c.compare.versus.title}</caption>
+                      <colgroup><col className="w-[26%]" /><col className="w-[40%]" /><col className="w-[34%]" /></colgroup>
                       <thead>
-                        <tr className="bg-gray-50 dark:bg-[#0D1017]">
-                          <th scope="col" className="px-4 py-4 text-xs font-bold uppercase tracking-[0.14em] text-gray-500 md:px-6"><span className="sr-only">Feature</span></th>
-                          {c.compare.versus.columns.map((col, i) => <th key={col} scope="col" className={`px-4 py-4 text-sm font-bold md:text-base ${i === 0 ? 'text-yellow-700 dark:text-yellow-300' : ''}`}>{col}</th>)}
+                        <tr className="border-b border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-white/[0.03]">
+                          <th scope="col" className="px-5 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-500 md:px-6">Feature</th>
+                          <th scope="col" className="border-x border-t-2 border-yellow-400/50 border-t-yellow-400 bg-yellow-400/15 px-5 py-4 text-sm font-bold text-gray-900 dark:text-white md:px-6 md:text-base">
+                            <span className="mb-0.5 block text-[9px] font-black uppercase tracking-wider text-yellow-700 dark:text-yellow-300">Recommended</span>{c.compare.versus.columns[0]}
+                          </th>
+                          <th scope="col" className="px-5 py-4 text-sm font-bold text-gray-600 dark:text-gray-300 md:px-6 md:text-base">{c.compare.versus.columns[1]}</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody className="divide-y divide-gray-200 dark:divide-white/10">
                         {c.compare.versus.rows.map(r => (
-                          <tr key={r.feature} className="border-t border-gray-200 dark:border-white/10">
-                            <th scope="row" className="px-4 py-3.5 text-sm font-medium text-gray-700 dark:text-gray-300 md:px-6">{r.feature}</th>
-                            <td className="px-4 py-3.5 text-sm font-semibold text-gray-900 dark:text-white">{r.values[0]}</td>
-                            <td className="px-4 py-3.5 text-sm text-gray-600 dark:text-gray-400">{r.values[1]}</td>
+                          <tr key={r.feature} className="align-top transition-colors hover:bg-gray-50/70 dark:hover:bg-white/[0.02]">
+                            <th scope="row" className="px-5 py-4 text-sm font-semibold text-gray-800 dark:text-gray-200 md:px-6">{r.feature}</th>
+                            <td className="border-x border-yellow-400/50 bg-yellow-400/[0.06] px-5 py-4 md:px-6">
+                              <span className="flex items-start gap-2.5 text-sm font-semibold text-gray-900 dark:text-white">
+                                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white" aria-label="Advantage"><Check size={12} strokeWidth={3} /></span>{r.values[0]}
+                              </span>
+                            </td>
+                            <td className="px-5 py-4 md:px-6">
+                              <span className="flex items-start gap-2.5 text-sm text-gray-600 dark:text-gray-400">
+                                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/10 text-red-500/80 dark:bg-red-400/10 dark:text-red-400/80" aria-label="Drawback"><X size={12} strokeWidth={3} /></span>{r.values[1]}
+                              </span>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
+                  {/* Mobile: stacked cards */}
+                  <ul data-versus-cards className="mt-6 space-y-3 sm:hidden">
+                    {c.compare.versus.rows.map(r => (
+                      <li key={r.feature} className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-[#0D1017]">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-gray-500">{r.feature}</p>
+                        <p className="mt-2.5 flex items-start gap-2.5 rounded-xl bg-yellow-400/10 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white">
+                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white" aria-hidden="true"><Check size={12} strokeWidth={3} /></span>
+                          <span><span className="sr-only">{c.compare!.versus!.columns[0]}: </span>{r.values[0]}</span>
+                        </p>
+                        <p className="mt-1.5 flex items-start gap-2.5 px-3 py-1 text-sm text-gray-600 dark:text-gray-400">
+                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/10 text-red-500/80" aria-hidden="true"><X size={12} strokeWidth={3} /></span>
+                          <span><span className="text-gray-400">{c.compare!.versus!.columns[1]}: </span>{r.values[1]}</span>
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
                   <p className="mx-auto mt-5 max-w-3xl text-center text-xs leading-relaxed text-gray-500 dark:text-gray-400">{c.compare.versus.note}</p>
                 </div>
               </ScrollReveal>
@@ -309,7 +324,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-white/65 md:text-lg">{c.ctaText}</p>
             </div>
             <div className="flex flex-col gap-3">
-              <button type="button" onClick={() => openInquiry('Free Growth Audit')} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
+              <button type="button" onClick={() => openInquiry('Free Growth Audit', '', { price: 'Free', extra: { 'Interested in': c.inquiry }, source: 'Service page · Free growth audit' })} className={btnPrimary}>Get a free growth audit <ArrowRight size={18} /></button>
               <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 dark:border-white/20 px-7 py-4 font-bold text-gray-900 dark:text-white transition-colors hover:border-green-400 hover:text-green-400"><MessageCircle size={18} /> Chat on WhatsApp</a>
             </div>
           </div>

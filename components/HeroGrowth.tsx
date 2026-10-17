@@ -60,7 +60,7 @@ const HeroGrowth: React.FC = () => {
           </p>
 
           <div className="mt-6 md:mt-8 flex flex-row flex-wrap items-center gap-2.5 md:gap-3">
-            <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="group inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-black shadow-[0_12px_40px_rgba(234,179,8,0.35)] transition-all hover:-translate-y-0.5 hover:bg-yellow-300">
+            <button type="button" onClick={() => openInquiry('Free Growth Audit', '', { price: 'Free', source: 'Home hero' })} className="group inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-black shadow-[0_12px_40px_rgba(234,179,8,0.35)] transition-all hover:-translate-y-0.5 hover:bg-yellow-300">
               Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
             </button>
             <Link to="/services" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-gray-900 transition-colors hover:border-yellow-400 dark:border-white/15 dark:bg-white/5 dark:text-white">
