@@ -215,7 +215,7 @@ export const SERVICE_CONTENT: Record<PillarId, ServiceContent> = {
     compare: {
       eyebrow: 'Compare plans',
       title: 'Same agent. Choose the voice.',
-      text: 'Every plan has the same flat agent fee and features. The plan sets the voice quality and the per-minute rate, and you can switch plans any time.',
+      text: 'Every plan has the same flat agent fee and core calling features. Higher plans add a more natural voice, bookings, WhatsApp and CRM sync, and you can switch plans any time.',
       columns: ['Voice Starter', 'Voice Growth', 'Voice Premium'],
       rows: [
         { feature: 'Agent fee (per 30 days)', values: ['₹2,099', '₹2,099', '₹2,099'] },
