@@ -5,7 +5,8 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-route
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ClickSpark from './components/ClickSpark';
-import ScrollProgressBar from './components/ScrollProgressBar';
+import CursorGlow from './components/CursorGlow';
+import { useCursorGlow } from './hooks/useCursorGlow';
 import FloatingPromotions from './components/FloatingPromotions';
 import { whenIdle } from './firestoreClient';
 import { lazyWidget } from './lazyRoute';
@@ -87,10 +88,11 @@ const AfterMount: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 /** The whole site inside the router. Shared by the browser (App) and the prerender (seo/render.tsx),
  *  so the prerendered HTML matches the first client render and React can hydrate it in place. */
 export const AppLayout: React.FC = () => {
+  useCursorGlow();
   return (
     <>
       <SEO />
-      <ScrollProgressBar />
+      <CursorGlow />
       <IdleExtras />
       <ScrollToTop />
       <ClickSpark

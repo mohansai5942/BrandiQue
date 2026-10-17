@@ -45,7 +45,7 @@ const Services: React.FC = () => {
           return (
             <section key={p.id} id={`service-${p.id}`} className="scroll-mt-24 mx-auto max-w-[100rem]">
               <ScrollReveal>
-                <div className="grid items-center gap-3 md:gap-8 overflow-hidden rounded-[32px] border border-gray-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#0B0E14] md:p-10 desk:grid-cols-2 desk:gap-12">
+                <div className="grid items-center gap-3 md:gap-8 overflow-hidden glass glass-glow rounded-[32px] p-4 shadow-sm md:p-10 desk:grid-cols-2 desk:gap-12">
                   <div className={i % 2 === 1 ? 'desk:order-2' : ''}>
                     <div className="flex items-center gap-3">
                       <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${TONE[p.id]}`}><Icon size={24} /></span>

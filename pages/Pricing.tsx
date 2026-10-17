@@ -59,7 +59,7 @@ const Pricing: React.FC = () => {
           <div className="mt-10 grid gap-3 md:gap-5 md:grid-cols-3">
             {HOW_IT_WORKS.map((step, index) => (
               <ScrollReveal key={step.title} delay={`delay-${index * 100}`}>
-                <div className="h-full rounded-3xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] p-4 md:p-8">
+                <div className="h-full glass glass-glow motion-card rounded-3xl p-4 md:p-8">
                   <div className="w-11 h-11 rounded-xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300 flex items-center justify-center"><step.icon size={22} /></div>
                   <h3 className="mt-5 text-lg font-bold">{step.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{step.text}</p>
@@ -78,7 +78,7 @@ const Pricing: React.FC = () => {
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             {PRICING_FAQ.map(item => (
               <ScrollReveal key={item.q}>
-                <div className="h-full rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0D1017] p-4 md:p-6">
+                <div className="h-full glass glass-glow motion-card rounded-2xl p-4 md:p-6">
                   <h3 className="flex items-start gap-2 font-bold"><HelpCircle size={17} className="mt-0.5 shrink-0 text-yellow-500" />{item.q}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.a}</p>
                 </div>

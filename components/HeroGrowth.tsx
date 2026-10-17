@@ -61,7 +61,7 @@ const HeroGrowth: React.FC = () => {
 
           <div className="mt-6 md:mt-8 flex flex-row flex-wrap items-center gap-2.5 md:gap-3">
             <MagneticButton>
-              <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="shine group inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-black shadow-[0_12px_40px_rgba(234,179,8,0.35)] transition-all hover:-translate-y-0.5 hover:bg-yellow-300">
+              <button type="button" onClick={() => openInquiry('Free Growth Audit')} className="group inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-5 py-3 text-sm md:px-7 md:py-4 md:text-base font-bold text-black shadow-[0_12px_40px_rgba(234,179,8,0.35)] transition-all hover:-translate-y-0.5 hover:bg-yellow-300">
                 Get a free growth audit <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
               </button>
             </MagneticButton>

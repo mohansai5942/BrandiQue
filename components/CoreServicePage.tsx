@@ -74,7 +74,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
               const Icon = ICONS[b.icon] || Sparkles;
               return (
                 <ScrollReveal key={b.title} delay={`delay-${(i % 3) * 100}`}>
-                  <div className="group h-full rounded-2xl md:rounded-3xl border border-gray-200 bg-white p-3.5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 hover:shadow-xl dark:border-white/10 dark:bg-[#0D1017]">
+                  <div className="group h-full glass glass-glow motion-card rounded-2xl md:rounded-3xl p-3.5 md:p-6">
                     <span className={`flex h-9 w-9 md:h-12 md:w-12 items-center justify-center rounded-xl md:rounded-2xl ${tone}`}><Icon size={18} /></span>
                     <h3 className="mt-3 md:mt-5 text-sm md:text-lg font-bold leading-snug">{b.title}</h3>
                     <p className="mt-1.5 md:mt-2 text-xs md:text-sm leading-relaxed text-gray-600 dark:text-gray-400">{b.text}</p>
@@ -117,7 +117,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
           <div className="mt-8 md:mt-12 grid grid-cols-2 gap-3 md:gap-4">
             {c.useCases.map((u, i) => (
               <ScrollReveal key={u.who} delay={`delay-${(i % 2) * 100}`}>
-                <div className="flex h-full gap-4 rounded-3xl border border-gray-200 bg-white p-4 md:p-6 dark:border-white/10 dark:bg-[#0D1017]">
+                <div className="flex h-full gap-4 glass glass-glow rounded-3xl p-4 md:p-6">
                   <span className="text-3xl font-black text-yellow-500/80">0{i + 1}</span>
                   <div><h3 className="font-bold">{u.who}</h3><p className="mt-1.5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{u.what}</p></div>
                 </div>
@@ -133,7 +133,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
           <ScrollReveal><SectionHeading eyebrow="How we work" title={<>From first call to launch, <span className="text-yellow-500">no surprises.</span></>} /></ScrollReveal>
           <ol className="mt-8 md:mt-12 grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-4">
             {c.process.map((p, i) => (
-              <li key={p.title} className="relative rounded-3xl border border-gray-200 bg-gray-50 p-4 md:p-6 dark:border-white/10 dark:bg-[#0D1017]">
+              <li key={p.title} className="relative glass glass-glow rounded-3xl p-4 md:p-6">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-400 text-sm font-black text-black">{i + 1}</span>
                 <h3 className="mt-4 font-bold">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{p.text}</p>
@@ -157,7 +157,7 @@ const CoreServicePage: React.FC<{ id: PillarId }> = ({ id }) => {
           <ScrollReveal><SectionHeading eyebrow="FAQ" title="Questions, answered" /></ScrollReveal>
           <div className="mt-10 space-y-3">
             {c.faqs.map(f => (
-              <details key={f.q} className="group rounded-2xl border border-gray-200 bg-white p-5 open:border-yellow-400/50 dark:border-white/10 dark:bg-[#0D1017]">
+              <details key={f.q} className="glass glass-glow group rounded-2xl p-5 open:border-yellow-400/50">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">{f.q}<ChevronDown size={18} className="shrink-0 text-gray-400 transition-transform group-open:rotate-180" /></summary>
                 <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{f.a}</p>
               </details>

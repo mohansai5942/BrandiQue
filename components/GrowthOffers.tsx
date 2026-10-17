@@ -60,7 +60,7 @@ const GrowthOffers: React.FC<GrowthOffersProps> = ({ showHeading = true, pillars
                 <div className="flex snap-x snap-mandatory overflow-x-auto scrollbar-none -mx-5 px-5 pb-2 gap-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-5 lg:gap-6 items-stretch">
                   {items.map((pkg, index) => (
                     <ScrollReveal key={pkg.name} delay={`delay-${index * 100}`} className="w-[84%] shrink-0 snap-start md:w-auto">
-                      <article className={`relative h-full rounded-[28px] p-4 md:p-8 border flex flex-col transition-all duration-300 hover:-translate-y-1 ${pkg.featured ? 'border-yellow-400/60 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0D1017] text-gray-900 dark:text-white'}`}>
+                      <article className={`glass-glow motion-card relative h-full rounded-[28px] p-4 md:p-8 border flex flex-col ${pkg.featured ? 'border-yellow-400/60 bg-[#11130F] text-white shadow-[0_18px_70px_rgba(234,179,8,0.10)]' : 'glass border-transparent text-gray-900 dark:text-white'}`}>
                         {pkg.featured && <span className="absolute top-4 right-4 rounded-full bg-yellow-400 px-3 py-1 text-[9px] font-black tracking-wider text-black uppercase">Recommended</span>}
                         <h4 className="text-xl md:text-2xl font-bold pr-24">{pkg.name}</h4>
                         <p className={`mt-3 text-sm leading-relaxed md:min-h-[72px] ${pkg.featured ? 'text-white/65' : 'text-gray-600 dark:text-gray-400'}`}>{pkg.description}</p>

@@ -37,7 +37,7 @@ const IndustrySolutions: React.FC<IndustrySolutionsProps> = ({ showHeading = tru
             const Icon = ICONS[solution.slug] || Rocket;
             return (
               <ScrollReveal key={solution.slug} delay={`delay-${(index % 2) * 100}`} className={compact ? "w-[84%] shrink-0 snap-start md:w-auto" : ""}>
-                <article id={solution.slug} className="shine scroll-mt-28 flex h-full flex-col rounded-[28px] border border-gray-200 bg-white p-4 md:p-8 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400/50 hover:shadow-xl dark:border-white/10 dark:bg-[#0D1017]">
+                <article id={solution.slug} className="glass glass-glow motion-card scroll-mt-28 flex h-full flex-col rounded-[28px] p-4 md:p-8">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-400/10 text-yellow-600 dark:text-yellow-300"><Icon size={24} /></div>
                     <div className="text-right">
